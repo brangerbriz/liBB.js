@@ -1,0 +1,49 @@
+<html>
+<head>
+    <title>BBModule Pointer Example</title>
+    <style type="text/css">
+        
+        body {
+            font-family: "Courier New", Courier, monospace;
+            color: #cc3399;
+        }
+
+        #canvas {
+            width: 100%;
+            height: 80%;
+        }
+
+        #info {
+            z-index: 2;
+            position: absolute;
+            top: 0;
+            pointer-events: none;
+        }
+
+        h4 {
+            margin-bottom: 2px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h4>Pointer Info</h4>
+        <span id="pointer-x-pos">0</span>, <span id="pointer-y-pos">0</span><br>
+        Is moving: <span id="pointer-is-moving">false</span><br>
+        Is down: <span id="pointer-is-down">false</span>
+
+        <h4>Mouse Info</h4>
+        <span id="mouse-x-pos">0</span>, <span id="mouse-y-pos">0</span> (previously 
+        <span id="mouse-prev-x-pos">0</span>, <span id="mouse-prev-y-pos">0</span>)<br>
+        Click: <span id="mouse-click-x-pos">0</span>, <span id="mouse-click-y-pos">0</span><br>
+        Previous Click: <span id="mouse-prev-click-x-pos">0</span>, <span id="mouse-prev-click-y-pos">0</span><br>
+        Is moving: <span id="mouse-is-moving">false</span><br>
+        Is down: <span id="mouse-is-down">false</span>
+
+    </div>
+    <canvas id="canvas"></canvas>
+    <script type="text/javascript" src="../../lib/require_v2.1.18.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
+</body>
+</html>
