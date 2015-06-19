@@ -6,7 +6,7 @@ function( BBModMouseInput,   BBModPointer,   BBModImageBrush2D,   BBModLineBrush
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
     var mouseInput = new BBModMouseInput(canvas);
-    var pointer = new BBModPointer();
+    var pointer = new BBModPointer(mouseInput);
     var imageBrush = new BBModImageBrush2D({
         variant: "star",
         color: new BBModColor(255, 0, 0),
@@ -34,7 +34,8 @@ function( BBModMouseInput,   BBModPointer,   BBModImageBrush2D,   BBModLineBrush
 
     function update() {
         
-        pointer.update(mouseInput);
+        mouseInput.update();
+        pointer.update();
         currentBrush.update(pointer);
 
         if (currentBrush.type == "image") {

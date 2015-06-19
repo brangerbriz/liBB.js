@@ -95,24 +95,29 @@ define(function(){
         });
 
         this.canvasElem.addEventListener('mousedown', function(e){
+            
+            if (e.button === BBModMouseInput.LEFT_BUTTON) {
 
-            self._isDown = true;
+                self._isDown = true;
 
-            if (self.hasOwnProperty('_activeStartCallback') && 
-                typeof self._activeStartCallback === 'function') {
+                if (self.hasOwnProperty('_activeStartCallback') && 
+                    typeof self._activeStartCallback === 'function') {
 
-                self._activeStartCallback(self.x, self.y);
+                    self._activeStartCallback(self.x, self.y);
+                }
             }
         });
 
         this.canvasElem.addEventListener('mouseup', function(e){
 
-            self._isDown = false;
+            if (e.button === BBModMouseInput.LEFT_BUTTON) {
+                self._isDown = false;
 
-            if (self.hasOwnProperty('_activeStopCallback') &&
-                typeof self._activeStopCallback === 'function') {
+                if (self.hasOwnProperty('_activeStopCallback') &&
+                    typeof self._activeStopCallback === 'function') {
 
-                self._activeStopCallback(self.x, self.y);
+                    self._activeStopCallback(self.x, self.y);
+                }
             }
         });
 
@@ -155,10 +160,41 @@ define(function(){
     }
 
     /**
-     * Holds wether or not the mouse is currently moving.
+     * Utility property that hold's the value of a JavaScript MouseEvent's left mouse button.
+     * @property
+     * @static
+     * @type {Number}
+     * @default 0
+     * @readOnly
+     */
+    BBModMouseInput.LEFT_BUTTON   = 0;
+
+    /**
+     * Utility property that hold's the value of a JavaScript MouseEvent's scroll wheel button.
+     * @property
+     * @static
+     * @type {Number}
+     * @default 1
+     * @readOnly
+     */
+    BBModMouseInput.SCROLL_BUTTON = 1;
+
+    /**
+     * Utility property that hold's the value of a JavaScript MouseEvent's right mouse button.
+     * @property
+     * @static
+     * @type {Number}
+     * @default 2
+     * @readOnly
+     */
+    BBModMouseInput.RIGHT_BUTTON  = 2;
+
+    /**
+     * Holds wether or not the mouse is currently moving. This property is read-only.
      * @property isMoving
      * @type {Boolean}
      * @default false
+     * @readOnly
      */
     Object.defineProperty(BBModMouseInput.prototype, 'isMoving', {
         get: function(){
@@ -170,10 +206,11 @@ define(function(){
     });
 
      /**
-     * Holds wether or not the mouse
+     * Holds wether or not a mouse button is depressed. This property is read-only.
      * @property isDown
      * @type {Boolean}
      * @default false
+     * @readOnly
      */
     Object.defineProperty(BBModMouseInput.prototype, 'isDown', {
         get: function(){
