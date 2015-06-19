@@ -41,12 +41,17 @@
                                 <li><a href="../classes/BBModBaseBrush2D.html">BBModBaseBrush2D</a></li>
                                 <li><a href="../classes/BBModImageBrush2D.html">BBModImageBrush2D</a></li>
                                 <li><a href="../classes/BBModLineBrush2D.html">BBModLineBrush2D</a></li>
+                                <li><a href="../classes/BBModMouseInput.html">BBModMouseInput</a></li>
+                                <li><a href="../classes/BBModPointer.html">BBModPointer</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/BBModBaseBrush2D.html">BBModBaseBrush2D</a></li>
                                 <li><a href="../modules/BBModImageBrush2D.html">BBModImageBrush2D</a></li>
                                 <li><a href="../modules/BBModLineBrush2D.html">BBModLineBrush2D</a></li>
+                                <li><a href="../modules/BBModMathUtils.html">BBModMathUtils</a></li>
+                                <li><a href="../modules/BBModMouseInput.html">BBModMouseInput</a></li>
+                                <li><a href="../modules/BBModPointer.html">BBModPointer</a></li>
                             </ul>
                         </div>
                     </div>
@@ -135,7 +140,7 @@ define([&#x27;./BBModColor&#x27;], function(BBModColor){
         this.height   = (config &amp;&amp; config.height &amp;&amp; typeof config.height === &#x27;number&#x27;) ? config.height : 50;
 
         /**
-         * The brush&#x27;s rotation. This property is not always used with each brush variant.
+         * The brush&#x27;s rotation in degrees. This property is not always used with each brush variant.
          * @property rotation
          * @type Number
          * @default 0
@@ -174,7 +179,7 @@ define([&#x27;./BBModColor&#x27;], function(BBModColor){
      * @method update
      * @param {Object} controllerModule An object with x and y properties and
      * optionally an isDown boolean (used for beginning and ending
-     * strokeds/marks). ) 
+     * strokeds/marks).
      */
     BBModBaseBrush2D.prototype.update = function(controllerModule) {
 

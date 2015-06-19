@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>BBModPointer.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/BBModBaseBrush2D.html">BBModBaseBrush2D</a></li>
+                                <li><a href="../classes/BBModImageBrush2D.html">BBModImageBrush2D</a></li>
+                                <li><a href="../classes/BBModLineBrush2D.html">BBModLineBrush2D</a></li>
+                                <li><a href="../classes/BBModMouseInput.html">BBModMouseInput</a></li>
+                                <li><a href="../classes/BBModPointer.html">BBModPointer</a></li>
+                            </ul>
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/BBModBaseBrush2D.html">BBModBaseBrush2D</a></li>
+                                <li><a href="../modules/BBModImageBrush2D.html">BBModImageBrush2D</a></li>
+                                <li><a href="../modules/BBModLineBrush2D.html">BBModLineBrush2D</a></li>
+                                <li><a href="../modules/BBModMathUtils.html">BBModMathUtils</a></li>
+                                <li><a href="../modules/BBModMouseInput.html">BBModMouseInput</a></li>
+                                <li><a href="../modules/BBModPointer.html">BBModPointer</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: BBModPointer.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+// A module for funneling in and standardizing pointer-like events
+// like mouse, touch, computer-vision detected hands, etc...
+// It has basic properties like x, y, isMoving and if the eventModule
+// that is passed into its update() has a selection interface (like the 
+// click on a mouse), then it also has an isDown property.
+// Note: This module is for use with HTML5 canvas only.
+
+/**
+ * A module for funneling in and standardizing basic pointer-like interfaces
+ * like mouse and touch.
+ * @module BBModPointer
+ */
+define([&#x27;./BBModMouseInput&#x27;], function(BBModMouseInput){
+
+
+    //NOTE: called inside BBModPointer using .call()
+    //to bind this to BBModPointer instance
+    function bindEventsToControllerModule() {
+
+        // the BBMouseInput module uses event listeners attatched to it&#x27;s
+        // HTML5 canvas to fire these callbacks directly, so pass them along.
+        if (this.controllerModule instanceof BBModMouseInput) {
+
+            this.controllerModule._activeStartCallback = this._activeStartCallback;
+            this.controllerModule._activeStopCallback  = this._activeStopCallback;
+            this.controllerModule._moveStartCallback   = this._moveStartCallback;
+            this.controllerModule._moveStopCallback    = this._moveStopCallback;
+            this.controllerModule._moveCallback        = this._moveCallback;
+        }
+    }
+
+    /**
+     * A module for funneling in and standardizing basic pointer-like interfaces
+     * like mouse and touch.
+     * @class BBModPointer
+     * @param {Object} controllerModule The input module you would like to control
+     * this pointer with.
+     * @constructor
+     */
+    function BBModPointer(controllerModule) {
+
+        if (!controllerModule) {
+            throw new Error(&#x27;BBModPointer: controllerModule parameter is missing from the BBModPointer constructor.&#x27;);
+        } else if (!controllerModule instanceof BBModMouseInput) {
+            throw new Error(&quot;BBModPointer.update: controllerModule is not a supported object type.&quot;);
+            this.controllerModule = null;
+        }
+
+        this.controllerModule = controllerModule;
+
+
+        /**
+         * The pointer&#x27;s current x position as supplied by the eventModule in BBModPointer.update(...).
+         * @property x
+         * @type {Number}
+         * @default undefined
+         */
+        this.x = null;
+
+        /**
+         * The pointer&#x27;s current y position as supplied by the eventModule in BBModPointer.update(...).
+         * @property y
+         * @type {Number}
+         * @default undefined
+         */
+        this.y = null;
+
+        /**
+         * A variable holding wether or not the event module controlling this
+         * pointer object (via BBModPointer.update(...)) is moving
+         * @property isMoving
+         * @type {Boolean}
+         * @default false
+         */
+        this.isMoving = false;
+
+        /**
+         * A variable holding wether or not the selection interface (i.e. mouse
+         * button, etc...) controlling this pointer object (via
+         * BBModPointer.update(...)) is active.
+         * @property isDown
+         * @type {Boolean}
+         * @default false
+         */
+        this.isDown = false;
+
+        /**
+         * Does the selection interface controlling this pointer have a
+         * selection interface (like a button)?
+         * @property hasSelectionInterface
+         * @type {Boolean}
+         * @default false
+         */
+        this.hasSelectionInterface = false;
+
+        this._activeStartCallback = null;
+        this._activeStopCallback  = null;
+        this._moveStartCallback   = null;
+        this._moveStopCallback    = null;
+        this._moveCallback        = null;
+    }
+
+    Object.defineProperty(BBModPointer.prototype, &quot;controllerModule&quot;, {
+        get: function(){
+            return this._controllerModule;
+        },
+        set: function(val){
+
+            this._controllerModule = val;
+
+            // rebind the event callbacks in case this is 
+            // a new controller module
+            bindEventsToControllerModule.call(this);
+        }
+    });
+
+    /**
+     * Update the pointer using the controllerModule.
+     * @method update
+     * @param  {Object} controllerModule 
+     */
+    BBModPointer.prototype.update = function() {
+
+        // add a new conditional for each module that pointer supports and then
+        // update BBModPointer&#x27;s internals (x, y, isMoving) in a custom way for
+        // each type of input (kinect, etc...)
+        if (this.controllerModule instanceof BBModMouseInput) {
+
+            // these assignments are easy for a mouse input object but will take
+            // more work for other types of modules (i.e. kinect)...
+            this.x                     = this.controllerModule.x;
+            this.y                     = this.controllerModule.y;
+            this.isMoving              = this.controllerModule.isMoving;
+            this.isDown                = this.controllerModule.isDown;
+            this.hasSelectionInterface = false;
+        }
+    }
+
+    /**
+     * A method used to register &quot;activestart&quot;, &quot;activestop&quot;, &quot;movestart&quot;, and
+     * &quot;movestop&quot; events.
+     * @method on
+     * @param  {String}   eventName   The event to register callback to.
+     * &quot;activestart&quot;, &quot;activestop&quot;, &quot;movestart&quot;, and &quot;movestop&quot; are all valid
+     * events.
+     * @param  {Function} callback    The callback to execute once the
+     * registered event has fired.
+     */
+    BBModPointer.prototype.on = function(eventName, callback){
+        
+        // save the callback so that it can be used later in update() if it needs to be    
+        if (eventName == &quot;activestart&quot;)      this._activeStartCallback       = callback;
+        else if (eventName == &quot;activestop&quot;)  this._activeStopCallback        = callback;
+        else if (eventName == &quot;movestart&quot;)   this._moveStartCallback         = callback;
+        else if (eventName == &quot;movestop&quot;)    this._moveStopCallback          = callback;
+        else if (eventName == &quot;move&quot;)        this._moveCallback              = callback;
+        else {
+            throw new Error(&#x27;BBModPointer.on: eventName is not a supported event.&#x27;);
+        }
+
+        if (this._controllerModule === null) {
+            throw new Error(&#x27;BBModPointer.on: pointer has no controller module.&#x27;
+                            +&#x27; You must first call BBModPointer.update() to assign this pointer a controller module.&#x27;);
+        }
+
+        bindEventsToControllerModule.call(this);
+    }
+
+    return BBModPointer;
+});
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

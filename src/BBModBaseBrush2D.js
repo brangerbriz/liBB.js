@@ -49,7 +49,7 @@ define(['./BBModColor'], function(BBModColor){
         this.height   = (config && config.height && typeof config.height === 'number') ? config.height : 50;
 
         /**
-         * The brush's rotation. This property is not always used with each brush variant.
+         * The brush's rotation in degrees. This property is not always used with each brush variant.
          * @property rotation
          * @type Number
          * @default 0
@@ -88,7 +88,7 @@ define(['./BBModColor'], function(BBModColor){
      * @method update
      * @param {Object} controllerModule An object with x and y properties and
      * optionally an isDown boolean (used for beginning and ending
-     * strokeds/marks). ) 
+     * strokeds/marks).
      */
     BBModBaseBrush2D.prototype.update = function(controllerModule) {
 

@@ -144,7 +144,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
      * @method update
      * @param {Object} controllerModule An object with x and y properties and
      * optionally an isDown boolean (used for beginning and ending
-     * strokeds/marks). ) 
+     * strokeds/marks).
      */
     BBModImageBrush2D.prototype.update = function(controllerModule) {
         

@@ -1,78 +1,140 @@
-// A module for standardizing mouse events so that they may be used with
-// the event funnel suite of modules.
-// Note: This module is for use with HTML5 canvas only.
-
+/**
+ * A module for standardizing mouse events so that they may be used with
+ * the event funnel suite of modules. For use with HTML5 canvas only.
+ * @module BBModMouseInput
+ */
 define(function(){
-
+    
+    /**
+     * A module for standardizing mouse events so that they may be used with
+     * the event funnel suite of modules.
+     * @class  BBModMouseInput
+     * @constructor
+     * @param {Object} canvasElement The HTML5 canvas object listening for mouse input.
+     */
     function BBModMouseInput(canvasElement) {
 
         var self = this;
-        var movingTimeout = undefined;
+        var movingTimeout = null;
         var movingTimeoutMillis = 150; // timeout to check if mouse is moving
 
-        this.hasSelectionInterface = true; // can this click, or otherwise have some method of activation
-        this.x          = 0; // the current x
-        this.y          = 0; // the current y
-        this.prevX      = 0; // the previous mouse x
-        this.prevY      = 0; // the previous mouse y
-        this.clickX     = 0; // the last clicked x
-        this.clickY     = 0; // the last clicked y
-        this.prevClickX = 0; // the previous last clicked x
-        this.prevClickY = 0; // the previous last clicked y
-        this.isMoving   = false;
-        this.isDown     = false;
+        /**
+         * The current x position.
+         * @property x
+         * @type {Number}
+         * @default 0
+         */
+        this.x          = 0;
 
+        /**
+         * The current y position.
+         * @property y
+         * @type {Number}
+         * @default 0
+         */
+        this.y          = 0;
+
+        /**
+         * The last clicked x position.
+         * @property clickX
+         * @type {Number}
+         * @default 0
+         */
+        this.clickX     = 0;
+
+        /**
+         * The last clicked y position.
+         * @property clickY
+         * @type {Number}
+         * @default 0
+         */
+        this.clickY     = 0;
+
+        this._isMoving = false;
+        this._isDown = false;
+
+        /**
+         * The HTML5 canvas element passed into BBModMouseInput during
+         * construction.
+         * @property canvasElem
+         * @type {Object}
+         */
         this.canvasElem = canvasElement;
+
         this.canvasElem.addEventListener('mousemove', function(e) {
 
             var mouse = getCanvasMouseCoords(e);
-            self.prevX = self.x;
-            self.prevY = self.y;
             self.x = mouse.x;
             self.y = mouse.y;
-            self.isMoving = true;
+                
+            if (!self.isMoving && self.hasOwnProperty('_moveStartCallback') &&
+                typeof self._moveStartCallback === 'function') {
+
+                self._moveStartCallback(self.x, self.y);
+            }
+        
+            self._isMoving = true;
 
             clearTimeout(movingTimeout);
             movingTimeout = setTimeout(function(){
-                self.isMoving = false;
+
+                if (self.isMoving &&
+                    self.hasOwnProperty('_moveStopCallback') &&
+                    typeof self._moveStartCallback === 'function') {
+
+                    self._isMoving = false;
+                    self._moveStopCallback(self.x, self.y);
+                }
             }, movingTimeoutMillis);
         });
 
         this.canvasElem.addEventListener('mousedown', function(e){
 
-            self.isDown = true;
+            self._isDown = true;
 
-            if (self.start && typeof self.start === 'function') {
-                self.start(self.x, self.y);
+            if (self.hasOwnProperty('_activeStartCallback') && 
+                typeof self._activeStartCallback === 'function') {
+
+                self._activeStartCallback(self.x, self.y);
             }
         });
 
         this.canvasElem.addEventListener('mouseup', function(e){
 
-            self.isDown = false;
+            self._isDown = false;
 
-            if (self.stop && typeof self.stop === 'function') {
-                self.stop(self.x, self.y);
+            if (self.hasOwnProperty('_activeStopCallback') &&
+                typeof self._activeStopCallback === 'function') {
+
+                self._activeStopCallback(self.x, self.y);
             }
         });
 
         this.canvasElem.addEventListener('click', function(e){
 
             var mouse = getCanvasMouseCoords(e);
-            self.prevClickX = self.clickX;
-            self.prevClickY = self.clickY;
             self.clickX = mouse.x;
             self.clickY = mouse.y;
         });
 
         this.canvasElem.addEventListener('mouseleave', function() {
 
-            if (self.isDown && self.stop && typeof self.stop === 'function') {
-                self.stop(self.x, self.y);
+            if (self._isDown && 
+                self.hasOwnProperty('_activeStopCallback') && 
+                typeof self._activeStopCallback === 'function') {
+
+                self._activeStopCallback(self.x, self.y);
             }
 
-            self.isMoving = false;
-            self.isDown   = false;
+            if (self.isMoving &&
+                self.hasOwnProperty('_moveStopCallback') && 
+                typeof self._moveStopCallback === 'function') {
+
+                self._moveStopCallback(self.x, self.y);
+            }
+
+            self._isMoving = false;
+            self._isDown   = false;
         });
 
         function getCanvasMouseCoords(e) {
@@ -86,12 +148,44 @@ define(function(){
         }
     }
 
-    BBModMouseInput.prototype.update = function() {
-        // empty...
-    }
+    /**
+     * Holds wether or not the mouse is currently moving.
+     * @property isMoving
+     * @type {Boolean}
+     * @default false
+     */
+    Object.defineProperty(BBModMouseInput.prototype, 'isMoving', {
+        get: function(){
+            return this._isMoving;
+        },
+        set: function(val){
+            throw new Error('BBModMouseInput.isMoving (setter): BBModMouseInput.isMoving is a read-only property.');
+        }
+    });
 
-    BBModMouseInput.prototype.updatePointer = function() {
-        // update the pointer code specifically...
+     /**
+     * Holds wether or not the mouse
+     * @property isDown
+     * @type {Boolean}
+     * @default false
+     */
+    Object.defineProperty(BBModMouseInput.prototype, 'isDown', {
+        get: function(){
+            return this._isDown;
+        },
+        set: function(val){
+            throw new Error('BBModMouseInput.isDown (setter): BBModMouseInput.isDown is a read-only property.');
+        }
+    });
+
+    BBModMouseInput.prototype.update = function() {
+
+        if (this.isMoving &&
+            this.hasOwnProperty('_moveCallback') &&
+            typeof this._moveCallback === 'function') {
+            
+            this._moveCallback(this.x, this.y);
+        }
     }
 
     return BBModMouseInput;

@@ -1,5 +1,5 @@
 /**
- * A 2D brush module for drawing contiguous lines in a stamp-like style.
+ * A 2D brush module for drawing contiguous lines in a stamp-like fashion.
  * @module BBModLineBrush2D
  * @extends BBModBaseBrush2D
  */
@@ -10,9 +10,9 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
     var controllerModuleHasIsDown = false;
 
     /**
-     * A 2D brush module for drawing contiguous lines in a stamp-like style.
+     * A 2D brush module for drawing contiguous lines in a stamp-like fashion.
      * What makes BBModLineBrush2D fundamentally different from BBModBaseBrush
-     * is that each new drawing instance is influenced by the last position of
+     * is that each new drawing instance is influenced by the previous position of
      * the brush (usually to adjust for drawing angle or brush width).
      * @class BBModLineBrush2D
      * @constructor
@@ -99,7 +99,13 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
     BBModLineBrush2D.prototype = Object.create(BBModBaseBrush2D.prototype);
     BBModLineBrush2D.prototype.constructor = BBModLineBrush2D;
 
-    
+    /**
+     * Update method. Usually called once per animation frame.
+     * @method update
+     * @param {Object} controllerModule An object with x and y properties and
+     * optionally an isDown boolean (used for beginning and ending
+     * strokeds/marks). 
+     */
     BBModLineBrush2D.prototype.update = function(controllerModule) {
         
         BBModBaseBrush2D.prototype.update.call(this, controllerModule);
@@ -112,6 +118,12 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
         }
     }
 
+    /**
+     * Draws the brush to the context. Usually called once per animation frame.
+     * @method draw
+     * @param {Object} context The HTML5 canvas context you would like to draw
+     * to.
+     */
     BBModLineBrush2D.prototype.draw = function(context) {
         
 

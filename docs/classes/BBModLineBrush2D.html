@@ -41,12 +41,17 @@
                                 <li><a href="../classes/BBModBaseBrush2D.html">BBModBaseBrush2D</a></li>
                                 <li><a href="../classes/BBModImageBrush2D.html">BBModImageBrush2D</a></li>
                                 <li><a href="../classes/BBModLineBrush2D.html">BBModLineBrush2D</a></li>
+                                <li><a href="../classes/BBModMouseInput.html">BBModMouseInput</a></li>
+                                <li><a href="../classes/BBModPointer.html">BBModPointer</a></li>
                             </ul>
                 
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/BBModBaseBrush2D.html">BBModBaseBrush2D</a></li>
                                 <li><a href="../modules/BBModImageBrush2D.html">BBModImageBrush2D</a></li>
                                 <li><a href="../modules/BBModLineBrush2D.html">BBModLineBrush2D</a></li>
+                                <li><a href="../modules/BBModMathUtils.html">BBModMathUtils</a></li>
+                                <li><a href="../modules/BBModMouseInput.html">BBModMouseInput</a></li>
+                                <li><a href="../modules/BBModPointer.html">BBModPointer</a></li>
                             </ul>
                         </div>
                     </div>
@@ -97,9 +102,9 @@
 
 
 <div class="box intro">
-    <p>A 2D brush module for drawing contiguous lines in a stamp-like style.
+    <p>A 2D brush module for drawing contiguous lines in a stamp-like fashion.
 What makes BBModLineBrush2D fundamentally different from BBModBaseBrush
-is that each new drawing instance is influenced by the last position of
+is that each new drawing instance is influenced by the previous position of
 the brush (usually to adjust for drawing angle or brush width).</p>
 
 </div>
@@ -271,10 +276,16 @@ height: 100, variant: "soft" }); </code></div>
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
-<div id="method_draw" class="method item inherited">
+<div id="method_draw" class="method item">
     <h3 class="name"><code>draw</code></h3>
 
-        <span class="paren">()</span>
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+                <li class="arg">
+                        <code>context</code>
+                </li>
+            </ul><span class="paren">)</span>
+        </div>
 
 
 
@@ -284,9 +295,12 @@ height: 100, variant: "soft" }); </code></div>
 
 
     <div class="meta">
-                <p>Inherited from
-                <a href="../classes/BBModBaseBrush2D.html#method_draw">BBModBaseBrush2D</a>:
-        <a href="../files/BBModBaseBrush2D.js.html#l114"><code>BBModBaseBrush2D.js:114</code></a>
+            <p>Inherited from
+            <a href="../classes/BBModBaseBrush2D.html#method_draw">
+                BBModBaseBrush2D
+            </a>
+            but overwritten in
+        <a href="../files/BBModLineBrush2D.js.html#l121"><code>BBModLineBrush2D.js:121</code></a>
         </p>
 
 
@@ -294,10 +308,28 @@ height: 100, variant: "soft" }); </code></div>
     </div>
 
     <div class="description">
-        <p>Base draw method. Usually called once per animation frame.</p>
+        <p>Draws the brush to the context. Usually called once per animation frame.</p>
 
     </div>
 
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+                <li class="param">
+                        <code class="param-name">context</code>
+                        <span class="type">Object</span>
+
+
+                    <div class="param-description">
+                        <p>The HTML5 canvas context you would like to draw
+to.</p>
+
+                    </div>
+
+                </li>
+            </ul>
+        </div>
 
 
 
@@ -356,7 +388,7 @@ height: 100, variant: "soft" }); </code></div>
 
 
 </div>
-<div id="method_update" class="method item inherited">
+<div id="method_update" class="method item">
     <h3 class="name"><code>update</code></h3>
 
         <div class="args">
@@ -375,9 +407,12 @@ height: 100, variant: "soft" }); </code></div>
 
 
     <div class="meta">
-                <p>Inherited from
-                <a href="../classes/BBModBaseBrush2D.html#method_update">BBModBaseBrush2D</a>:
-        <a href="../files/BBModBaseBrush2D.js.html#l86"><code>BBModBaseBrush2D.js:86</code></a>
+            <p>Inherited from
+            <a href="../classes/BBModBaseBrush2D.html#method_update">
+                BBModBaseBrush2D
+            </a>
+            but overwritten in
+        <a href="../files/BBModLineBrush2D.js.html#l102"><code>BBModLineBrush2D.js:102</code></a>
         </p>
 
 
@@ -385,7 +420,7 @@ height: 100, variant: "soft" }); </code></div>
     </div>
 
     <div class="description">
-        <p>Base update method. Usually called once per animation frame.</p>
+        <p>Update method. Usually called once per animation frame.</p>
 
     </div>
 
@@ -401,7 +436,7 @@ height: 100, variant: "soft" }); </code></div>
                     <div class="param-description">
                         <p>An object with x and y properties and
 optionally an isDown boolean (used for beginning and ending
-strokeds/marks). )</p>
+strokeds/marks).</p>
 
                     </div>
 
@@ -568,7 +603,7 @@ strokeds/marks). )</p>
                         </div>
                     
                         <div class="description">
-                            <p>The brush's rotation. This property is not always used with each brush variant.</p>
+                            <p>The brush's rotation in degrees. This property is not always used with each brush variant.</p>
                     
                         </div>
                     

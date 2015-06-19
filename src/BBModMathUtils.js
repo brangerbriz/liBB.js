@@ -1,5 +1,18 @@
-// all static utils
+/**
+ * A static utilitites class for all things math.
+ * @module BBModMathUtils
+ * @static
+ */
 define({
+    /**
+     * Scales value using min and max. This is the inverse of BBModMathUtils.lerp(...).
+     * @method norm
+     * @static
+     * @param  {Number} value The value to be scaled.
+     * @param  {Number} min
+     * @param  {Number} max
+     * @return {Number}       Returns the scaled value.
+     */
     norm: function(value, min, max) {
 
         if (typeof value !== "number") {
@@ -12,6 +25,15 @@ define({
 
         return (value - min) / (max - min);
     },
+     /**
+     * Linear interpolate norm from min and max. This is the inverse of BBModMathUtils.norm(...).
+     * @method lerp
+     * @static
+     * @param  {Number} value
+     * @param  {Number} min
+     * @param  {Number} max
+     * @return {Number}       Returns the lerped norm.
+     */
     lerp: function(norm, min, max) {
 
         if (typeof norm !== "number") {
@@ -24,6 +46,17 @@ define({
 
         return (max - min) * norm + min;
     },
+    /**
+     * Maps (scales) value between sourceMin and sourceMax to destMin and destMax.
+     * @method map
+     * @static
+     * @param  {Number} value The value to be mapped.
+     * @param  {Number} sourceMin 
+     * @param  {Number} sourceMax
+     * @param  {Number} destMin 
+     * @param  {Number} destMax
+     * @return {Number} Returns the mapped value.
+     */
     map: function(value, sourceMin, sourceMax, destMin, destMax) {
 
         if (typeof value !== "number") {
@@ -40,6 +73,16 @@ define({
 
         return this.lerp(this.norm(value, sourceMin, sourceMax), destMin, destMax);
     },
+    /**
+     * Get the distance between two points.
+     * @method  dist
+     * @static
+     * @param  {Number} p1x The x value of the first point.
+     * @param  {Number} p1y The y value of the first point.
+     * @param  {Number} p2x The x value of the second point.
+     * @param  {Number} p2y The y value of the second point.
+     * @return {Number} Returns the distance between (p1x, p1y) and (p2x, p2y).
+     */
     dist: function(p1x, p1y, p2x, p2y){
         
         if (typeof p1x !== "number") {
@@ -54,6 +97,18 @@ define({
 
         return Math.sqrt(Math.pow(p2x - p1x, 2) + Math.pow(p2y - p1y, 2));
     },
+    /**
+     * Get the angle between two points in radians. For degrees process this
+     * return value through BBModMathUtils.radToDegree(...).
+     * @method angleBtwn
+     * @static
+     * @param  {Number} p1x The x value of the first point.
+     * @param  {Number} p1y The y value of the first point.
+     * @param  {Number} p2x The x value of the second point.
+     * @param  {Number} p2y The y value of the second point.
+     * @return {Number} Returns the angle between (p1x, p1y) and (p2x, p2y) in
+     * radians.
+     */
     angleBtw: function(p1x, p1y, p2x, p2y){
 
         if (typeof p1x !== "number") {
@@ -68,6 +123,13 @@ define({
 
         return Math.atan2( p2x - p1x, p2y - p1y );
     },
+    /**
+     * Translate radians into degrees.
+     * @method  radToDeg
+     * @static
+     * @param  {[type]} radians
+     * @return {[type]}         Returns radians in degrees.
+     */
     radToDeg: function(radians) {
 
         if (typeof radians !== "number") {
@@ -76,6 +138,13 @@ define({
 
         return radians * (180.0 / Math.PI);
     },
+    /**
+     * Translate degrees into radians.
+     * @method  degToRad
+     * @static
+     * @param  {[type]} degrees
+     * @return {[type]}         Returns degrees in radians.
+     */
     degToRad: function(degrees) {
 
         if (typeof degrees !== "number") {

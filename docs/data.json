@@ -33,6 +33,37 @@
             },
             "fors": {},
             "namespaces": {}
+        },
+        "BBModMathUtils.js": {
+            "name": "BBModMathUtils.js",
+            "modules": {
+                "BBModMathUtils": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "BBModMouseInput.js": {
+            "name": "BBModMouseInput.js",
+            "modules": {
+                "BBModMouseInput": 1
+            },
+            "classes": {
+                "BBModMouseInput": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "BBModPointer.js": {
+            "name": "BBModPointer.js",
+            "modules": {
+                "BBModPointer": 1
+            },
+            "classes": {
+                "BBModPointer": 1
+            },
+            "fors": {},
+            "namespaces": {}
         }
     },
     "modules": {
@@ -74,8 +105,46 @@
             "tag": "module",
             "file": "BBModLineBrush2D.js",
             "line": 12,
-            "description": "A 2D brush module for drawing contiguous lines in a stamp-like style.",
+            "description": "A 2D brush module for drawing contiguous lines in a stamp-like fashion.",
             "extends": "BBModBaseBrush2D"
+        },
+        "BBModMathUtils": {
+            "name": "BBModMathUtils",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "BBModMathUtils.js",
+            "line": 1,
+            "description": "A static utilitites class for all things math.",
+            "static": 1
+        },
+        "BBModMouseInput": {
+            "name": "BBModMouseInput",
+            "submodules": {},
+            "classes": {
+                "BBModMouseInput": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "BBModMouseInput.js",
+            "line": 8,
+            "description": "A module for standardizing mouse events so that they may be used with\nthe event funnel suite of modules. For use with HTML5 canvas only."
+        },
+        "BBModPointer": {
+            "name": "BBModPointer",
+            "submodules": {},
+            "classes": {
+                "BBModPointer": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "BBModPointer.js",
+            "line": 32,
+            "description": "A module for funneling in and standardizing basic pointer-like interfaces\nlike mouse and touch."
         }
     },
     "classes": {
@@ -144,7 +213,7 @@
             "namespace": "",
             "file": "BBModLineBrush2D.js",
             "line": 12,
-            "description": "A 2D brush module for drawing contiguous lines in a stamp-like style.\nWhat makes BBModLineBrush2D fundamentally different from BBModBaseBrush\nis that each new drawing instance is influenced by the last position of\nthe brush (usually to adjust for drawing angle or brush width).",
+            "description": "A 2D brush module for drawing contiguous lines in a stamp-like fashion.\nWhat makes BBModLineBrush2D fundamentally different from BBModBaseBrush\nis that each new drawing instance is influenced by the previous position of\nthe brush (usually to adjust for drawing angle or brush width).",
             "is_constructor": 1,
             "extends": "BBModBaseBrush2D",
             "params": [
@@ -158,6 +227,50 @@
             "example": [
                 " <div><code> var lineBrush = new BBModLineBrush2D({ width: 100,\nheight: 100, variant: \"soft\" }); </code></div>"
             ]
+        },
+        "BBModMouseInput": {
+            "name": "BBModMouseInput",
+            "shortname": "BBModMouseInput",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "BBModMouseInput",
+            "namespace": "",
+            "file": "BBModMouseInput.js",
+            "line": 8,
+            "description": "A module for standardizing mouse events so that they may be used with\nthe event funnel suite of modules.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "canvasElement",
+                    "description": "The HTML5 canvas object listening for mouse input.",
+                    "type": "Object"
+                }
+            ]
+        },
+        "BBModPointer": {
+            "name": "BBModPointer",
+            "shortname": "BBModPointer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "BBModPointer",
+            "namespace": "",
+            "file": "BBModPointer.js",
+            "line": 32,
+            "description": "A module for funneling in and standardizing basic pointer-like interfaces\nlike mouse and touch.",
+            "params": [
+                {
+                    "name": "controllerModule",
+                    "description": "The input module you would like to control\nthis pointer with.",
+                    "type": "Object"
+                }
+            ],
+            "is_constructor": 1
         }
     },
     "classitems": [
@@ -208,7 +321,7 @@
         {
             "file": "BBModBaseBrush2D.js",
             "line": 51,
-            "description": "The brush's rotation. This property is not always used with each brush variant.",
+            "description": "The brush's rotation in degrees. This property is not always used with each brush variant.",
             "itemtype": "property",
             "name": "rotation",
             "type": "Number",
@@ -258,7 +371,7 @@
             "params": [
                 {
                     "name": "controllerModule",
-                    "description": "An object with x and y properties and\noptionally an isDown boolean (used for beginning and ending\nstrokeds/marks). )",
+                    "description": "An object with x and y properties and\noptionally an isDown boolean (used for beginning and ending\nstrokeds/marks).",
                     "type": "Object"
                 }
             ],
@@ -381,7 +494,7 @@
             "params": [
                 {
                     "name": "controllerModule",
-                    "description": "An object with x and y properties and\noptionally an isDown boolean (used for beginning and ending\nstrokeds/marks). )",
+                    "description": "An object with x and y properties and\noptionally an isDown boolean (used for beginning and ending\nstrokeds/marks).",
                     "type": "Object"
                 }
             ],
@@ -480,6 +593,423 @@
             "type": "Boolean",
             "class": "BBModLineBrush2D",
             "module": "BBModLineBrush2D"
+        },
+        {
+            "file": "BBModLineBrush2D.js",
+            "line": 102,
+            "description": "Update method. Usually called once per animation frame.",
+            "itemtype": "method",
+            "name": "update",
+            "params": [
+                {
+                    "name": "controllerModule",
+                    "description": "An object with x and y properties and\noptionally an isDown boolean (used for beginning and ending\nstrokeds/marks).",
+                    "type": "Object"
+                }
+            ],
+            "class": "BBModLineBrush2D",
+            "module": "BBModLineBrush2D"
+        },
+        {
+            "file": "BBModLineBrush2D.js",
+            "line": 121,
+            "description": "Draws the brush to the context. Usually called once per animation frame.",
+            "itemtype": "method",
+            "name": "draw",
+            "params": [
+                {
+                    "name": "context",
+                    "description": "The HTML5 canvas context you would like to draw\nto.",
+                    "type": "Object"
+                }
+            ],
+            "class": "BBModLineBrush2D",
+            "module": "BBModLineBrush2D"
+        },
+        {
+            "file": "BBModMathUtils.js",
+            "line": 7,
+            "description": "Scales value using min and max. This is the inverse of BBModMathUtils.lerp(...).",
+            "itemtype": "method",
+            "name": "norm",
+            "static": 1,
+            "params": [
+                {
+                    "name": "value",
+                    "description": "The value to be scaled.",
+                    "type": "Number"
+                },
+                {
+                    "name": "min",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "max",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns the scaled value.",
+                "type": "Number"
+            },
+            "class": "BBModMouseInput",
+            "module": "BBModMathUtils"
+        },
+        {
+            "file": "BBModMathUtils.js",
+            "line": 28,
+            "description": "Linear interpolate norm from min and max. This is the inverse of BBModMathUtils.norm(...).",
+            "itemtype": "method",
+            "name": "lerp",
+            "static": 1,
+            "params": [
+                {
+                    "name": "value",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "min",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "max",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns the lerped norm.",
+                "type": "Number"
+            },
+            "class": "BBModMouseInput",
+            "module": "BBModMathUtils"
+        },
+        {
+            "file": "BBModMathUtils.js",
+            "line": 49,
+            "description": "Maps (scales) value between sourceMin and sourceMax to destMin and destMax.",
+            "itemtype": "method",
+            "name": "map",
+            "static": 1,
+            "params": [
+                {
+                    "name": "value",
+                    "description": "The value to be mapped.",
+                    "type": "Number"
+                },
+                {
+                    "name": "sourceMin",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "sourceMax",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "destMin",
+                    "description": "",
+                    "type": "Number"
+                },
+                {
+                    "name": "destMax",
+                    "description": "",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns the mapped value.",
+                "type": "Number"
+            },
+            "class": "BBModMouseInput",
+            "module": "BBModMathUtils"
+        },
+        {
+            "file": "BBModMathUtils.js",
+            "line": 76,
+            "description": "Get the distance between two points.",
+            "itemtype": "method",
+            "name": "dist",
+            "static": 1,
+            "params": [
+                {
+                    "name": "p1x",
+                    "description": "The x value of the first point.",
+                    "type": "Number"
+                },
+                {
+                    "name": "p1y",
+                    "description": "The y value of the first point.",
+                    "type": "Number"
+                },
+                {
+                    "name": "p2x",
+                    "description": "The x value of the second point.",
+                    "type": "Number"
+                },
+                {
+                    "name": "p2y",
+                    "description": "The y value of the second point.",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns the distance between (p1x, p1y) and (p2x, p2y).",
+                "type": "Number"
+            },
+            "class": "BBModMouseInput",
+            "module": "BBModMathUtils"
+        },
+        {
+            "file": "BBModMathUtils.js",
+            "line": 100,
+            "description": "Get the angle between two points in radians. For degrees process this\nreturn value through BBModMathUtils.radToDegree(...).",
+            "itemtype": "method",
+            "name": "angleBtwn",
+            "static": 1,
+            "params": [
+                {
+                    "name": "p1x",
+                    "description": "The x value of the first point.",
+                    "type": "Number"
+                },
+                {
+                    "name": "p1y",
+                    "description": "The y value of the first point.",
+                    "type": "Number"
+                },
+                {
+                    "name": "p2x",
+                    "description": "The x value of the second point.",
+                    "type": "Number"
+                },
+                {
+                    "name": "p2y",
+                    "description": "The y value of the second point.",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns the angle between (p1x, p1y) and (p2x, p2y) in\nradians.",
+                "type": "Number"
+            },
+            "class": "BBModMouseInput",
+            "module": "BBModMathUtils"
+        },
+        {
+            "file": "BBModMathUtils.js",
+            "line": 126,
+            "description": "Translate radians into degrees.",
+            "itemtype": "method",
+            "name": "radToDeg",
+            "static": 1,
+            "params": [
+                {
+                    "name": "radians",
+                    "description": "",
+                    "type": "[type]"
+                }
+            ],
+            "return": {
+                "description": "Returns radians in degrees.",
+                "type": "[type]"
+            },
+            "class": "BBModMouseInput",
+            "module": "BBModMathUtils"
+        },
+        {
+            "file": "BBModMathUtils.js",
+            "line": 141,
+            "description": "Translate degrees into radians.",
+            "itemtype": "method",
+            "name": "degToRad",
+            "static": 1,
+            "params": [
+                {
+                    "name": "degrees",
+                    "description": "",
+                    "type": "[type]"
+                }
+            ],
+            "return": {
+                "description": "Returns degrees in radians.",
+                "type": "[type]"
+            },
+            "class": "BBModMouseInput",
+            "module": "BBModMathUtils"
+        },
+        {
+            "file": "BBModMouseInput.js",
+            "line": 21,
+            "description": "The current x position.",
+            "itemtype": "property",
+            "name": "x",
+            "type": "{Number}",
+            "default": "0",
+            "class": "BBModMouseInput",
+            "module": "BBModMouseInput"
+        },
+        {
+            "file": "BBModMouseInput.js",
+            "line": 29,
+            "description": "The current y position.",
+            "itemtype": "property",
+            "name": "y",
+            "type": "{Number}",
+            "default": "0",
+            "class": "BBModMouseInput",
+            "module": "BBModMouseInput"
+        },
+        {
+            "file": "BBModMouseInput.js",
+            "line": 37,
+            "description": "The last clicked x position.",
+            "itemtype": "property",
+            "name": "clickX",
+            "type": "{Number}",
+            "default": "0",
+            "class": "BBModMouseInput",
+            "module": "BBModMouseInput"
+        },
+        {
+            "file": "BBModMouseInput.js",
+            "line": 45,
+            "description": "The last clicked y position.",
+            "itemtype": "property",
+            "name": "clickY",
+            "type": "{Number}",
+            "default": "0",
+            "class": "BBModMouseInput",
+            "module": "BBModMouseInput"
+        },
+        {
+            "file": "BBModMouseInput.js",
+            "line": 56,
+            "description": "The HTML5 canvas element passed into BBModMouseInput during\nconstruction.",
+            "itemtype": "property",
+            "name": "canvasElem",
+            "type": "{Object}",
+            "class": "BBModMouseInput",
+            "module": "BBModMouseInput"
+        },
+        {
+            "file": "BBModMouseInput.js",
+            "line": 151,
+            "description": "Holds wether or not the mouse is currently moving.",
+            "itemtype": "property",
+            "name": "isMoving",
+            "type": "{Boolean}",
+            "default": "false",
+            "class": "BBModMouseInput",
+            "module": "BBModMouseInput"
+        },
+        {
+            "file": "BBModMouseInput.js",
+            "line": 166,
+            "description": "Holds wether or not the mouse",
+            "itemtype": "property",
+            "name": "isDown",
+            "type": "{Boolean}",
+            "default": "false",
+            "class": "BBModMouseInput",
+            "module": "BBModMouseInput"
+        },
+        {
+            "file": "BBModPointer.js",
+            "line": 52,
+            "description": "The pointer's current x position as supplied by the eventModule in BBModPointer.update(...).",
+            "itemtype": "property",
+            "name": "x",
+            "type": "{Number}",
+            "default": "undefined",
+            "class": "BBModPointer",
+            "module": "BBModPointer"
+        },
+        {
+            "file": "BBModPointer.js",
+            "line": 60,
+            "description": "The pointer's current y position as supplied by the eventModule in BBModPointer.update(...).",
+            "itemtype": "property",
+            "name": "y",
+            "type": "{Number}",
+            "default": "undefined",
+            "class": "BBModPointer",
+            "module": "BBModPointer"
+        },
+        {
+            "file": "BBModPointer.js",
+            "line": 68,
+            "description": "A variable holding wether or not the event module controlling this\npointer object (via BBModPointer.update(...)) is moving",
+            "itemtype": "property",
+            "name": "isMoving",
+            "type": "{Boolean}",
+            "default": "false",
+            "class": "BBModPointer",
+            "module": "BBModPointer"
+        },
+        {
+            "file": "BBModPointer.js",
+            "line": 77,
+            "description": "A variable holding wether or not the selection interface (i.e. mouse\nbutton, etc...) controlling this pointer object (via\nBBModPointer.update(...)) is active.",
+            "itemtype": "property",
+            "name": "isDown",
+            "type": "{Boolean}",
+            "default": "false",
+            "class": "BBModPointer",
+            "module": "BBModPointer"
+        },
+        {
+            "file": "BBModPointer.js",
+            "line": 87,
+            "description": "Does the selection interface controlling this pointer have a\nselection interface (like a button)?",
+            "itemtype": "property",
+            "name": "hasSelectionInterface",
+            "type": "{Boolean}",
+            "default": "false",
+            "class": "BBModPointer",
+            "module": "BBModPointer"
+        },
+        {
+            "file": "BBModPointer.js",
+            "line": 117,
+            "description": "Update the pointer using the controllerModule.",
+            "itemtype": "method",
+            "name": "update",
+            "params": [
+                {
+                    "name": "controllerModule",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "BBModPointer",
+            "module": "BBModPointer"
+        },
+        {
+            "file": "BBModPointer.js",
+            "line": 139,
+            "description": "A method used to register \"activestart\", \"activestop\", \"movestart\", and\n\"movestop\" events.",
+            "itemtype": "method",
+            "name": "on",
+            "params": [
+                {
+                    "name": "eventName",
+                    "description": "The event to register callback to.\n\"activestart\", \"activestop\", \"movestart\", and \"movestop\" are all valid\nevents.",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "The callback to execute once the\nregistered event has fired.",
+                    "type": "Function"
+                }
+            ],
+            "class": "BBModPointer",
+            "module": "BBModPointer"
         }
     ],
     "warnings": []

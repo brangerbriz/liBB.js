@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>BBModBaseBrush2D</title>
+    <title>BBModPointer</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -85,34 +85,34 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-<h1>BBModBaseBrush2D Class</h1>
+<h1>BBModPointer Class</h1>
 <div class="box meta">
 
 
         <div class="foundat">
-            Defined in: <a href="../files/BBModBaseBrush2D.js.html#l7"><code>BBModBaseBrush2D.js:7</code></a>
+            Defined in: <a href="../files/BBModPointer.js.html#l32"><code>BBModPointer.js:32</code></a>
         </div>
 
-            Module: <a href="../modules/BBModBaseBrush2D.html">BBModBaseBrush2D</a>
+            Module: <a href="../modules/BBModPointer.html">BBModPointer</a>
 
 </div>
 
 
 <div class="box intro">
-    <p>Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D,
-etc...</p>
+    <p>A module for funneling in and standardizing basic pointer-like interfaces
+like mouse and touch.</p>
 
 </div>
 
     <div class="constructor">
         <h2>Constructor</h2>
-<div id="method_BBModBaseBrush2D" class="method item">
-    <h3 class="name"><code>BBModBaseBrush2D</code></h3>
+<div id="method_BBModPointer" class="method item">
+    <h3 class="name"><code>BBModPointer</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code class="optional">[config]</code>
+                        <code>controllerModule</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -127,7 +127,7 @@ etc...</p>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/BBModBaseBrush2D.js.html#l7"><code>BBModBaseBrush2D.js:7</code></a>
+        <a href="../files/BBModPointer.js.html#l32"><code>BBModPointer.js:32</code></a>
         </p>
 
 
@@ -143,14 +143,13 @@ etc...</p>
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name optional">[config]</code>
+                        <code class="param-name">controllerModule</code>
                         <span class="type">Object</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
 
 
                     <div class="param-description">
-                        <p>An optional config hash to initialize any of
-BBModBaseBrush2D's public properties</p>
+                        <p>The input module you would like to control
+this pointer with.</p>
 
                     </div>
 
@@ -160,14 +159,6 @@ BBModBaseBrush2D's public properties</p>
 
 
 
-        <div class="example">
-            <h4>Example:</h4>
-
-            <div class="example-content">
-                 <div><code> var baseBrush = new BBModBaseBrush2D({ width: 100,
-height: 100, color: new BBModColor(255, 0, 0) }); </code></div>
-            </div>
-        </div>
 </div>
     </div>
 
@@ -188,11 +179,7 @@ height: 100, color: new BBModColor(255, 0, 0) }); </code></div>
 
                     <ul class="index-list methods">
                             <li class="index-item method">
-                                <a href="#method_draw">draw</a>
-
-                            </li>
-                            <li class="index-item method">
-                                <a href="#method_scale">scale</a>
+                                <a href="#method_on">on</a>
 
                             </li>
                             <li class="index-item method">
@@ -207,27 +194,15 @@ height: 100, color: new BBModColor(255, 0, 0) }); </code></div>
 
                     <ul class="index-list properties">
                             <li class="index-item property">
-                                <a href="#property_color">color</a>
+                                <a href="#property_hasSelectionInterface">hasSelectionInterface</a>
 
                             </li>
                             <li class="index-item property">
-                                <a href="#property_height">height</a>
+                                <a href="#property_isDown">isDown</a>
 
                             </li>
                             <li class="index-item property">
-                                <a href="#property_hidden">hidden</a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#property_rotation">rotation</a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#property_type">type</a>
-
-                            </li>
-                            <li class="index-item property">
-                                <a href="#property_w">w</a>
+                                <a href="#property_isMoving">isMoving</a>
 
                             </li>
                             <li class="index-item property">
@@ -247,44 +222,16 @@ height: 100, color: new BBModColor(255, 0, 0) }); </code></div>
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
 
-<div id="method_draw" class="method item">
-    <h3 class="name"><code>draw</code></h3>
-
-        <span class="paren">()</span>
-
-
-
-
-
-
-
-
-    <div class="meta">
-                <p>
-                Defined in
-        <a href="../files/BBModBaseBrush2D.js.html#l114"><code>BBModBaseBrush2D.js:114</code></a>
-        </p>
-
-
-
-    </div>
-
-    <div class="description">
-        <p>Base draw method. Usually called once per animation frame.</p>
-
-    </div>
-
-
-
-
-</div>
-<div id="method_scale" class="method item">
-    <h3 class="name"><code>scale</code></h3>
+<div id="method_on" class="method item">
+    <h3 class="name"><code>on</code></h3>
 
         <div class="args">
             <span class="paren">(</span><ul class="args-list inline commas">
                 <li class="arg">
-                        <code>amount</code>
+                        <code>eventName</code>
+                </li>
+                <li class="arg">
+                        <code>callback</code>
                 </li>
             </ul><span class="paren">)</span>
         </div>
@@ -299,7 +246,7 @@ height: 100, color: new BBModColor(255, 0, 0) }); </code></div>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/BBModBaseBrush2D.js.html#l125"><code>BBModBaseBrush2D.js:125</code></a>
+        <a href="../files/BBModPointer.js.html#l139"><code>BBModPointer.js:139</code></a>
         </p>
 
 
@@ -307,7 +254,8 @@ height: 100, color: new BBModColor(255, 0, 0) }); </code></div>
     </div>
 
     <div class="description">
-        <p>Multiplies width and height properties by amount.</p>
+        <p>A method used to register &quot;activestart&quot;, &quot;activestop&quot;, &quot;movestart&quot;, and
+&quot;movestop&quot; events.</p>
 
     </div>
 
@@ -316,12 +264,26 @@ height: 100, color: new BBModColor(255, 0, 0) }); </code></div>
 
             <ul class="params-list">
                 <li class="param">
-                        <code class="param-name">amount</code>
-                        <span class="type">Number</span>
+                        <code class="param-name">eventName</code>
+                        <span class="type">String</span>
 
 
                     <div class="param-description">
-                        <p>Amount to scale width and height by</p>
+                        <p>The event to register callback to.
+&quot;activestart&quot;, &quot;activestop&quot;, &quot;movestart&quot;, and &quot;movestop&quot; are all valid
+events.</p>
+
+                    </div>
+
+                </li>
+                <li class="param">
+                        <code class="param-name">callback</code>
+                        <span class="type">Function</span>
+
+
+                    <div class="param-description">
+                        <p>The callback to execute once the
+registered event has fired.</p>
 
                     </div>
 
@@ -353,7 +315,7 @@ height: 100, color: new BBModColor(255, 0, 0) }); </code></div>
     <div class="meta">
                 <p>
                 Defined in
-        <a href="../files/BBModBaseBrush2D.js.html#l86"><code>BBModBaseBrush2D.js:86</code></a>
+        <a href="../files/BBModPointer.js.html#l117"><code>BBModPointer.js:117</code></a>
         </p>
 
 
@@ -361,7 +323,7 @@ height: 100, color: new BBModColor(255, 0, 0) }); </code></div>
     </div>
 
     <div class="description">
-        <p>Base update method. Usually called once per animation frame.</p>
+        <p>Update the pointer using the controllerModule.</p>
 
     </div>
 
@@ -375,10 +337,7 @@ height: 100, color: new BBModColor(255, 0, 0) }); </code></div>
 
 
                     <div class="param-description">
-                        <p>An object with x and y properties and
-optionally an isDown boolean (used for beginning and ending
-strokeds/marks).</p>
-
+                         
                     </div>
 
                 </li>
@@ -393,60 +352,8 @@ strokeds/marks).</p>
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
 
-                    <div id="property_color" class="property item">
-                        <h3 class="name"><code>color</code></h3>
-                        <span class="type">BBModColor</span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/BBModBaseBrush2D.js.html#l59"><code>BBModBaseBrush2D.js:59</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>The brush's color.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> null</p>
-                    
-                    
-                    </div>
-                    <div id="property_height" class="property item">
-                        <h3 class="name"><code>height</code></h3>
-                        <span class="type">Number</span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/BBModBaseBrush2D.js.html#l43"><code>BBModBaseBrush2D.js:43</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>The brush's height.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> 50</p>
-                    
-                    
-                    </div>
-                    <div id="property_hidden" class="property item">
-                        <h3 class="name"><code>hidden</code></h3>
+                    <div id="property_hasSelectionInterface" class="property item">
+                        <h3 class="name"><code>hasSelectionInterface</code></h3>
                         <span class="type">Boolean</span>
                     
                     
@@ -456,15 +363,15 @@ strokeds/marks).</p>
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/BBModBaseBrush2D.js.html#l67"><code>BBModBaseBrush2D.js:67</code></a>
+                            <a href="../files/BBModPointer.js.html#l87"><code>BBModPointer.js:87</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>Wether or not to draw the brush to the screen. Toggle this variable
-                    to hide and show the brush.</p>
+                            <p>Does the selection interface controlling this pointer have a
+                    selection interface (like a button)?</p>
                     
                         </div>
                     
@@ -472,9 +379,9 @@ strokeds/marks).</p>
                     
                     
                     </div>
-                    <div id="property_rotation" class="property item">
-                        <h3 class="name"><code>rotation</code></h3>
-                        <span class="type">Number</span>
+                    <div id="property_isDown" class="property item">
+                        <h3 class="name"><code>isDown</code></h3>
+                        <span class="type">Boolean</span>
                     
                     
                     
@@ -483,24 +390,26 @@ strokeds/marks).</p>
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/BBModBaseBrush2D.js.html#l51"><code>BBModBaseBrush2D.js:51</code></a>
+                            <a href="../files/BBModPointer.js.html#l77"><code>BBModPointer.js:77</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>The brush's rotation in degrees. This property is not always used with each brush variant.</p>
+                            <p>A variable holding wether or not the selection interface (i.e. mouse
+                    button, etc...) controlling this pointer object (via
+                    BBModPointer.update(...)) is active.</p>
                     
                         </div>
                     
-                            <p><strong>Default:</strong> 0</p>
+                            <p><strong>Default:</strong> false</p>
                     
                     
                     </div>
-                    <div id="property_type" class="property item">
-                        <h3 class="name"><code>type</code></h3>
-                        <span class="type">String</span>
+                    <div id="property_isMoving" class="property item">
+                        <h3 class="name"><code>isMoving</code></h3>
+                        <span class="type">Boolean</span>
                     
                     
                     
@@ -509,45 +418,19 @@ strokeds/marks).</p>
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/BBModBaseBrush2D.js.html#l76"><code>BBModBaseBrush2D.js:76</code></a>
+                            <a href="../files/BBModPointer.js.html#l68"><code>BBModPointer.js:68</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>The type of brush. Defaults to &quot;base&quot; for BBModBaseBrush, &quot;image&quot; for
-                    BBModImageBrush, etc... and should be treated as read-only.</p>
+                            <p>A variable holding wether or not the event module controlling this
+                    pointer object (via BBModPointer.update(...)) is moving</p>
                     
                         </div>
                     
-                            <p><strong>Default:</strong> &quot;base&quot;</p>
-                    
-                    
-                    </div>
-                    <div id="property_w" class="property item">
-                        <h3 class="name"><code>w</code></h3>
-                        <span class="type">Number</span>
-                    
-                    
-                    
-                    
-                    
-                        <div class="meta">
-                                    <p>
-                                    Defined in
-                            <a href="../files/BBModBaseBrush2D.js.html#l35"><code>BBModBaseBrush2D.js:35</code></a>
-                            </p>
-                    
-                    
-                        </div>
-                    
-                        <div class="description">
-                            <p>The brush's width.</p>
-                    
-                        </div>
-                    
-                            <p><strong>Default:</strong> 50</p>
+                            <p><strong>Default:</strong> false</p>
                     
                     
                     </div>
@@ -562,18 +445,18 @@ strokeds/marks).</p>
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/BBModBaseBrush2D.js.html#l19"><code>BBModBaseBrush2D.js:19</code></a>
+                            <a href="../files/BBModPointer.js.html#l52"><code>BBModPointer.js:52</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>The brush's x position.</p>
+                            <p>The pointer's current x position as supplied by the eventModule in BBModPointer.update(...).</p>
                     
                         </div>
                     
-                            <p><strong>Default:</strong> 0</p>
+                            <p><strong>Default:</strong> undefined</p>
                     
                     
                     </div>
@@ -588,18 +471,18 @@ strokeds/marks).</p>
                         <div class="meta">
                                     <p>
                                     Defined in
-                            <a href="../files/BBModBaseBrush2D.js.html#l27"><code>BBModBaseBrush2D.js:27</code></a>
+                            <a href="../files/BBModPointer.js.html#l60"><code>BBModPointer.js:60</code></a>
                             </p>
                     
                     
                         </div>
                     
                         <div class="description">
-                            <p>The brush's y position.</p>
+                            <p>The pointer's current y position as supplied by the eventModule in BBModPointer.update(...).</p>
                     
                         </div>
                     
-                            <p><strong>Default:</strong> 0</p>
+                            <p><strong>Default:</strong> undefined</p>
                     
                     
                     </div>

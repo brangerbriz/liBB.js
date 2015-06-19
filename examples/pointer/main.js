@@ -4,18 +4,36 @@ function( BBModMouseInput,   BBModPointer) {
 
     var canvas = document.getElementById('canvas');
     var mouseInput = new BBModMouseInput(canvas);
-    var pointer = new BBModPointer();
+    var pointer = new BBModPointer(mouseInput);
 
-    pointer.on('start', mouseInput, function(){
-        // fired when a pointer is pressed (if the input being used supports isDown)
+    pointer.on('activestart', function(x, y){
+        // fired when the pointer is pressed (if the input being used supports isDown)
+        console.log('activestart');
     });
 
-    pointer.on('stop', mouseInput, function(){
-        // fired when a pointer is released (if the input being used supports isDown)
+    pointer.on('activestop', function(x, y){
+        // fired when the pointer is released (if the input being used supports isDown)
+        console.log('activestop');
+    });
+
+    pointer.on('movestart', function(x, y){
+        // fired when the pointer begins to move
+        console.log('movestart');
+    });
+
+    pointer.on('movestop', function(x, y){
+        // fired when the pointer stops moving
+        console.log('movestop');
+    });
+
+    pointer.on('move', function(x, y){
+        // fired every frame that the pointer is moving
+        console.log('move');
     });
 
     function update() {
-        pointer.update(mouseInput);
+        mouseInput.update();
+        pointer.update();
         updateDisplay();
     }
 
@@ -37,16 +55,8 @@ function( BBModMouseInput,   BBModPointer) {
         document.getElementById('pointer-is-down').innerHTML   = pointer.isDown ? 'true' : 'false';
 
         // mouse
-        document.getElementById('mouse-x-pos').innerHTML = mouseInput.x;
-        document.getElementById('mouse-y-pos').innerHTML = mouseInput.y;
-        document.getElementById('mouse-prev-x-pos').innerHTML = mouseInput.prevX;
-        document.getElementById('mouse-prev-y-pos').innerHTML = mouseInput.prevY;
         document.getElementById('mouse-click-x-pos').innerHTML = mouseInput.clickX;
         document.getElementById('mouse-click-y-pos').innerHTML = mouseInput.clickY;
-        document.getElementById('mouse-prev-click-x-pos').innerHTML = mouseInput.prevClickX;
-        document.getElementById('mouse-prev-click-y-pos').innerHTML = mouseInput.prevClickY;
-        document.getElementById('mouse-is-moving').innerHTML = mouseInput.isMoving ? 'true' : 'false';
-        document.getElementById('mouse-is-down').innerHTML = mouseInput.isDown ? 'true' : 'false';
     }
 
 });

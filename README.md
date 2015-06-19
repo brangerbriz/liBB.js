@@ -1,4 +1,4 @@
-# Reusable JavaScript Modules for Application Development
+# Reusable JavaScript Modules
 
 - [docs](docs): Library documentation
 - [examples](examples): Library examples
