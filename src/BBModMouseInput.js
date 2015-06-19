@@ -16,7 +16,6 @@ define(function(){
 
         var self = this;
         var movingTimeout = null;
-        var movingTimeoutMillis = 150; // timeout to check if mouse is moving
 
         /**
          * The current x position.
@@ -49,6 +48,13 @@ define(function(){
          * @default 0
          */
         this.clickY     = 0;
+
+        /**
+         * Time in milliseconds that the mouse has been still before considering it's movement to be finished.
+         * @property moveDebounce
+         * @type {Number}
+         */
+        this.moveDebounce = 150;
 
         this._isMoving = false;
         this._isDown = false;
@@ -85,7 +91,7 @@ define(function(){
                     self._isMoving = false;
                     self._moveStopCallback(self.x, self.y);
                 }
-            }, movingTimeoutMillis);
+            }, self.moveDebounce);
         });
 
         this.canvasElem.addEventListener('mousedown', function(e){

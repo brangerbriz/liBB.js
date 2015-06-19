@@ -845,7 +845,7 @@
         },
         {
             "file": "BBModMouseInput.js",
-            "line": 21,
+            "line": 20,
             "description": "The current x position.",
             "itemtype": "property",
             "name": "x",
@@ -856,7 +856,7 @@
         },
         {
             "file": "BBModMouseInput.js",
-            "line": 29,
+            "line": 28,
             "description": "The current y position.",
             "itemtype": "property",
             "name": "y",
@@ -867,7 +867,7 @@
         },
         {
             "file": "BBModMouseInput.js",
-            "line": 37,
+            "line": 36,
             "description": "The last clicked x position.",
             "itemtype": "property",
             "name": "clickX",
@@ -878,7 +878,7 @@
         },
         {
             "file": "BBModMouseInput.js",
-            "line": 45,
+            "line": 44,
             "description": "The last clicked y position.",
             "itemtype": "property",
             "name": "clickY",
@@ -889,7 +889,17 @@
         },
         {
             "file": "BBModMouseInput.js",
-            "line": 56,
+            "line": 52,
+            "description": "Time in milliseconds that the mouse has been still before considering it's movement to be finished.",
+            "itemtype": "property",
+            "name": "moveDebounce",
+            "type": "{Number}",
+            "class": "BBModMouseInput",
+            "module": "BBModMouseInput"
+        },
+        {
+            "file": "BBModMouseInput.js",
+            "line": 62,
             "description": "The HTML5 canvas element passed into BBModMouseInput during\nconstruction.",
             "itemtype": "property",
             "name": "canvasElem",
@@ -899,7 +909,7 @@
         },
         {
             "file": "BBModMouseInput.js",
-            "line": 151,
+            "line": 157,
             "description": "Holds wether or not the mouse is currently moving.",
             "itemtype": "property",
             "name": "isMoving",
@@ -910,7 +920,7 @@
         },
         {
             "file": "BBModMouseInput.js",
-            "line": 166,
+            "line": 172,
             "description": "Holds wether or not the mouse",
             "itemtype": "property",
             "name": "isDown",
