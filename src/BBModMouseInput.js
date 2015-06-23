@@ -150,7 +150,7 @@ define(function(){
 
         function getCanvasMouseCoords(e) {
 
-            var rect = canvas.getBoundingClientRect();
+            var rect = self.canvasElem.getBoundingClientRect();
 
             return {
                 x: Math.round((e.clientX - rect.left) / (rect.right - rect.left) * self.canvasElem.width),
