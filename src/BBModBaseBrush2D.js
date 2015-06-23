@@ -2,7 +2,8 @@
  * Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D, etc...
  * @module BBModBaseBrush2D
  */
-define(['./BBModColor'], function(BBModColor){
+define(['./BBModColor', './BBModBrushManager2D'],
+function(  BBModColor,     BBModBrushManager2D){
 
     /**
      * Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D,
@@ -81,6 +82,8 @@ define(['./BBModColor'], function(BBModColor){
          * @default "base"
          */
         this.type = "base";
+
+        this.manager = (config && config.manager && config.manager instanceof BBModBrushManager2D) ? config.manager : null;
     }
 
     /**
@@ -115,11 +118,19 @@ define(['./BBModColor'], function(BBModColor){
      * Base draw method. Usually called once per animation frame.
      * @method draw 
      */
-    BBModBaseBrush2D.prototype.draw = function() {
+    BBModBaseBrush2D.prototype.draw = function(context) {
 
-        // if (!this.hidden) {
+        if (!context) {
+            throw new Error('BBModBaseBrush.draw: Invalid context parameter');
+        }
 
-        // }
+        var returnContext = context;
+
+        if(this.manager instanceof BBModBrushManager2D) {
+            returnContext = this.manager.context;   
+        }
+
+        return returnContext;
     }
 
     /**

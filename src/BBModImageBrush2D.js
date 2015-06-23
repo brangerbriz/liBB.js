@@ -19,7 +19,6 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
      * @example <div><code> var imageBrush = new BBModImageBrush2D({ width: 100,
      * height: 100, src: "http://some/image.png" }); </code></div>
      */
-    
     function BBModImageBrush2D(config) {
 
         BBModBaseBrush2D.call(this, config);
@@ -199,7 +198,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
         var self = this;
 
-        BBModBaseBrush2D.prototype.draw.call(this);
+        context = BBModBaseBrush2D.prototype.draw.call(this, context);
 
         // if the variant is present and is the right variable type
         if (this.variant !== null && 
@@ -229,6 +228,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
         }
 
         // draw down here...
+        this.hidden = false; // remove
         if (!this.hidden && drawReady) {
 
             context.save();

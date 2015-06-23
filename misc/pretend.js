@@ -2,17 +2,22 @@
 	
 	var mouseInput = new BBModMouseInput();
 
-	var pointer = new BBModPointer();
+	var selection; // keep track of current selection from GUI
+
+	var pointer = new BBModPointer({
+		manager: brushManager
+	});
 
 	var starBrush = new BBModShapeBrush({
 		variant: "star",
-		rotation: 45
+		rotation: 45,
+		manager: brushManager
 	});
 
-	var brushManager = new BBModBrushManager({
-		tracking: [
-			starBrush
-		]
+	var poopBrush = new BBModShapeBrush({
+		variant: "poop",
+		rotation: 45,
+		manager: brushManager
 	});
 
 	var arrows = [];
@@ -38,7 +43,7 @@
 
 	function update(){
 			
-		brushManager.update();
+		//brushManager.update();
 		
 		//
 		pointer.update(mouseInput);
@@ -47,7 +52,7 @@
 		starBrush.x = pointer.x + Math.random()*50;
 		starBrush.color.h ++;
 
-
+		
 		for (var i = 0; i < agents.length; i++) {
 			agents[i].follow( mouseInput );
 			arrows[i].update( agents[i] );
@@ -63,7 +68,13 @@
 		requestAnimationFrame(draw);
 		ctx.clearRect( 0, 0, canvas.width, canvas.height );
 
+		switch(selection){
+			case "star" : starBrush.draw(); break;
+			case "poop" : poopBrush.draw(); break;
+		}
+
 		brushManager.draw();
+		
 
 		for (var i = 0; i < arrows.length; i++) {
 			arrows[i].draw();

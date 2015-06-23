@@ -206,7 +206,7 @@ define(function(){
     });
 
      /**
-     * Holds wether or not a mouse button is depressed. This property is read-only.
+     * Holds wether or not the left mouse button is currently depressed. This property is read-only.
      * @property isDown
      * @type {Boolean}
      * @default false

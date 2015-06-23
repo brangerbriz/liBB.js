@@ -47,6 +47,7 @@
                 
                             <ul id="api-modules" class="apis modules">
                                 <li><a href="../modules/BBModBaseBrush2D.html">BBModBaseBrush2D</a></li>
+                                <li><a href="../modules/BBModBrushManager2D.html">BBModBrushManager2D</a></li>
                                 <li><a href="../modules/BBModImageBrush2D.html">BBModImageBrush2D</a></li>
                                 <li><a href="../modules/BBModLineBrush2D.html">BBModLineBrush2D</a></li>
                                 <li><a href="../modules/BBModMathUtils.html">BBModMathUtils</a></li>
@@ -218,7 +219,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
     BBModLineBrush2D.prototype.draw = function(context) {
         
 
-        BBModBaseBrush2D.prototype.draw.call(this);
+        context = BBModBaseBrush2D.prototype.draw.call(this, context);
 
         if (typeof this.variant !== &#x27;string&#x27; ||
             this.variants.indexOf(this.variant) === -1) {

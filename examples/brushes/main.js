@@ -1,43 +1,59 @@
 var currentBrush; // global for now just so that it can be accessed via the console for dev
+var undo;
+
 require.config({ baseUrl: "../../src" });
-require(["BBModMouseInput", "BBModPointer", "BBModImageBrush2D", "BBModLineBrush2D", "BBModColor"], 
-function( BBModMouseInput,   BBModPointer,   BBModImageBrush2D,   BBModLineBrush2D,   BBModColor) {
+require(["BBModMouseInput", "BBModPointer", "BBModImageBrush2D", "BBModLineBrush2D", "BBModColor", "BBModBrushManager2D"], 
+function( BBModMouseInput,   BBModPointer,   BBModImageBrush2D,   BBModLineBrush2D,   BBModColor,   BBModBrushManager2D) {
 
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
-    var mouseInput = new BBModMouseInput(canvas);
-    var pointer = new BBModPointer(mouseInput);
-    var imageBrush = new BBModImageBrush2D({
-        variant: "star",
-        color: new BBModColor(255, 0, 0),
-        width: 50,
-        height: 50
-    });
 
-    var lineBrush = new BBModLineBrush2D({
-        color: new BBModColor(0, 0, 255),
-        weight: 20,
-        variant: "solid"
-    });
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-    currentBrush = lineBrush;
+    var mouseInput, pointer, brushManager, imageBrush, lineBrush;
 
     function setup() {
         
         window.onresize = onWindowResize;
         onWindowResize();
+
+        mouseInput = new BBModMouseInput(canvas);
+        pointer = new BBModPointer(mouseInput);
+        brushManager = new BBModBrushManager2D(canvas.width, canvas.height);
+        brushManager.trackPointers([pointer]);
+
+        imageBrush = new BBModImageBrush2D({
+            src: "flower.png",
+            color: new BBModColor(255, 0, 0),
+            width: 50,
+            height: 50,
+            manager: brushManager
+        });
+
+        lineBrush = new BBModLineBrush2D({
+            color: new BBModColor(0, 0, 255),
+            weight: 20,
+            variant: "solid",
+            manager: brushManager
+        });
+
+        currentBrush = lineBrush;
+
         // explicitly call line brush selection to access the radio buttons
         onLineBrushSelection();
 
-        imageBrush.src = "http://freedwallpaper.com/wp-content/uploads/2014/11/cat-wallpapers-for-desktop-2-1366x768-770958.jpg"
+        
     }
 
     function update() {
         
         mouseInput.update();
         pointer.update();
-        currentBrush.update(pointer);
+        brushManager.update();
 
+        currentBrush.update(pointer);
+      
         if (currentBrush.type == "image") {
             currentBrush.rotation += 2;
         }
@@ -47,7 +63,13 @@ function( BBModMouseInput,   BBModPointer,   BBModImageBrush2D,   BBModLineBrush
 
     function draw() {
         
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // brushManager.capture(ctx);
         currentBrush.draw(ctx);
+        
+        brushManager.draw(ctx);
+
     }
 
     setup();
@@ -186,6 +208,22 @@ function( BBModMouseInput,   BBModPointer,   BBModImageBrush2D,   BBModLineBrush
 
         document.getElementById('brush-selection-image').onchange = onImageBrushSelection;
         document.getElementById('brush-selection-line').onchange = onLineBrushSelection;
+        document.getElementById('undo-button').onclick = function() {
+            if (brushManager.hasUndo()) {
+                brushManager.undo();
+            } else {
+                alert('No more undos.');
+            }
+        }
+
+        document.getElementById('redo-button').onclick = function() {
+            if (brushManager.hasRedo()) {
+                brushManager.redo();
+            } else {
+                alert('No more redos.');
+            }
+        }
+
     }
 
     function updateVariantList() {

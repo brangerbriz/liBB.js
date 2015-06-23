@@ -12,6 +12,15 @@
             "fors": {},
             "namespaces": {}
         },
+        "BBModBrushManager2D.js": {
+            "name": "BBModBrushManager2D.js",
+            "modules": {
+                "BBModBrushManager2D": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "BBModImageBrush2D.js": {
             "name": "BBModImageBrush2D.js",
             "modules": {
@@ -77,8 +86,19 @@
             "namespaces": {},
             "tag": "module",
             "file": "BBModBaseBrush2D.js",
-            "line": 7,
+            "line": 8,
             "description": "Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D, etc..."
+        },
+        "BBModBrushManager2D": {
+            "name": "BBModBrushManager2D",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "BBModBrushManager2D.js",
+            "line": 1,
+            "description": "Basic scene manager for brushes and pointers. BBModBrushMangager2D provides\nfunctionality to"
         },
         "BBModImageBrush2D": {
             "name": "BBModImageBrush2D",
@@ -159,7 +179,7 @@
             "module": "BBModBaseBrush2D",
             "namespace": "",
             "file": "BBModBaseBrush2D.js",
-            "line": 7,
+            "line": 8,
             "description": "Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D,\netc...",
             "is_constructor": 1,
             "params": [
@@ -276,7 +296,7 @@
     "classitems": [
         {
             "file": "BBModBaseBrush2D.js",
-            "line": 19,
+            "line": 20,
             "description": "The brush's x position.",
             "itemtype": "property",
             "name": "x",
@@ -287,7 +307,7 @@
         },
         {
             "file": "BBModBaseBrush2D.js",
-            "line": 27,
+            "line": 28,
             "description": "The brush's y position.",
             "itemtype": "property",
             "name": "y",
@@ -298,7 +318,7 @@
         },
         {
             "file": "BBModBaseBrush2D.js",
-            "line": 35,
+            "line": 36,
             "description": "The brush's width.",
             "itemtype": "property",
             "name": "w",
@@ -309,7 +329,7 @@
         },
         {
             "file": "BBModBaseBrush2D.js",
-            "line": 43,
+            "line": 44,
             "description": "The brush's height.",
             "itemtype": "property",
             "name": "height",
@@ -320,7 +340,7 @@
         },
         {
             "file": "BBModBaseBrush2D.js",
-            "line": 51,
+            "line": 52,
             "description": "The brush's rotation in degrees. This property is not always used with each brush variant.",
             "itemtype": "property",
             "name": "rotation",
@@ -331,7 +351,7 @@
         },
         {
             "file": "BBModBaseBrush2D.js",
-            "line": 59,
+            "line": 60,
             "description": "The brush's color.",
             "itemtype": "property",
             "name": "color",
@@ -342,7 +362,7 @@
         },
         {
             "file": "BBModBaseBrush2D.js",
-            "line": 67,
+            "line": 68,
             "description": "Wether or not to draw the brush to the screen. Toggle this variable\nto hide and show the brush.",
             "itemtype": "property",
             "name": "hidden",
@@ -353,7 +373,7 @@
         },
         {
             "file": "BBModBaseBrush2D.js",
-            "line": 76,
+            "line": 77,
             "description": "The type of brush. Defaults to \"base\" for BBModBaseBrush, \"image\" for\nBBModImageBrush, etc... and should be treated as read-only.",
             "itemtype": "property",
             "name": "type",
@@ -364,7 +384,7 @@
         },
         {
             "file": "BBModBaseBrush2D.js",
-            "line": 86,
+            "line": 89,
             "description": "Base update method. Usually called once per animation frame.",
             "itemtype": "method",
             "name": "update",
@@ -380,7 +400,7 @@
         },
         {
             "file": "BBModBaseBrush2D.js",
-            "line": 114,
+            "line": 117,
             "description": "Base draw method. Usually called once per animation frame.",
             "itemtype": "method",
             "name": "draw",
@@ -389,7 +409,7 @@
         },
         {
             "file": "BBModBaseBrush2D.js",
-            "line": 125,
+            "line": 136,
             "description": "Multiplies width and height properties by amount.",
             "itemtype": "method",
             "name": "scale",
@@ -405,7 +425,7 @@
         },
         {
             "file": "BBModImageBrush2D.js",
-            "line": 27,
+            "line": 26,
             "description": "The type of brush. This property should be treated as read-only.",
             "itemtype": "property",
             "name": "type",
@@ -416,7 +436,7 @@
         },
         {
             "file": "BBModImageBrush2D.js",
-            "line": 36,
+            "line": 35,
             "description": "The current brush variant.",
             "itemtype": "property",
             "name": "variant",
@@ -427,7 +447,7 @@
         },
         {
             "file": "BBModImageBrush2D.js",
-            "line": 44,
+            "line": 43,
             "description": "The internal image element used to load and draw to screen.",
             "access": "protected",
             "tagname": "",
@@ -440,7 +460,7 @@
         },
         {
             "file": "BBModImageBrush2D.js",
-            "line": 53,
+            "line": 52,
             "description": "An internal variable to check if the variant has been changed since\nthe last update().",
             "access": "protected",
             "tagname": "",
@@ -453,7 +473,7 @@
         },
         {
             "file": "BBModImageBrush2D.js",
-            "line": 63,
+            "line": 62,
             "description": "A private method used by src's getters and setters.",
             "access": "private",
             "tagname": "",
@@ -466,7 +486,7 @@
         },
         {
             "file": "BBModImageBrush2D.js",
-            "line": 72,
+            "line": 71,
             "description": "An array of all supported variants. For the BBModImageBrush2D class\nthese are a list of pre-made SVGs with programmatic control for\nchanging their color.",
             "itemtype": "property",
             "name": "variants",
@@ -476,7 +496,7 @@
         },
         {
             "file": "BBModImageBrush2D.js",
-            "line": 115,
+            "line": 114,
             "description": "The brush's image src. Functionally equivalent to the src property of an\nImage element. When src is not null no variants are used (i.e. the\nvariant property is set to null).",
             "itemtype": "property",
             "name": "src",
@@ -487,7 +507,7 @@
         },
         {
             "file": "BBModImageBrush2D.js",
-            "line": 142,
+            "line": 141,
             "description": "Update method. Usually called once per animation frame.",
             "itemtype": "method",
             "name": "update",
@@ -503,7 +523,7 @@
         },
         {
             "file": "BBModImageBrush2D.js",
-            "line": 159,
+            "line": 158,
             "description": "Draws the brush to the context. Usually called once per animation frame.",
             "itemtype": "method",
             "name": "draw",
@@ -961,7 +981,7 @@
         {
             "file": "BBModMouseInput.js",
             "line": 208,
-            "description": "Holds wether or not a mouse button is depressed. This property is read-only.",
+            "description": "Holds wether or not the left mouse button is currently depressed. This property is read-only.",
             "itemtype": "property",
             "name": "isDown",
             "type": "{Boolean}",

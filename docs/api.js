@@ -9,6 +9,7 @@ YUI.add("yuidoc-meta", function(Y) {
     ],
     "modules": [
         "BBModBaseBrush2D",
+        "BBModBrushManager2D",
         "BBModImageBrush2D",
         "BBModLineBrush2D",
         "BBModMathUtils",
@@ -20,6 +21,11 @@ YUI.add("yuidoc-meta", function(Y) {
             "displayName": "BBModBaseBrush2D",
             "name": "BBModBaseBrush2D",
             "description": "Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D, etc..."
+        },
+        {
+            "displayName": "BBModBrushManager2D",
+            "name": "BBModBrushManager2D",
+            "description": "Basic scene manager for brushes and pointers. BBModBrushMangager2D provides\nfunctionality to"
         },
         {
             "displayName": "BBModImageBrush2D",

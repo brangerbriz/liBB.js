@@ -127,7 +127,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
     BBModLineBrush2D.prototype.draw = function(context) {
         
 
-        BBModBaseBrush2D.prototype.draw.call(this);
+        context = BBModBaseBrush2D.prototype.draw.call(this, context);
 
         if (typeof this.variant !== 'string' ||
             this.variants.indexOf(this.variant) === -1) {
