@@ -41,6 +41,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
         // this._fboImage.crossOrigin = "anonymous";
 
         this._pointers = [];
+        // array of booleans indicating which pointers are currently active (down)
         this._pointerStates = [];
 
         this._needsUndo = false;
@@ -159,7 +160,6 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
             }
         }
         
-        
         if (this._needsUndo) {
             
             if (this._purgatory.length == this.numUndos + 1) {
@@ -206,9 +206,9 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
         }
         
         // if the image has loaded
-        if (this._fboImage.complete) {
+        // if (this._fboImage.complete) {
             context.drawImage(this._fboImage, 0, 0);    
-        }
+        // }
     }
 
     BBModBrushManager2D.prototype.undo = function() {
