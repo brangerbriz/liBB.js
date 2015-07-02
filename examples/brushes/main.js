@@ -42,8 +42,6 @@ function( BBModMouseInput,   BBModPointer,   BBModImageBrush2D,   BBModLineBrush
 
         // explicitly call line brush selection to access the radio buttons
         onLineBrushSelection();
-
-        
     }
 
     function update() {
@@ -65,7 +63,6 @@ function( BBModMouseInput,   BBModPointer,   BBModImageBrush2D,   BBModLineBrush
         
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // brushManager.capture(ctx);
         currentBrush.draw(ctx);
         
         brushManager.draw(ctx);
