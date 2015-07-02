@@ -1,5 +1,5 @@
 /**
- * Basic scene manager for brushes and pointers. BBModBrushMangager2D provides
+ * Basic scene manager for brushes and pointers. BBModBrushManager2D provides
  * functionality to
  * @module BBModBrushManager2D
  */
@@ -7,21 +7,21 @@ define(['./BBModBaseBrush2D', 'BBModBaseBrush2D', 'BBModPointer'],
 function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
 
 
-    function BBModBrushManager2D(width, height) {
+    function BBModBrushManager2D(canvas) {
 
-        if (!canvas) {
+        if (typeof canvas === 'undefined' || 
+            !(canvas instanceof HTMLCanvasElement)) {
             throw new Error('BBModBrushManager2D: An HTML5 canvas object must be supplied as a first parameter.');
         }
 
-        var canv    = document.createElement('canvas');
-        canv.width  = width;
-        canv.height = height;
-
+        this._parentCanvas = canvas;
+        
         // document.body.appendChild(canv)
-        this.canvas  = canv;
+        this.canvas  = document.createElement('canvas');
+        this.updateCanvasPosition();
 
         // this context is used by the brushes internally
-        this.context = canv.getContext('2d');
+        this.context = this.canvas.getContext('2d');
 
         this._numUndos = 5; // matches public numUndos w/ getter and setter
 
@@ -30,7 +30,6 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
                               // can be placed back in history with redo function
 
         this._fboImage = new Image();
-
 
         // https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
         this._fboImage.crossOrigin = "Anonymous";
@@ -68,7 +67,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
             for (var i = 0; i < pointers.length; i++) {
              
                 var pointer = pointers[i];
-                if (! pointer instanceof BBModPointer) {
+                if (! (pointer instanceof BBModPointer)) {
                     throw new Error('BBModBrushManager2D.trackPointers: pointers[' 
                         + i + '] is not an instance of BBModPointer.');
                 } else {
@@ -217,6 +216,13 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
         if (this._history.length > 0) {
             this._needsRedo = true;
         }
+    }
+
+    BBModBrushManager2D.prototype.updateCanvasPosition = function() {
+
+        this.canvas.width = this._parentCanvas.width;
+        this.canvas.height = this._parentCanvas.height;
+         
     }
 
     return BBModBrushManager2D;

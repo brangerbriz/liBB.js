@@ -20,7 +20,7 @@ function( BBModMouseInput,   BBModPointer,   BBModImageBrush2D,   BBModLineBrush
 
         mouseInput = new BBModMouseInput(canvas);
         pointer = new BBModPointer(mouseInput);
-        brushManager = new BBModBrushManager2D(canvas.width, canvas.height);
+        brushManager = new BBModBrushManager2D(canvas);
         brushManager.trackPointers([pointer]);
 
         imageBrush = new BBModImageBrush2D({
