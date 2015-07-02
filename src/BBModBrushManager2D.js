@@ -30,9 +30,15 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
                               // can be placed back in history with redo function
 
         this._fboImage = new Image();
+        this._fboImage.onerror = function(err) {
+           console.log('BBModBrushManager2D: src failed to load: ' + err.target.src);
+        }
 
-        // https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
-        this._fboImage.crossOrigin = "Anonymous";
+
+        //// https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
+        //// uncommenting this causes error described here:
+        //// https://github.com/brangerbriz/bbmod/issues/1
+        // this._fboImage.crossOrigin = "anonymous";
 
         this._pointers = [];
         this._pointerStates = [];
@@ -115,8 +121,6 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
             throw new Error('BBModBrushManager2D.update: You must add at least one pointer to '
                             + 'the brush manager with BBModBrushManager2D.addPointers(...)');
         }
-
-        console.log(this._purgatory.length);
 
         for (var i = 0; i < this._pointers.length; i++) {
             
@@ -201,13 +205,16 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
             }
         }
         
-        context.drawImage(this._fboImage, 0, 0);    
+        // if the image has loaded
+        if (this._fboImage.complete) {
+            context.drawImage(this._fboImage, 0, 0);    
+        }
     }
 
     BBModBrushManager2D.prototype.undo = function() {
 
         if (this._history.length > 1) {
-            this._needsUndo = true;
+            this._needsUndo = true; 
         }
     }
 
