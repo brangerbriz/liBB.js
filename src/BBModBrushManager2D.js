@@ -14,9 +14,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
             throw new Error('BBModBrushManager2D: An HTML5 canvas object must be supplied as a first parameter.');
         }
 
-        var parentCanvasStyle = window.getComputedStyle(canvas);
-
-        if (parentCanvasStyle.getPropertyValue('position') !== 'absolute') {
+        if (window.getComputedStyle(canvas).getPropertyValue('position') !== 'absolute') {
             throw new Error('BBModBrushManager2D: the HTML5 canvas passed into the BBModBrushManager2D'
             + ' constructor must be absolutely positioned. Sorry ;).');
         }
@@ -241,6 +239,8 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
         this.secondaryCanvas.width  = this.canvas.width;
         this.secondaryCanvas.height = this.canvas.height;
         this.secondaryContext       = this.secondaryCanvas.getContext('2d');
+
+        var parentCanvasStyle = window.getComputedStyle(this._parentCanvas);
 
         this.secondaryCanvas.style.position      = 'absolute';
         this.secondaryCanvas.style.pointerEvents = 'none';
