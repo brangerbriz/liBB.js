@@ -127,7 +127,7 @@ function(  BBModColor,     BBModBrushManager2D){
         var returnContext = context;
 
         if(this.manager instanceof BBModBrushManager2D) {
-            returnContext = this.manager.context;   
+            returnContext = this.manager._getCurrentContext();   
         }
 
         return returnContext;

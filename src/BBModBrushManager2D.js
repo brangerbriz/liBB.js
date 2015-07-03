@@ -14,14 +14,19 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
             throw new Error('BBModBrushManager2D: An HTML5 canvas object must be supplied as a first parameter.');
         }
 
-        this._parentCanvas = canvas;
-        
-        // document.body.appendChild(canv)
-        this.canvas  = document.createElement('canvas');
-        this.updateCanvasPosition();
+        var parentCanvasStyle = window.getComputedStyle(canvas);
 
-        // this context is used by the brushes internally
+        if (parentCanvasStyle.getPropertyValue('position') !== 'absolute') {
+            throw new Error('BBModBrushManager2D: the HTML5 canvas passed into the BBModBrushManager2D'
+            + ' constructor must be absolutely positioned. Sorry ;).');
+        }
+
+        this._parentCanvas = canvas;        
+        this.canvas  = document.createElement('canvas');
         this.context = this.canvas.getContext('2d');
+        this.secondaryCanvas = document.createElement('canvas');
+        this._parentCanvas.parentNode.insertBefore(this.secondaryCanvas, this._parentCanvas.nextSibling);
+        this.updateCanvasPosition();
 
         this._numUndos = 5; // matches public numUndos w/ getter and setter
 
@@ -34,19 +39,19 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
            console.log('BBModBrushManager2D: src failed to load: ' + err.target.src);
         }
 
-
         //// https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
         //// uncommenting this causes error described here:
         //// https://github.com/brangerbriz/bbmod/issues/1
         // this._fboImage.crossOrigin = "anonymous";
 
         this._pointers = [];
-        // array of booleans indicating which pointers are currently active (down)
+        // array of booleans indicating which pointers are currently active (down
         this._pointerStates = [];
 
         this._needsUndo = false;
         this._needsRedo = false;
         this._srcLoadWaiting = false;
+        this._somePointersDown = false;
 
         // add empty canvas to the history
         this._history.push(this.canvas.toDataURL());
@@ -123,6 +128,8 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
                             + 'the brush manager with BBModBrushManager2D.addPointers(...)');
         }
 
+        this._somePointersDown = this._pointerStates.some(function(val){ return val === true });
+
         for (var i = 0; i < this._pointers.length; i++) {
             
             var pointer = this._pointers[i];
@@ -160,6 +167,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
             }
         }
         
+        
         if (this._needsUndo) {
             
             if (this._purgatory.length == this.numUndos + 1) {
@@ -195,7 +203,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
                 this._needsRedo = false;
             }
         
-        } else if (this._pointerStates.some(function(val){ return val === true })) {
+        } else if (this._somePointersDown) {
 
             this._fboImage.src = this.canvas.toDataURL();
             this._srcLoadWaiting = true;
@@ -229,7 +237,38 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
 
         this.canvas.width = this._parentCanvas.width;
         this.canvas.height = this._parentCanvas.height;
+
+        this.secondaryCanvas.width  = this.canvas.width;
+        this.secondaryCanvas.height = this.canvas.height;
+        this.secondaryContext       = this.secondaryCanvas.getContext('2d');
+
+        this.secondaryCanvas.style.position      = 'absolute';
+        this.secondaryCanvas.style.pointerEvents = 'none';
+        this.secondaryCanvas.style.top           = parentCanvasStyle.getPropertyValue('top');
+        this.secondaryCanvas.style.right         = parentCanvasStyle.getPropertyValue('right');
+        this.secondaryCanvas.style.bottom        = parentCanvasStyle.getPropertyValue('bottom');
+        this.secondaryCanvas.style.left          = parentCanvasStyle.getPropertyValue('left');
+        
+        var parentZIndex = parentCanvasStyle.getPropertyValue('z-index');
+
+        if (isNaN(parentZIndex)) {
+
+            throw new Error('BBModBrushManager2D: the HTML5 canvas passed into the BBModBrushManager2D'
+                + ' constructor should have a z-index property value that is numeric. Currently the value is "' 
+                + parentZIndex + '".');
+
+            parentZIndex = 0;
+
+        } else {
+            parentZIndex = parseInt(parentZIndex);
+        }
+
+        this.secondaryCanvas.style.zIndex = parentZIndex + 1;
          
+    }
+
+    BBModBrushManager2D.prototype._getCurrentContext = function() {
+        return this._somePointersDown ? this.secondaryContext : this.context;
     }
 
     return BBModBrushManager2D;

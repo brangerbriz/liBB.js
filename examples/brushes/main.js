@@ -61,11 +61,18 @@ function( BBModMouseInput,   BBModPointer,   BBModImageBrush2D,   BBModLineBrush
 
     function draw() {
         
+        
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         currentBrush.draw(ctx);
+
+        var then = (new Date()).getTime();
         
         brushManager.draw(ctx);
+
+        var now = (new Date()).getTime();
+        // console.log((now - then) + 'ms');
 
     }
 
