@@ -59,9 +59,7 @@ function( BBModMouseInput,   BBModPointer,   BBModImageBrush2D,   BBModLineBrush
         updateDisplay();
     }
 
-    function draw() {
-        
-        
+    function draw() {       
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -207,12 +205,13 @@ function( BBModMouseInput,   BBModPointer,   BBModImageBrush2D,   BBModLineBrush
 
     function onWindowResize() {
         
-        canvas.width = window.innerWidth;
+        canvas.width  = window.innerWidth;
         canvas.height = window.innerHeight;
 
         document.getElementById('brush-selection-image').onchange = onImageBrushSelection;
         document.getElementById('brush-selection-line').onchange = onLineBrushSelection;
         document.getElementById('undo-button').onclick = function() {
+
             if (brushManager.hasUndo()) {
                 brushManager.undo();
             } else {

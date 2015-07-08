@@ -227,8 +227,6 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
             console.error('BBModImageBrush2D draw: you are attempting to draw an image brush without first setting its source with the .src property');
         }
 
-        // draw down here...
-        this.hidden = false; // remove
         if (!this.hidden && drawReady) {
 
             context.save();

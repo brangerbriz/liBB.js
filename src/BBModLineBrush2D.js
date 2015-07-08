@@ -129,6 +129,11 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
         context = BBModBaseBrush2D.prototype.draw.call(this, context);
 
+        context.save();
+
+        context.lineJoin = "round";
+        context.lineCap = "round";
+
         if (typeof this.variant !== 'string' ||
             this.variants.indexOf(this.variant) === -1) {
             throw new Error("BBModBaseBrush2D.draw: " + this.variant + " is not a valid variant for BBModImageBrush2D");
@@ -141,8 +146,6 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
                 
                 if (this._lineStartedThisFrame) {
                     
-                    context.lineJoin = "round";
-                    context.lineCap = "round";
                     context.beginPath();
                     context.moveTo(this.x, this.y);
 
@@ -225,6 +228,8 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
         } else {
             this._lineStartedThisFrame = true;
         }
+
+        context.restore();
 
         this.prevX = this.x;
         this.prevY = this.y;

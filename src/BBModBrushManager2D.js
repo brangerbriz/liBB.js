@@ -9,6 +9,8 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
 
     function BBModBrushManager2D(canvas) {
 
+        var self = this;
+
         if (typeof canvas === 'undefined' || 
             !(canvas instanceof HTMLCanvasElement)) {
             throw new Error('BBModBrushManager2D: An HTML5 canvas object must be supplied as a first parameter.');
@@ -19,10 +21,13 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
             + ' constructor must be absolutely positioned. Sorry ;).');
         }
 
-        this._parentCanvas = canvas;        
-        this.canvas  = document.createElement('canvas');
-        this.context = this.canvas.getContext('2d');
-        this.secondaryCanvas = document.createElement('canvas');
+        this._parentCanvas    = canvas;
+        this._parentContext   = canvas.getContext('2d');
+        this.canvas           = document.createElement('canvas');
+        this.context          = this.canvas.getContext('2d');
+        this.secondaryCanvas  = document.createElement('canvas');
+        this.secondaryContext = this.secondaryCanvas.getContext('2d');
+
         this._parentCanvas.parentNode.insertBefore(this.secondaryCanvas, this._parentCanvas.nextSibling);
         this.updateCanvasPosition();
 
@@ -33,8 +38,33 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
                               // can be placed back in history with redo function
 
         this._fboImage = new Image();
+        this._fboImage.onload = function() {
+            self.secondaryContext.clearRect(0, 0, self.canvas.width, self.canvas.height);
+        }
         this._fboImage.onerror = function(err) {
            console.log('BBModBrushManager2D: src failed to load: ' + err.target.src);
+        }
+
+        this._secondaryFboImage = new Image();
+        // called by assigning src during this.update() when 
+        // all pointers are up and at least one was down last frame
+        this._secondaryFboImage.onload = function() {
+            
+            self.context.clearRect(0, 0, self.canvas.width, self.canvas.height);
+    
+            self.context.drawImage(self._fboImage, 0, 0);
+            self.context.drawImage(self._secondaryFboImage, 0, 0);
+
+            if (self._history.length === self.numUndos + 1) {
+                self._history.shift();
+            }
+
+            var image = self.canvas.toDataURL();
+            self._history.push(image);
+
+            console.log("got in here");
+
+            self._fboImage.src = image;
         }
 
         //// https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
@@ -43,12 +73,11 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
         // this._fboImage.crossOrigin = "anonymous";
 
         this._pointers = [];
-        // array of booleans indicating which pointers are currently active (down
+        // array of booleans indicating which pointers are currently active (down)
         this._pointerStates = [];
 
         this._needsUndo = false;
         this._needsRedo = false;
-        this._srcLoadWaiting = false;
         this._somePointersDown = false;
 
         // add empty canvas to the history
@@ -126,46 +155,24 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
                             + 'the brush manager with BBModBrushManager2D.addPointers(...)');
         }
 
-        this._somePointersDown = this._pointerStates.some(function(val){ return val === true });
+        var somePointersDown = this._pointerStates.some(function(val){ return val === true });
+
+        // if there are no pointers down this frame
+        // but there were some last frame
+        if (this._somePointersDown && !somePointersDown) {
+
+            this._secondaryFboImage.src = this.secondaryCanvas.toDataURL();
+        }
 
         for (var i = 0; i < this._pointers.length; i++) {
-            
-            var pointer = this._pointers[i];
 
-            // state change detected
-            if (pointer.isDown === false &&
-                this._pointerStates[i] === true) {
-
-                if (this._history.length === this.numUndos + 1) {
-                    this._history.shift();
-                }
-
-                this._history.push(this.canvas.toDataURL());
-            }
-
-            this._pointerStates[i] = pointer.isDown;
-        }
-    }
-
-    BBModBrushManager2D.prototype.draw = function(context) {
-
-        var self = this;
-
-        function drawToFBOAndContext() {
-            self.context.clearRect(0, 0, self.canvas.width, self.canvas.height);
-            self.context.drawImage(self._fboImage, 0, 0);
-            context.drawImage(self._fboImage, 0, 0); 
+            this._pointerStates[i] = this._pointers[i].isDown;
         }
 
-        // don't override 
-        if (!this._srcLoadWaiting) {
-            this._fboImage.onload = function() {
-                drawToFBOAndContext();
-                self._srcLoadWaiting = false;
-            }
-        }
-        
-        
+        this._somePointersDown = somePointersDown;
+       
+        var image;
+
         if (this._needsUndo) {
             
             if (this._purgatory.length == this.numUndos + 1) {
@@ -175,46 +182,33 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
             this._purgatory.push(this._history.pop());
 
             this._fboImage.src = this._history[this._history.length - 1];
-            this._srcLoadWaiting = true;
             
             this._needsUndo = false;
 
         } else if (this._needsRedo) {
             
-            if (this._purgatory.length > 0 &&
-                !self._srcLoadWaiting) {
+            if (this._purgatory.length > 0) {
 
-                this._fboImage.onload = function() {
-                
-                    drawToFBOAndContext();
-
-                    if (self._history.length === self.numUndos + 1) {
-                        self._history.shift();
-                    }
-
-                    self._history.push(self.canvas.toDataURL());
-                    self._srcLoadWaiting = false;
-                }
-                
-                this._fboImage.src = this._purgatory.pop();
-                this._srcLoadWaiting = true;
+                image = this._purgatory.pop();
+                this._fboImage.src = image;
+                this._history.push(image);
                 this._needsRedo = false;
             }
         
         } else if (this._somePointersDown) {
 
-            this._fboImage.src = this.canvas.toDataURL();
-            this._srcLoadWaiting = true;
-
             if (this._purgatory.length > 0) {
                 this._purgatory = [];
             }
         }
-        
+    }
+
+    BBModBrushManager2D.prototype.draw = function(context) {
+
         // if the image has loaded
-        // if (this._fboImage.complete) {
+        if (this._fboImage.complete) {
             context.drawImage(this._fboImage, 0, 0);    
-        // }
+        }
     }
 
     BBModBrushManager2D.prototype.undo = function() {
@@ -238,7 +232,6 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
 
         this.secondaryCanvas.width  = this.canvas.width;
         this.secondaryCanvas.height = this.canvas.height;
-        this.secondaryContext       = this.secondaryCanvas.getContext('2d');
 
         var parentCanvasStyle = window.getComputedStyle(this._parentCanvas);
 
@@ -265,10 +258,6 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
 
         this.secondaryCanvas.style.zIndex = parentZIndex + 1;
          
-    }
-
-    BBModBrushManager2D.prototype._getCurrentContext = function() {
-        return this._somePointersDown ? this.secondaryContext : this.context;
     }
 
     return BBModBrushManager2D;
