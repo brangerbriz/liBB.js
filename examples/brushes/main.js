@@ -70,7 +70,7 @@ function( BBModMouseInput,   BBModPointer,   BBModImageBrush2D,   BBModLineBrush
         brushManager.draw(ctx);
 
         var now = (new Date()).getTime();
-        // console.log((now - then) + 'ms');
+        //console.log((now - then) + 'ms');
 
     }
 

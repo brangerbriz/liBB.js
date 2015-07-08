@@ -6,10 +6,10 @@
 define(['./BBModBaseBrush2D', 'BBModBaseBrush2D', 'BBModPointer'],
 function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
 
-
     function BBModBrushManager2D(canvas) {
 
         var self = this;
+        this.foo = false;
 
         if (typeof canvas === 'undefined' || 
             !(canvas instanceof HTMLCanvasElement)) {
@@ -39,8 +39,16 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
 
         this._fboImage = new Image();
         this._fboImage.onload = function() {
-            self.secondaryContext.clearRect(0, 0, self.canvas.width, self.canvas.height);
+            // add to event loop
+            setTimeout(function() {
+                self.secondaryContext.clearRect(0, 0, self.canvas.width, self.canvas.height);
+                self.secondaryCanvas.style.display = "block";
+                self.foo = false;
+            }, 0);
         }
+
+        this._fboImageTemp = null;
+
         this._fboImage.onerror = function(err) {
            console.log('BBModBrushManager2D: src failed to load: ' + err.target.src);
         }
@@ -49,7 +57,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
         // called by assigning src during this.update() when 
         // all pointers are up and at least one was down last frame
         this._secondaryFboImage.onload = function() {
-            
+
             self.context.clearRect(0, 0, self.canvas.width, self.canvas.height);
     
             self.context.drawImage(self._fboImage, 0, 0);
@@ -62,9 +70,16 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
             var image = self.canvas.toDataURL();
             self._history.push(image);
 
-            console.log("got in here");
+            self._fboImageTemp = self._fboImage.cloneNode(true);
+            self._fboImageTemp.onload = function(){}; //no-op
 
             self._fboImage.src = image;
+
+            self.secondaryCanvas.style.display = "none";
+            self._parentContext.drawImage(self._secondaryFboImage, 0, 0);
+            self.foo = true;
+            
+            // debugger;
         }
 
         //// https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
@@ -205,9 +220,22 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
 
     BBModBrushManager2D.prototype.draw = function(context) {
 
+        if (typeof context === "undefined" ) {
+            context = this._parentContext;
+        } else if(! (context instanceof CanvasRenderingContext2D)) {
+            throw new Error('BBModBrushManager2D.draw: context is not an instance of CanvasRenderingContext2D');
+        }
+
         // if the image has loaded
         if (this._fboImage.complete) {
             context.drawImage(this._fboImage, 0, 0);    
+        } else if (this._fboImageTemp !== null){
+            console.log('drawing temp');
+            context.drawImage(this._fboImageTemp, 0, 0);
+            if (this.foo) {
+                context.drawImage(this._secondaryFboImage, 0, 0);
+                console.log('did this');
+            }
         }
     }
 
