@@ -208,6 +208,10 @@ function( BBModMouseInput,   BBModPointer,   BBModImageBrush2D,   BBModLineBrush
         canvas.width  = window.innerWidth;
         canvas.height = window.innerHeight;
 
+        if (typeof brushManager !== "undefined") {
+            brushManager.updateCanvasPosition();
+        }
+
         document.getElementById('brush-selection-image').onchange = onImageBrushSelection;
         document.getElementById('brush-selection-line').onchange = onLineBrushSelection;
         document.getElementById('undo-button').onclick = function() {
