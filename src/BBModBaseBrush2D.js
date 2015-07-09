@@ -2,8 +2,8 @@
  * Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D, etc...
  * @module BBModBaseBrush2D
  */
-define(['./BBModColor', './BBModBrushManager2D'],
-function(  BBModColor,     BBModBrushManager2D){
+define(['BBModBrushManager2D', './BBModColor'],
+function(BBModBrushManager2D,     BBModColor){
 
     /**
      * Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D,
