@@ -39,6 +39,7 @@
                         <div id="api-tabview-panel">
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/BBModBaseBrush2D.html">BBModBaseBrush2D</a></li>
+                                <li><a href="../classes/BBModBrushManager2D.html">BBModBrushManager2D</a></li>
                                 <li><a href="../classes/BBModImageBrush2D.html">BBModImageBrush2D</a></li>
                                 <li><a href="../classes/BBModLineBrush2D.html">BBModLineBrush2D</a></li>
                                 <li><a href="../classes/BBModMouseInput.html">BBModMouseInput</a></li>
@@ -221,6 +222,11 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
         context = BBModBaseBrush2D.prototype.draw.call(this, context);
 
+        context.save();
+
+        context.lineJoin = &quot;round&quot;;
+        context.lineCap = &quot;round&quot;;
+
         if (typeof this.variant !== &#x27;string&#x27; ||
             this.variants.indexOf(this.variant) === -1) {
             throw new Error(&quot;BBModBaseBrush2D.draw: &quot; + this.variant + &quot; is not a valid variant for BBModImageBrush2D&quot;);
@@ -233,8 +239,6 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
                 
                 if (this._lineStartedThisFrame) {
                     
-                    context.lineJoin = &quot;round&quot;;
-                    context.lineCap = &quot;round&quot;;
                     context.beginPath();
                     context.moveTo(this.x, this.y);
 
@@ -317,6 +321,8 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
         } else {
             this._lineStartedThisFrame = true;
         }
+
+        context.restore();
 
         this.prevX = this.x;
         this.prevY = this.y;

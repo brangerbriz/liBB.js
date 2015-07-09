@@ -17,7 +17,9 @@
             "modules": {
                 "BBModBrushManager2D": 1
             },
-            "classes": {},
+            "classes": {
+                "BBModBrushManager2D": 1
+            },
             "fors": {},
             "namespaces": {}
         },
@@ -92,13 +94,15 @@
         "BBModBrushManager2D": {
             "name": "BBModBrushManager2D",
             "submodules": {},
-            "classes": {},
+            "classes": {
+                "BBModBrushManager2D": 1
+            },
             "fors": {},
             "namespaces": {},
             "tag": "module",
             "file": "BBModBrushManager2D.js",
-            "line": 1,
-            "description": "Basic scene manager for brushes and pointers. BBModBrushMangager2D provides\nfunctionality to"
+            "line": 11,
+            "description": "Basic scene manager for brushes and pointers. BBModBrushManager2D allows a\ndrawing scene (that uses brushes) to persist while the rest of the canvas is\ncleared each frame. It also provides functionality to undo/redo manager to\nyour drawing actions."
         },
         "BBModImageBrush2D": {
             "name": "BBModImageBrush2D",
@@ -192,6 +196,28 @@
             ],
             "example": [
                 " <div><code> var baseBrush = new BBModBaseBrush2D({ width: 100,\nheight: 100, color: new BBModColor(255, 0, 0) }); </code></div>"
+            ]
+        },
+        "BBModBrushManager2D": {
+            "name": "BBModBrushManager2D",
+            "shortname": "BBModBrushManager2D",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "BBModBrushManager2D",
+            "namespace": "",
+            "file": "BBModBrushManager2D.js",
+            "line": 11,
+            "description": "Basic scene manager for brushes and pointers. BBModBrushManager2D allows a\ndrawing scene (that uses brushes) to persist while the rest of the canvas is\ncleared each frame. It also provides functionality to undo/redo manager to\nyour drawing actions.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "canvas",
+                    "description": "The HTML5 canvas element for the\nbrush manager to use.",
+                    "type": "[HTMLCanvasElement]"
+                }
             ]
         },
         "BBModImageBrush2D": {
@@ -422,6 +448,344 @@
             ],
             "class": "BBModBaseBrush2D",
             "module": "BBModBaseBrush2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 35,
+            "description": "The canvas element passed into the BBModBrushManager2D constructor",
+            "itemtype": "property",
+            "name": "_parentCanvas",
+            "type": "{HTMLCanvasElement}",
+            "access": "protected",
+            "tagname": "",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 43,
+            "description": "The 2D drawing context of the canvas element passed into the\nBBModBrushManager2D constructor",
+            "itemtype": "property",
+            "name": "_parentContext",
+            "type": "{CanvasRenderingContext2D}",
+            "access": "protected",
+            "tagname": "",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 52,
+            "description": "An in-memory canvas object used internally by BBModBrushManager to\ndraw to and read pixels from",
+            "itemtype": "property",
+            "name": "canvas",
+            "type": "{HTMLCanvasElement}",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 60,
+            "description": "The 2D drawing context of canvas",
+            "itemtype": "property",
+            "name": "context",
+            "type": "{CanvasRenderingContext2D}",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 67,
+            "description": "A secondary canvas that is used internally by BBModBrushManager. This\ncanvas is written to the DOM on top of _parentCanvas (the canvas\npassed into the BBModBaseBrush2D constructor). It is absolutely\npositioned and has a z-index 1 higher than _parentCanvas.",
+            "itemtype": "property",
+            "name": "secondaryCanvas",
+            "type": "{HTMLCanvasElement}",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 77,
+            "description": "The 2D drawing context of secondaryCanvas",
+            "itemtype": "property",
+            "name": "secondaryContext",
+            "type": "{CanvasRenderingContext2D}",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 89,
+            "description": "An array of base-64 encoded images that represent undo states.",
+            "itemtype": "property",
+            "name": "_history",
+            "type": "{Array}",
+            "access": "protected",
+            "tagname": "",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 97,
+            "description": "An array of base-64 encoded images that represent redo states.",
+            "itemtype": "property",
+            "name": "_purgatory",
+            "type": "{Array}",
+            "access": "protected",
+            "tagname": "",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 105,
+            "description": "An internal FBO (Frame Buffer Object) that is assigned the pixels\nfrom canvas and is drawn during BBModBrushManager2D.draw()",
+            "itemtype": "property",
+            "name": "_fboImage",
+            "type": "{Image}",
+            "access": "protected",
+            "tagname": "",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 120,
+            "description": "A deep copy of _fboImage that is drawn in BBModBrushManager2D.draw()\nwhen _fboImage is reloading",
+            "itemtype": "property",
+            "name": "_fboImageTemp",
+            "type": "{Image}",
+            "default": "null",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 133,
+            "description": "A secondary internal FBO (Frame Buffer Object) that is assigned the\npixels from _secondaryCanvas",
+            "itemtype": "property",
+            "name": "_secondaryFboImage",
+            "type": "{Image}",
+            "access": "protected",
+            "tagname": "",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 173,
+            "description": "An array of BBModPointer object used to control the brushes drawn to\nbrush mananger",
+            "itemtype": "property",
+            "name": "_pointers",
+            "type": "{Array}",
+            "access": "protected",
+            "tagname": "",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 182,
+            "description": "An array of booleans indicating which pointers are currently active (down)",
+            "itemtype": "property",
+            "name": "_pointerStates",
+            "type": "{Array}",
+            "access": "protected",
+            "tagname": "",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 190,
+            "description": "Internal flag to determin if BBModBrushManager2D.undo() was called\nsince the BBModBrushManager2D.update()",
+            "itemtype": "property",
+            "name": "_needsUndo",
+            "type": "{Boolean}",
+            "access": "protected",
+            "tagname": "",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 199,
+            "description": "Internal flag to determin if BBModBrushManager2D.redo() was called\nsince the BBModBrushManager2D.update()",
+            "itemtype": "property",
+            "name": "_needsRedo",
+            "type": "{Boolean}",
+            "access": "protected",
+            "tagname": "",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 208,
+            "description": "Boolean that holds true if at least one pointer is active (down)",
+            "itemtype": "property",
+            "name": "_somePointersDown",
+            "type": "{Boolean}",
+            "access": "protected",
+            "tagname": "",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 216,
+            "description": "Internal flag checked against in BBModBrushManager2D.draw() that\nholds wether or not _fboImage is finished loaded. Note: this flag is\npurposefully not set when _fboImage.src is set from undo() or redo().",
+            "itemtype": "property",
+            "name": "_fboImageLoadWaiting",
+            "type": "{Boolean}",
+            "access": "protected",
+            "tagname": "",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 230,
+            "description": "The number of undo/redo states to save",
+            "itemtype": "property",
+            "name": "numUndos",
+            "type": "{Number}",
+            "default": "5",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 251,
+            "description": "Set the brush manager to use these pointers when drawing.\nBBModBrushManager2D must be tracking at least one pointer in order to\nupdate().",
+            "itemtype": "method",
+            "name": "trackPointers",
+            "params": [
+                {
+                    "name": "pointers",
+                    "description": "An array of BBModPointer objects for\nBBModBrushManager2D to track.",
+                    "type": "Array"
+                }
+            ],
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 280,
+            "description": "Untrack all pointers.",
+            "itemtype": "method",
+            "name": "untrackPointers",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 289,
+            "description": "Untrack one pointer at index. Pointers tracked by BBModBrushManager2D\nhave indexes based on the order they were added by calls to\nBBModBrushManager2D.trackPointers(...). Untracking a pointer removes it\nfrom the internal _pointers array which changes the index of all pointers\nafter it. Keep this in mind when using this method.",
+            "itemtype": "method",
+            "name": "untrackPointers",
+            "params": [
+                {
+                    "name": "index",
+                    "description": "The index of the pointer to untrack.",
+                    "type": "Number"
+                }
+            ],
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 309,
+            "description": "A method to determin if the brush manager is currently tracking pointers",
+            "itemtype": "method",
+            "name": "hasPointers",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 318,
+            "description": "A method to determin if the brush manager currently has an undo state.",
+            "itemtype": "method",
+            "name": "hasUndo",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 327,
+            "description": "A method to determin if the brush manager currently has an redo state.",
+            "itemtype": "method",
+            "name": "hasRedo",
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 336,
+            "description": "BBModBrushManager2D's update method. Should be called once per animation frame.",
+            "itemtype": "method",
+            "name": "update",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 395,
+            "description": "Draws the brush manager scene to the canvas supplied in the\nBBModBrushManager2D constructor or the optionally, \"context\" if it was\nprovided as a parameter. Should be called once per animation frame.",
+            "itemtype": "method",
+            "name": "update",
+            "params": [
+                {
+                    "name": "context",
+                    "description": "An optional drawing context\nthat will be drawn to if it is supplied.",
+                    "type": "[CanvasRenderingContext2D]"
+                }
+            ],
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 428,
+            "description": "Undo one drawing action if available",
+            "itemtype": "method",
+            "name": "undo",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 439,
+            "description": "Undo redo one drawing action if available",
+            "itemtype": "method",
+            "name": "undo",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
+        },
+        {
+            "file": "BBModBrushManager2D.js",
+            "line": 450,
+            "description": "Notifies brush manager that the canvas passed into the\nBBModBrushManager2D constructor has been moved or resized. It is\nimportant to call this method whenever the positional CSS from the parent\ncanvas is changed so that BBModBrushManager2D's internal canvases may be\nupdated upropriately.",
+            "itemtype": "method",
+            "name": "updateCanvasPosition",
+            "class": "BBModBrushManager2D",
+            "module": "BBModBrushManager2D"
         },
         {
             "file": "BBModImageBrush2D.js",

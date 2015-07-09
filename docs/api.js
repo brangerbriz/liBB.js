@@ -2,6 +2,7 @@ YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
         "BBModBaseBrush2D",
+        "BBModBrushManager2D",
         "BBModImageBrush2D",
         "BBModLineBrush2D",
         "BBModMouseInput",
@@ -25,7 +26,7 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "BBModBrushManager2D",
             "name": "BBModBrushManager2D",
-            "description": "Basic scene manager for brushes and pointers. BBModBrushMangager2D provides\nfunctionality to"
+            "description": "Basic scene manager for brushes and pointers. BBModBrushManager2D allows a\ndrawing scene (that uses brushes) to persist while the rest of the canvas is\ncleared each frame. It also provides functionality to undo/redo manager to\nyour drawing actions."
         },
         {
             "displayName": "BBModImageBrush2D",
