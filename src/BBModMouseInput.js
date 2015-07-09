@@ -155,7 +155,7 @@ define(function(){
             return {
                 x: Math.round((e.clientX - rect.left) / (rect.right - rect.left) * self.canvasElem.width),
                 y: Math.round((e.clientY - rect.top) / (rect.bottom - rect.top) * self.canvasElem.height)
-            }
+            };
         }
     }
 
@@ -229,7 +229,7 @@ define(function(){
             
             this._moveCallback(this.x, this.y);
         }
-    }
+    };
 
     return BBModMouseInput;
 });

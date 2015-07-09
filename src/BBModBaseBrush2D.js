@@ -112,7 +112,7 @@ function(  BBModColor,     BBModBrushManager2D){
         } else {
             throw new Error('BBModBaseBrush.update: missing controllerModule parameter');
         }
-    }
+    };
 
     /**
      * Base draw method. Usually called once per animation frame.
@@ -131,7 +131,7 @@ function(  BBModColor,     BBModBrushManager2D){
         }
 
         return returnContext;
-    }
+    };
 
     /**
      * Multiplies width and height properties by amount.
@@ -148,7 +148,7 @@ function(  BBModColor,     BBModBrushManager2D){
         } else {
             throw new Error("BBModBaseBrush2D.scale: scale is not a number type");
         }
-    }
+    };
 
     return BBModBaseBrush2D;
 });

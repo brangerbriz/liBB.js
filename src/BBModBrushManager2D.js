@@ -5,8 +5,8 @@
  * your drawing actions.
  * @module BBModBrushManager2D
  */
-define(['./BBModBaseBrush2D', 'BBModBaseBrush2D', 'BBModPointer'],
-function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
+define(['./BBModBaseBrush2D', 'BBModPointer'],
+function(  BBModBaseBrush2D,   BBModPointer ){
 
     /**
      * Basic scene manager for brushes and pointers. BBModBrushManager2D allows a
@@ -28,8 +28,8 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
         }
 
         if (window.getComputedStyle(canvas).getPropertyValue('position') !== 'absolute') {
-            throw new Error('BBModBrushManager2D: the HTML5 canvas passed into the BBModBrushManager2D'
-            + ' constructor must be absolutely positioned. Sorry ;).');
+            throw new Error('BBModBrushManager2D: the HTML5 canvas passed into the BBModBrushManager2D' + 
+                ' constructor must be absolutely positioned. Sorry ;).');
         }
 
         /**
@@ -115,7 +115,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
             self.secondaryContext.clearRect(0, 0, self.canvas.width, self.canvas.height);
             self.secondaryCanvas.style.display = self._parentCanvas.style.display;
             self._fboImageLoadWaiting = false;
-        }
+        };
 
         /**
          * A deep copy of _fboImage that is drawn in BBModBrushManager2D.draw()
@@ -128,7 +128,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
 
         this._fboImage.onerror = function(err) {
            console.log('BBModBrushManager2D: src failed to load: ' + err.target.src);
-        }
+        };
 
         /**
          * A secondary internal FBO (Frame Buffer Object) that is assigned the
@@ -163,7 +163,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
             self.secondaryCanvas.style.display = "none";
             self._parentContext.drawImage(self._secondaryFboImage, 0, 0);
             self._fboImageLoadWaiting = true;
-        }
+        };
 
         //// https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
         //// uncommenting this causes error described here:
@@ -264,8 +264,8 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
              
                 var pointer = pointers[i];
                 if (! (pointer instanceof BBModPointer)) {
-                    throw new Error('BBModBrushManager2D.trackPointers: pointers[' 
-                        + i + '] is not an instance of BBModPointer.');
+                    throw new Error('BBModBrushManager2D.trackPointers: pointers[' +
+                        i + '] is not an instance of BBModPointer.');
                 } else {
                     this._pointers.push(pointer);
                     this._pointerStates.push(pointer.isDown);
@@ -275,7 +275,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
         } else {
             throw new Error('BBModBrushManager2D.trackPointers: pointers parameter must be an array of pointers.');
         }
-    }
+    };
 
     /**
      * Untrack all pointers.
@@ -284,7 +284,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
     BBModBrushManager2D.prototype.untrackPointers = function() {
         this._pointers = [];
         this._pointerStates = [];
-    }
+    };
 
     /**
      * Untrack one pointer at index. Pointers tracked by BBModBrushManager2D
@@ -301,10 +301,10 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
             this._pointers.splice(index, 1);
             this._pointerStates.splice(index, 1);
         } else {
-            throw new Error('BBModBrushManager2D.untrackPointerAtIndex: Invalid pointer index ' 
-                + index + '. there is no pointer at that index.');
+            throw new Error('BBModBrushManager2D.untrackPointerAtIndex: Invalid pointer index ' +
+                index + '. there is no pointer at that index.');
         }
-    }
+    };
 
     /**
      * A method to determin if the brush manager is currently tracking pointers
@@ -313,7 +313,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
      */
     BBModBrushManager2D.prototype.hasPointers = function() {
         return this._pointers.length > 0;
-    }
+    };
 
     /**
      * A method to determin if the brush manager currently has an undo state.
@@ -322,7 +322,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
      */
     BBModBrushManager2D.prototype.hasUndo = function() {
         return this._history.length > 1;
-    }
+    };
 
     /**
      * A method to determin if the brush manager currently has an redo state.
@@ -331,7 +331,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
      */
     BBModBrushManager2D.prototype.hasRedo = function() {
         return this._purgatory.length > 0;
-    }
+    };
 
     /**
      * BBModBrushManager2D's update method. Should be called once per animation frame.
@@ -340,11 +340,11 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
     BBModBrushManager2D.prototype.update = function() {
 
         if (! this.hasPointers()) {
-            throw new Error('BBModBrushManager2D.update: You must add at least one pointer to '
-                            + 'the brush manager with BBModBrushManager2D.addPointers(...)');
+            throw new Error('BBModBrushManager2D.update: You must add at least one pointer to ' +
+                            'the brush manager with BBModBrushManager2D.addPointers(...)');
         }
 
-        var somePointersDown = this._pointerStates.some(function(val){ return val === true });
+        var somePointersDown = this._pointerStates.some(function(val){ return val === true; });
 
         // if there are no pointers down this frame
         // but there were some last frame
@@ -390,7 +390,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
                 this._purgatory = [];
             }
         }
-    }
+    };
 
     /**
      * Draws the brush manager scene to the canvas supplied in the
@@ -423,7 +423,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
 
             }
         }
-    }
+    };
 
     /**
      * Undo one drawing action if available
@@ -434,7 +434,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
         if (this._history.length > 1) {
             this._needsUndo = true; 
         }
-    }
+    };
 
     /**
      * Undo redo one drawing action if available
@@ -445,7 +445,7 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
         if (this._history.length > 0) {
             this._needsRedo = true;
         }
-    }
+    };
 
     /**
      * Notifies brush manager that the canvas passed into the
@@ -476,19 +476,18 @@ function(  BBModBaseBrush2D,   BBModBaseBrush2D,   BBModPointer ){
 
         if (isNaN(parentZIndex)) {
 
-            throw new Error('BBModBrushManager2D: the HTML5 canvas passed into the BBModBrushManager2D'
-                + ' constructor should have a z-index property value that is numeric. Currently the value is "' 
-                + parentZIndex + '".');
-
             parentZIndex = 0;
+            this.secondaryCanvas.style.zIndex = parentZIndex + 1;
+
+            throw new Error('BBModBrushManager2D: the HTML5 canvas passed into the BBModBrushManager2D' +
+                ' constructor should have a z-index property value that is numeric. Currently the value is "' +
+                parentZIndex + '".');
 
         } else {
             parentZIndex = parseInt(parentZIndex);
-        }
-
-        this.secondaryCanvas.style.zIndex = parentZIndex + 1;
-         
-    }
+            this.secondaryCanvas.style.zIndex = parentZIndex + 1;
+        } 
+    };
 
     return BBModBrushManager2D;
 });

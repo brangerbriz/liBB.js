@@ -14,23 +14,23 @@ define(function(){
         if (g !== undefined) this.g = g;
         if (b !== undefined) this.b = b;
         if (a !== undefined) this.a = a;
-    }
+    };
 
     BBModColor.prototype.isEqual = function(color, excludeAlpha) {
 
-        if (! color || ! color instanceof BBModColor) {
+        if (! color || ! (color instanceof BBModColor)) {
             throw new Error("BBModColor.isEqual: color parameter is not an instance of BBModColor");
         }
 
         if (excludeAlpha) {
             return (this.r === color.r &&
                     this.g === color.g &&
-                    this.b === color.b)
+                    this.b === color.b);
         } else {
             return (this.r === color.r &&
                     this.g === color.g &&
                     this.b === color.b &&
-                    this.a === color.a)
+                    this.a === color.a);
         }
     };
 

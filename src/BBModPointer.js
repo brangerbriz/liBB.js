@@ -39,11 +39,11 @@ define(['./BBModMouseInput'], function(BBModMouseInput){
      */
     function BBModPointer(controllerModule) {
 
-        if (!controllerModule) {
+        if (typeof controllerModule === "undefined") {
             throw new Error('BBModPointer: controllerModule parameter is missing from the BBModPointer constructor.');
-        } else if (!controllerModule instanceof BBModMouseInput) {
-            throw new Error("BBModPointer.update: controllerModule is not a supported object type.");
+        } else if (! (controllerModule instanceof BBModMouseInput)) {
             this.controllerModule = null;
+            throw new Error("BBModPointer.update: controllerModule is not a supported object type.");
         }
 
         this.controllerModule = controllerModule;
@@ -134,7 +134,7 @@ define(['./BBModMouseInput'], function(BBModMouseInput){
             this.isDown                = this.controllerModule.isDown;
             this.hasSelectionInterface = false;
         }
-    }
+    };
 
     /**
      * A method used to register "activestart", "activestop", "movestart", and
@@ -159,12 +159,12 @@ define(['./BBModMouseInput'], function(BBModMouseInput){
         }
 
         if (this._controllerModule === null) {
-            throw new Error('BBModPointer.on: pointer has no controller module.'
-                            +' You must first call BBModPointer.update() to assign this pointer a controller module.');
+            throw new Error('BBModPointer.on: pointer has no controller module.' +
+                            ' You must first call BBModPointer.update() to assign this pointer a controller module.');
         }
 
         bindEventsToControllerModule.call(this);
-    }
+    };
 
     return BBModPointer;
 });

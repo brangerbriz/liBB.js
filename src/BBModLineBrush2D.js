@@ -116,7 +116,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
         } else {
             controllerModuleHasIsDown = false;
         }
-    }
+    };
 
     /**
      * Draws the brush to the context. Usually called once per animation frame.
@@ -173,7 +173,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
                         this.weight = Math.abs(dx - dy);
 
-                        if( this.weight > 100){ this.weight = 100 }
+                        if( this.weight > 100){ this.weight = 100; }
 
                         context.lineWidth = BBModMathUtils.map(this.weight, 0, 100, this.height / 2.5, this.height * 2.5);
                         context.lineTo(this.x, this.y);
@@ -195,7 +195,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
                             gradient.addColorStop(1, "rgba(" + r + ", " + g + ", " + b + ', 0)');
                             context.fillStyle = gradient;
                             context.fillRect(x - this.height/2, y - this.height/2, this.height, this.height);
-                        };
+                        }
 
                     } else if(this.variant == 'lines' || this.variant == 'calligraphy'){
 
@@ -233,7 +233,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
         this.prevX = this.x;
         this.prevY = this.y;
-    }
+    };
 
     return BBModLineBrush2D;
 });
