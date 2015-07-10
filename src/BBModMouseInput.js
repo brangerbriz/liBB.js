@@ -5,6 +5,8 @@
  */
 define(function(){
     
+    'use strict';
+    
     /**
      * A module for standardizing mouse events so that they may be used with
      * the event funnel suite of modules.

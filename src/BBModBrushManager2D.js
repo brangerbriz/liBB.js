@@ -8,6 +8,8 @@
 define(['BBModPointer'],
 function(BBModPointer ){
 
+    'use strict';
+
     /**
      * Basic scene manager for brushes and pointers. BBModBrushManager2D allows a
      * drawing scene (that uses brushes) to persist while the rest of the canvas is

@@ -6,6 +6,8 @@
 define(['./BBModBaseBrush2D', './BBModColor', './BBModMathUtils'], 
 function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
+    'use strict';
+
     var drawReady = false;
     var initSrcSet = false;
 

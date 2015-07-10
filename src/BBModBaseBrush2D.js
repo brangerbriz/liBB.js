@@ -5,6 +5,8 @@
 define(['BBModBrushManager2D', './BBModColor'],
 function(BBModBrushManager2D,     BBModColor){
 
+    'use strict';
+
     /**
      * Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D,
      * etc...

@@ -1,5 +1,7 @@
 define(function(){
 
+    'use strict';
+
     function BBModColor(r, g, b, a) {
         
         this.r = r || 0;
