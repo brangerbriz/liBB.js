@@ -117,8 +117,8 @@
  * your drawing actions.
  * @module BBModBrushManager2D
  */
-define([&#x27;./BBModBaseBrush2D&#x27;, &#x27;BBModPointer&#x27;],
-function(  BBModBaseBrush2D,   BBModPointer ){
+define([&#x27;BBModPointer&#x27;],
+function(BBModPointer ){
 
     /**
      * Basic scene manager for brushes and pointers. BBModBrushManager2D allows a
@@ -130,6 +130,7 @@ function(  BBModBaseBrush2D,   BBModPointer ){
      * @param {[HTMLCanvasElement]} canvas The HTML5 canvas element for the
      * brush manager to use.
      */
+    
     function BBModBrushManager2D(canvas) {
 
         var self = this;
@@ -504,6 +505,7 @@ function(  BBModBaseBrush2D,   BBModPointer ){
         }
     };
 
+
     /**
      * Draws the brush manager scene to the canvas supplied in the
      * BBModBrushManager2D constructor or the optionally, &quot;context&quot; if it was
@@ -583,6 +585,9 @@ function(  BBModBaseBrush2D,   BBModPointer ){
         this.secondaryCanvas.style.right         = parentCanvasStyle.getPropertyValue(&#x27;right&#x27;);
         this.secondaryCanvas.style.bottom        = parentCanvasStyle.getPropertyValue(&#x27;bottom&#x27;);
         this.secondaryCanvas.style.left          = parentCanvasStyle.getPropertyValue(&#x27;left&#x27;);
+        this.secondaryCanvas.style.margin        = parentCanvasStyle.getPropertyValue(&#x27;margin&#x27;);
+        this.secondaryCanvas.style.border        = parentCanvasStyle.getPropertyValue(&#x27;border&#x27;);
+        this.secondaryCanvas.style.padding       = parentCanvasStyle.getPropertyValue(&#x27;padding&#x27;);
         
         var parentZIndex = parentCanvasStyle.getPropertyValue(&#x27;z-index&#x27;);
 

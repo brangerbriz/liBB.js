@@ -16,6 +16,7 @@ define(function(){
         if (a !== undefined) this.a = a;
     };
 
+
     BBModColor.prototype.isEqual = function(color, excludeAlpha) {
 
         if (! color || ! (color instanceof BBModColor)) {
