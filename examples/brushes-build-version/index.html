@@ -1,0 +1,79 @@
+<html>
+<head>
+    <title>BBModule Brush Example</title>
+    <style type="text/css">
+        
+        body {
+            font-family: "Courier New", Courier, monospace;
+            color: #cc3399;
+        }
+        
+        #info {
+            z-index: 2;
+            position: absolute;
+            top: 0;
+            pointer-events: none;
+        }
+
+        h4 {
+            margin-bottom: 2px;
+        }
+
+        #brush-selection {
+            pointer-events: auto;
+        }
+
+        #brush-input {
+            position: absolute;
+            top: 0;
+            right: 20;
+            z-index: 2;
+        }
+
+        #canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h4>Base Brush Properties</h4>
+        <span id="base-brush-x">0</span>, <span id="base-brush-y">0</span><br>
+        width: <span id="base-brush-width">null</span><br>
+        height: <span id="base-brush-height">null</span><br>
+        rotation: <span id="base-brush-rotation">null</span><br>
+        color: <span id="base-brush-color-r">null</span>, <span id="base-brush-color-g">null</span>, <span id="base-brush-color-b">null</span><br>
+
+        <div id="secondary-brush-box" style="display: none;">
+            <h4><span id="brush-type"></span> Brush</h4>
+            <div id="secondary-brush-properties"></div>
+        </div>
+    </div>
+
+    <div id="brush-input">
+        <div id="brush-selection">
+            <h4>Brush</h4>
+            <form>
+                <input id="brush-selection-image" type="radio" name="brush" value="BBModImageBrush2D"> BBModImageBrush2D<br/>
+                <input id="brush-selection-line"  type="radio" name="brush" value="BBModLineBrush2D" checked> BBModLineBrush2D
+            </form>
+        </div>
+
+        <div id="variant-selection">
+            <h4>variant</h4>
+            <form id="variant-container"></form>
+        </div>
+
+        <button id="undo-button">Undo</button> 
+        <button id="redo-button">Redo</button>
+    </div>
+
+    <canvas id="canvas"></canvas>
+    <script type="text/javascript" src="../../build/build.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
+</body>
+</html>
