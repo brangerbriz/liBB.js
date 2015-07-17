@@ -12,9 +12,14 @@ define(function(){
      * the event funnel suite of modules.
      * @class  BBModMouseInput
      * @constructor
-     * @param {Object} canvasElement The HTML5 canvas object listening for mouse input.
+     * @param {HTMLCanvasElement} canvasElement The HTML5 canvas object listening for mouse input.
      */
     function BBModMouseInput(canvasElement) {
+
+        if (typeof canvasElement === 'undefined' || 
+            !(canvasElement instanceof HTMLCanvasElement)) {
+            throw new Error('BBModMouseInput: An HTML5 canvas object must be supplied as a first parameter.');
+        }
 
         var self = this;
         var movingTimeout = null;

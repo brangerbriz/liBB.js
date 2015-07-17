@@ -53,6 +53,8 @@
             
                 <li><a href="../classes/BBModPointer.html">BBModPointer</a></li>
             
+                <li><a href="../classes/BBModVector2.html">BBModVector2</a></li>
+            
             </ul>
 
             <ul id="api-modules" class="apis modules">
@@ -70,6 +72,8 @@
                 <li><a href="../modules/BBModMouseInput.html">BBModMouseInput</a></li>
             
                 <li><a href="../modules/BBModPointer.html">BBModPointer</a></li>
+            
+                <li><a href="../modules/BBModVector2.html">BBModVector2</a></li>
             
             </ul>
         </div>
@@ -258,9 +262,9 @@ function(BBModPointer ){
         // all pointers are up and at least one was down last frame
         this._secondaryFboImage.onload = function() {
 
-            self.context.clearRect(0, 0, self.canvas.width, self.canvas.height);
+            // self.context.clearRect(0, 0, self.canvas.width, self.canvas.height);
     
-            self.context.drawImage(self._fboImage, 0, 0);
+            // self.context.drawImage(self._fboImage, 0, 0);
             self.context.drawImage(self._secondaryFboImage, 0, 0);
 
             if (self._history.length === self.numUndos + 1) {
@@ -527,15 +531,15 @@ function(BBModPointer ){
         // if the image has loaded
         if (this._fboImage.complete) {
 
-            context.drawImage(this._fboImage, 0, 0);   
+            try { context.drawImage(this._fboImage, 0, 0); } catch(err) {console.log(1); }
 
         } else if (this._fboImageTemp !== null){
 
-            context.drawImage(this._fboImageTemp, 0, 0);
+            try { context.drawImage(this._fboImageTemp, 0, 0); } catch(err) {console.log(2); }
 
             if (this._fboImageLoadWaiting) {
 
-                context.drawImage(this._secondaryFboImage, 0, 0);
+                try { context.drawImage(this._secondaryFboImage, 0, 0); } catch(err) {console.log(3); }
 
             }
         }
