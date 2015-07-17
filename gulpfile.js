@@ -61,7 +61,7 @@ gulp.task('docs', function() {
 });
 
 gulp.task('scripts', function () {
-    return gulp.src(srcDir + mainFile)
+    return gulp.src(srcDir + '/' + mainFile)
         .pipe(requireJSOptimize(requireJSOptimizeConfig))
         .pipe(gulp.dest(buildDir))
         .pipe(rename('BBMod.min.js'))
