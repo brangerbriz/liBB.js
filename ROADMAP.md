@@ -22,6 +22,8 @@ POG.BrushManager
 - Kinect (As input)
 - Leap Motion
 - Most Pixels Ever
+- GPGPU
+- Shaders
 
 ## Blog Posts
 
