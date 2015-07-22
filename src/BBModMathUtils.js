@@ -159,4 +159,6 @@ define(function(){
 
         return degrees * (Math.PI / 180.0);
     };
+
+    return BBModMathUtils;
 });
