@@ -53,6 +53,8 @@
             
                 <li><a href="../classes/BBModPointer.html">BBModPointer</a></li>
             
+                <li><a href="../classes/BBModVector2.html">BBModVector2</a></li>
+            
             </ul>
 
             <ul id="api-modules" class="apis modules">
@@ -70,6 +72,8 @@
                 <li><a href="../modules/BBModMouseInput.html">BBModMouseInput</a></li>
             
                 <li><a href="../modules/BBModPointer.html">BBModPointer</a></li>
+            
+                <li><a href="../modules/BBModVector2.html">BBModVector2</a></li>
             
             </ul>
         </div>
@@ -117,14 +121,21 @@
  */
 define(function(){
     
+    &#x27;use strict&#x27;;
+    
     /**
      * A module for standardizing mouse events so that they may be used with
      * the event funnel suite of modules.
      * @class  BBModMouseInput
      * @constructor
-     * @param {Object} canvasElement The HTML5 canvas object listening for mouse input.
+     * @param {HTMLCanvasElement} canvasElement The HTML5 canvas object listening for mouse input.
      */
     function BBModMouseInput(canvasElement) {
+
+        if (typeof canvasElement === &#x27;undefined&#x27; || 
+            !(canvasElement instanceof HTMLCanvasElement)) {
+            throw new Error(&#x27;BBModMouseInput: An HTML5 canvas object must be supplied as a first parameter.&#x27;);
+        }
 
         var self = this;
         var movingTimeout = null;

@@ -12,11 +12,13 @@
  */
 define(['./BBModMouseInput'], function(BBModMouseInput){
 
+    'use strict';
 
     //NOTE: called inside BBModPointer using .call()
     //to bind this to BBModPointer instance
     function bindEventsToControllerModule() {
-
+    /*jshint validthis: true */
+    
         // the BBMouseInput module uses event listeners attatched to it's
         // HTML5 canvas to fire these callbacks directly, so pass them along.
         if (this.controllerModule instanceof BBModMouseInput) {

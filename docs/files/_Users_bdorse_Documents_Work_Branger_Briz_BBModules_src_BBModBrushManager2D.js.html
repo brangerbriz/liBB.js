@@ -53,6 +53,8 @@
             
                 <li><a href="../classes/BBModPointer.html">BBModPointer</a></li>
             
+                <li><a href="../classes/BBModVector2.html">BBModVector2</a></li>
+            
             </ul>
 
             <ul id="api-modules" class="apis modules">
@@ -70,6 +72,8 @@
                 <li><a href="../modules/BBModMouseInput.html">BBModMouseInput</a></li>
             
                 <li><a href="../modules/BBModPointer.html">BBModPointer</a></li>
+            
+                <li><a href="../modules/BBModVector2.html">BBModVector2</a></li>
             
             </ul>
         </div>
@@ -117,8 +121,10 @@
  * your drawing actions.
  * @module BBModBrushManager2D
  */
-define([&#x27;./BBModBaseBrush2D&#x27;, &#x27;BBModPointer&#x27;],
-function(  BBModBaseBrush2D,   BBModPointer ){
+define([&#x27;BBModPointer&#x27;],
+function(BBModPointer ){
+
+    &#x27;use strict&#x27;;
 
     /**
      * Basic scene manager for brushes and pointers. BBModBrushManager2D allows a
@@ -130,6 +136,7 @@ function(  BBModBaseBrush2D,   BBModPointer ){
      * @param {[HTMLCanvasElement]} canvas The HTML5 canvas element for the
      * brush manager to use.
      */
+    
     function BBModBrushManager2D(canvas) {
 
         var self = this;
@@ -255,9 +262,9 @@ function(  BBModBaseBrush2D,   BBModPointer ){
         // all pointers are up and at least one was down last frame
         this._secondaryFboImage.onload = function() {
 
-            self.context.clearRect(0, 0, self.canvas.width, self.canvas.height);
+            // self.context.clearRect(0, 0, self.canvas.width, self.canvas.height);
     
-            self.context.drawImage(self._fboImage, 0, 0);
+            // self.context.drawImage(self._fboImage, 0, 0);
             self.context.drawImage(self._secondaryFboImage, 0, 0);
 
             if (self._history.length === self.numUndos + 1) {
@@ -504,6 +511,7 @@ function(  BBModBaseBrush2D,   BBModPointer ){
         }
     };
 
+
     /**
      * Draws the brush manager scene to the canvas supplied in the
      * BBModBrushManager2D constructor or the optionally, &quot;context&quot; if it was
@@ -523,15 +531,15 @@ function(  BBModBaseBrush2D,   BBModPointer ){
         // if the image has loaded
         if (this._fboImage.complete) {
 
-            context.drawImage(this._fboImage, 0, 0);   
+            try { context.drawImage(this._fboImage, 0, 0); } catch(err) {console.log(1); }
 
         } else if (this._fboImageTemp !== null){
 
-            context.drawImage(this._fboImageTemp, 0, 0);
+            try { context.drawImage(this._fboImageTemp, 0, 0); } catch(err) {console.log(2); }
 
             if (this._fboImageLoadWaiting) {
 
-                context.drawImage(this._secondaryFboImage, 0, 0);
+                try { context.drawImage(this._secondaryFboImage, 0, 0); } catch(err) {console.log(3); }
 
             }
         }
@@ -583,6 +591,9 @@ function(  BBModBaseBrush2D,   BBModPointer ){
         this.secondaryCanvas.style.right         = parentCanvasStyle.getPropertyValue(&#x27;right&#x27;);
         this.secondaryCanvas.style.bottom        = parentCanvasStyle.getPropertyValue(&#x27;bottom&#x27;);
         this.secondaryCanvas.style.left          = parentCanvasStyle.getPropertyValue(&#x27;left&#x27;);
+        this.secondaryCanvas.style.margin        = parentCanvasStyle.getPropertyValue(&#x27;margin&#x27;);
+        this.secondaryCanvas.style.border        = parentCanvasStyle.getPropertyValue(&#x27;border&#x27;);
+        this.secondaryCanvas.style.padding       = parentCanvasStyle.getPropertyValue(&#x27;padding&#x27;);
         
         var parentZIndex = parentCanvasStyle.getPropertyValue(&#x27;z-index&#x27;);
 

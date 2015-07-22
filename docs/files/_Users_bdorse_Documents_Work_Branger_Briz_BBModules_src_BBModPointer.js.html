@@ -53,6 +53,8 @@
             
                 <li><a href="../classes/BBModPointer.html">BBModPointer</a></li>
             
+                <li><a href="../classes/BBModVector2.html">BBModVector2</a></li>
+            
             </ul>
 
             <ul id="api-modules" class="apis modules">
@@ -70,6 +72,8 @@
                 <li><a href="../modules/BBModMouseInput.html">BBModMouseInput</a></li>
             
                 <li><a href="../modules/BBModPointer.html">BBModPointer</a></li>
+            
+                <li><a href="../modules/BBModVector2.html">BBModVector2</a></li>
             
             </ul>
         </div>
@@ -124,11 +128,13 @@
  */
 define([&#x27;./BBModMouseInput&#x27;], function(BBModMouseInput){
 
+    &#x27;use strict&#x27;;
 
     //NOTE: called inside BBModPointer using .call()
     //to bind this to BBModPointer instance
     function bindEventsToControllerModule() {
-
+    /*jshint validthis: true */
+    
         // the BBMouseInput module uses event listeners attatched to it&#x27;s
         // HTML5 canvas to fire these callbacks directly, so pass them along.
         if (this.controllerModule instanceof BBModMouseInput) {

@@ -53,6 +53,8 @@
             
                 <li><a href="../classes/BBModPointer.html">BBModPointer</a></li>
             
+                <li><a href="../classes/BBModVector2.html">BBModVector2</a></li>
+            
             </ul>
 
             <ul id="api-modules" class="apis modules">
@@ -70,6 +72,8 @@
                 <li><a href="../modules/BBModMouseInput.html">BBModMouseInput</a></li>
             
                 <li><a href="../modules/BBModPointer.html">BBModPointer</a></li>
+            
+                <li><a href="../modules/BBModVector2.html">BBModVector2</a></li>
             
             </ul>
         </div>
@@ -114,8 +118,10 @@
  * Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D, etc...
  * @module BBModBaseBrush2D
  */
-define([&#x27;./BBModColor&#x27;, &#x27;./BBModBrushManager2D&#x27;],
-function(  BBModColor,     BBModBrushManager2D){
+define([&#x27;BBModBrushManager2D&#x27;, &#x27;./BBModColor&#x27;],
+function(BBModBrushManager2D,     BBModColor){
+
+    &#x27;use strict&#x27;;
 
     /**
      * Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D,
@@ -193,7 +199,7 @@ function(  BBModColor,     BBModBrushManager2D){
          * @type String
          * @default &quot;base&quot;
          */
-        this.type = &quot;base&quot;;
+        this.type    = &quot;base&quot;;
 
         this.manager = (config &amp;&amp; config.manager &amp;&amp; config.manager instanceof BBModBrushManager2D) ? config.manager : null;
     }

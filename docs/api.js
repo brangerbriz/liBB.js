@@ -6,7 +6,8 @@ YUI.add("yuidoc-meta", function(Y) {
         "BBModImageBrush2D",
         "BBModLineBrush2D",
         "BBModMouseInput",
-        "BBModPointer"
+        "BBModPointer",
+        "BBModVector2"
     ],
     "modules": [
         "BBModBaseBrush2D",
@@ -15,7 +16,8 @@ YUI.add("yuidoc-meta", function(Y) {
         "BBModLineBrush2D",
         "BBModMathUtils",
         "BBModMouseInput",
-        "BBModPointer"
+        "BBModPointer",
+        "BBModVector2"
     ],
     "allModules": [
         {
@@ -52,6 +54,11 @@ YUI.add("yuidoc-meta", function(Y) {
             "displayName": "BBModPointer",
             "name": "BBModPointer",
             "description": "A module for funneling in and standardizing basic pointer-like interfaces\nlike mouse and touch."
+        },
+        {
+            "displayName": "BBModVector2",
+            "name": "BBModVector2",
+            "description": "A vector in 2 dimensional space. A direct copy of Three.js's Vector2 class."
         }
     ]
 } };

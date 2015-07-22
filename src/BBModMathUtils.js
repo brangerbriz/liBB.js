@@ -3,7 +3,12 @@
  * @module BBModMathUtils
  * @static
  */
-define({
+define(function(){
+
+    'use strict';
+
+    function BBModMathUtils() {}
+
     /**
      * Scales value using min and max. This is the inverse of BBModMathUtils.lerp(...).
      * @method norm
@@ -13,7 +18,7 @@ define({
      * @param  {Number} max
      * @return {Number}       Returns the scaled value.
      */
-    norm: function(value, min, max) {
+    BBModMathUtils.norm = function(value, min, max) {
 
         if (typeof value !== "number") {
             throw new Error("BBModMathUtils.norm: value is not a number type");
@@ -24,7 +29,8 @@ define({
         }
 
         return (value - min) / (max - min);
-    },
+    };
+
      /**
      * Linear interpolate norm from min and max. This is the inverse of BBModMathUtils.norm(...).
      * @method lerp
@@ -34,7 +40,7 @@ define({
      * @param  {Number} max
      * @return {Number}       Returns the lerped norm.
      */
-    lerp: function(norm, min, max) {
+    BBModMathUtils.lerp = function(norm, min, max) {
 
         if (typeof norm !== "number") {
             throw new Error("BBModMathUtils.lerp: norm is not a number type");
@@ -45,7 +51,7 @@ define({
         }
 
         return (max - min) * norm + min;
-    },
+    };
     /**
      * Maps (scales) value between sourceMin and sourceMax to destMin and destMax.
      * @method map
@@ -57,7 +63,7 @@ define({
      * @param  {Number} destMax
      * @return {Number} Returns the mapped value.
      */
-    map: function(value, sourceMin, sourceMax, destMin, destMax) {
+    BBModMathUtils.map = function(value, sourceMin, sourceMax, destMin, destMax) {
 
         if (typeof value !== "number") {
             throw new Error("BBModMathUtils.map: value is not a number type");
@@ -72,7 +78,7 @@ define({
         }
 
         return this.lerp(this.norm(value, sourceMin, sourceMax), destMin, destMax);
-    },
+    };
     /**
      * Get the distance between two points.
      * @method  dist
@@ -83,7 +89,7 @@ define({
      * @param  {Number} p2y The y value of the second point.
      * @return {Number} Returns the distance between (p1x, p1y) and (p2x, p2y).
      */
-    dist: function(p1x, p1y, p2x, p2y){
+    BBModMathUtils.dist = function(p1x, p1y, p2x, p2y){
         
         if (typeof p1x !== "number") {
             throw new Error("BBModMathUtils.dist: p1x is not a number type");
@@ -96,7 +102,7 @@ define({
         }
 
         return Math.sqrt(Math.pow(p2x - p1x, 2) + Math.pow(p2y - p1y, 2));
-    },
+    };
     /**
      * Get the angle between two points in radians. For degrees process this
      * return value through BBModMathUtils.radToDegree(...).
@@ -109,7 +115,7 @@ define({
      * @return {Number} Returns the angle between (p1x, p1y) and (p2x, p2y) in
      * radians.
      */
-    angleBtw: function(p1x, p1y, p2x, p2y){
+    BBModMathUtils.angleBtw = function(p1x, p1y, p2x, p2y){
 
         if (typeof p1x !== "number") {
             throw new Error("BBModMathUtils.angleBtwn: p1x is not a number type");
@@ -122,7 +128,7 @@ define({
         }
 
         return Math.atan2( p2x - p1x, p2y - p1y );
-    },
+    };
     /**
      * Translate radians into degrees.
      * @method  radToDeg
@@ -130,14 +136,14 @@ define({
      * @param  {[type]} radians
      * @return {[type]}         Returns radians in degrees.
      */
-    radToDeg: function(radians) {
+    BBModMathUtils.radToDeg = function(radians) {
 
         if (typeof radians !== "number") {
             throw new Error("BBModMathUtils.radToDegree: radians is not a number type");
         }
 
         return radians * (180.0 / Math.PI);
-    },
+    };
     /**
      * Translate degrees into radians.
      * @method  degToRad
@@ -145,12 +151,12 @@ define({
      * @param  {[type]} degrees
      * @return {[type]}         Returns degrees in radians.
      */
-    degToRad: function(degrees) {
+    BBModMathUtils.degToRad = function(degrees) {
 
         if (typeof degrees !== "number") {
             throw new Error("BBModMathUtils.degToRad: degrees is not a number type");
         }
 
         return degrees * (Math.PI / 180.0);
-    }  
+    };
 });

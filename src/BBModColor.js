@@ -4,6 +4,8 @@
  */
 define(function(){
 
+    'use strict';
+    
     /**
      * A module for creating color objects and doing color maths
      * @class BBModColor
@@ -17,7 +19,7 @@ define(function(){
      * &nbsp; var color = new BBModColor(255,0,0); 
      * </code></section>
      */
-    
+
     function BBModColor(r, g, b, a) {
 
         // see getter/setter below
@@ -307,6 +309,7 @@ define(function(){
     BBModColor.prototype.getHex = function() { 
         return "#" +((this.r << 16) | (this.g << 8) | this.b).toString(16);
     };
+
 
     BBModColor.prototype.isEqual = function(color, excludeAlpha) {
 

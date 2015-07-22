@@ -5,6 +5,8 @@
 define(['BBModBrushManager2D', './BBModColor'],
 function(BBModBrushManager2D,     BBModColor){
 
+    'use strict';
+
     /**
      * Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D,
      * etc...
@@ -81,7 +83,7 @@ function(BBModBrushManager2D,     BBModColor){
          * @type String
          * @default "base"
          */
-        this.type = "base";
+        this.type    = "base";
 
         this.manager = (config && config.manager && config.manager instanceof BBModBrushManager2D) ? config.manager : null;
     }
