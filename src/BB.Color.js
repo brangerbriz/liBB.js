@@ -297,14 +297,30 @@ function(  BB){
         this.hsv2rgb();
     };
 
+
+    /**
+     * returns rgb string for color
+     * @method getRGB
+     * @return {String} for example <code>'rgb(255,0,0)'</code>
+     */
     BB.Color.prototype.getRGB = function() { 
         return 'rgb('+this.r+', '+this.g+', '+this.b+')';
     };
 
+    /**
+     * returns rgba string for color
+     * @method getRGBA
+     * @return {String} for example <code>'rgba(255,0,0,255)'</code>
+     */
     BB.Color.prototype.getRGBA = function() { 
         return 'rgba('+this.r+', '+this.g+', '+this.b+', '+this.a+')';
     };
 
+    /**
+     * returns hex string for color
+     * @method getHex
+     * @return {String} for example <code>'#ff0000'</code>
+     */
     BB.Color.prototype.getHex = function() { 
         return "#" +((this.r << 16) | (this.g << 8) | this.b).toString(16);
     };
