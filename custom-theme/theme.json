@@ -1,0 +1,9 @@
+{
+	"projectName" : "BBMod",
+	
+	"projectVersion" : "0.0.1",
+	
+	"projectDescription" : "a set of JavaScript modules for creating interactive && generative apps + installations",
+	
+	"cred" : "lots of coyp+paste from >> https://github.com/Krxtopher/yuidoc-themes"
+}
