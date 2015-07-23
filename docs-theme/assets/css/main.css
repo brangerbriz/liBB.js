@@ -229,6 +229,7 @@
             .params-list { list-style-type: none; padding: 0; }
 
             .returns { margin-top: 20px; }
+            .returns h4 .type { font-family: Consolas, Menlo, "Courier New", monospace;  }
 
             .params-list,
             .returns-description { margin: 0 0 0 .7em; }
