@@ -27,7 +27,7 @@ var jshint            = require('gulp-jshint');
 var jshintStylish     = require('jshint-stylish');
 var uglify            = require('gulp-uglify');
 var rename            = require('gulp-rename');
-var yuidoc            = require('gulp-yuidoc');
+var yuidoc            = require('gulp-yuidoc-relative');
 var requireJSOptimize = require('gulp-requirejs-optimize');
 
 var packageName = 'BB';
@@ -56,7 +56,11 @@ gulp.task('lint', function() {
 
 gulp.task('docs', function() {
     return gulp.src(srcDir + '/*.js')
-        .pipe(yuidoc())
+        .pipe(yuidoc.parser())
+        .pipe(yuidoc.reporter())
+        .pipe(yuidoc.generator({
+            themedir: './docs-theme'
+        }))
         .pipe(gulp.dest(docsDir))
 });
 
