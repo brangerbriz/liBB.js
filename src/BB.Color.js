@@ -16,9 +16,7 @@ function(  BB){
      * @param {Number} [b] optional parameter for setting the blue value (0-255)
      * @param {Number} [a] optional parameter for setting the alpha value (0-255)
      * @example 
-     * <section><code class="javascript"> 
-     * &nbsp; var color = new BB.Color(255,0,0); 
-     * </code></section>
+     * <pre class="code prettyprint"> var color = new BB.Color(255,0,0); </pre>
      */
 
     BB.Color = function(r, g, b, a) {
@@ -559,15 +557,15 @@ function(  BB){
      * by that particular scheme )
      * 
      * @example 
-     * <section><code class="javascript"> 
-     * &nbsp; color.colorScheme("analogous",{                           <br>
-     * &nbsp;&nbsp;&nbsp;&nbsp; angle: 30,                              <br>
-     * &nbsp;&nbsp;&nbsp;&nbsp; tint:[ 0.4, 0.8 ],                      <br>
-     * &nbsp;&nbsp;&nbsp;&nbsp; shade:[ 0.3, 0.6 ]                      <br>
-     * &nbsp; });                                                       <br><br>
-     * &nbsp; color.schemes["analogous"][0] // returns first color      <br>
-     * &nbsp; color.schemes["analogous"][1] // returns second color     <br>
-     *</code></section>
+     * <code class="code prettyprint"> 
+     * &nbsp; color.colorScheme("analogous",{                          <br>        
+     * &nbsp;&nbsp;&nbsp;&nbsp; angle: 30,                             <br> 
+     * &nbsp;&nbsp;&nbsp;&nbsp; tint:[ 0.4, 0.8 ],                     <br> 
+     * &nbsp;&nbsp;&nbsp;&nbsp; shade:[ 0.3, 0.6 ]                     <br> 
+     *&nbsp; });                                                       <br><br>
+     * &nbsp; color.schemes["analogous"][0] // returns first color     <br> 
+     * &nbsp; color.schemes["analogous"][1] // returns second color    <br> 
+     * </code>
      */
     BB.Color.prototype.colorScheme = function( scheme, config ) { 
 
