@@ -1,23 +1,26 @@
 /**
- * Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D, etc...
- * @module BBModBaseBrush2D
+ * Base 2D brush class extended by BB.ImageBrush2D, BB.LineBrush2D, etc...
+ * @module BB.BaseBrush2D
  */
-define(['BBModBrushManager2D', './BBModColor'],
-function(BBModBrushManager2D,     BBModColor){
+define(['./BB', './BB.BrushManager2D', './BB.Color'],
+function(  BB,        BrushManager2D,        Color){
 
     'use strict';
 
+    BB.BaseBrush2D = BrushManager2D;
+    BB.Color       = Color;
+
     /**
-     * Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D,
+     * Base 2D brush class extended by BB.ImageBrush2D, BB.LineBrush2D,
      * etc...
-     * @class BBModBaseBrush2D
+     * @class BB.BaseBrush2D
      * @constructor
      * @param {Object} [config] An optional config hash to initialize any of
-     * BBModBaseBrush2D's public properties
-     * @example <div><code> var baseBrush = new BBModBaseBrush2D({ width: 100,
-     * height: 100, color: new BBModColor(255, 0, 0) }); </code></div>
+     * BB.BaseBrush2D's public properties
+     * @example <div><code> var baseBrush = new BB.BaseBrush2D({ width: 100,
+     * height: 100, color: new BB.Color(255, 0, 0) }); </code></div>
      */
-    function BBModBaseBrush2D(config) {
+    BB.BaseBrush2D = function(config) {
 
         /**
          * The brush's x position.
@@ -62,10 +65,10 @@ function(BBModBrushManager2D,     BBModColor){
         /**
          * The brush's color.
          * @property color
-         * @type BBModColor
+         * @type BB.Color
          * @default null
          */
-        this.color    = (config && config.color && config.color instanceof BBModColor) ? config.color : null;
+        this.color    = (config && config.color && config.color instanceof BB.Color) ? config.color : null;
         
         /**
          * Wether or not to draw the brush to the screen. Toggle this variable
@@ -77,16 +80,16 @@ function(BBModBrushManager2D,     BBModColor){
         this.hidden   = (config && config.hidden && typeof hidden === 'boolean') ? config.hidden : false;
         
         /**
-         * The type of brush. Defaults to "base" for BBModBaseBrush, "image" for
-         * BBModImageBrush, etc... and should be treated as read-only.
+         * The type of brush. Defaults to "base" for BB.BaseBrush, "image" for
+         * BB.ImageBrush, etc... and should be treated as read-only.
          * @property type
          * @type String
          * @default "base"
          */
         this.type    = "base";
 
-        this.manager = (config && config.manager && config.manager instanceof BBModBrushManager2D) ? config.manager : null;
-    }
+        this.manager = (config && config.manager && config.manager instanceof BB.BrushManager2D) ? config.manager : null;
+    };
 
     /**
      * Base update method. Usually called once per animation frame.
@@ -95,24 +98,24 @@ function(BBModBrushManager2D,     BBModColor){
      * optionally an isDown boolean (used for beginning and ending
      * strokeds/marks).
      */
-    BBModBaseBrush2D.prototype.update = function(controllerModule) {
+    BB.BaseBrush2D.prototype.update = function(controllerModule) {
 
         if (controllerModule !== undefined) {
             
             if (controllerModule.x !== undefined && typeof controllerModule.x === 'number') {
                 this.x = controllerModule.x;
             } else {
-                throw new Error('BBModBaseBrush.update: controllerModule parameter does not have a valid x parameter');
+                throw new Error('BB.BaseBrush.update: controllerModule parameter does not have a valid x parameter');
             }
 
             if (controllerModule.y !== undefined && typeof controllerModule.y === 'number') {
                 this.y = controllerModule.y;
             } else {
-                throw new Error('BBModBaseBrush.update: controllerModule parameter does not have a valid y parameter');
+                throw new Error('BB.BaseBrush.update: controllerModule parameter does not have a valid y parameter');
             }
 
         } else {
-            throw new Error('BBModBaseBrush.update: missing controllerModule parameter');
+            throw new Error('BB.BaseBrush.update: missing controllerModule parameter');
         }
     };
 
@@ -120,15 +123,15 @@ function(BBModBrushManager2D,     BBModColor){
      * Base draw method. Usually called once per animation frame.
      * @method draw 
      */
-    BBModBaseBrush2D.prototype.draw = function(context) {
+    BB.BaseBrush2D.prototype.draw = function(context) {
 
         if (!context) {
-            throw new Error('BBModBaseBrush.draw: Invalid context parameter');
+            throw new Error('BB.BaseBrush.draw: Invalid context parameter');
         }
 
         var returnContext = context;
 
-        if(this.manager instanceof BBModBrushManager2D) {
+        if(this.manager instanceof BB.BrushManager2D) {
             returnContext = this.manager.secondaryContext;   
         }
 
@@ -140,7 +143,7 @@ function(BBModBrushManager2D,     BBModColor){
      * @method scale
      * @param {Number} amount Amount to scale width and height by
      */
-    BBModBaseBrush2D.prototype.scale = function(amount) {
+    BB.BaseBrush2D.prototype.scale = function(amount) {
         
         if (typeof amount === 'number') {
             
@@ -148,9 +151,9 @@ function(BBModBrushManager2D,     BBModColor){
             this.height *= amount;
 
         } else {
-            throw new Error("BBModBaseBrush2D.scale: scale is not a number type");
+            throw new Error("BB.BaseBrush2D.scale: scale is not a number type");
         }
     };
 
-    return BBModBaseBrush2D;
+    return BB.BaseBrush2D;
 });

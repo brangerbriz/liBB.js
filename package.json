@@ -1,8 +1,8 @@
 {
-  "name": "BBMod.js",
+  "name": "BB.js",
   "version": "0.1.0",
   "description": "Reusable JavaScript modules by Branger_Briz",
-  "main": "build/BBMod.js",
+  "main": "build/BB.js",
   "directories": {
     "doc": "docs",
     "example": "examples"
@@ -28,7 +28,7 @@
   "bugs": {
     "url": "https://github.com/brangerbriz/BBMod.js/issues"
   },
-  "homepage": "https://github.com/brangerbriz/bbmods",
+  "homepage": "https://github.com/brangerbriz/BBMod.js",
   "devDependencies": {
     "almond": "^0.3.1",
     "gulp": "^3.9.0",

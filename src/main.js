@@ -2,22 +2,22 @@ define(function (require) {
 
   'use strict';
 
-  var BBMod = require('BBModCore');
+  var BB = require('BB');
   
   //utils
-  BBMod.MathUtils      = require('BBModMathUtils');
-  BBMod.Color          = require('BBModColor');
+  BB.MathUtils      = require('BB.MathUtils');
+  BB.Color          = require('BB.Color');
 
   // brushes
-  BBMod.BaseBrush2D    = require('BBModBaseBrush2D');
-  BBMod.ImageBrush2D   = require('BBModImageBrush2D');
-  BBMod.LineBrush2D    = require('BBModLineBrush2D');
-  BBMod.BrushManager2D = require('BBModBrushManager2D');
+  BB.BaseBrush2D    = require('BB.BaseBrush2D');
+  BB.ImageBrush2D   = require('BB.ImageBrush2D');
+  BB.LineBrush2D    = require('BB.LineBrush2D');
+  BB.BrushManager2D = require('BB.BrushManager2D');
   
   // inputs, etc...
-  BBMod.MouseInput     = require('BBModMouseInput');
-  BBMod.Pointer        = require('BBModPointer');
+  BB.MouseInput     = require('BB.MouseInput');
+  BB.Pointer        = require('BB.Pointer');
 
-  return BBMod;
+  return BB;
 
 });

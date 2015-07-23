@@ -1,24 +1,25 @@
 /**
  * A module for standardizing mouse events so that they may be used with
  * the event funnel suite of modules. For use with HTML5 canvas only.
- * @module BBModMouseInput
+ * @module BB.MouseInput
  */
-define(function(){
+define(['./BB'], 
+function(  BB){
     
     'use strict';
     
     /**
      * A module for standardizing mouse events so that they may be used with
      * the event funnel suite of modules.
-     * @class  BBModMouseInput
+     * @class  BB.MouseInput
      * @constructor
      * @param {HTMLCanvasElement} canvasElement The HTML5 canvas object listening for mouse input.
      */
-    function BBModMouseInput(canvasElement) {
+    BB.MouseInput = function(canvasElement) {
 
         if (typeof canvasElement === 'undefined' || 
             !(canvasElement instanceof HTMLCanvasElement)) {
-            throw new Error('BBModMouseInput: An HTML5 canvas object must be supplied as a first parameter.');
+            throw new Error('BB.MouseInput: An HTML5 canvas object must be supplied as a first parameter.');
         }
 
         var self = this;
@@ -67,7 +68,7 @@ define(function(){
         this._isDown = false;
 
         /**
-         * The HTML5 canvas element passed into BBModMouseInput during
+         * The HTML5 canvas element passed into BB.MouseInput during
          * construction.
          * @property canvasElem
          * @type {Object}
@@ -103,7 +104,7 @@ define(function(){
 
         this.canvasElem.addEventListener('mousedown', function(e){
             
-            if (e.button === BBModMouseInput.LEFT_BUTTON) {
+            if (e.button === BB.MouseInput.LEFT_BUTTON) {
 
                 self._isDown = true;
 
@@ -117,7 +118,7 @@ define(function(){
 
         this.canvasElem.addEventListener('mouseup', function(e){
 
-            if (e.button === BBModMouseInput.LEFT_BUTTON) {
+            if (e.button === BB.MouseInput.LEFT_BUTTON) {
                 self._isDown = false;
 
                 if (self.hasOwnProperty('_activeStopCallback') &&
@@ -164,7 +165,7 @@ define(function(){
                 y: Math.round((e.clientY - rect.top) / (rect.bottom - rect.top) * self.canvasElem.height)
             };
         }
-    }
+    };
 
     /**
      * Utility property that hold's the value of a JavaScript MouseEvent's left mouse button.
@@ -174,7 +175,7 @@ define(function(){
      * @default 0
      * @readOnly
      */
-    BBModMouseInput.LEFT_BUTTON   = 0;
+    BB.MouseInput.LEFT_BUTTON   = 0;
 
     /**
      * Utility property that hold's the value of a JavaScript MouseEvent's scroll wheel button.
@@ -184,7 +185,7 @@ define(function(){
      * @default 1
      * @readOnly
      */
-    BBModMouseInput.SCROLL_BUTTON = 1;
+    BB.MouseInput.SCROLL_BUTTON = 1;
 
     /**
      * Utility property that hold's the value of a JavaScript MouseEvent's right mouse button.
@@ -194,7 +195,7 @@ define(function(){
      * @default 2
      * @readOnly
      */
-    BBModMouseInput.RIGHT_BUTTON  = 2;
+    BB.MouseInput.RIGHT_BUTTON  = 2;
 
     /**
      * Holds wether or not the mouse is currently moving. This property is read-only.
@@ -203,12 +204,12 @@ define(function(){
      * @default false
      * @readOnly
      */
-    Object.defineProperty(BBModMouseInput.prototype, 'isMoving', {
+    Object.defineProperty(BB.MouseInput.prototype, 'isMoving', {
         get: function(){
             return this._isMoving;
         },
         set: function(val){
-            throw new Error('BBModMouseInput.isMoving (setter): BBModMouseInput.isMoving is a read-only property.');
+            throw new Error('BB.MouseInput.isMoving (setter): BB.MouseInput.isMoving is a read-only property.');
         }
     });
 
@@ -219,16 +220,16 @@ define(function(){
      * @default false
      * @readOnly
      */
-    Object.defineProperty(BBModMouseInput.prototype, 'isDown', {
+    Object.defineProperty(BB.MouseInput.prototype, 'isDown', {
         get: function(){
             return this._isDown;
         },
         set: function(val){
-            throw new Error('BBModMouseInput.isDown (setter): BBModMouseInput.isDown is a read-only property.');
+            throw new Error('BB.MouseInput.isDown (setter): BB.MouseInput.isDown is a read-only property.');
         }
     });
 
-    BBModMouseInput.prototype.update = function() {
+    BB.MouseInput.prototype.update = function() {
 
         if (this.isMoving &&
             this.hasOwnProperty('_moveCallback') &&
@@ -238,5 +239,5 @@ define(function(){
         }
     };
 
-    return BBModMouseInput;
+    return BB.MouseInput;
 });

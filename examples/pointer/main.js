@@ -1,6 +1,6 @@
 var canvas = document.getElementById('canvas');
-var mouseInput = new BBMod.MouseInput(canvas);
-var pointer = new BBMod.Pointer(mouseInput);
+var mouseInput = new BB.MouseInput(canvas);
+var pointer = new BB.Pointer(mouseInput);
 
 pointer.on('activestart', function(x, y){
     // fired when the pointer is pressed (if the input being used supports isDown)

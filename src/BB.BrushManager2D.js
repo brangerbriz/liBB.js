@@ -1,42 +1,43 @@
 /**
- * Basic scene manager for brushes and pointers. BBModBrushManager2D allows a
+ * Basic scene manager for brushes and pointers. BB.BrushManager2D allows a
  * drawing scene (that uses brushes) to persist while the rest of the canvas is
  * cleared each frame. It also provides functionality to undo/redo manager to
  * your drawing actions.
- * @module BBModBrushManager2D
+ * @module BB.BrushManager2D
  */
-define(['BBModPointer'],
-function(BBModPointer ){
+define(['./BB', 'BB.Pointer'],
+function(  BB,      Pointer ){
 
     'use strict';
 
+    BB.Pointer = Pointer;
+
     /**
-     * Basic scene manager for brushes and pointers. BBModBrushManager2D allows a
+     * Basic scene manager for brushes and pointers. BB.BrushManager2D allows a
      * drawing scene (that uses brushes) to persist while the rest of the canvas is
      * cleared each frame. It also provides functionality to undo/redo manager to
      * your drawing actions.
-     * @class BBModBrushManager2D
+     * @class BB.BrushManager2D
      * @constructor
      * @param {[HTMLCanvasElement]} canvas The HTML5 canvas element for the
      * brush manager to use.
-     */
-    
-    function BBModBrushManager2D(canvas) {
+     */    
+    BB.BrushManager2D = function(canvas) {
 
         var self = this;
 
         if (typeof canvas === 'undefined' || 
             !(canvas instanceof HTMLCanvasElement)) {
-            throw new Error('BBModBrushManager2D: An HTML5 canvas object must be supplied as a first parameter.');
+            throw new Error('BB.BrushManager2D: An HTML5 canvas object must be supplied as a first parameter.');
         }
 
         if (window.getComputedStyle(canvas).getPropertyValue('position') !== 'absolute') {
-            throw new Error('BBModBrushManager2D: the HTML5 canvas passed into the BBModBrushManager2D' + 
+            throw new Error('BB.BrushManager2D: the HTML5 canvas passed into the BB.BrushManager2D' + 
                 ' constructor must be absolutely positioned. Sorry ;).');
         }
 
         /**
-         * The canvas element passed into the BBModBrushManager2D constructor
+         * The canvas element passed into the BB.BrushManager2D constructor
          * @property _parentCanvas
          * @type {HTMLCanvasElement}
          * @protected
@@ -45,7 +46,7 @@ function(BBModPointer ){
 
         /**
          * The 2D drawing context of the canvas element passed into the
-         * BBModBrushManager2D constructor
+         * BB.BrushManager2D constructor
          * @property _parentContext
          * @type {CanvasRenderingContext2D}
          * @protected
@@ -53,7 +54,7 @@ function(BBModPointer ){
         this._parentContext   = canvas.getContext('2d');
 
          /**
-          * An in-memory canvas object used internally by BBModBrushManager to
+          * An in-memory canvas object used internally by BB.BrushManager to
           * draw to and read pixels from
           * @property canvas
           * @type {HTMLCanvasElement}
@@ -68,9 +69,9 @@ function(BBModPointer ){
         this.context          = this.canvas.getContext('2d');
 
         /**
-         * A secondary canvas that is used internally by BBModBrushManager. This
+         * A secondary canvas that is used internally by BB.BrushManager. This
          * canvas is written to the DOM on top of _parentCanvas (the canvas
-         * passed into the BBModBaseBrush2D constructor). It is absolutely
+         * passed into the BB.BaseBrush2D constructor). It is absolutely
          * positioned and has a z-index 1 higher than _parentCanvas.
          * @property secondaryCanvas
          * @type {HTMLCanvasElement}
@@ -107,7 +108,7 @@ function(BBModPointer ){
 
         /**
          * An internal FBO (Frame Buffer Object) that is assigned the pixels
-         * from canvas and is drawn during BBModBrushManager2D.draw()
+         * from canvas and is drawn during BB.BrushManager2D.draw()
          * @property _fboImage
          * @type {Image}
          * @protected
@@ -121,7 +122,7 @@ function(BBModPointer ){
         };
 
         /**
-         * A deep copy of _fboImage that is drawn in BBModBrushManager2D.draw()
+         * A deep copy of _fboImage that is drawn in BB.BrushManager2D.draw()
          * when _fboImage is reloading
          * @property _fboImageTemp
          * @type {Image}
@@ -130,7 +131,7 @@ function(BBModPointer ){
         this._fboImageTemp = null;
 
         this._fboImage.onerror = function(err) {
-           console.log('BBModBrushManager2D: src failed to load: ' + err.target.src);
+           console.log('BB.BrushManager2D: src failed to load: ' + err.target.src);
         };
 
         /**
@@ -170,11 +171,11 @@ function(BBModPointer ){
 
         //// https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
         //// uncommenting this causes error described here:
-        //// https://github.com/brangerbriz/bbmod/issues/1
+        //// https://github.com/brangerbriz/BBMod.js/issues/1
         // this._fboImage.crossOrigin = "anonymous";
 
         /**
-         * An array of BBModPointer object used to control the brushes drawn to
+         * An array of BB.Pointer object used to control the brushes drawn to
          * brush mananger
          * @property _pointers
          * @type {Array}
@@ -191,8 +192,8 @@ function(BBModPointer ){
         this._pointerStates = [];
 
         /**
-         * Internal flag to determin if BBModBrushManager2D.undo() was called
-         * since the BBModBrushManager2D.update()
+         * Internal flag to determin if BB.BrushManager2D.undo() was called
+         * since the BB.BrushManager2D.update()
          * @property _needsUndo
          * @type {Boolean}
          * @protected
@@ -200,8 +201,8 @@ function(BBModPointer ){
         this._needsUndo = false;
 
         /**
-         * Internal flag to determin if BBModBrushManager2D.redo() was called
-         * since the BBModBrushManager2D.update()
+         * Internal flag to determin if BB.BrushManager2D.redo() was called
+         * since the BB.BrushManager2D.update()
          * @property _needsRedo
          * @type {Boolean}
          * @protected
@@ -217,7 +218,7 @@ function(BBModPointer ){
         this._somePointersDown = false;
 
         /**
-         * Internal flag checked against in BBModBrushManager2D.draw() that
+         * Internal flag checked against in BB.BrushManager2D.draw() that
          * holds wether or not _fboImage is finished loaded. Note: this flag is
          * purposefully not set when _fboImage.src is set from undo() or redo().
          * @property _fboImageLoadWaiting
@@ -228,7 +229,7 @@ function(BBModPointer ){
 
         // add empty canvas to the history
         this._history.push(this.canvas.toDataURL());
-    }
+    };
 
     /**
      * The number of undo/redo states to save
@@ -236,7 +237,7 @@ function(BBModPointer ){
      * @type {Number}
      * @default 5
      */
-    Object.defineProperty(BBModBrushManager2D.prototype, "numUndos", {
+    Object.defineProperty(BB.BrushManager2D.prototype, "numUndos", {
         get: function() {
             return this._numUndos;
         },
@@ -253,22 +254,22 @@ function(BBModPointer ){
 
     /**
      * Set the brush manager to use these pointers when drawing.
-     * BBModBrushManager2D must be tracking at least one pointer in order to
+     * BB.BrushManager2D must be tracking at least one pointer in order to
      * update().
      * @method trackPointers
-     * @param  {Array} pointers An array of BBModPointer objects for
-     * BBModBrushManager2D to track.
+     * @param  {Array} pointers An array of BB.Pointer objects for
+     * BB.BrushManager2D to track.
      */
-    BBModBrushManager2D.prototype.trackPointers = function(pointers) {
+    BB.BrushManager2D.prototype.trackPointers = function(pointers) {
         
         if (pointers instanceof Array) {
 
             for (var i = 0; i < pointers.length; i++) {
              
                 var pointer = pointers[i];
-                if (! (pointer instanceof BBModPointer)) {
-                    throw new Error('BBModBrushManager2D.trackPointers: pointers[' +
-                        i + '] is not an instance of BBModPointer.');
+                if (! (pointer instanceof BB.Pointer)) {
+                    throw new Error('BB.BrushManager2D.trackPointers: pointers[' +
+                        i + '] is not an instance of BB.Pointer.');
                 } else {
                     this._pointers.push(pointer);
                     this._pointerStates.push(pointer.isDown);
@@ -276,7 +277,7 @@ function(BBModPointer ){
             }
 
         } else {
-            throw new Error('BBModBrushManager2D.trackPointers: pointers parameter must be an array of pointers.');
+            throw new Error('BB.BrushManager2D.trackPointers: pointers parameter must be an array of pointers.');
         }
     };
 
@@ -284,27 +285,27 @@ function(BBModPointer ){
      * Untrack all pointers.
      * @method untrackPointers
      */
-    BBModBrushManager2D.prototype.untrackPointers = function() {
+    BB.BrushManager2D.prototype.untrackPointers = function() {
         this._pointers = [];
         this._pointerStates = [];
     };
 
     /**
-     * Untrack one pointer at index. Pointers tracked by BBModBrushManager2D
+     * Untrack one pointer at index. Pointers tracked by BB.BrushManager2D
      * have indexes based on the order they were added by calls to
-     * BBModBrushManager2D.trackPointers(...). Untracking a pointer removes it
+     * BB.BrushManager2D.trackPointers(...). Untracking a pointer removes it
      * from the internal _pointers array which changes the index of all pointers
      * after it. Keep this in mind when using this method.
      * @method untrackPointers
      * @param {Number} index The index of the pointer to untrack.
      */
-    BBModBrushManager2D.prototype.untrackPointerAtIndex = function(index) {
+    BB.BrushManager2D.prototype.untrackPointerAtIndex = function(index) {
         
         if (typeof this._pointers[index] !== 'undefined') {
             this._pointers.splice(index, 1);
             this._pointerStates.splice(index, 1);
         } else {
-            throw new Error('BBModBrushManager2D.untrackPointerAtIndex: Invalid pointer index ' +
+            throw new Error('BB.BrushManager2D.untrackPointerAtIndex: Invalid pointer index ' +
                 index + '. there is no pointer at that index.');
         }
     };
@@ -314,7 +315,7 @@ function(BBModPointer ){
      * @method hasPointers
      * @return {Boolean}
      */
-    BBModBrushManager2D.prototype.hasPointers = function() {
+    BB.BrushManager2D.prototype.hasPointers = function() {
         return this._pointers.length > 0;
     };
 
@@ -323,7 +324,7 @@ function(BBModPointer ){
      * @method hasUndo
      * @return {Boolean}
      */
-    BBModBrushManager2D.prototype.hasUndo = function() {
+    BB.BrushManager2D.prototype.hasUndo = function() {
         return this._history.length > 1;
     };
 
@@ -332,19 +333,19 @@ function(BBModPointer ){
      * @method hasRedo
      * @return {Boolean}
      */
-    BBModBrushManager2D.prototype.hasRedo = function() {
+    BB.BrushManager2D.prototype.hasRedo = function() {
         return this._purgatory.length > 0;
     };
 
     /**
-     * BBModBrushManager2D's update method. Should be called once per animation frame.
+     * BB.BrushManager2D's update method. Should be called once per animation frame.
      * @method update
      */
-    BBModBrushManager2D.prototype.update = function() {
+    BB.BrushManager2D.prototype.update = function() {
 
         if (! this.hasPointers()) {
-            throw new Error('BBModBrushManager2D.update: You must add at least one pointer to ' +
-                            'the brush manager with BBModBrushManager2D.addPointers(...)');
+            throw new Error('BB.BrushManager2D.update: You must add at least one pointer to ' +
+                            'the brush manager with BB.BrushManager2D.addPointers(...)');
         }
 
         var somePointersDown = this._pointerStates.some(function(val){ return val === true; });
@@ -398,18 +399,18 @@ function(BBModPointer ){
 
     /**
      * Draws the brush manager scene to the canvas supplied in the
-     * BBModBrushManager2D constructor or the optionally, "context" if it was
+     * BB.BrushManager2D constructor or the optionally, "context" if it was
      * provided as a parameter. Should be called once per animation frame.
      * @method update
      * @param {[CanvasRenderingContext2D]} context An optional drawing context
      * that will be drawn to if it is supplied.
      */
-    BBModBrushManager2D.prototype.draw = function(context) {
+    BB.BrushManager2D.prototype.draw = function(context) {
 
         if (typeof context === "undefined" ) {
             context = this._parentContext;
         } else if(! (context instanceof CanvasRenderingContext2D)) {
-            throw new Error('BBModBrushManager2D.draw: context is not an instance of CanvasRenderingContext2D');
+            throw new Error('BB.BrushManager2D.draw: context is not an instance of CanvasRenderingContext2D');
         }
 
         // if the image has loaded
@@ -433,7 +434,7 @@ function(BBModPointer ){
      * Undo one drawing action if available
      * @method undo
      */
-    BBModBrushManager2D.prototype.undo = function() {
+    BB.BrushManager2D.prototype.undo = function() {
 
         if (this._history.length > 1) {
             this._needsUndo = true; 
@@ -444,7 +445,7 @@ function(BBModPointer ){
      * Undo redo one drawing action if available
      * @method undo
      */
-    BBModBrushManager2D.prototype.redo = function() {
+    BB.BrushManager2D.prototype.redo = function() {
 
         if (this._history.length > 0) {
             this._needsRedo = true;
@@ -453,13 +454,13 @@ function(BBModPointer ){
 
     /**
      * Notifies brush manager that the canvas passed into the
-     * BBModBrushManager2D constructor has been moved or resized. It is
+     * BB.BrushManager2D constructor has been moved or resized. It is
      * important to call this method whenever the positional CSS from the parent
-     * canvas is changed so that BBModBrushManager2D's internal canvases may be
+     * canvas is changed so that BB.BrushManager2D's internal canvases may be
      * updated upropriately.
      * @method updateCanvasPosition
      */
-    BBModBrushManager2D.prototype.updateCanvasPosition = function() {
+    BB.BrushManager2D.prototype.updateCanvasPosition = function() {
 
         this.canvas.width = this._parentCanvas.width;
         this.canvas.height = this._parentCanvas.height;
@@ -486,7 +487,7 @@ function(BBModPointer ){
             parentZIndex = 0;
             this.secondaryCanvas.style.zIndex = parentZIndex + 1;
 
-            throw new Error('BBModBrushManager2D: the HTML5 canvas passed into the BBModBrushManager2D' +
+            throw new Error('BB.BrushManager2D: the HTML5 canvas passed into the BB.BrushManager2D' +
                 ' constructor should have a z-index property value that is numeric. Currently the value is "' +
                 parentZIndex + '".');
 
@@ -496,5 +497,5 @@ function(BBModPointer ){
         } 
     };
 
-    return BBModBrushManager2D;
+    return BB.BrushManager2D;
 });

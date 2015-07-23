@@ -8,20 +8,23 @@
 /**
  * A module for funneling in and standardizing basic pointer-like interfaces
  * like mouse and touch.
- * @module BBModPointer
+ * @module BB.Pointer
  */
-define(['./BBModMouseInput'], function(BBModMouseInput){
+define(['./BB', './BB.MouseInput'],
+function(  BB,     MouseInput){
 
     'use strict';
 
-    //NOTE: called inside BBModPointer using .call()
-    //to bind this to BBModPointer instance
+    BB.MouseInput = MouseInput;
+
+    //NOTE: called inside BB.Pointer using .call()
+    //to bind this to BB.Pointer instance
     function bindEventsToControllerModule() {
     /*jshint validthis: true */
     
         // the BBMouseInput module uses event listeners attatched to it's
         // HTML5 canvas to fire these callbacks directly, so pass them along.
-        if (this.controllerModule instanceof BBModMouseInput) {
+        if (this.controllerModule instanceof BB.MouseInput) {
 
             this.controllerModule._activeStartCallback = this._activeStartCallback;
             this.controllerModule._activeStopCallback  = this._activeStopCallback;
@@ -34,25 +37,25 @@ define(['./BBModMouseInput'], function(BBModMouseInput){
     /**
      * A module for funneling in and standardizing basic pointer-like interfaces
      * like mouse and touch.
-     * @class BBModPointer
+     * @class BB.Pointer
      * @param {Object} controllerModule The input module you would like to control
      * this pointer with.
      * @constructor
      */
-    function BBModPointer(controllerModule) {
+    BB.Pointer = function(controllerModule) {
 
         if (typeof controllerModule === "undefined") {
-            throw new Error('BBModPointer: controllerModule parameter is missing from the BBModPointer constructor.');
-        } else if (! (controllerModule instanceof BBModMouseInput)) {
+            throw new Error('BB.Pointer: controllerModule parameter is missing from the BB.Pointer constructor.');
+        } else if (! (controllerModule instanceof BB.MouseInput)) {
             this.controllerModule = null;
-            throw new Error("BBModPointer.update: controllerModule is not a supported object type.");
+            throw new Error("BB.Pointer.update: controllerModule is not a supported object type.");
         }
 
         this.controllerModule = controllerModule;
 
 
         /**
-         * The pointer's current x position as supplied by the eventModule in BBModPointer.update(...).
+         * The pointer's current x position as supplied by the eventModule in BB.Pointer.update(...).
          * @property x
          * @type {Number}
          * @default undefined
@@ -60,7 +63,7 @@ define(['./BBModMouseInput'], function(BBModMouseInput){
         this.x = null;
 
         /**
-         * The pointer's current y position as supplied by the eventModule in BBModPointer.update(...).
+         * The pointer's current y position as supplied by the eventModule in BB.Pointer.update(...).
          * @property y
          * @type {Number}
          * @default undefined
@@ -69,7 +72,7 @@ define(['./BBModMouseInput'], function(BBModMouseInput){
 
         /**
          * A variable holding wether or not the event module controlling this
-         * pointer object (via BBModPointer.update(...)) is moving
+         * pointer object (via BB.Pointer.update(...)) is moving
          * @property isMoving
          * @type {Boolean}
          * @default false
@@ -79,7 +82,7 @@ define(['./BBModMouseInput'], function(BBModMouseInput){
         /**
          * A variable holding wether or not the selection interface (i.e. mouse
          * button, etc...) controlling this pointer object (via
-         * BBModPointer.update(...)) is active.
+         * BB.Pointer.update(...)) is active.
          * @property isDown
          * @type {Boolean}
          * @default false
@@ -100,9 +103,9 @@ define(['./BBModMouseInput'], function(BBModMouseInput){
         this._moveStartCallback   = null;
         this._moveStopCallback    = null;
         this._moveCallback        = null;
-    }
+    };
 
-    Object.defineProperty(BBModPointer.prototype, "controllerModule", {
+    Object.defineProperty(BB.Pointer.prototype, "controllerModule", {
         get: function(){
             return this._controllerModule;
         },
@@ -121,12 +124,12 @@ define(['./BBModMouseInput'], function(BBModMouseInput){
      * @method update
      * @param  {Object} controllerModule 
      */
-    BBModPointer.prototype.update = function() {
+    BB.Pointer.prototype.update = function() {
 
         // add a new conditional for each module that pointer supports and then
-        // update BBModPointer's internals (x, y, isMoving) in a custom way for
+        // update BB.Pointer's internals (x, y, isMoving) in a custom way for
         // each type of input (kinect, etc...)
-        if (this.controllerModule instanceof BBModMouseInput) {
+        if (this.controllerModule instanceof BB.MouseInput) {
 
             // these assignments are easy for a mouse input object but will take
             // more work for other types of modules (i.e. kinect)...
@@ -148,7 +151,7 @@ define(['./BBModMouseInput'], function(BBModMouseInput){
      * @param  {Function} callback    The callback to execute once the
      * registered event has fired.
      */
-    BBModPointer.prototype.on = function(eventName, callback){
+    BB.Pointer.prototype.on = function(eventName, callback){
         
         // save the callback so that it can be used later in update() if it needs to be    
         if (eventName == "activestart")      this._activeStartCallback       = callback;
@@ -157,16 +160,16 @@ define(['./BBModMouseInput'], function(BBModMouseInput){
         else if (eventName == "movestop")    this._moveStopCallback          = callback;
         else if (eventName == "move")        this._moveCallback              = callback;
         else {
-            throw new Error('BBModPointer.on: eventName is not a supported event.');
+            throw new Error('BB.Pointer.on: eventName is not a supported event.');
         }
 
         if (this._controllerModule === null) {
-            throw new Error('BBModPointer.on: pointer has no controller module.' +
-                            ' You must first call BBModPointer.update() to assign this pointer a controller module.');
+            throw new Error('BB.Pointer.on: pointer has no controller module.' +
+                            ' You must first call BB.Pointer.update() to assign this pointer a controller module.');
         }
 
         bindEventsToControllerModule.call(this);
     };
 
-    return BBModPointer;
+    return BB.Pointer;
 });

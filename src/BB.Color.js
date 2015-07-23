@@ -1,14 +1,15 @@
 /**
  * A module for creating color objects and doing color maths
- * @module BBModColor
+ * @module BB.Color
  */
-define(function(){
+define(['./BB'],
+function(  BB){
 
     'use strict';
     
     /**
      * A module for creating color objects and doing color maths
-     * @class BBModColor
+     * @class BB.Color
      * @constructor
      * @param {Number} [r] optional parameter for setting the red value (0-255)
      * @param {Number} [g] optional parameter for setting the green value (0-255)
@@ -16,18 +17,18 @@ define(function(){
      * @param {Number} [a] optional parameter for setting the alpha value (0-255)
      * @example 
      * <section><code class="javascript"> 
-     * &nbsp; var color = new BBModColor(255,0,0); 
+     * &nbsp; var color = new BB.Color(255,0,0); 
      * </code></section>
      */
 
-    function BBModColor(r, g, b, a) {
+    BB.Color = function(r, g, b, a) {
 
         // see getter/setter below
         if( typeof r == "undefined" ){
             this._r = 0; 
         }
         else if( typeof r !== 'number' || r<0 || r>255 ){
-            throw new Error("BBModColor: red parameter neeeds to be a NUMBER between 0 - 255");
+            throw new Error("BB.Color: red parameter neeeds to be a NUMBER between 0 - 255");
         } else {
             this._r = r || 0;     
         }
@@ -37,7 +38,7 @@ define(function(){
             this._g = 0; 
         }
         else if( typeof g !== 'number' || g<0 || g>255 ){
-            throw new Error("BBModColor: green parameter neeeds to be a NUMBER between 0 - 255");
+            throw new Error("BB.Color: green parameter neeeds to be a NUMBER between 0 - 255");
         } else {
             this._g = g || 0;        
         }
@@ -47,7 +48,7 @@ define(function(){
             this._b = 0; 
         }
         else if( typeof b !== 'number' || b<0 || b>255 ){
-            throw new Error("BBModColor: blue parameter neeeds to be a NUMBER between 0 - 255");
+            throw new Error("BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255");
         } else {
             this._b = b || 0;        
         }
@@ -57,7 +58,7 @@ define(function(){
             this._a = 255; 
         }
         else if(  a<0 || a>255 ){
-            throw new Error("BBModColor: alpha parameter neeeds to be a NUMBER between 0 - 255");
+            throw new Error("BB.Color: alpha parameter neeeds to be a NUMBER between 0 - 255");
         } else {
             this._a = a || 255;        
         }
@@ -79,7 +80,7 @@ define(function(){
             'triadic' : [],
             'tetradic' : []
         };
-    }
+    };
 
     /**
      * the red value between 0 - 255
@@ -87,13 +88,13 @@ define(function(){
      * @type Number
      * @default 0
      */   
-    Object.defineProperty(BBModColor.prototype, "r", {
+    Object.defineProperty(BB.Color.prototype, "r", {
         get: function() {
             return this._r;
         },
         set: function(r) {
             if( typeof r !== 'number' || r<0 || r>255 ){
-                throw new Error("BBModColor: red parameter neeeds to be a NUMBER between 0 - 255");
+                throw new Error("BB.Color: red parameter neeeds to be a NUMBER between 0 - 255");
             } else {
                 this._r = r || 0;    
                 this.rgb2hsv(); 
@@ -107,13 +108,13 @@ define(function(){
      * @type Number
      * @default 0
      */   
-    Object.defineProperty(BBModColor.prototype, "g", {
+    Object.defineProperty(BB.Color.prototype, "g", {
         get: function() {
             return this._g;
         },
         set: function(g) {
             if( typeof g !== 'number' || g<0 || g>255 ){
-                throw new Error("BBModColor: green parameter neeeds to be a NUMBER between 0 - 255");
+                throw new Error("BB.Color: green parameter neeeds to be a NUMBER between 0 - 255");
             } else {
                 this._g = g || 0;    
                 this.rgb2hsv(); 
@@ -127,13 +128,13 @@ define(function(){
      * @type Number
      * @default 0
      */   
-    Object.defineProperty(BBModColor.prototype, "b", {
+    Object.defineProperty(BB.Color.prototype, "b", {
         get: function() {
             return this._b;
         },
         set: function(b) {
             if( typeof b !== 'number' || b<0 || b>255 ){
-                throw new Error("BBModColor: blue parameter neeeds to be a NUMBER between 0 - 255");
+                throw new Error("BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255");
             } else {
                 this._b = b || 0;    
                 this.rgb2hsv(); 
@@ -147,13 +148,13 @@ define(function(){
      * @type Number
      * @default 255
      */   
-    Object.defineProperty(BBModColor.prototype, "a", {
+    Object.defineProperty(BB.Color.prototype, "a", {
         get: function() {
             return this._a;
         },
         set: function(a) {
             if( typeof a !== 'number' || a<0 || a>255 ){
-                throw new Error("BBModColor: alpha parameter neeeds to be a NUMBER between 0 - 255");
+                throw new Error("BB.Color: alpha parameter neeeds to be a NUMBER between 0 - 255");
             } else {
                 this._a = a || 0;    
                 this.rgb2hsv(); 
@@ -167,13 +168,13 @@ define(function(){
      * @type Number
      * @default 0
      */   
-    Object.defineProperty(BBModColor.prototype, "h", {
+    Object.defineProperty(BB.Color.prototype, "h", {
         get: function() {
             return this._h;
         },
         set: function(h) {
             if( typeof h !== 'number' || h<0 || h>359 ){
-                throw new Error("BBModColor: hue parameter neeeds to be a NUMBER between 0 - 359");
+                throw new Error("BB.Color: hue parameter neeeds to be a NUMBER between 0 - 359");
             } else {
                 this._h = h || 0;    
                 this.hsv2rgb(); 
@@ -187,13 +188,13 @@ define(function(){
      * @type Number
      * @default 0
      */   
-    Object.defineProperty(BBModColor.prototype, "s", {
+    Object.defineProperty(BB.Color.prototype, "s", {
         get: function() {
             return this._s;
         },
         set: function(s) {
             if( typeof s !== 'number' || s<0 || s>100 ){
-                throw new Error("BBModColor: saturation parameter neeeds to be a NUMBER between 0 - 100");
+                throw new Error("BB.Color: saturation parameter neeeds to be a NUMBER between 0 - 100");
             } else {
                 this._s = s || 0;    
                 this.hsv2rgb(); 
@@ -207,13 +208,13 @@ define(function(){
      * @type Number
      * @default 0
      */   
-    Object.defineProperty(BBModColor.prototype, "v", {
+    Object.defineProperty(BB.Color.prototype, "v", {
         get: function() {
             return this._v;
         },
         set: function(v) {
             if( typeof v !== 'number' || v<0 || v>100 ){
-                throw new Error("BBModColor: brightness/lightness parameter neeeds to be a NUMBER between 0 - 100");
+                throw new Error("BB.Color: brightness/lightness parameter neeeds to be a NUMBER between 0 - 100");
             } else {
                 this._v = v || 0;    
                 this.hsv2rgb(); 
@@ -231,29 +232,29 @@ define(function(){
      * @param {Number} b sets the blue value from 0 - 255 
      * @param {Number} a sets the alpha value from 0 - 255 
      */
-    BBModColor.prototype.setRGBA = function(r, g, b, a) {
+    BB.Color.prototype.setRGBA = function(r, g, b, a) {
 
 
         if( typeof r !== 'number' || r<0 || r>255 ){
-            throw new Error("BBModColor: red parameter neeeds to be a NUMBER between 0 - 255");
+            throw new Error("BB.Color: red parameter neeeds to be a NUMBER between 0 - 255");
         } else {
             this.r = r;
         }
 
         if( typeof g !== 'number' || g<0 || g>255 ){
-            throw new Error("BBModColor: green parameter neeeds to be a NUMBER between 0 - 255");
+            throw new Error("BB.Color: green parameter neeeds to be a NUMBER between 0 - 255");
         } else {
             this.g = g;
         }
 
         if( typeof b !== 'number' || b<0 || b>255 ){
-            throw new Error("BBModColor: blue parameter neeeds to be a NUMBER between 0 - 255");
+            throw new Error("BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255");
         } else {
             this.b = b;
         }
 
         if( typeof a !== 'number' || a<0 || a>255 ){
-            throw new Error("BBModColor: alpha parameter neeeds to be a NUMBER between 0 - 255");
+            throw new Error("BB.Color: alpha parameter neeeds to be a NUMBER between 0 - 255");
         } else {
             this.a = a;
         }
@@ -269,28 +270,28 @@ define(function(){
      * @param {Number} v sets the light/bright value from 0 - 100
      * @param {Number} a sets the alpha value from 0 - 255
      */
-    BBModColor.prototype.setHSVA = function(h, s, v, a) {
+    BB.Color.prototype.setHSVA = function(h, s, v, a) {
         
         if( typeof h !== 'number' || h<0 || h>359 ){
-            throw new Error("BBModColor: hue parameter neeeds to be a NUMBER between 0 - 359");
+            throw new Error("BB.Color: hue parameter neeeds to be a NUMBER between 0 - 359");
         } else {
             this.h = h;
         }
 
         if( typeof s !== 'number' || s<0 || s>100 ){
-            throw new Error("BBModColor: saturation parameter neeeds to be a NUMBER between 0 - 100");
+            throw new Error("BB.Color: saturation parameter neeeds to be a NUMBER between 0 - 100");
         } else {
             this.s = s;
         }
 
         if( typeof v !== 'number' || v<0 || v>100 ){
-            throw new Error("BBModColor: value parameter neeeds to be a NUMBER between 0 - 100");
+            throw new Error("BB.Color: value parameter neeeds to be a NUMBER between 0 - 100");
         } else {
             this.v = v;
         }
 
         if( typeof a !== 'number' || a<0 || a>255 ){
-            throw new Error("BBModColor: alpha parameter neeeds to be a NUMBER between 0 - 255");
+            throw new Error("BB.Color: alpha parameter neeeds to be a NUMBER between 0 - 255");
         } else {
             this.a = a;
         }
@@ -298,23 +299,23 @@ define(function(){
         this.hsv2rgb();
     };
 
-    BBModColor.prototype.getRGB = function() { 
+    BB.Color.prototype.getRGB = function() { 
         return 'rgb('+this.r+', '+this.g+', '+this.b+')';
     };
 
-    BBModColor.prototype.getRGBA = function() { 
+    BB.Color.prototype.getRGBA = function() { 
         return 'rgba('+this.r+', '+this.g+', '+this.b+', '+this.a+')';
     };
 
-    BBModColor.prototype.getHex = function() { 
+    BB.Color.prototype.getHex = function() { 
         return "#" +((this.r << 16) | (this.g << 8) | this.b).toString(16);
     };
 
 
-    BBModColor.prototype.isEqual = function(color, excludeAlpha) {
+    BB.Color.prototype.isEqual = function(color, excludeAlpha) {
 
-        if (! color || !(color instanceof BBModColor) ) {
-            throw new Error("BBModColor.isEqual: color parameter is not an instance of BBModColor");
+        if (! color || !(color instanceof BB.Color) ) {
+            throw new Error("BB.Color.isEqual: color parameter is not an instance of BB.Color");
         }
 
         if (excludeAlpha) {
@@ -329,18 +330,18 @@ define(function(){
         }
     };
 
-    BBModColor.prototype.min3 = function( a,b,c ) { 
+    BB.Color.prototype.min3 = function( a,b,c ) { 
         return ( a<b )   ?   ( ( a<c ) ? a : c )   :   ( ( b<c ) ? b : c ); 
     }; 
     
-    BBModColor.prototype.max3 = function( a,b,c ) { 
+    BB.Color.prototype.max3 = function( a,b,c ) { 
         return ( a>b )   ?   ( ( a>c ) ? a : c )   :   ( ( b>c ) ? b : c );
     };
 
 
     /**
      * converts rgb values into hsv values, you can pass it an instance of
-     * BBModColor as a single parameter or pass it three individual parameters (
+     * BB.Color as a single parameter or pass it three individual parameters (
      * for r, g and b ) and it returns an object with h,s,v properties.
      *
      * if you don't pass it any parameters it takes its own internal values as
@@ -348,19 +349,19 @@ define(function(){
      * functionality is used internally, for ex. by the getters && setters )
      * 
      * @method rgb2hsv
-     * @param  {Number} [rgb] either an instance of BBModColor or a red value
+     * @param  {Number} [rgb] either an instance of BB.Color or a red value
      * between 0 - 255
      * @param  {Number} [g]   a green value between 0 - 255
      * @param  {Number} [b]   a blue value value between 0 - 255
      * @return {Object}     an object with h, s, v properties
      */
-    BBModColor.prototype.rgb2hsv = function( rgb, g, b ) { 
+    BB.Color.prototype.rgb2hsv = function( rgb, g, b ) { 
 
         var self;
         if( typeof rgb == "undefined"){
             self = this;
         } else {
-            self = ( rgb instanceof BBModColor ) ? rgb : { r:rgb, g:g, b:b };
+            self = ( rgb instanceof BB.Color ) ? rgb : { r:rgb, g:g, b:b };
         }
 
         var hsv = {};
@@ -391,7 +392,7 @@ define(function(){
 
     /**
      * converts hsv values into rgb values, you can pass it an instance of
-     * BBModColor as a single parameter or pass it three individual parameters (
+     * BB.Color as a single parameter or pass it three individual parameters (
      * for h, s and v ) and it returns an object with r,g,b properties.
      *
      * if you don't pass it any parameters it takes its own internal values as
@@ -399,12 +400,12 @@ define(function(){
      * functionality is used internally, for ex. by the getters && setters )
      *
      * @method hsv2rgb
-     * @param  {Number} [hsv] either an instance of BBModColor or a h value between 0 - 359
+     * @param  {Number} [hsv] either an instance of BB.Color or a h value between 0 - 359
      * @param  {Number} [s]   a saturation value between 0 - 100
      * @param  {Number} [v]   a brightness/lightness value value between 0 - 100
      * @return {Object}     an object with r, g, b properties
      */
-    BBModColor.prototype.hsv2rgb = function( hsv, s, v ) { 
+    BB.Color.prototype.hsv2rgb = function( hsv, s, v ) { 
 
         var rgb;
         if( typeof hsv == "undefined"){
@@ -415,7 +416,7 @@ define(function(){
         } else {
 
             rgb = {};
-            hsv = ( hsv instanceof BBModColor ) ? hsv : { h:hsv, s:s, v:v };
+            hsv = ( hsv instanceof BB.Color ) ? hsv : { h:hsv, s:s, v:v };
 
         }
 
@@ -473,7 +474,7 @@ define(function(){
 
     // private function for shifting hue
     // used by color scheme functions 
-    BBModColor.prototype._hueShift = function( h,s ) { 
+    BB.Color.prototype._hueShift = function( h,s ) { 
         
         h += s; 
         
@@ -485,7 +486,7 @@ define(function(){
 
     // private function for creating scheme variants
     // used by scheme functions 
-    BBModColor.prototype._schemeVarient = function( rgb, scheme, config ) { 
+    BB.Color.prototype._schemeVarient = function( rgb, scheme, config ) { 
 
         
         if( typeof config.tint !== "undefined" ){
@@ -568,14 +569,14 @@ define(function(){
      * &nbsp; color.schemes["analogous"][1] // returns second color     <br>
      *</code></section>
      */
-    BBModColor.prototype.colorScheme = function( scheme, config ) { 
+    BB.Color.prototype.colorScheme = function( scheme, config ) { 
 
         var rgb, hsv;
         
         if( scheme == "monochromatic" ){ // -----------------------------------------------------------
             if(typeof config !== "object"){
                 
-                throw new Error("BBModColor.colorScheme: expecting a config object");
+                throw new Error("BB.Color.colorScheme: expecting a config object");
             
             } else {                
                 this.schemes[scheme] = []; // clear previous colors
@@ -586,13 +587,13 @@ define(function(){
         if( scheme == "analogous" ){ // -----------------------------------------------------------
             if(typeof config !== "object"){
                 
-                throw new Error("BBModColor.colorScheme: expecting a config object");
+                throw new Error("BB.Color.colorScheme: expecting a config object");
             
             } else {
 
                 if( typeof config.angle == "undefined" ){
 
-                    throw new Error("BBModColor.colorScheme: this scheme requires a config object with an angle property");
+                    throw new Error("BB.Color.colorScheme: this scheme requires a config object with an angle property");
 
                 }
 
@@ -618,7 +619,7 @@ define(function(){
         if( scheme == "complementary" ){ // -----------------------------------------------------------
             if(typeof config !== "object"){
                 
-                throw new Error("BBModColor.colorScheme: expecting a config object");
+                throw new Error("BB.Color.colorScheme: expecting a config object");
             
             } else {
 
@@ -637,13 +638,13 @@ define(function(){
         if( scheme == "split complementary" ){ // -----------------------------------------------------------
             if(typeof config !== "object"){
                 
-                throw new Error("BBModColor.colorScheme: expecting a config object");
+                throw new Error("BB.Color.colorScheme: expecting a config object");
             
             } else {
 
                 if( typeof config.angle == "undefined" ){
 
-                    throw new Error("BBModColor.colorScheme: this scheme requires a config object with an angle property");
+                    throw new Error("BB.Color.colorScheme: this scheme requires a config object with an angle property");
                 }
 
                 this.schemes[scheme] = []; // clear previous colors
@@ -667,7 +668,7 @@ define(function(){
         if( scheme == "triadic" ){ // -----------------------------------------------------------
             if(typeof config !== "object"){
                 
-                throw new Error("BBModColor.colorScheme: expecting a config object");
+                throw new Error("BB.Color.colorScheme: expecting a config object");
             
             } else {
 
@@ -692,13 +693,13 @@ define(function(){
         if( scheme == "tetradic" ){ // -----------------------------------------------------------
             if(typeof config !== "object"){
                 
-                throw new Error("BBModColor.colorScheme: expecting a config object");
+                throw new Error("BB.Color.colorScheme: expecting a config object");
             
             } else {
 
                 if( typeof config.angle == "undefined" ){
 
-                    throw new Error("BBModColor.colorScheme: this scheme requires a config object with an angle property");
+                    throw new Error("BB.Color.colorScheme: this scheme requires a config object with an angle property");
                 }
 
                 this.schemes[scheme] = []; // clear previous colors
@@ -728,5 +729,5 @@ define(function(){
 
     };
 
-    return BBModColor;
+    return BB.Color;
 });

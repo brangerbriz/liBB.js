@@ -8,7 +8,7 @@
     } else {
         //Browser globals case. Just assign the 
         //result to a property on the global. 
-        root.BBMod = factory();
+        root.BB = factory();
     }
 }(this, function () {
     //almond, and your modules will be inlined here
@@ -445,29 +445,30 @@ var requirejs, require, define;
 
 define("../node_modules/almond/almond", function(){});
 
-define('BBModCore',[],function(){
+define('BB',[],function(){
 
     'use strict';
     
-    function BBMod() {
+    function BB() {
         
     }
 
-    return BBMod;
+    return BB;
 });
 /**
  * A static utilitites class for all things math.
- * @module BBModMathUtils
+ * @module BB.MathUtils
  * @static
  */
-define('BBModMathUtils',[],function(){
+define('BB.MathUtils',['./BB'], 
+function(  BB){
 
     'use strict';
 
-    function BBModMathUtils() {}
+    BB.MathUtils = function() {};
 
     /**
-     * Scales value using min and max. This is the inverse of BBModMathUtils.lerp(...).
+     * Scales value using min and max. This is the inverse of BB.MathUtils.lerp(...).
      * @method norm
      * @static
      * @param  {Number} value The value to be scaled.
@@ -475,21 +476,21 @@ define('BBModMathUtils',[],function(){
      * @param  {Number} max
      * @return {Number}       Returns the scaled value.
      */
-    BBModMathUtils.norm = function(value, min, max) {
+    BB.MathUtils.norm = function(value, min, max) {
 
         if (typeof value !== "number") {
-            throw new Error("BBModMathUtils.norm: value is not a number type");
+            throw new Error("BB.MathUtils.norm: value is not a number type");
         } else if (typeof min !== "number") {
-            throw new Error("BBModMathUtils.norm: min is not a number type");
+            throw new Error("BB.MathUtils.norm: min is not a number type");
         } else if (typeof max !== "number") {
-            throw new Error("BBModMathUtils.norm: max is not a number type");
+            throw new Error("BB.MathUtils.norm: max is not a number type");
         }
 
         return (value - min) / (max - min);
     };
 
      /**
-     * Linear interpolate norm from min and max. This is the inverse of BBModMathUtils.norm(...).
+     * Linear interpolate norm from min and max. This is the inverse of BB.MathUtils.norm(...).
      * @method lerp
      * @static
      * @param  {Number} value
@@ -497,14 +498,14 @@ define('BBModMathUtils',[],function(){
      * @param  {Number} max
      * @return {Number}       Returns the lerped norm.
      */
-    BBModMathUtils.lerp = function(norm, min, max) {
+    BB.MathUtils.lerp = function(norm, min, max) {
 
         if (typeof norm !== "number") {
-            throw new Error("BBModMathUtils.lerp: norm is not a number type");
+            throw new Error("BB.MathUtils.lerp: norm is not a number type");
         } else if (typeof min !== "number") {
-            throw new Error("BBModMathUtils.lerp: min is not a number type");
+            throw new Error("BB.MathUtils.lerp: min is not a number type");
         } else if (typeof max !== "number") {
-            throw new Error("BBModMathUtils.lerp: max is not a number type");
+            throw new Error("BB.MathUtils.lerp: max is not a number type");
         }
 
         return (max - min) * norm + min;
@@ -520,18 +521,18 @@ define('BBModMathUtils',[],function(){
      * @param  {Number} destMax
      * @return {Number} Returns the mapped value.
      */
-    BBModMathUtils.map = function(value, sourceMin, sourceMax, destMin, destMax) {
+    BB.MathUtils.map = function(value, sourceMin, sourceMax, destMin, destMax) {
 
         if (typeof value !== "number") {
-            throw new Error("BBModMathUtils.map: value is not a number type");
+            throw new Error("BB.MathUtils.map: value is not a number type");
         } else if (typeof sourceMin !== "number") {
-            throw new Error("BBModMathUtils.map: sourceMin is not a number type");
+            throw new Error("BB.MathUtils.map: sourceMin is not a number type");
         } else if (typeof sourceMax !== "number") {
-            throw new Error("BBModMathUtils.map: sourceMax is not a number type");
+            throw new Error("BB.MathUtils.map: sourceMax is not a number type");
         } else if (typeof destMin !== "number") {
-            throw new Error("BBModMathUtils.map: destMin is not a number type");
+            throw new Error("BB.MathUtils.map: destMin is not a number type");
         } else if (typeof destMax !== "number") {
-            throw new Error("BBModMathUtils.map: destMax is not a number type");
+            throw new Error("BB.MathUtils.map: destMax is not a number type");
         }
 
         return this.lerp(this.norm(value, sourceMin, sourceMax), destMin, destMax);
@@ -546,23 +547,23 @@ define('BBModMathUtils',[],function(){
      * @param  {Number} p2y The y value of the second point.
      * @return {Number} Returns the distance between (p1x, p1y) and (p2x, p2y).
      */
-    BBModMathUtils.dist = function(p1x, p1y, p2x, p2y){
+    BB.MathUtils.dist = function(p1x, p1y, p2x, p2y){
         
         if (typeof p1x !== "number") {
-            throw new Error("BBModMathUtils.dist: p1x is not a number type");
+            throw new Error("BB.MathUtils.dist: p1x is not a number type");
         } else if (typeof p1y !== "number") {
-            throw new Error("BBModMathUtils.dist: p1y is not a number type");
+            throw new Error("BB.MathUtils.dist: p1y is not a number type");
         } else if (typeof p2x !== "number") {
-            throw new Error("BBModMathUtils.dist: p2x is not a number type");
+            throw new Error("BB.MathUtils.dist: p2x is not a number type");
         } else if (typeof p2y !== "number") {
-            throw new Error("BBModMathUtils.dist: p2y is not a number type");
+            throw new Error("BB.MathUtils.dist: p2y is not a number type");
         }
 
         return Math.sqrt(Math.pow(p2x - p1x, 2) + Math.pow(p2y - p1y, 2));
     };
     /**
      * Get the angle between two points in radians. For degrees process this
-     * return value through BBModMathUtils.radToDegree(...).
+     * return value through BB.MathUtils.radToDegree(...).
      * @method angleBtwn
      * @static
      * @param  {Number} p1x The x value of the first point.
@@ -572,16 +573,16 @@ define('BBModMathUtils',[],function(){
      * @return {Number} Returns the angle between (p1x, p1y) and (p2x, p2y) in
      * radians.
      */
-    BBModMathUtils.angleBtw = function(p1x, p1y, p2x, p2y){
+    BB.MathUtils.angleBtw = function(p1x, p1y, p2x, p2y){
 
         if (typeof p1x !== "number") {
-            throw new Error("BBModMathUtils.angleBtwn: p1x is not a number type");
+            throw new Error("BB.MathUtils.angleBtwn: p1x is not a number type");
         } else if (typeof p1y !== "number") {
-            throw new Error("BBModMathUtils.angleBtwn: p1y is not a number type");
+            throw new Error("BB.MathUtils.angleBtwn: p1y is not a number type");
         } else if (typeof p2x !== "number") {
-            throw new Error("BBModMathUtils.angleBtwn: p2x is not a number type");
+            throw new Error("BB.MathUtils.angleBtwn: p2x is not a number type");
         } else if (typeof p2y !== "number") {
-            throw new Error("BBModMathUtils.angleBtwn: p2y is not a number type");
+            throw new Error("BB.MathUtils.angleBtwn: p2y is not a number type");
         }
 
         return Math.atan2( p2x - p1x, p2y - p1y );
@@ -593,10 +594,10 @@ define('BBModMathUtils',[],function(){
      * @param  {[type]} radians
      * @return {[type]}         Returns radians in degrees.
      */
-    BBModMathUtils.radToDeg = function(radians) {
+    BB.MathUtils.radToDeg = function(radians) {
 
         if (typeof radians !== "number") {
-            throw new Error("BBModMathUtils.radToDegree: radians is not a number type");
+            throw new Error("BB.MathUtils.radToDegree: radians is not a number type");
         }
 
         return radians * (180.0 / Math.PI);
@@ -608,40 +609,335 @@ define('BBModMathUtils',[],function(){
      * @param  {[type]} degrees
      * @return {[type]}         Returns degrees in radians.
      */
-    BBModMathUtils.degToRad = function(degrees) {
+    BB.MathUtils.degToRad = function(degrees) {
 
         if (typeof degrees !== "number") {
-            throw new Error("BBModMathUtils.degToRad: degrees is not a number type");
+            throw new Error("BB.MathUtils.degToRad: degrees is not a number type");
         }
 
         return degrees * (Math.PI / 180.0);
     };
+
+    return BB.MathUtils;
 });
-define('BBModColor',[],function(){
+/**
+ * A module for creating color objects and doing color maths
+ * @module BB.Color
+ */
+define('BB.Color',['./BB'],
+function(  BB){
 
     'use strict';
+    
+    /**
+     * A module for creating color objects and doing color maths
+     * @class BB.Color
+     * @constructor
+     * @param {Number} [r] optional parameter for setting the red value (0-255)
+     * @param {Number} [g] optional parameter for setting the green value (0-255)
+     * @param {Number} [b] optional parameter for setting the blue value (0-255)
+     * @param {Number} [a] optional parameter for setting the alpha value (0-255)
+     * @example 
+     * <section><code class="javascript"> 
+     * &nbsp; var color = new BB.Color(255,0,0); 
+     * </code></section>
+     */
 
-    function BBModColor(r, g, b, a) {
+    BB.Color = function(r, g, b, a) {
+
+        // see getter/setter below
+        if( typeof r == "undefined" ){
+            this._r = 0; 
+        }
+        else if( typeof r !== 'number' || r<0 || r>255 ){
+            throw new Error("BB.Color: red parameter neeeds to be a NUMBER between 0 - 255");
+        } else {
+            this._r = r || 0;     
+        }
+
+        // see getter/setter below
+        if( typeof g == "undefined" ){
+            this._g = 0; 
+        }
+        else if( typeof g !== 'number' || g<0 || g>255 ){
+            throw new Error("BB.Color: green parameter neeeds to be a NUMBER between 0 - 255");
+        } else {
+            this._g = g || 0;        
+        }
+
+        // see getter/setter below
+        if( typeof b == "undefined" ){
+            this._b = 0; 
+        }
+        else if( typeof b !== 'number' || b<0 || b>255 ){
+            throw new Error("BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255");
+        } else {
+            this._b = b || 0;        
+        }
+
+        // see getter/setter below
+        if( typeof a == "undefined" ){
+            this._a = 255; 
+        }
+        else if(  a<0 || a>255 ){
+            throw new Error("BB.Color: alpha parameter neeeds to be a NUMBER between 0 - 255");
+        } else {
+            this._a = a || 255;        
+        }
+
+       this.rgb2hsv();
+
+        /**
+         * object with properties ( named after different color schemes ) for
+         * holding arrays of the color values generated with the <code>colorScheme()</code>
+         * method
+         * @type {Object}
+         * @property schemes
+         */
+        this.schemes = {
+            'monochromatic' : [],
+            'analogous' : [],
+            'complementary' : [],
+            'split complementary' : [],
+            'triadic' : [],
+            'tetradic' : []
+        };
+    };
+
+    /**
+     * the red value between 0 - 255
+     * @property r
+     * @type Number
+     * @default 0
+     */   
+    Object.defineProperty(BB.Color.prototype, "r", {
+        get: function() {
+            return this._r;
+        },
+        set: function(r) {
+            if( typeof r !== 'number' || r<0 || r>255 ){
+                throw new Error("BB.Color: red parameter neeeds to be a NUMBER between 0 - 255");
+            } else {
+                this._r = r || 0;    
+                this.rgb2hsv(); 
+            }
+        }
+    });
+
+    /**
+     * the green value between 0 - 255
+     * @property g
+     * @type Number
+     * @default 0
+     */   
+    Object.defineProperty(BB.Color.prototype, "g", {
+        get: function() {
+            return this._g;
+        },
+        set: function(g) {
+            if( typeof g !== 'number' || g<0 || g>255 ){
+                throw new Error("BB.Color: green parameter neeeds to be a NUMBER between 0 - 255");
+            } else {
+                this._g = g || 0;    
+                this.rgb2hsv(); 
+            }
+        }
+    });
+
+    /**
+     * the blue value between 0 - 255
+     * @property b
+     * @type Number
+     * @default 0
+     */   
+    Object.defineProperty(BB.Color.prototype, "b", {
+        get: function() {
+            return this._b;
+        },
+        set: function(b) {
+            if( typeof b !== 'number' || b<0 || b>255 ){
+                throw new Error("BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255");
+            } else {
+                this._b = b || 0;    
+                this.rgb2hsv(); 
+            }
+        }
+    });
+
+    /**
+     * the alpha value between 0 - 255
+     * @property a
+     * @type Number
+     * @default 255
+     */   
+    Object.defineProperty(BB.Color.prototype, "a", {
+        get: function() {
+            return this._a;
+        },
+        set: function(a) {
+            if( typeof a !== 'number' || a<0 || a>255 ){
+                throw new Error("BB.Color: alpha parameter neeeds to be a NUMBER between 0 - 255");
+            } else {
+                this._a = a || 0;    
+                this.rgb2hsv(); 
+            }
+        }
+    });
+
+    /**
+     * the hue value between 0 - 359
+     * @property h
+     * @type Number
+     * @default 0
+     */   
+    Object.defineProperty(BB.Color.prototype, "h", {
+        get: function() {
+            return this._h;
+        },
+        set: function(h) {
+            if( typeof h !== 'number' || h<0 || h>359 ){
+                throw new Error("BB.Color: hue parameter neeeds to be a NUMBER between 0 - 359");
+            } else {
+                this._h = h || 0;    
+                this.hsv2rgb(); 
+            }
+        }
+    });
+
+    /**
+     * the saturation value between 0 - 100
+     * @property s
+     * @type Number
+     * @default 0
+     */   
+    Object.defineProperty(BB.Color.prototype, "s", {
+        get: function() {
+            return this._s;
+        },
+        set: function(s) {
+            if( typeof s !== 'number' || s<0 || s>100 ){
+                throw new Error("BB.Color: saturation parameter neeeds to be a NUMBER between 0 - 100");
+            } else {
+                this._s = s || 0;    
+                this.hsv2rgb(); 
+            }
+        }
+    });
+
+    /**
+     * the brightness/lightness value between 0 - 100
+     * @property v
+     * @type Number
+     * @default 0
+     */   
+    Object.defineProperty(BB.Color.prototype, "v", {
+        get: function() {
+            return this._v;
+        },
+        set: function(v) {
+            if( typeof v !== 'number' || v<0 || v>100 ){
+                throw new Error("BB.Color: brightness/lightness parameter neeeds to be a NUMBER between 0 - 100");
+            } else {
+                this._v = v || 0;    
+                this.hsv2rgb(); 
+            }
+        }
+    });
+
+
+
+    /**
+     * sets the rgba value of the color
+     * @method setRGBA
+     * @param {Number} r sets the red value from 0 - 255 
+     * @param {Number} g sets the green value from 0 - 255 
+     * @param {Number} b sets the blue value from 0 - 255 
+     * @param {Number} a sets the alpha value from 0 - 255 
+     */
+    BB.Color.prototype.setRGBA = function(r, g, b, a) {
+
+
+        if( typeof r !== 'number' || r<0 || r>255 ){
+            throw new Error("BB.Color: red parameter neeeds to be a NUMBER between 0 - 255");
+        } else {
+            this.r = r;
+        }
+
+        if( typeof g !== 'number' || g<0 || g>255 ){
+            throw new Error("BB.Color: green parameter neeeds to be a NUMBER between 0 - 255");
+        } else {
+            this.g = g;
+        }
+
+        if( typeof b !== 'number' || b<0 || b>255 ){
+            throw new Error("BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255");
+        } else {
+            this.b = b;
+        }
+
+        if( typeof a !== 'number' || a<0 || a>255 ){
+            throw new Error("BB.Color: alpha parameter neeeds to be a NUMBER between 0 - 255");
+        } else {
+            this.a = a;
+        }
+
+        this.rgb2hsv();
+    };
+    
+    /**
+     * sets the h(hue) s(saturation) v(value) of the color
+     * @method setHSVA
+     * @param {Number} h sets the hue value from 0 - 359
+     * @param {Number} s sets the saturation value from 0 - 100
+     * @param {Number} v sets the light/bright value from 0 - 100
+     * @param {Number} a sets the alpha value from 0 - 255
+     */
+    BB.Color.prototype.setHSVA = function(h, s, v, a) {
         
-        this.r = r || 0;
-        this.g = g || 0;
-        this.b = b || 0;
-        this.a = a || 255;
-    }
+        if( typeof h !== 'number' || h<0 || h>359 ){
+            throw new Error("BB.Color: hue parameter neeeds to be a NUMBER between 0 - 359");
+        } else {
+            this.h = h;
+        }
 
-    BBModColor.prototype.set = function(r, g, b, a) {
+        if( typeof s !== 'number' || s<0 || s>100 ){
+            throw new Error("BB.Color: saturation parameter neeeds to be a NUMBER between 0 - 100");
+        } else {
+            this.s = s;
+        }
 
-        if (r !== undefined) this.r = r;
-        if (g !== undefined) this.g = g;
-        if (b !== undefined) this.b = b;
-        if (a !== undefined) this.a = a;
+        if( typeof v !== 'number' || v<0 || v>100 ){
+            throw new Error("BB.Color: value parameter neeeds to be a NUMBER between 0 - 100");
+        } else {
+            this.v = v;
+        }
+
+        if( typeof a !== 'number' || a<0 || a>255 ){
+            throw new Error("BB.Color: alpha parameter neeeds to be a NUMBER between 0 - 255");
+        } else {
+            this.a = a;
+        }
+
+        this.hsv2rgb();
+    };
+
+    BB.Color.prototype.getRGB = function() { 
+        return 'rgb('+this.r+', '+this.g+', '+this.b+')';
+    };
+
+    BB.Color.prototype.getRGBA = function() { 
+        return 'rgba('+this.r+', '+this.g+', '+this.b+', '+this.a+')';
+    };
+
+    BB.Color.prototype.getHex = function() { 
+        return "#" +((this.r << 16) | (this.g << 8) | this.b).toString(16);
     };
 
 
-    BBModColor.prototype.isEqual = function(color, excludeAlpha) {
+    BB.Color.prototype.isEqual = function(color, excludeAlpha) {
 
-        if (! color || ! (color instanceof BBModColor)) {
-            throw new Error("BBModColor.isEqual: color parameter is not an instance of BBModColor");
+        if (! color || !(color instanceof BB.Color) ) {
+            throw new Error("BB.Color.isEqual: color parameter is not an instance of BB.Color");
         }
 
         if (excludeAlpha) {
@@ -656,29 +952,429 @@ define('BBModColor',[],function(){
         }
     };
 
-    return BBModColor;
+    BB.Color.prototype.min3 = function( a,b,c ) { 
+        return ( a<b )   ?   ( ( a<c ) ? a : c )   :   ( ( b<c ) ? b : c ); 
+    }; 
+    
+    BB.Color.prototype.max3 = function( a,b,c ) { 
+        return ( a>b )   ?   ( ( a>c ) ? a : c )   :   ( ( b>c ) ? b : c );
+    };
+
+
+    /**
+     * converts rgb values into hsv values, you can pass it an instance of
+     * BB.Color as a single parameter or pass it three individual parameters (
+     * for r, g and b ) and it returns an object with h,s,v properties.
+     *
+     * if you don't pass it any parameters it takes its own internal values as
+     * arguments and updates it's own internal hsv automatically ( that
+     * functionality is used internally, for ex. by the getters && setters )
+     * 
+     * @method rgb2hsv
+     * @param  {Number} [rgb] either an instance of BB.Color or a red value
+     * between 0 - 255
+     * @param  {Number} [g]   a green value between 0 - 255
+     * @param  {Number} [b]   a blue value value between 0 - 255
+     * @return {Object}     an object with h, s, v properties
+     */
+    BB.Color.prototype.rgb2hsv = function( rgb, g, b ) { 
+
+        var self;
+        if( typeof rgb == "undefined"){
+            self = this;
+        } else {
+            self = ( rgb instanceof BB.Color ) ? rgb : { r:rgb, g:g, b:b };
+        }
+
+        var hsv = {};
+        var max = this.max3( self.r, self.g, self.b );
+        var dif = max - this.min3( self.r, self.g, self.b );
+
+        hsv.s = (max===0.0) ? 0 : (100*dif/max);
+
+        if ( hsv.s === 0 ) hsv.h = 0;
+        else if ( self.r==max ) hsv.h = 60.0 * ( self.g-self.b )/dif;
+        else if ( self.g==max ) hsv.h = 120.0+60.0 * ( self.b-self.r )/dif;
+        else if ( self.b==max ) hsv.h = 240.0+60.0 * ( self.r-self.g )/dif;
+
+        if ( hsv.h < 0.0 ) hsv.h += 360.0;
+
+        hsv.h = Math.round( hsv.h );           
+        hsv.s = Math.round( hsv.s );    
+        hsv.v = Math.round( max*100/255 );      
+
+        if( typeof rgb == "undefined"){
+            this._h = hsv.h;         
+            this._s = hsv.s;  
+            this._v = hsv.v;     
+        } 
+
+        return hsv;
+    };
+
+    /**
+     * converts hsv values into rgb values, you can pass it an instance of
+     * BB.Color as a single parameter or pass it three individual parameters (
+     * for h, s and v ) and it returns an object with r,g,b properties.
+     *
+     * if you don't pass it any parameters it takes its own internal values as
+     * arguments and updates it's own internal rgb automatically ( that
+     * functionality is used internally, for ex. by the getters && setters )
+     *
+     * @method hsv2rgb
+     * @param  {Number} [hsv] either an instance of BB.Color or a h value between 0 - 359
+     * @param  {Number} [s]   a saturation value between 0 - 100
+     * @param  {Number} [v]   a brightness/lightness value value between 0 - 100
+     * @return {Object}     an object with r, g, b properties
+     */
+    BB.Color.prototype.hsv2rgb = function( hsv, s, v ) { 
+
+        var rgb;
+        if( typeof hsv == "undefined"){
+
+            rgb = this;
+            hsv = { h:this.h, s:this.s, v:this.v };
+
+        } else {
+
+            rgb = {};
+            hsv = ( hsv instanceof BB.Color ) ? hsv : { h:hsv, s:s, v:v };
+
+        }
+
+
+        if( typeof hsv == "undefined" && hsv.s === 0 ){
+
+            this._r = this._g = this._b = Math.round( hsv.v * 2.55 );
+
+            return this;
+
+        } else if ( typeof hsv !== "undefined" && hsv.s === 0 ) {
+
+            rgb.r = rgb.g = rgb.b = Math.round( hsv.v * 2.55 );
+
+            return rgb;
+
+        } else {
+
+            hsv.h /= 60;
+            hsv.s /= 100;
+            hsv.v /= 100;
+            
+            var i = Math.floor( hsv.h );
+            var f = hsv.h - i;
+            var p = hsv.v * ( 1- hsv.s );
+            var q = hsv.v * ( 1 - hsv.s * f );
+            var t = hsv.v * ( 1 - hsv.s * (1-f) );
+            
+            switch( i ) {
+                case 0: rgb.r = hsv.v; rgb.g = t; rgb.b = p; break;
+                case 1: rgb.r = q; rgb.g = hsv.v; rgb.b = p; break;
+                case 2: rgb.r = p; rgb.g = hsv.v; rgb.b = t; break;
+                case 3: rgb.r = p; rgb.g = q; rgb.b = hsv.v; break;
+                case 4: rgb.r = t; rgb.g = p; rgb.b = hsv.v; break;
+                default: rgb.r = hsv.v; rgb.g = p; rgb.b = q;
+            }
+
+            rgb.r = Math.round(rgb.r * 255);
+            rgb.g = Math.round(rgb.g * 255);
+            rgb.b = Math.round(rgb.b * 255);
+
+            if( typeof hsv == "undefined"){
+
+                this._r = rgb.r;         
+                this._g = rgb.g;  
+                this._b = rgb.b;    
+
+            } 
+            
+            return rgb;
+        }
+    };
+
+    //
+
+    // private function for shifting hue
+    // used by color scheme functions 
+    BB.Color.prototype._hueShift = function( h,s ) { 
+        
+        h += s; 
+        
+        while ( h>=360.0 )  h -= 360.0; 
+        while ( h<0.0 )     h += 360.0; 
+
+        return h; 
+    };
+
+    // private function for creating scheme variants
+    // used by scheme functions 
+    BB.Color.prototype._schemeVarient = function( rgb, scheme, config ) { 
+
+        
+        if( typeof config.tint !== "undefined" ){
+
+            config.tint.sort(function(a,b){return b - a;}); // reorder largest to smallest
+
+            for (var i = 0; i < config.tint.length; i++) {
+                var col = {};                                                     
+                col.r = Math.round( rgb.r+(255-rgb.r ) * config.tint[i] );
+                col.g = Math.round( rgb.g+(255-rgb.g ) * config.tint[i] );
+                col.b = Math.round( rgb.b+(255-rgb.b ) * config.tint[i] );
+                col.a = this.a;
+
+                this.schemes[scheme].push( col );
+            }
+
+        }
+
+        this.schemes[scheme].push({ r:rgb.r, g:rgb.g, b:rgb.b, a:this.a });
+        
+        if( typeof config.shade !== "undefined" ){
+            
+            config.shade.sort(function(a,b){return b - a;}); // reorder largest to smallest
+
+            for (var j = 0; j < config.shade.length; j++) {
+                var col2 = {};                                                     
+                col2.r = Math.round( rgb.r * config.shade[j] );
+                col2.g = Math.round( rgb.g * config.shade[j] );
+                col2.b = Math.round( rgb.b * config.shade[j] );
+                col2.a = this.a;
+
+                this.schemes[scheme].push( col2 );
+            }
+        }
+
+        for (var ii = 0; ii < this.schemes[scheme].length; ii++) {
+            var self = this.schemes[scheme][ii];
+                self.hex = "#" +((self.r << 16) | (self.g << 8) | self.b).toString(16);
+                self.rgb = 'rgb('+self.r+', '+self.g+', '+self.b+')';
+                self.rgba = 'rgba('+self.r+', '+self.g+', '+self.b+', '+self.a+')';
+        }
+    };
+
+    // config.angle = "30"; config.tint = [ 0.4, 0.8 ]; config.shade = [ 0.3, 0.6 ]
+
+    /**
+     * generates a color scheme ( array of additional color values ) from the
+     * base color.
+     *
+     * the colors are stored in an array in the <code>.schemes</code> property (
+     * object ) and can be accessed by passing it the key ( name of ) the color
+     * scheme you generated like so: <code> .schemes["triadic"] </code>, which
+     * will return an array of objects ( with r, g, b, a properties )
+     * 
+     * @method colorScheme
+     * 
+     * @param  {String} scheme name of the color scheme you want to generate.
+     * can be either "monochromatic", "analogous", "complementary", "split
+     * complementary", "triadic" or "tetradic"
+     * 
+     * @param  {Object} config object with properties for angle (Number) for hue
+     * shift ( this is required by all schemes except for "complimentary" and
+     * "triadaic", which by definition have hardcoded angles of 180 and 240/120
+     * respectively ), tint (Array of Floats) and shade (Array of Flaots), which
+     * are used to create monochromatic colors ( tint for light variations of
+     * the base color and shade for dark ), these are required when creating
+     * "monochromatic" scheme ( which is essentially just a set of tint/shade
+     * variations from the base color ) and optional for the other schemes (
+     * used if you want monochromatic varients calculated of the colors produced
+     * by that particular scheme )
+     * 
+     * @example 
+     * <section><code class="javascript"> 
+     * &nbsp; color.colorScheme("analogous",{                           <br>
+     * &nbsp;&nbsp;&nbsp;&nbsp; angle: 30,                              <br>
+     * &nbsp;&nbsp;&nbsp;&nbsp; tint:[ 0.4, 0.8 ],                      <br>
+     * &nbsp;&nbsp;&nbsp;&nbsp; shade:[ 0.3, 0.6 ]                      <br>
+     * &nbsp; });                                                       <br><br>
+     * &nbsp; color.schemes["analogous"][0] // returns first color      <br>
+     * &nbsp; color.schemes["analogous"][1] // returns second color     <br>
+     *</code></section>
+     */
+    BB.Color.prototype.colorScheme = function( scheme, config ) { 
+
+        var rgb, hsv;
+        
+        if( scheme == "monochromatic" ){ // -----------------------------------------------------------
+            if(typeof config !== "object"){
+                
+                throw new Error("BB.Color.colorScheme: expecting a config object");
+            
+            } else {                
+                this.schemes[scheme] = []; // clear previous colors
+                this._schemeVarient( this, scheme, config);
+            }
+        }
+
+        if( scheme == "analogous" ){ // -----------------------------------------------------------
+            if(typeof config !== "object"){
+                
+                throw new Error("BB.Color.colorScheme: expecting a config object");
+            
+            } else {
+
+                if( typeof config.angle == "undefined" ){
+
+                    throw new Error("BB.Color.colorScheme: this scheme requires a config object with an angle property");
+
+                }
+
+                this.schemes[scheme] = []; // clear previous colors
+
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    hsv.h   = this._hueShift(   hsv.h, config.angle     );
+                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
+
+                this._schemeVarient( rgb, scheme, config);
+
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    hsv.h   = this._hueShift(   hsv.h, 0.0-config.angle );
+                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
+
+                this._schemeVarient( rgb, scheme, config);
+            }
+        }
+
+
+        if( scheme == "complementary" ){ // -----------------------------------------------------------
+            if(typeof config !== "object"){
+                
+                throw new Error("BB.Color.colorScheme: expecting a config object");
+            
+            } else {
+
+                this.schemes[scheme] = []; // clear previous colors
+
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    hsv.h   = this._hueShift(   hsv.h, 180  );
+                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
+
+                this._schemeVarient( rgb, scheme, config);
+            }
+        }
+
+
+        if( scheme == "split complementary" ){ // -----------------------------------------------------------
+            if(typeof config !== "object"){
+                
+                throw new Error("BB.Color.colorScheme: expecting a config object");
+            
+            } else {
+
+                if( typeof config.angle == "undefined" ){
+
+                    throw new Error("BB.Color.colorScheme: this scheme requires a config object with an angle property");
+                }
+
+                this.schemes[scheme] = []; // clear previous colors
+
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    hsv.h   = this._hueShift(   hsv.h, 180.0-config.angle);
+                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
+
+                this._schemeVarient( rgb, scheme, config);
+
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    hsv.h   = this._hueShift(   hsv.h, 180.0+config.angle);
+                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
+
+                this._schemeVarient( rgb, scheme, config);
+            }
+        }
+
+        if( scheme == "triadic" ){ // -----------------------------------------------------------
+            if(typeof config !== "object"){
+                
+                throw new Error("BB.Color.colorScheme: expecting a config object");
+            
+            } else {
+
+                this.schemes[scheme] = []; // clear previous colors
+
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    hsv.h   = this._hueShift(   hsv.h, 240  );
+                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
+
+                this._schemeVarient( rgb, scheme, config);
+
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    hsv.h   = this._hueShift(   hsv.h, 120  );
+                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
+
+                this._schemeVarient( rgb, scheme, config);
+            }
+        }
+
+        if( scheme == "tetradic" ){ // -----------------------------------------------------------
+            if(typeof config !== "object"){
+                
+                throw new Error("BB.Color.colorScheme: expecting a config object");
+            
+            } else {
+
+                if( typeof config.angle == "undefined" ){
+
+                    throw new Error("BB.Color.colorScheme: this scheme requires a config object with an angle property");
+                }
+
+                this.schemes[scheme] = []; // clear previous colors
+
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    hsv.h   = this._hueShift(   hsv.h, 180  );
+                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
+
+                this._schemeVarient( rgb, scheme, config);
+
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    hsv.h   = this._hueShift(   hsv.h, -config.angle    );
+                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
+
+                this._schemeVarient( rgb, scheme, config);
+                
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    hsv.h   = this._hueShift(   hsv.h, -config.angle+180.0  );
+                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
+
+                this._schemeVarient( rgb, scheme, config);                  
+            }
+        }           
+
+    };
+
+    return BB.Color;
 });
 /**
  * A module for standardizing mouse events so that they may be used with
  * the event funnel suite of modules. For use with HTML5 canvas only.
- * @module BBModMouseInput
+ * @module BB.MouseInput
  */
-define('BBModMouseInput',[],function(){
+define('BB.MouseInput',['./BB'], 
+function(  BB){
     
     'use strict';
     
     /**
      * A module for standardizing mouse events so that they may be used with
      * the event funnel suite of modules.
-     * @class  BBModMouseInput
+     * @class  BB.MouseInput
      * @constructor
      * @param {HTMLCanvasElement} canvasElement The HTML5 canvas object listening for mouse input.
      */
-    function BBModMouseInput(canvasElement) {
+    BB.MouseInput = function(canvasElement) {
 
         if (typeof canvasElement === 'undefined' || 
             !(canvasElement instanceof HTMLCanvasElement)) {
-            throw new Error('BBModMouseInput: An HTML5 canvas object must be supplied as a first parameter.');
+            throw new Error('BB.MouseInput: An HTML5 canvas object must be supplied as a first parameter.');
         }
 
         var self = this;
@@ -727,7 +1423,7 @@ define('BBModMouseInput',[],function(){
         this._isDown = false;
 
         /**
-         * The HTML5 canvas element passed into BBModMouseInput during
+         * The HTML5 canvas element passed into BB.MouseInput during
          * construction.
          * @property canvasElem
          * @type {Object}
@@ -763,7 +1459,7 @@ define('BBModMouseInput',[],function(){
 
         this.canvasElem.addEventListener('mousedown', function(e){
             
-            if (e.button === BBModMouseInput.LEFT_BUTTON) {
+            if (e.button === BB.MouseInput.LEFT_BUTTON) {
 
                 self._isDown = true;
 
@@ -777,7 +1473,7 @@ define('BBModMouseInput',[],function(){
 
         this.canvasElem.addEventListener('mouseup', function(e){
 
-            if (e.button === BBModMouseInput.LEFT_BUTTON) {
+            if (e.button === BB.MouseInput.LEFT_BUTTON) {
                 self._isDown = false;
 
                 if (self.hasOwnProperty('_activeStopCallback') &&
@@ -824,7 +1520,7 @@ define('BBModMouseInput',[],function(){
                 y: Math.round((e.clientY - rect.top) / (rect.bottom - rect.top) * self.canvasElem.height)
             };
         }
-    }
+    };
 
     /**
      * Utility property that hold's the value of a JavaScript MouseEvent's left mouse button.
@@ -834,7 +1530,7 @@ define('BBModMouseInput',[],function(){
      * @default 0
      * @readOnly
      */
-    BBModMouseInput.LEFT_BUTTON   = 0;
+    BB.MouseInput.LEFT_BUTTON   = 0;
 
     /**
      * Utility property that hold's the value of a JavaScript MouseEvent's scroll wheel button.
@@ -844,7 +1540,7 @@ define('BBModMouseInput',[],function(){
      * @default 1
      * @readOnly
      */
-    BBModMouseInput.SCROLL_BUTTON = 1;
+    BB.MouseInput.SCROLL_BUTTON = 1;
 
     /**
      * Utility property that hold's the value of a JavaScript MouseEvent's right mouse button.
@@ -854,7 +1550,7 @@ define('BBModMouseInput',[],function(){
      * @default 2
      * @readOnly
      */
-    BBModMouseInput.RIGHT_BUTTON  = 2;
+    BB.MouseInput.RIGHT_BUTTON  = 2;
 
     /**
      * Holds wether or not the mouse is currently moving. This property is read-only.
@@ -863,12 +1559,12 @@ define('BBModMouseInput',[],function(){
      * @default false
      * @readOnly
      */
-    Object.defineProperty(BBModMouseInput.prototype, 'isMoving', {
+    Object.defineProperty(BB.MouseInput.prototype, 'isMoving', {
         get: function(){
             return this._isMoving;
         },
         set: function(val){
-            throw new Error('BBModMouseInput.isMoving (setter): BBModMouseInput.isMoving is a read-only property.');
+            throw new Error('BB.MouseInput.isMoving (setter): BB.MouseInput.isMoving is a read-only property.');
         }
     });
 
@@ -879,16 +1575,16 @@ define('BBModMouseInput',[],function(){
      * @default false
      * @readOnly
      */
-    Object.defineProperty(BBModMouseInput.prototype, 'isDown', {
+    Object.defineProperty(BB.MouseInput.prototype, 'isDown', {
         get: function(){
             return this._isDown;
         },
         set: function(val){
-            throw new Error('BBModMouseInput.isDown (setter): BBModMouseInput.isDown is a read-only property.');
+            throw new Error('BB.MouseInput.isDown (setter): BB.MouseInput.isDown is a read-only property.');
         }
     });
 
-    BBModMouseInput.prototype.update = function() {
+    BB.MouseInput.prototype.update = function() {
 
         if (this.isMoving &&
             this.hasOwnProperty('_moveCallback') &&
@@ -898,7 +1594,7 @@ define('BBModMouseInput',[],function(){
         }
     };
 
-    return BBModMouseInput;
+    return BB.MouseInput;
 });
 
 // A module for funneling in and standardizing pointer-like events
@@ -911,20 +1607,23 @@ define('BBModMouseInput',[],function(){
 /**
  * A module for funneling in and standardizing basic pointer-like interfaces
  * like mouse and touch.
- * @module BBModPointer
+ * @module BB.Pointer
  */
-define('BBModPointer',['./BBModMouseInput'], function(BBModMouseInput){
+define('BB.Pointer',['./BB', './BB.MouseInput'],
+function(  BB,     MouseInput){
 
     'use strict';
 
-    //NOTE: called inside BBModPointer using .call()
-    //to bind this to BBModPointer instance
+    BB.MouseInput = MouseInput;
+
+    //NOTE: called inside BB.Pointer using .call()
+    //to bind this to BB.Pointer instance
     function bindEventsToControllerModule() {
     /*jshint validthis: true */
     
         // the BBMouseInput module uses event listeners attatched to it's
         // HTML5 canvas to fire these callbacks directly, so pass them along.
-        if (this.controllerModule instanceof BBModMouseInput) {
+        if (this.controllerModule instanceof BB.MouseInput) {
 
             this.controllerModule._activeStartCallback = this._activeStartCallback;
             this.controllerModule._activeStopCallback  = this._activeStopCallback;
@@ -937,25 +1636,25 @@ define('BBModPointer',['./BBModMouseInput'], function(BBModMouseInput){
     /**
      * A module for funneling in and standardizing basic pointer-like interfaces
      * like mouse and touch.
-     * @class BBModPointer
+     * @class BB.Pointer
      * @param {Object} controllerModule The input module you would like to control
      * this pointer with.
      * @constructor
      */
-    function BBModPointer(controllerModule) {
+    BB.Pointer = function(controllerModule) {
 
         if (typeof controllerModule === "undefined") {
-            throw new Error('BBModPointer: controllerModule parameter is missing from the BBModPointer constructor.');
-        } else if (! (controllerModule instanceof BBModMouseInput)) {
+            throw new Error('BB.Pointer: controllerModule parameter is missing from the BB.Pointer constructor.');
+        } else if (! (controllerModule instanceof BB.MouseInput)) {
             this.controllerModule = null;
-            throw new Error("BBModPointer.update: controllerModule is not a supported object type.");
+            throw new Error("BB.Pointer.update: controllerModule is not a supported object type.");
         }
 
         this.controllerModule = controllerModule;
 
 
         /**
-         * The pointer's current x position as supplied by the eventModule in BBModPointer.update(...).
+         * The pointer's current x position as supplied by the eventModule in BB.Pointer.update(...).
          * @property x
          * @type {Number}
          * @default undefined
@@ -963,7 +1662,7 @@ define('BBModPointer',['./BBModMouseInput'], function(BBModMouseInput){
         this.x = null;
 
         /**
-         * The pointer's current y position as supplied by the eventModule in BBModPointer.update(...).
+         * The pointer's current y position as supplied by the eventModule in BB.Pointer.update(...).
          * @property y
          * @type {Number}
          * @default undefined
@@ -972,7 +1671,7 @@ define('BBModPointer',['./BBModMouseInput'], function(BBModMouseInput){
 
         /**
          * A variable holding wether or not the event module controlling this
-         * pointer object (via BBModPointer.update(...)) is moving
+         * pointer object (via BB.Pointer.update(...)) is moving
          * @property isMoving
          * @type {Boolean}
          * @default false
@@ -982,7 +1681,7 @@ define('BBModPointer',['./BBModMouseInput'], function(BBModMouseInput){
         /**
          * A variable holding wether or not the selection interface (i.e. mouse
          * button, etc...) controlling this pointer object (via
-         * BBModPointer.update(...)) is active.
+         * BB.Pointer.update(...)) is active.
          * @property isDown
          * @type {Boolean}
          * @default false
@@ -1003,9 +1702,9 @@ define('BBModPointer',['./BBModMouseInput'], function(BBModMouseInput){
         this._moveStartCallback   = null;
         this._moveStopCallback    = null;
         this._moveCallback        = null;
-    }
+    };
 
-    Object.defineProperty(BBModPointer.prototype, "controllerModule", {
+    Object.defineProperty(BB.Pointer.prototype, "controllerModule", {
         get: function(){
             return this._controllerModule;
         },
@@ -1024,12 +1723,12 @@ define('BBModPointer',['./BBModMouseInput'], function(BBModMouseInput){
      * @method update
      * @param  {Object} controllerModule 
      */
-    BBModPointer.prototype.update = function() {
+    BB.Pointer.prototype.update = function() {
 
         // add a new conditional for each module that pointer supports and then
-        // update BBModPointer's internals (x, y, isMoving) in a custom way for
+        // update BB.Pointer's internals (x, y, isMoving) in a custom way for
         // each type of input (kinect, etc...)
-        if (this.controllerModule instanceof BBModMouseInput) {
+        if (this.controllerModule instanceof BB.MouseInput) {
 
             // these assignments are easy for a mouse input object but will take
             // more work for other types of modules (i.e. kinect)...
@@ -1051,7 +1750,7 @@ define('BBModPointer',['./BBModMouseInput'], function(BBModMouseInput){
      * @param  {Function} callback    The callback to execute once the
      * registered event has fired.
      */
-    BBModPointer.prototype.on = function(eventName, callback){
+    BB.Pointer.prototype.on = function(eventName, callback){
         
         // save the callback so that it can be used later in update() if it needs to be    
         if (eventName == "activestart")      this._activeStartCallback       = callback;
@@ -1060,59 +1759,60 @@ define('BBModPointer',['./BBModMouseInput'], function(BBModMouseInput){
         else if (eventName == "movestop")    this._moveStopCallback          = callback;
         else if (eventName == "move")        this._moveCallback              = callback;
         else {
-            throw new Error('BBModPointer.on: eventName is not a supported event.');
+            throw new Error('BB.Pointer.on: eventName is not a supported event.');
         }
 
         if (this._controllerModule === null) {
-            throw new Error('BBModPointer.on: pointer has no controller module.' +
-                            ' You must first call BBModPointer.update() to assign this pointer a controller module.');
+            throw new Error('BB.Pointer.on: pointer has no controller module.' +
+                            ' You must first call BB.Pointer.update() to assign this pointer a controller module.');
         }
 
         bindEventsToControllerModule.call(this);
     };
 
-    return BBModPointer;
+    return BB.Pointer;
 });
 
 /**
- * Basic scene manager for brushes and pointers. BBModBrushManager2D allows a
+ * Basic scene manager for brushes and pointers. BB.BrushManager2D allows a
  * drawing scene (that uses brushes) to persist while the rest of the canvas is
  * cleared each frame. It also provides functionality to undo/redo manager to
  * your drawing actions.
- * @module BBModBrushManager2D
+ * @module BB.BrushManager2D
  */
-define('BBModBrushManager2D',['BBModPointer'],
-function(BBModPointer ){
+define('BB.BrushManager2D',['./BB', 'BB.Pointer'],
+function(  BB,      Pointer ){
 
     'use strict';
 
+    BB.Pointer = Pointer;
+
     /**
-     * Basic scene manager for brushes and pointers. BBModBrushManager2D allows a
+     * Basic scene manager for brushes and pointers. BB.BrushManager2D allows a
      * drawing scene (that uses brushes) to persist while the rest of the canvas is
      * cleared each frame. It also provides functionality to undo/redo manager to
      * your drawing actions.
-     * @class BBModBrushManager2D
+     * @class BB.BrushManager2D
      * @constructor
      * @param {[HTMLCanvasElement]} canvas The HTML5 canvas element for the
      * brush manager to use.
-     */
-    
-    function BBModBrushManager2D(canvas) {
+     */    
+    BB.BrushManager2D = function(canvas) {
 
         var self = this;
 
         if (typeof canvas === 'undefined' || 
             !(canvas instanceof HTMLCanvasElement)) {
-            throw new Error('BBModBrushManager2D: An HTML5 canvas object must be supplied as a first parameter.');
+            throw new Error('BB.BrushManager2D: An HTML5 canvas object must be supplied as a first parameter.');
         }
 
         if (window.getComputedStyle(canvas).getPropertyValue('position') !== 'absolute') {
-            throw new Error('BBModBrushManager2D: the HTML5 canvas passed into the BBModBrushManager2D' + 
+            throw new Error('BB.BrushManager2D: the HTML5 canvas passed into the BB.BrushManager2D' + 
                 ' constructor must be absolutely positioned. Sorry ;).');
         }
 
         /**
-         * The canvas element passed into the BBModBrushManager2D constructor
+         * The canvas element passed into the BB.BrushManager2D constructor
          * @property _parentCanvas
          * @type {HTMLCanvasElement}
          * @protected
@@ -1121,7 +1821,7 @@ function(BBModPointer ){
 
         /**
          * The 2D drawing context of the canvas element passed into the
-         * BBModBrushManager2D constructor
+         * BB.BrushManager2D constructor
          * @property _parentContext
          * @type {CanvasRenderingContext2D}
          * @protected
@@ -1129,7 +1829,7 @@ function(BBModPointer ){
         this._parentContext   = canvas.getContext('2d');
 
          /**
-          * An in-memory canvas object used internally by BBModBrushManager to
+          * An in-memory canvas object used internally by BB.BrushManager to
           * draw to and read pixels from
           * @property canvas
           * @type {HTMLCanvasElement}
@@ -1144,9 +1844,9 @@ function(BBModPointer ){
         this.context          = this.canvas.getContext('2d');
 
         /**
-         * A secondary canvas that is used internally by BBModBrushManager. This
+         * A secondary canvas that is used internally by BB.BrushManager. This
          * canvas is written to the DOM on top of _parentCanvas (the canvas
-         * passed into the BBModBaseBrush2D constructor). It is absolutely
+         * passed into the BB.BaseBrush2D constructor). It is absolutely
          * positioned and has a z-index 1 higher than _parentCanvas.
          * @property secondaryCanvas
          * @type {HTMLCanvasElement}
@@ -1183,7 +1883,7 @@ function(BBModPointer ){
 
         /**
          * An internal FBO (Frame Buffer Object) that is assigned the pixels
-         * from canvas and is drawn during BBModBrushManager2D.draw()
+         * from canvas and is drawn during BB.BrushManager2D.draw()
          * @property _fboImage
          * @type {Image}
          * @protected
@@ -1197,7 +1897,7 @@ function(BBModPointer ){
         };
 
         /**
-         * A deep copy of _fboImage that is drawn in BBModBrushManager2D.draw()
+         * A deep copy of _fboImage that is drawn in BB.BrushManager2D.draw()
          * when _fboImage is reloading
          * @property _fboImageTemp
          * @type {Image}
@@ -1206,7 +1906,7 @@ function(BBModPointer ){
         this._fboImageTemp = null;
 
         this._fboImage.onerror = function(err) {
-           console.log('BBModBrushManager2D: src failed to load: ' + err.target.src);
+           console.log('BB.BrushManager2D: src failed to load: ' + err.target.src);
         };
 
         /**
@@ -1222,9 +1922,9 @@ function(BBModPointer ){
         // all pointers are up and at least one was down last frame
         this._secondaryFboImage.onload = function() {
 
-            // self.context.clearRect(0, 0, self.canvas.width, self.canvas.height);
+            self.context.clearRect(0, 0, self.canvas.width, self.canvas.height);
     
-            // self.context.drawImage(self._fboImage, 0, 0);
+            self.context.drawImage(self._fboImage, 0, 0);
             self.context.drawImage(self._secondaryFboImage, 0, 0);
 
             if (self._history.length === self.numUndos + 1) {
@@ -1246,11 +1946,11 @@ function(BBModPointer ){
 
         //// https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
         //// uncommenting this causes error described here:
-        //// https://github.com/brangerbriz/bbmod/issues/1
+        //// https://github.com/brangerbriz/BBMod.js/issues/1
         // this._fboImage.crossOrigin = "anonymous";
 
         /**
-         * An array of BBModPointer object used to control the brushes drawn to
+         * An array of BB.Pointer object used to control the brushes drawn to
          * brush mananger
          * @property _pointers
          * @type {Array}
@@ -1267,8 +1967,8 @@ function(BBModPointer ){
         this._pointerStates = [];
 
         /**
-         * Internal flag to determin if BBModBrushManager2D.undo() was called
-         * since the BBModBrushManager2D.update()
+         * Internal flag to determin if BB.BrushManager2D.undo() was called
+         * since the BB.BrushManager2D.update()
          * @property _needsUndo
          * @type {Boolean}
          * @protected
@@ -1276,8 +1976,8 @@ function(BBModPointer ){
         this._needsUndo = false;
 
         /**
-         * Internal flag to determin if BBModBrushManager2D.redo() was called
-         * since the BBModBrushManager2D.update()
+         * Internal flag to determin if BB.BrushManager2D.redo() was called
+         * since the BB.BrushManager2D.update()
          * @property _needsRedo
          * @type {Boolean}
          * @protected
@@ -1293,7 +1993,7 @@ function(BBModPointer ){
         this._somePointersDown = false;
 
         /**
-         * Internal flag checked against in BBModBrushManager2D.draw() that
+         * Internal flag checked against in BB.BrushManager2D.draw() that
          * holds wether or not _fboImage is finished loaded. Note: this flag is
          * purposefully not set when _fboImage.src is set from undo() or redo().
          * @property _fboImageLoadWaiting
@@ -1304,7 +2004,7 @@ function(BBModPointer ){
 
         // add empty canvas to the history
         this._history.push(this.canvas.toDataURL());
-    }
+    };
 
     /**
      * The number of undo/redo states to save
@@ -1312,7 +2012,7 @@ function(BBModPointer ){
      * @type {Number}
      * @default 5
      */
-    Object.defineProperty(BBModBrushManager2D.prototype, "numUndos", {
+    Object.defineProperty(BB.BrushManager2D.prototype, "numUndos", {
         get: function() {
             return this._numUndos;
         },
@@ -1329,22 +2029,22 @@ function(BBModPointer ){
 
     /**
      * Set the brush manager to use these pointers when drawing.
-     * BBModBrushManager2D must be tracking at least one pointer in order to
+     * BB.BrushManager2D must be tracking at least one pointer in order to
      * update().
      * @method trackPointers
-     * @param  {Array} pointers An array of BBModPointer objects for
-     * BBModBrushManager2D to track.
+     * @param  {Array} pointers An array of BB.Pointer objects for
+     * BB.BrushManager2D to track.
      */
-    BBModBrushManager2D.prototype.trackPointers = function(pointers) {
+    BB.BrushManager2D.prototype.trackPointers = function(pointers) {
         
         if (pointers instanceof Array) {
 
             for (var i = 0; i < pointers.length; i++) {
              
                 var pointer = pointers[i];
-                if (! (pointer instanceof BBModPointer)) {
-                    throw new Error('BBModBrushManager2D.trackPointers: pointers[' +
-                        i + '] is not an instance of BBModPointer.');
+                if (! (pointer instanceof BB.Pointer)) {
+                    throw new Error('BB.BrushManager2D.trackPointers: pointers[' +
+                        i + '] is not an instance of BB.Pointer.');
                 } else {
                     this._pointers.push(pointer);
                     this._pointerStates.push(pointer.isDown);
@@ -1352,7 +2052,7 @@ function(BBModPointer ){
             }
 
         } else {
-            throw new Error('BBModBrushManager2D.trackPointers: pointers parameter must be an array of pointers.');
+            throw new Error('BB.BrushManager2D.trackPointers: pointers parameter must be an array of pointers.');
         }
     };
 
@@ -1360,27 +2060,27 @@ function(BBModPointer ){
      * Untrack all pointers.
      * @method untrackPointers
      */
-    BBModBrushManager2D.prototype.untrackPointers = function() {
+    BB.BrushManager2D.prototype.untrackPointers = function() {
         this._pointers = [];
         this._pointerStates = [];
     };
 
     /**
-     * Untrack one pointer at index. Pointers tracked by BBModBrushManager2D
+     * Untrack one pointer at index. Pointers tracked by BB.BrushManager2D
      * have indexes based on the order they were added by calls to
-     * BBModBrushManager2D.trackPointers(...). Untracking a pointer removes it
+     * BB.BrushManager2D.trackPointers(...). Untracking a pointer removes it
      * from the internal _pointers array which changes the index of all pointers
      * after it. Keep this in mind when using this method.
      * @method untrackPointers
      * @param {Number} index The index of the pointer to untrack.
      */
-    BBModBrushManager2D.prototype.untrackPointerAtIndex = function(index) {
+    BB.BrushManager2D.prototype.untrackPointerAtIndex = function(index) {
         
         if (typeof this._pointers[index] !== 'undefined') {
             this._pointers.splice(index, 1);
             this._pointerStates.splice(index, 1);
         } else {
-            throw new Error('BBModBrushManager2D.untrackPointerAtIndex: Invalid pointer index ' +
+            throw new Error('BB.BrushManager2D.untrackPointerAtIndex: Invalid pointer index ' +
                 index + '. there is no pointer at that index.');
         }
     };
@@ -1390,7 +2090,7 @@ function(BBModPointer ){
      * @method hasPointers
      * @return {Boolean}
      */
-    BBModBrushManager2D.prototype.hasPointers = function() {
+    BB.BrushManager2D.prototype.hasPointers = function() {
         return this._pointers.length > 0;
     };
 
@@ -1399,7 +2099,7 @@ function(BBModPointer ){
      * @method hasUndo
      * @return {Boolean}
      */
-    BBModBrushManager2D.prototype.hasUndo = function() {
+    BB.BrushManager2D.prototype.hasUndo = function() {
         return this._history.length > 1;
     };
 
@@ -1408,19 +2108,19 @@ function(BBModPointer ){
      * @method hasRedo
      * @return {Boolean}
      */
-    BBModBrushManager2D.prototype.hasRedo = function() {
+    BB.BrushManager2D.prototype.hasRedo = function() {
         return this._purgatory.length > 0;
     };
 
     /**
-     * BBModBrushManager2D's update method. Should be called once per animation frame.
+     * BB.BrushManager2D's update method. Should be called once per animation frame.
      * @method update
      */
-    BBModBrushManager2D.prototype.update = function() {
+    BB.BrushManager2D.prototype.update = function() {
 
         if (! this.hasPointers()) {
-            throw new Error('BBModBrushManager2D.update: You must add at least one pointer to ' +
-                            'the brush manager with BBModBrushManager2D.addPointers(...)');
+            throw new Error('BB.BrushManager2D.update: You must add at least one pointer to ' +
+                            'the brush manager with BB.BrushManager2D.addPointers(...)');
         }
 
         var somePointersDown = this._pointerStates.some(function(val){ return val === true; });
@@ -1474,32 +2174,32 @@ function(BBModPointer ){
 
     /**
      * Draws the brush manager scene to the canvas supplied in the
-     * BBModBrushManager2D constructor or the optionally, "context" if it was
+     * BB.BrushManager2D constructor or the optionally, "context" if it was
      * provided as a parameter. Should be called once per animation frame.
      * @method update
      * @param {[CanvasRenderingContext2D]} context An optional drawing context
      * that will be drawn to if it is supplied.
      */
-    BBModBrushManager2D.prototype.draw = function(context) {
+    BB.BrushManager2D.prototype.draw = function(context) {
 
         if (typeof context === "undefined" ) {
             context = this._parentContext;
         } else if(! (context instanceof CanvasRenderingContext2D)) {
-            throw new Error('BBModBrushManager2D.draw: context is not an instance of CanvasRenderingContext2D');
+            throw new Error('BB.BrushManager2D.draw: context is not an instance of CanvasRenderingContext2D');
         }
 
         // if the image has loaded
         if (this._fboImage.complete) {
 
-            try { context.drawImage(this._fboImage, 0, 0); } catch(err) {console.log(1); }
+            context.drawImage(this._fboImage, 0, 0);   
 
         } else if (this._fboImageTemp !== null){
 
-            try { context.drawImage(this._fboImageTemp, 0, 0); } catch(err) {console.log(2); }
+            context.drawImage(this._fboImageTemp, 0, 0);
 
             if (this._fboImageLoadWaiting) {
 
-                try { context.drawImage(this._secondaryFboImage, 0, 0); } catch(err) {console.log(3); }
+                context.drawImage(this._secondaryFboImage, 0, 0);
 
             }
         }
@@ -1509,7 +2209,7 @@ function(BBModPointer ){
      * Undo one drawing action if available
      * @method undo
      */
-    BBModBrushManager2D.prototype.undo = function() {
+    BB.BrushManager2D.prototype.undo = function() {
 
         if (this._history.length > 1) {
             this._needsUndo = true; 
@@ -1520,7 +2220,7 @@ function(BBModPointer ){
      * Undo redo one drawing action if available
      * @method undo
      */
-    BBModBrushManager2D.prototype.redo = function() {
+    BB.BrushManager2D.prototype.redo = function() {
 
         if (this._history.length > 0) {
             this._needsRedo = true;
@@ -1529,13 +2229,13 @@ function(BBModPointer ){
 
     /**
      * Notifies brush manager that the canvas passed into the
-     * BBModBrushManager2D constructor has been moved or resized. It is
+     * BB.BrushManager2D constructor has been moved or resized. It is
      * important to call this method whenever the positional CSS from the parent
-     * canvas is changed so that BBModBrushManager2D's internal canvases may be
+     * canvas is changed so that BB.BrushManager2D's internal canvases may be
      * updated upropriately.
      * @method updateCanvasPosition
      */
-    BBModBrushManager2D.prototype.updateCanvasPosition = function() {
+    BB.BrushManager2D.prototype.updateCanvasPosition = function() {
 
         this.canvas.width = this._parentCanvas.width;
         this.canvas.height = this._parentCanvas.height;
@@ -1562,7 +2262,7 @@ function(BBModPointer ){
             parentZIndex = 0;
             this.secondaryCanvas.style.zIndex = parentZIndex + 1;
 
-            throw new Error('BBModBrushManager2D: the HTML5 canvas passed into the BBModBrushManager2D' +
+            throw new Error('BB.BrushManager2D: the HTML5 canvas passed into the BB.BrushManager2D' +
                 ' constructor should have a z-index property value that is numeric. Currently the value is "' +
                 parentZIndex + '".');
 
@@ -1572,29 +2272,32 @@ function(BBModPointer ){
         } 
     };
 
-    return BBModBrushManager2D;
+    return BB.BrushManager2D;
 });
 
 /**
- * Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D, etc...
- * @module BBModBaseBrush2D
+ * Base 2D brush class extended by BB.ImageBrush2D, BB.LineBrush2D, etc...
+ * @module BB.BaseBrush2D
  */
-define('BBModBaseBrush2D',['BBModBrushManager2D', './BBModColor'],
-function(BBModBrushManager2D,     BBModColor){
+define('BB.BaseBrush2D',['./BB', './BB.BrushManager2D', './BB.Color'],
+function(  BB,        BrushManager2D,        Color){
 
     'use strict';
 
+    BB.BaseBrush2D = BrushManager2D;
+    BB.Color       = Color;
+
     /**
-     * Base 2D brush class extended by BBModImageBrush2D, BBModLineBrush2D,
+     * Base 2D brush class extended by BB.ImageBrush2D, BB.LineBrush2D,
      * etc...
-     * @class BBModBaseBrush2D
+     * @class BB.BaseBrush2D
      * @constructor
      * @param {Object} [config] An optional config hash to initialize any of
-     * BBModBaseBrush2D's public properties
-     * @example <div><code> var baseBrush = new BBModBaseBrush2D({ width: 100,
-     * height: 100, color: new BBModColor(255, 0, 0) }); </code></div>
+     * BB.BaseBrush2D's public properties
+     * @example <div><code> var baseBrush = new BB.BaseBrush2D({ width: 100,
+     * height: 100, color: new BB.Color(255, 0, 0) }); </code></div>
      */
-    function BBModBaseBrush2D(config) {
+    BB.BaseBrush2D = function(config) {
 
         /**
          * The brush's x position.
@@ -1639,10 +2342,10 @@ function(BBModBrushManager2D,     BBModColor){
         /**
          * The brush's color.
          * @property color
-         * @type BBModColor
+         * @type BB.Color
          * @default null
          */
-        this.color    = (config && config.color && config.color instanceof BBModColor) ? config.color : null;
+        this.color    = (config && config.color && config.color instanceof BB.Color) ? config.color : null;
         
         /**
          * Wether or not to draw the brush to the screen. Toggle this variable
@@ -1654,16 +2357,16 @@ function(BBModBrushManager2D,     BBModColor){
         this.hidden   = (config && config.hidden && typeof hidden === 'boolean') ? config.hidden : false;
         
         /**
-         * The type of brush. Defaults to "base" for BBModBaseBrush, "image" for
-         * BBModImageBrush, etc... and should be treated as read-only.
+         * The type of brush. Defaults to "base" for BB.BaseBrush, "image" for
+         * BB.ImageBrush, etc... and should be treated as read-only.
          * @property type
          * @type String
          * @default "base"
          */
         this.type    = "base";
 
-        this.manager = (config && config.manager && config.manager instanceof BBModBrushManager2D) ? config.manager : null;
-    }
+        this.manager = (config && config.manager && config.manager instanceof BB.BrushManager2D) ? config.manager : null;
+    };
 
     /**
      * Base update method. Usually called once per animation frame.
@@ -1672,24 +2375,24 @@ function(BBModBrushManager2D,     BBModColor){
      * optionally an isDown boolean (used for beginning and ending
      * strokeds/marks).
      */
-    BBModBaseBrush2D.prototype.update = function(controllerModule) {
+    BB.BaseBrush2D.prototype.update = function(controllerModule) {
 
         if (controllerModule !== undefined) {
             
             if (controllerModule.x !== undefined && typeof controllerModule.x === 'number') {
                 this.x = controllerModule.x;
             } else {
-                throw new Error('BBModBaseBrush.update: controllerModule parameter does not have a valid x parameter');
+                throw new Error('BB.BaseBrush.update: controllerModule parameter does not have a valid x parameter');
             }
 
             if (controllerModule.y !== undefined && typeof controllerModule.y === 'number') {
                 this.y = controllerModule.y;
             } else {
-                throw new Error('BBModBaseBrush.update: controllerModule parameter does not have a valid y parameter');
+                throw new Error('BB.BaseBrush.update: controllerModule parameter does not have a valid y parameter');
             }
 
         } else {
-            throw new Error('BBModBaseBrush.update: missing controllerModule parameter');
+            throw new Error('BB.BaseBrush.update: missing controllerModule parameter');
         }
     };
 
@@ -1697,15 +2400,15 @@ function(BBModBrushManager2D,     BBModColor){
      * Base draw method. Usually called once per animation frame.
      * @method draw 
      */
-    BBModBaseBrush2D.prototype.draw = function(context) {
+    BB.BaseBrush2D.prototype.draw = function(context) {
 
         if (!context) {
-            throw new Error('BBModBaseBrush.draw: Invalid context parameter');
+            throw new Error('BB.BaseBrush.draw: Invalid context parameter');
         }
 
         var returnContext = context;
 
-        if(this.manager instanceof BBModBrushManager2D) {
+        if(this.manager instanceof BB.BrushManager2D) {
             returnContext = this.manager.secondaryContext;   
         }
 
@@ -1717,7 +2420,7 @@ function(BBModBrushManager2D,     BBModColor){
      * @method scale
      * @param {Number} amount Amount to scale width and height by
      */
-    BBModBaseBrush2D.prototype.scale = function(amount) {
+    BB.BaseBrush2D.prototype.scale = function(amount) {
         
         if (typeof amount === 'number') {
             
@@ -1725,39 +2428,43 @@ function(BBModBrushManager2D,     BBModColor){
             this.height *= amount;
 
         } else {
-            throw new Error("BBModBaseBrush2D.scale: scale is not a number type");
+            throw new Error("BB.BaseBrush2D.scale: scale is not a number type");
         }
     };
 
-    return BBModBaseBrush2D;
+    return BB.BaseBrush2D;
 });
 
 /**
  * A 2D brush module for drawing images in a stamp-like style.
- * @module BBModImageBrush2D
- * @extends BBModBaseBrush2D
+ * @module BB.ImageBrush2D
+ * @extends BB.BaseBrush2D
  */
-define('BBModImageBrush2D',['./BBModBaseBrush2D', './BBModColor', './BBModMathUtils'], 
-function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
+define('BB.ImageBrush2D',['./BB', './BB.BaseBrush2D', './BB.Color', './BB.MathUtils'], 
+function(  BB,        BaseBrush2D,        Color,        MathUtils){
 
     'use strict';
+
+    BB.BaseBrush2D = BaseBrush2D;
+    BB.Color       = Color;
+    BB.MathUtils   = MathUtils;
 
     var drawReady = false;
     var initSrcSet = false;
 
     /**
      * A brush module for drawing images in a stamp-like style.
-     * @class BBModImageBrush2D
+     * @class BB.ImageBrush2D
      * @constructor
-     * @extends BBModBaseBrush2D
+     * @extends BB.BaseBrush2D
      * @param {Object} [config] A optional config hash to initialize any of
-     * BBModImageBrush2D's public properties.
-     * @example <div><code> var imageBrush = new BBModImageBrush2D({ width: 100,
+     * BB.ImageBrush2D's public properties.
+     * @example <div><code> var imageBrush = new BB.ImageBrush2D({ width: 100,
      * height: 100, src: "http://some/image.png" }); </code></div>
      */
-    function BBModImageBrush2D(config) {
+    BB.ImageBrush2D = function(config) {
 
-        BBModBaseBrush2D.call(this, config);
+        BB.BaseBrush2D.call(this, config);
 
         /**
          * The type of brush. This property should be treated as read-only.
@@ -1805,7 +2512,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
         this._src = null;
 
          /**
-          * An array of all supported variants. For the BBModImageBrush2D class
+          * An array of all supported variants. For the BB.ImageBrush2D class
           * these are a list of pre-made SVGs with programmatic control for
           * changing their color.
           * @property variants
@@ -1831,7 +2538,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
         if (config) {
 
             if (config.src && config.variant) {
-                throw new Error('BBModImageBrush2D: The config.src and config.variant properties are mutually exlusive'+
+                throw new Error('BB.ImageBrush2D: The config.src and config.variant properties are mutually exlusive'+
                                 'and cannot both be included in the same config object.');
             }
 
@@ -1842,10 +2549,10 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
                 this.variant = config.variant;
             }  
         }   
-    }
+    };
 
-    BBModImageBrush2D.prototype = Object.create(BBModBaseBrush2D.prototype);
-    BBModImageBrush2D.prototype.constructor = BBModImageBrush2D;
+    BB.ImageBrush2D.prototype = Object.create(BB.BaseBrush2D.prototype);
+    BB.ImageBrush2D.prototype.constructor = BB.ImageBrush2D;
 
     /**
      * The brush's image src. Functionally equivalent to the src property of an
@@ -1855,7 +2562,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
      * @type String
      * @default null
      */   
-    Object.defineProperty(BBModImageBrush2D.prototype, 'src', {
+    Object.defineProperty(BB.ImageBrush2D.prototype, 'src', {
         get: function() {
             return this._src;
         },
@@ -1882,9 +2589,9 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
      * optionally an isDown boolean (used for beginning and ending
      * strokeds/marks).
      */
-    BBModImageBrush2D.prototype.update = function(controllerModule) {
+    BB.ImageBrush2D.prototype.update = function(controllerModule) {
         
-        BBModBaseBrush2D.prototype.update.call(this, controllerModule);
+        BB.BaseBrush2D.prototype.update.call(this, controllerModule);
 
         if (controllerModule.hasOwnProperty('isDown')) {
             this.hidden = (controllerModule.isDown === false);
@@ -1898,12 +2605,12 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
      * @param {Object} context The HTML5 canvas context you would like to draw
      * to.
      */
-    BBModImageBrush2D.prototype.draw = function(context) {
+    BB.ImageBrush2D.prototype.draw = function(context) {
         
         function getColoredSVGVariant() {
         
             var r, g, b, a;
-            if (self.color && self.color instanceof BBModColor) {
+            if (self.color && self.color instanceof BB.Color) {
                 r = self.color.r;
                 g = self.color.g;
                 b = self.color.b;
@@ -1935,7 +2642,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
         var self = this;
 
-        context = BBModBaseBrush2D.prototype.draw.call(this, context);
+        context = BB.BaseBrush2D.prototype.draw.call(this, context);
 
         // if the variant is present and is the right variable type
         if (this.variant !== null && 
@@ -1955,13 +2662,13 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
                     this._lastVariant = this.variant;  
                 
                 } else {
-                    throw new Error('BBModImageBrush2D draw: ' + this.variant + ' is not a valid variant for BBModImageBrush2D');
+                    throw new Error('BB.ImageBrush2D draw: ' + this.variant + ' is not a valid variant for BB.ImageBrush2D');
                 }
             }            
         }
 
         if (!initSrcSet) {
-            console.error('BBModImageBrush2D draw: you are attempting to draw an image brush without first setting its source with the .src property');
+            console.error('BB.ImageBrush2D draw: you are attempting to draw an image brush without first setting its source with the .src property');
         }
 
         if (!this.hidden && drawReady) {
@@ -1969,7 +2676,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
             context.save();
         
             context.translate(this.x, this.y);
-            context.rotate(BBModMathUtils.degToRad(this.rotation));
+            context.rotate(BB.MathUtils.degToRad(this.rotation));
 
             // draw to screen
             context.drawImage(this._image, - this.width/2, - this.height/2, this.width, this.height);
@@ -1978,42 +2685,46 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
         }
     };
 
-    return BBModImageBrush2D;
+    return BB.ImageBrush2D;
 });
 
 /**
  * A 2D brush module for drawing contiguous lines in a stamp-like fashion.
- * @module BBModLineBrush2D
- * @extends BBModBaseBrush2D
+ * @module BB.LineBrush2D
+ * @extends BB.BaseBrush2D
  */
-define('BBModLineBrush2D',['./BBModBaseBrush2D', './BBModColor', "./BBModMathUtils"], 
-function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
+define('BB.LineBrush2D',['./BB', './BB.BaseBrush2D', './BB.Color', "./BB.MathUtils"], 
+function(  BB,        BaseBrush2D,        Color,        MathUtils){
 
     'use strict';
+
+    BB.BaseBrush2D = BaseBrush2D;
+    BB.Color       = Color;
+    BB.MathUtils   = MathUtils;
 
     var justReset = false;
     var controllerModuleHasIsDown = false;
 
     /**
      * A 2D brush module for drawing contiguous lines in a stamp-like fashion.
-     * What makes BBModLineBrush2D fundamentally different from BBModBaseBrush
+     * What makes BB.LineBrush2D fundamentally different from BB.BaseBrush
      * is that each new drawing instance is influenced by the previous position of
      * the brush (usually to adjust for drawing angle or brush width).
-     * @class BBModLineBrush2D
+     * @class BB.LineBrush2D
      * @constructor
-     * @extends BBModBaseBrush2D
+     * @extends BB.BaseBrush2D
      * @param {Object} [config] A optional config hash to initialize any of
-     * BBModLineBrush2D's public properties.
-     * @example <div><code> var lineBrush = new BBModLineBrush2D({ width: 100,
+     * BB.LineBrush2D's public properties.
+     * @example <div><code> var lineBrush = new BB.LineBrush2D({ width: 100,
      * height: 100, variant: "soft" }); </code></div>
      */
-    function BBModLineBrush2D(config) {
+    BB.LineBrush2D = function(config) {
 
-        BBModBaseBrush2D.call(this, config);
+        BB.BaseBrush2D.call(this, config);
 
         /**
          * The brush's previous x position. This property is unique to
-         * BBModLineBrush.
+         * BB.LineBrush.
          * @property prevX
          * @type Number
          * @default null
@@ -2022,7 +2733,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
         /**
          * The brush's previous y position. This property is unique to
-         * BBModLineBrush.
+         * BB.LineBrush.
          * @property prevY
          * @type Number
          * @default null
@@ -2079,10 +2790,10 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
             if (typeof config.variant === 'string') this.variant = config.variant;
             if (typeof config.weight === 'number') this.weight = config.weight;
         }   
-    }
+    };
 
-    BBModLineBrush2D.prototype = Object.create(BBModBaseBrush2D.prototype);
-    BBModLineBrush2D.prototype.constructor = BBModLineBrush2D;
+    BB.LineBrush2D.prototype = Object.create(BB.BaseBrush2D.prototype);
+    BB.LineBrush2D.prototype.constructor = BB.LineBrush2D;
 
     /**
      * Update method. Usually called once per animation frame.
@@ -2091,9 +2802,9 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
      * optionally an isDown boolean (used for beginning and ending
      * strokeds/marks). 
      */
-    BBModLineBrush2D.prototype.update = function(controllerModule) {
+    BB.LineBrush2D.prototype.update = function(controllerModule) {
         
-        BBModBaseBrush2D.prototype.update.call(this, controllerModule);
+        BB.BaseBrush2D.prototype.update.call(this, controllerModule);
 
         if (controllerModule.hasOwnProperty('isDown')) {
             controllerModuleHasIsDown = true;
@@ -2109,10 +2820,10 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
      * @param {Object} context The HTML5 canvas context you would like to draw
      * to.
      */
-    BBModLineBrush2D.prototype.draw = function(context) {
+    BB.LineBrush2D.prototype.draw = function(context) {
         
 
-        context = BBModBaseBrush2D.prototype.draw.call(this, context);
+        context = BB.BaseBrush2D.prototype.draw.call(this, context);
 
         context.save();
 
@@ -2121,7 +2832,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
         if (typeof this.variant !== 'string' ||
             this.variants.indexOf(this.variant) === -1) {
-            throw new Error("BBModBaseBrush2D.draw: " + this.variant + " is not a valid variant for BBModImageBrush2D");
+            throw new Error("BB.BaseBrush2D.draw: " + this.variant + " is not a valid variant for BB.ImageBrush2D");
         }      
 
         // draw down here...
@@ -2139,11 +2850,11 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
                 } else { // we are in the middle of the line
 
                     var r, g, b, alphaFloat;
-                    if (this.color && this.color instanceof BBModColor) {
+                    if (this.color && this.color instanceof BB.Color) {
                         r = this.color.r;
                         g = this.color.g;
                         b = this.color.b;
-                        alphaFloat = BBModMathUtils.map(this.color.a, 0, 255, 0.0, 1.0);
+                        alphaFloat = BB.MathUtils.map(this.color.a, 0, 255, 0.0, 1.0);
                     } else {
                         r = 255;
                         g = 255;
@@ -2160,7 +2871,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
                         if( this.weight > 100){ this.weight = 100; }
 
-                        context.lineWidth = BBModMathUtils.map(this.weight, 0, 100, this.height / 2.5, this.height * 2.5);
+                        context.lineWidth = BB.MathUtils.map(this.weight, 0, 100, this.height / 2.5, this.height * 2.5);
                         context.lineTo(this.x, this.y);
                         context.strokeStyle = "rgba(" + r + ", " + g + ", " + b + ", " + alphaFloat + ")";
                         context.stroke();
@@ -2170,8 +2881,8 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
                     } else if(this.variant == 'soft'){
                         
-                        var dist = BBModMathUtils.dist(this.prevX, this.prevY, this.x, this.y);
-                        var angle = BBModMathUtils.angleBtw(this.prevX, this.prevY, this.x, this.y);
+                        var dist = BB.MathUtils.dist(this.prevX, this.prevY, this.x, this.y);
+                        var angle = BB.MathUtils.angleBtw(this.prevX, this.prevY, this.x, this.y);
                         for (var i = 0; i < dist; i++) {
                             var x = this.prevX + (Math.sin(angle) * i);
                             var y = this.prevY + (Math.cos(angle) * i);
@@ -2220,30 +2931,30 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
         this.prevY = this.y;
     };
 
-    return BBModLineBrush2D;
+    return BB.LineBrush2D;
 });
 
-define('main',['require','BBModCore','BBModMathUtils','BBModColor','BBModBaseBrush2D','BBModImageBrush2D','BBModLineBrush2D','BBModBrushManager2D','BBModMouseInput','BBModPointer'],function (require) {
+define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.ImageBrush2D','BB.LineBrush2D','BB.BrushManager2D','BB.MouseInput','BB.Pointer'],function (require) {
 
   'use strict';
 
-  var BBMod = require('BBModCore');
+  var BB = require('BB');
   
   //utils
-  BBMod.MathUtils      = require('BBModMathUtils');
-  BBMod.Color          = require('BBModColor');
+  BB.MathUtils      = require('BB.MathUtils');
+  BB.Color          = require('BB.Color');
 
   // brushes
-  BBMod.BaseBrush2D    = require('BBModBaseBrush2D');
-  BBMod.ImageBrush2D   = require('BBModImageBrush2D');
-  BBMod.LineBrush2D    = require('BBModLineBrush2D');
-  BBMod.BrushManager2D = require('BBModBrushManager2D');
+  BB.BaseBrush2D    = require('BB.BaseBrush2D');
+  BB.ImageBrush2D   = require('BB.ImageBrush2D');
+  BB.LineBrush2D    = require('BB.LineBrush2D');
+  BB.BrushManager2D = require('BB.BrushManager2D');
   
   // inputs, etc...
-  BBMod.MouseInput     = require('BBModMouseInput');
-  BBMod.Pointer        = require('BBModPointer');
+  BB.MouseInput     = require('BB.MouseInput');
+  BB.Pointer        = require('BB.Pointer');
 
-  return BBMod;
+  return BB;
 
 });
     //The modules for your project will be inlined above

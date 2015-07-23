@@ -2,9 +2,9 @@ define(function(){
 
     'use strict';
     
-    function BBMod() {
+    function BB() {
         
     }
 
-    return BBMod;
+    return BB;
 });

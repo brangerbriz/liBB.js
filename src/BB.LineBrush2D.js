@@ -1,36 +1,40 @@
 /**
  * A 2D brush module for drawing contiguous lines in a stamp-like fashion.
- * @module BBModLineBrush2D
- * @extends BBModBaseBrush2D
+ * @module BB.LineBrush2D
+ * @extends BB.BaseBrush2D
  */
-define(['./BBModBaseBrush2D', './BBModColor', "./BBModMathUtils"], 
-function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
+define(['./BB', './BB.BaseBrush2D', './BB.Color', "./BB.MathUtils"], 
+function(  BB,        BaseBrush2D,        Color,        MathUtils){
 
     'use strict';
+
+    BB.BaseBrush2D = BaseBrush2D;
+    BB.Color       = Color;
+    BB.MathUtils   = MathUtils;
 
     var justReset = false;
     var controllerModuleHasIsDown = false;
 
     /**
      * A 2D brush module for drawing contiguous lines in a stamp-like fashion.
-     * What makes BBModLineBrush2D fundamentally different from BBModBaseBrush
+     * What makes BB.LineBrush2D fundamentally different from BB.BaseBrush
      * is that each new drawing instance is influenced by the previous position of
      * the brush (usually to adjust for drawing angle or brush width).
-     * @class BBModLineBrush2D
+     * @class BB.LineBrush2D
      * @constructor
-     * @extends BBModBaseBrush2D
+     * @extends BB.BaseBrush2D
      * @param {Object} [config] A optional config hash to initialize any of
-     * BBModLineBrush2D's public properties.
-     * @example <div><code> var lineBrush = new BBModLineBrush2D({ width: 100,
+     * BB.LineBrush2D's public properties.
+     * @example <div><code> var lineBrush = new BB.LineBrush2D({ width: 100,
      * height: 100, variant: "soft" }); </code></div>
      */
-    function BBModLineBrush2D(config) {
+    BB.LineBrush2D = function(config) {
 
-        BBModBaseBrush2D.call(this, config);
+        BB.BaseBrush2D.call(this, config);
 
         /**
          * The brush's previous x position. This property is unique to
-         * BBModLineBrush.
+         * BB.LineBrush.
          * @property prevX
          * @type Number
          * @default null
@@ -39,7 +43,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
         /**
          * The brush's previous y position. This property is unique to
-         * BBModLineBrush.
+         * BB.LineBrush.
          * @property prevY
          * @type Number
          * @default null
@@ -96,10 +100,10 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
             if (typeof config.variant === 'string') this.variant = config.variant;
             if (typeof config.weight === 'number') this.weight = config.weight;
         }   
-    }
+    };
 
-    BBModLineBrush2D.prototype = Object.create(BBModBaseBrush2D.prototype);
-    BBModLineBrush2D.prototype.constructor = BBModLineBrush2D;
+    BB.LineBrush2D.prototype = Object.create(BB.BaseBrush2D.prototype);
+    BB.LineBrush2D.prototype.constructor = BB.LineBrush2D;
 
     /**
      * Update method. Usually called once per animation frame.
@@ -108,9 +112,9 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
      * optionally an isDown boolean (used for beginning and ending
      * strokeds/marks). 
      */
-    BBModLineBrush2D.prototype.update = function(controllerModule) {
+    BB.LineBrush2D.prototype.update = function(controllerModule) {
         
-        BBModBaseBrush2D.prototype.update.call(this, controllerModule);
+        BB.BaseBrush2D.prototype.update.call(this, controllerModule);
 
         if (controllerModule.hasOwnProperty('isDown')) {
             controllerModuleHasIsDown = true;
@@ -126,10 +130,10 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
      * @param {Object} context The HTML5 canvas context you would like to draw
      * to.
      */
-    BBModLineBrush2D.prototype.draw = function(context) {
+    BB.LineBrush2D.prototype.draw = function(context) {
         
 
-        context = BBModBaseBrush2D.prototype.draw.call(this, context);
+        context = BB.BaseBrush2D.prototype.draw.call(this, context);
 
         context.save();
 
@@ -138,7 +142,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
         if (typeof this.variant !== 'string' ||
             this.variants.indexOf(this.variant) === -1) {
-            throw new Error("BBModBaseBrush2D.draw: " + this.variant + " is not a valid variant for BBModImageBrush2D");
+            throw new Error("BB.BaseBrush2D.draw: " + this.variant + " is not a valid variant for BB.ImageBrush2D");
         }      
 
         // draw down here...
@@ -156,11 +160,11 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
                 } else { // we are in the middle of the line
 
                     var r, g, b, alphaFloat;
-                    if (this.color && this.color instanceof BBModColor) {
+                    if (this.color && this.color instanceof BB.Color) {
                         r = this.color.r;
                         g = this.color.g;
                         b = this.color.b;
-                        alphaFloat = BBModMathUtils.map(this.color.a, 0, 255, 0.0, 1.0);
+                        alphaFloat = BB.MathUtils.map(this.color.a, 0, 255, 0.0, 1.0);
                     } else {
                         r = 255;
                         g = 255;
@@ -177,7 +181,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
                         if( this.weight > 100){ this.weight = 100; }
 
-                        context.lineWidth = BBModMathUtils.map(this.weight, 0, 100, this.height / 2.5, this.height * 2.5);
+                        context.lineWidth = BB.MathUtils.map(this.weight, 0, 100, this.height / 2.5, this.height * 2.5);
                         context.lineTo(this.x, this.y);
                         context.strokeStyle = "rgba(" + r + ", " + g + ", " + b + ", " + alphaFloat + ")";
                         context.stroke();
@@ -187,8 +191,8 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
                     } else if(this.variant == 'soft'){
                         
-                        var dist = BBModMathUtils.dist(this.prevX, this.prevY, this.x, this.y);
-                        var angle = BBModMathUtils.angleBtw(this.prevX, this.prevY, this.x, this.y);
+                        var dist = BB.MathUtils.dist(this.prevX, this.prevY, this.x, this.y);
+                        var angle = BB.MathUtils.angleBtw(this.prevX, this.prevY, this.x, this.y);
                         for (var i = 0; i < dist; i++) {
                             var x = this.prevX + (Math.sin(angle) * i);
                             var y = this.prevY + (Math.cos(angle) * i);
@@ -237,5 +241,5 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
         this.prevY = this.y;
     };
 
-    return BBModLineBrush2D;
+    return BB.LineBrush2D;
 });

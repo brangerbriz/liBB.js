@@ -3,7 +3,7 @@
 
 /**
  * A vector in 2 dimensional space. A direct copy of Three.js's Vector2 class.
- * @module BBModVector2
+ * @module BB.Vector2
  * @author mrdoob / http://mrdoob.com/
  * @author philogb / http://blog.thejit.org/
  * @author egraether / http://egraether.com/
@@ -12,7 +12,7 @@
 
 /**
  * A vector in 2 dimensional space. A direct copy of Three.js's THREE.Vector2 class.
- * @class BBModVector2
+ * @class BB.Vector2
  * @constructor
  * @param {Number} x Represents the x value of the vector
  * @param {Number} y Represents the y value of the vector
@@ -34,7 +34,7 @@
  * @chainable
  * @param {Number} x Represents the x value of the vector
  * @param {Number} y Represents the y value of the vector
- * @return {BBModVector2} this vector.
+ * @return {BB.Vector2} this vector.
  */
 
 /**
@@ -42,7 +42,7 @@
  * @method setX
  * @chainable
  * @param {Number} x Represents the x value of the vector.
- * @return {BBModVector2} this vector.
+ * @return {BB.Vector2} this vector.
  */
 
 /**
@@ -50,7 +50,7 @@
  * @method setY
  * @chainable
  * @param {Number} y Represents the y value of the vector.
- * @return {BBModVector2} this vector.
+ * @return {BB.Vector2} this vector.
  */
 
 /**
@@ -75,23 +75,23 @@
  * Copies value of v to this vector. Note: Does not return a copy of this vector.
  * @method copy
  * @chainable
- * @param  {BBModVector2} v
- * @return {BBModVector2} This vector.
+ * @param  {BB.Vector2} v
+ * @return {BB.Vector2} This vector.
  */
 
 /**
  * Adds vector v to this vector.
  * @method add
  * @chainable
- * @param {BBModVector2} v The vector to add to this vector
- * @return {BBModVector2} this vector.
+ * @param {BB.Vector2} v The vector to add to this vector
+ * @return {BB.Vector2} this vector.
  */
 
 /**
  * Add the scalar value s to this vector's x and y values.
  * @method addScalar
  * @chainable
- * @return {BBModVector2} this vector.
+ * @return {BB.Vector2} this vector.
  * @param {Number} s Scalar to add vector with.
  */
 
@@ -99,24 +99,24 @@
  * Sets this vector to a + b.
  * @method addVectors
  * @chainable
- * @param {BBModVector2} a The first vector.
- * @param {BBModVector2} b The second vector.
- * @return {BBModVector2} This vector.
+ * @param {BB.Vector2} a The first vector.
+ * @param {BB.Vector2} b The second vector.
+ * @return {BB.Vector2} This vector.
  */
 
 /**
  * Subtracts vector v from this vector.
  * @method sub
  * @chainable
- * @param {BBModVector2} v The vector to subtract from this vector
- * @return {BBModVector2} this vector.
+ * @param {BB.Vector2} v The vector to subtract from this vector
+ * @return {BB.Vector2} this vector.
  */
 
 /**
  * Subtracts the scalar value s from this vector's x and y values.
  * @method subScalar
  * @chainable
- * @return {BBModVector2} this vector.
+ * @return {BB.Vector2} this vector.
  * @param {Number} s Scalar to subract vector by.
  */
 
@@ -124,55 +124,55 @@
  * Sets this vector to a - b.
  * @method subVectors
  * @chainable
- * @param {BBModVector2} a The first vector.
- * @param {BBModVector2} b The second vector.
- * @return {BBModVector2} This vector.
+ * @param {BB.Vector2} a The first vector.
+ * @param {BB.Vector2} b The second vector.
+ * @return {BB.Vector2} This vector.
  */
 
 /**
  * Multiplies this vector by v.
  * @method multiply
  * @chainable
- * @param {BBModVector2} v The vector to subtract from this vector
- * @return {BBModVector2} this vector.
+ * @param {BB.Vector2} v The vector to subtract from this vector
+ * @return {BB.Vector2} this vector.
  */
 
 /**
  * Multiplies this vector by scalar s.
  * @method mutliplyScalar
  * @param  {Number} s The scalar to multiply this vector by.
- * @return {BBModVector2} This vector.
+ * @return {BB.Vector2} This vector.
  */
 
 /**
  * Divides this vector by v.
  * @method divide
  * @chainable
- * @param {BBModVector2} v The vector to subtract from this vector
- * @return {BBModVector2} this vector.
+ * @param {BB.Vector2} v The vector to subtract from this vector
+ * @return {BB.Vector2} this vector.
  */
 
 /**
  * Divides this vector by scalar s.
  * @method divideScalar
  * @param  {Number} s The scalar to divide this vector by.
- * @return {BBModVector2} This vector.
+ * @return {BB.Vector2} This vector.
  */
 
 /**
  * If this vector's x or y value is less than v's x or y value, replace that value with the corresponding min value.
  * @method min
  * @chainable
- * @param  {BBModVector2} v The vector to check and assign min values from
- * @return {BBModVector2}   This vector.
+ * @param  {BB.Vector2} v The vector to check and assign min values from
+ * @return {BB.Vector2}   This vector.
  */
 
 /**
  * If this vector's x or y value is less than v's x or y value, replace that value with the corresponding min value.
  * @method max
  * @chainable
- * @param  {BBModVector2} v The vector to check and assign max values from
- * @return {BBModVector2}   This vector.
+ * @param  {BB.Vector2} v The vector to check and assign max values from
+ * @return {BB.Vector2}   This vector.
  */
 
 /**
@@ -183,9 +183,9 @@
  * this assumption isn't true it will not operate correctly
  * @method clamp
  * @chainable
- * @param  {BBModVector2} min The vector containing the min x and y values in the desired range.
- * @param  {BBModVector2} max The vector containing the max x and y values in the desired range.
- * @return {BBModVector2}     This vector.
+ * @param  {BB.Vector2} min The vector containing the min x and y values in the desired range.
+ * @param  {BB.Vector2} max The vector containing the max x and y values in the desired range.
+ * @return {BB.Vector2}     This vector.
  */
 
 /**
@@ -196,48 +196,48 @@
  * @chainable
  * @param  {Number} min the minimum value the components will be clamped to.
  * @param  {Number} max the minimum value the components will be clamped to.
- * @return {BBModVector2}     This vector.
+ * @return {BB.Vector2}     This vector.
  */
 
 /**
  * The components of the vector are rounded downwards (towards negative infinity) to an integer value.
  * @method floor
  * @chainable
- * @return {BBModVector2} This vector.
+ * @return {BB.Vector2} This vector.
  */
 
 /**
  * The components of the vector are rounded upwards (towards positive infinity) to an integer value.
  * @method ceil
  * @chainable
- * @return {BBModVector2} This vector.
+ * @return {BB.Vector2} This vector.
  */
 
 /**
  * The components of the vector are rounded towards the nearest integer value.
  * @method round
  * @chainable
- * @return {BBModVector2} This vector.
+ * @return {BB.Vector2} This vector.
  */
 
 /**
  * The components of the vector are rounded towards zero (up if negative, down if positive) to an integer value.
  * @method roundToZero
  * @chainable
- * @return {BBModVector2} This vector.
+ * @return {BB.Vector2} This vector.
  */
 
  /**
  * Inverts this vector.
  * @method negate
  * @chainable
- * @return {BBModVector2} this vector.
+ * @return {BB.Vector2} this vector.
  */
 
 /**
  * Computes dot product of this vector and v.
  * @method dot
- * @param  {BBModVector2} v
+ * @param  {BB.Vector2} v
  * @return {Number}   The dot product of this vector and v.
  */
 
@@ -257,20 +257,20 @@
  * Normalizes this vector.
  * @method normalize
  * @chainable
- * @return {BBModVector2} This vector.
+ * @return {BB.Vector2} This vector.
  */
 
 /**
  * Computes distance of this vector to v.
  * @method distanceTo
- * @param  {BBModVector2} v 
+ * @param  {BB.Vector2} v 
  * @return {Number}   Distance from this vector to v.
  */
 
 /**
  * Computes squared distance of this vector to v.
  * @method distanceToSquared
- * @param  {BBModVector2} v 
+ * @param  {BB.Vector2} v 
  * @return {Number}   Squared distance from this vector to v.
  */
 
@@ -279,7 +279,7 @@
  * @method setLength
  * @chainable
  * @param {Number} l The new length of the vector.
- * @return {BBModVector2} This vector.
+ * @return {BB.Vector2} This vector.
  */
 
 /**
@@ -287,9 +287,9 @@
  * percent along the line.
  * @method lerp
  * @chainable
- * @param  {BBModVector2} v  The vector to lerp this vector with.
+ * @param  {BB.Vector2} v  The vector to lerp this vector with.
  * @param  {Number} alpha Percentage along the line (0 - 1).
- * @return {BBModVector2}  This vector.
+ * @return {BB.Vector2}  This vector.
  */
 
 /**
@@ -297,16 +297,16 @@
  * and v2 with alpha factor.
  * @method lerpVectors
  * @chainable
- * @param  {BBModVector2} v1  The first vector.
- * @param  {BBModVector2} v2  The second vector.
+ * @param  {BB.Vector2} v1  The first vector.
+ * @param  {BB.Vector2} v2  The second vector.
  * @param  {Number} alpha Percentage along the line (0 - 1).
- * @return {BBModVector2}  This vector.
+ * @return {BB.Vector2}  This vector.
  */
 
 /**
  * Checks for strict equality of this vector and v.
  * @method equals
- * @param  {BBModVector2} v The vector to check equality against.
+ * @param  {BB.Vector2} v The vector to check equality against.
  * @return {Boolean}
  */
 
@@ -315,7 +315,7 @@
  * @method fromArray
  * @chainable
  * @param  {[type]} array  Array of length 2.
- * @return {BBModVector2}  This vector.
+ * @return {BB.Vector2}  This vector.
  */
 
 /**
@@ -328,18 +328,19 @@
 /**
  * Clones this vector.
  * @method clone
- * @return {BBModVector2} A new vector with this vectors x and y values.
+ * @return {BB.Vector2} A new vector with this vectors x and y values.
  */
     
 // note: fromAttribute(...) is not documented because the Three.js website
 // provides no documentation for it and it doesn't really make sense without
 // our library.
 
-define(function() {
+define(['./BB'],
+function(  THREE) { 
+//NOTE: importing BB core as THREE (just a name) so that Three.js' Vector2 class code
+//can be copied and pasted below when it is updated.
 
     'use strict';
-
-    var THREE = {};
 
     THREE.Vector2 = function ( x, y ) {
 
@@ -383,7 +384,7 @@ define(function() {
 
                 case 0: this.x = value; break;
                 case 1: this.y = value; break;
-                default: throw new Error( 'BBModVector2.setComponent: index is out of range: ' + index );
+                default: throw new Error( 'BB.Vector2.setComponent: index is out of range: ' + index );
 
             }
 
@@ -395,7 +396,7 @@ define(function() {
 
                 case 0: return this.x;
                 case 1: return this.y;
-                default: throw new Error( 'BBModVector2.getComponent: index is out of range: ' + index );
+                default: throw new Error( 'BB.Vector2.getComponent: index is out of range: ' + index );
 
             }
 

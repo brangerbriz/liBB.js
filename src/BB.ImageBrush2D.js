@@ -1,29 +1,33 @@
 /**
  * A 2D brush module for drawing images in a stamp-like style.
- * @module BBModImageBrush2D
- * @extends BBModBaseBrush2D
+ * @module BB.ImageBrush2D
+ * @extends BB.BaseBrush2D
  */
-define(['./BBModBaseBrush2D', './BBModColor', './BBModMathUtils'], 
-function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
+define(['./BB', './BB.BaseBrush2D', './BB.Color', './BB.MathUtils'], 
+function(  BB,        BaseBrush2D,        Color,        MathUtils){
 
     'use strict';
+
+    BB.BaseBrush2D = BaseBrush2D;
+    BB.Color       = Color;
+    BB.MathUtils   = MathUtils;
 
     var drawReady = false;
     var initSrcSet = false;
 
     /**
      * A brush module for drawing images in a stamp-like style.
-     * @class BBModImageBrush2D
+     * @class BB.ImageBrush2D
      * @constructor
-     * @extends BBModBaseBrush2D
+     * @extends BB.BaseBrush2D
      * @param {Object} [config] A optional config hash to initialize any of
-     * BBModImageBrush2D's public properties.
-     * @example <div><code> var imageBrush = new BBModImageBrush2D({ width: 100,
+     * BB.ImageBrush2D's public properties.
+     * @example <div><code> var imageBrush = new BB.ImageBrush2D({ width: 100,
      * height: 100, src: "http://some/image.png" }); </code></div>
      */
-    function BBModImageBrush2D(config) {
+    BB.ImageBrush2D = function(config) {
 
-        BBModBaseBrush2D.call(this, config);
+        BB.BaseBrush2D.call(this, config);
 
         /**
          * The type of brush. This property should be treated as read-only.
@@ -71,7 +75,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
         this._src = null;
 
          /**
-          * An array of all supported variants. For the BBModImageBrush2D class
+          * An array of all supported variants. For the BB.ImageBrush2D class
           * these are a list of pre-made SVGs with programmatic control for
           * changing their color.
           * @property variants
@@ -97,7 +101,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
         if (config) {
 
             if (config.src && config.variant) {
-                throw new Error('BBModImageBrush2D: The config.src and config.variant properties are mutually exlusive'+
+                throw new Error('BB.ImageBrush2D: The config.src and config.variant properties are mutually exlusive'+
                                 'and cannot both be included in the same config object.');
             }
 
@@ -108,10 +112,10 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
                 this.variant = config.variant;
             }  
         }   
-    }
+    };
 
-    BBModImageBrush2D.prototype = Object.create(BBModBaseBrush2D.prototype);
-    BBModImageBrush2D.prototype.constructor = BBModImageBrush2D;
+    BB.ImageBrush2D.prototype = Object.create(BB.BaseBrush2D.prototype);
+    BB.ImageBrush2D.prototype.constructor = BB.ImageBrush2D;
 
     /**
      * The brush's image src. Functionally equivalent to the src property of an
@@ -121,7 +125,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
      * @type String
      * @default null
      */   
-    Object.defineProperty(BBModImageBrush2D.prototype, 'src', {
+    Object.defineProperty(BB.ImageBrush2D.prototype, 'src', {
         get: function() {
             return this._src;
         },
@@ -148,9 +152,9 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
      * optionally an isDown boolean (used for beginning and ending
      * strokeds/marks).
      */
-    BBModImageBrush2D.prototype.update = function(controllerModule) {
+    BB.ImageBrush2D.prototype.update = function(controllerModule) {
         
-        BBModBaseBrush2D.prototype.update.call(this, controllerModule);
+        BB.BaseBrush2D.prototype.update.call(this, controllerModule);
 
         if (controllerModule.hasOwnProperty('isDown')) {
             this.hidden = (controllerModule.isDown === false);
@@ -164,12 +168,12 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
      * @param {Object} context The HTML5 canvas context you would like to draw
      * to.
      */
-    BBModImageBrush2D.prototype.draw = function(context) {
+    BB.ImageBrush2D.prototype.draw = function(context) {
         
         function getColoredSVGVariant() {
         
             var r, g, b, a;
-            if (self.color && self.color instanceof BBModColor) {
+            if (self.color && self.color instanceof BB.Color) {
                 r = self.color.r;
                 g = self.color.g;
                 b = self.color.b;
@@ -201,7 +205,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
 
         var self = this;
 
-        context = BBModBaseBrush2D.prototype.draw.call(this, context);
+        context = BB.BaseBrush2D.prototype.draw.call(this, context);
 
         // if the variant is present and is the right variable type
         if (this.variant !== null && 
@@ -221,13 +225,13 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
                     this._lastVariant = this.variant;  
                 
                 } else {
-                    throw new Error('BBModImageBrush2D draw: ' + this.variant + ' is not a valid variant for BBModImageBrush2D');
+                    throw new Error('BB.ImageBrush2D draw: ' + this.variant + ' is not a valid variant for BB.ImageBrush2D');
                 }
             }            
         }
 
         if (!initSrcSet) {
-            console.error('BBModImageBrush2D draw: you are attempting to draw an image brush without first setting its source with the .src property');
+            console.error('BB.ImageBrush2D draw: you are attempting to draw an image brush without first setting its source with the .src property');
         }
 
         if (!this.hidden && drawReady) {
@@ -235,7 +239,7 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
             context.save();
         
             context.translate(this.x, this.y);
-            context.rotate(BBModMathUtils.degToRad(this.rotation));
+            context.rotate(BB.MathUtils.degToRad(this.rotation));
 
             // draw to screen
             context.drawImage(this._image, - this.width/2, - this.height/2, this.width, this.height);
@@ -244,5 +248,5 @@ function(  BBModBaseBrush2D,     BBModColor,     BBModMathUtils){
         }
     };
 
-    return BBModImageBrush2D;
+    return BB.ImageBrush2D;
 });

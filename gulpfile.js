@@ -1,6 +1,6 @@
 /**
- *  This is the Gulpfile for BBMod.js. Gulp is a task runner/builder
- *  which is what BBMod.js uses to build the source code into the library
+ *  This is the Gulpfile for BB.js. Gulp is a task runner/builder
+ *  which is what BB.js uses to build the source code into the library
  *  and handle other housekeeping tasks.
  *
  *  There are three main tasks:
@@ -30,7 +30,7 @@ var rename            = require('gulp-rename');
 var yuidoc            = require('gulp-yuidoc');
 var requireJSOptimize = require('gulp-requirejs-optimize');
 
-var packageName = 'BBMod';
+var packageName = 'BB';
 var srcDir      = 'src';
 var buildDir    = 'build';
 var docsDir     = 'docs';
@@ -64,7 +64,7 @@ gulp.task('scripts', function () {
     return gulp.src(srcDir + '/' + mainFile)
         .pipe(requireJSOptimize(requireJSOptimizeConfig))
         .pipe(gulp.dest(buildDir))
-        .pipe(rename('BBMod.min.js'))
+        .pipe(rename(packageName + '.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest(buildDir));
 });

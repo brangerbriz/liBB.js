@@ -14,21 +14,21 @@ function setup() {
     window.onresize = onWindowResize;
     onWindowResize();
 
-    mouseInput = new BBMod.MouseInput(canvas);
-    pointer = new BBMod.Pointer(mouseInput);
-    brushManager = new BBMod.BrushManager2D(canvas);
+    mouseInput = new BB.MouseInput(canvas);
+    pointer = new BB.Pointer(mouseInput);
+    brushManager = new BB.BrushManager2D(canvas);
     brushManager.trackPointers([pointer]);
 
-    imageBrush = new BBMod.ImageBrush2D({
+    imageBrush = new BB.ImageBrush2D({
         src: "flower.png",
-        color: new BBMod.Color(255, 0, 0),
+        color: new BB.Color(255, 0, 0),
         width: 50,
         height: 50,
         manager: brushManager
     });
 
-    lineBrush = new BBMod.LineBrush2D({
-        color: new BBMod.Color(0, 0, 255),
+    lineBrush = new BB.LineBrush2D({
+        color: new BB.Color(0, 0, 255),
         weight: 20,
         variant: "solid",
         manager: brushManager
