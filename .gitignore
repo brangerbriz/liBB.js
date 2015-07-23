@@ -1,2 +1,4 @@
 .DS_Store
 node_modules/
+examples/brushes/build/
+examples/brushes/package.json
