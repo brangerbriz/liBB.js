@@ -79,7 +79,7 @@ define(function(){
             'triadic' : [],
             'tetradic' : []
         };
-    };
+    }
 
     /**
      * the red value between 0 - 255
@@ -313,19 +313,19 @@ define(function(){
 
     BBModColor.prototype.isEqual = function(color, excludeAlpha) {
 
-        if (! color || ! color instanceof BBModColor) {
+        if (! color || !(color instanceof BBModColor) ) {
             throw new Error("BBModColor.isEqual: color parameter is not an instance of BBModColor");
         }
 
         if (excludeAlpha) {
             return (this.r === color.r &&
                     this.g === color.g &&
-                    this.b === color.b)
+                    this.b === color.b);
         } else {
             return (this.r === color.r &&
                     this.g === color.g &&
                     this.b === color.b &&
-                    this.a === color.a)
+                    this.a === color.a);
         }
     };
 
@@ -363,13 +363,13 @@ define(function(){
             self = ( rgb instanceof BBModColor ) ? rgb : { r:rgb, g:g, b:b };
         }
 
-        var hsv = new Object();
+        var hsv = {};
         var max = this.max3( self.r, self.g, self.b );
         var dif = max - this.min3( self.r, self.g, self.b );
 
-        hsv.s = (max==0.0) ? 0 : (100*dif/max);
+        hsv.s = (max===0.0) ? 0 : (100*dif/max);
 
-        if ( hsv.s == 0 ) hsv.h = 0;
+        if ( hsv.s === 0 ) hsv.h = 0;
         else if ( self.r==max ) hsv.h = 60.0 * ( self.g-self.b )/dif;
         else if ( self.g==max ) hsv.h = 120.0+60.0 * ( self.b-self.r )/dif;
         else if ( self.b==max ) hsv.h = 240.0+60.0 * ( self.r-self.g )/dif;
@@ -406,7 +406,7 @@ define(function(){
      */
     BBModColor.prototype.hsv2rgb = function( hsv, s, v ) { 
 
-        var hsv, rgb;
+        var rgb;
         if( typeof hsv == "undefined"){
 
             rgb = this;
@@ -414,19 +414,19 @@ define(function(){
 
         } else {
 
-            rgb = new Object();
+            rgb = {};
             hsv = ( hsv instanceof BBModColor ) ? hsv : { h:hsv, s:s, v:v };
 
         }
 
 
-        if( typeof hsv == "undefined" && hsv.s == 0 ){
+        if( typeof hsv == "undefined" && hsv.s === 0 ){
 
             this._r = this._g = this._b = Math.round( hsv.v * 2.55 );
 
             return this;
 
-        } else if ( typeof hsv !== "undefined" && hsv.s == 0 ) {
+        } else if ( typeof hsv !== "undefined" && hsv.s === 0 ) {
 
             rgb.r = rgb.g = rgb.b = Math.round( hsv.v * 2.55 );
 
@@ -490,17 +490,17 @@ define(function(){
         
         if( typeof config.tint !== "undefined" ){
 
-            config.tint.sort(function(a,b){return b - a}); // reorder largest to smallest
+            config.tint.sort(function(a,b){return b - a;}); // reorder largest to smallest
 
             for (var i = 0; i < config.tint.length; i++) {
-                var col = new Object();                                                     
+                var col = {};                                                     
                 col.r = Math.round( rgb.r+(255-rgb.r ) * config.tint[i] );
                 col.g = Math.round( rgb.g+(255-rgb.g ) * config.tint[i] );
                 col.b = Math.round( rgb.b+(255-rgb.b ) * config.tint[i] );
                 col.a = this.a;
 
                 this.schemes[scheme].push( col );
-            };
+            }
 
         }
 
@@ -508,26 +508,26 @@ define(function(){
         
         if( typeof config.shade !== "undefined" ){
             
-            config.shade.sort(function(a,b){return b - a}); // reorder largest to smallest
+            config.shade.sort(function(a,b){return b - a;}); // reorder largest to smallest
 
-            for (var i = 0; i < config.shade.length; i++) {
-                var col = new Object();                                                     
-                col.r = Math.round( rgb.r * config.shade[i] );
-                col.g = Math.round( rgb.g * config.shade[i] );
-                col.b = Math.round( rgb.b * config.shade[i] );
-                col.a = this.a;
+            for (var j = 0; j < config.shade.length; j++) {
+                var col2 = {};                                                     
+                col2.r = Math.round( rgb.r * config.shade[j] );
+                col2.g = Math.round( rgb.g * config.shade[j] );
+                col2.b = Math.round( rgb.b * config.shade[j] );
+                col2.a = this.a;
 
-                this.schemes[scheme].push( col );
-            };
+                this.schemes[scheme].push( col2 );
+            }
         }
 
-        for (var i = 0; i < this.schemes[scheme].length; i++) {
-            var self = this.schemes[scheme][i];
+        for (var ii = 0; ii < this.schemes[scheme].length; ii++) {
+            var self = this.schemes[scheme][ii];
                 self.hex = "#" +((self.r << 16) | (self.g << 8) | self.b).toString(16);
                 self.rgb = 'rgb('+self.r+', '+self.g+', '+self.b+')';
                 self.rgba = 'rgba('+self.r+', '+self.g+', '+self.b+', '+self.a+')';
-        };
-    }
+        }
+    };
 
     // config.angle = "30"; config.tint = [ 0.4, 0.8 ]; config.shade = [ 0.3, 0.6 ]
 
@@ -569,6 +569,8 @@ define(function(){
      *</code></section>
      */
     BBModColor.prototype.colorScheme = function( scheme, config ) { 
+
+        var rgb, hsv;
         
         if( scheme == "monochromatic" ){ // -----------------------------------------------------------
             if(typeof config !== "object"){
@@ -596,15 +598,15 @@ define(function(){
 
                 this.schemes[scheme] = []; // clear previous colors
 
-                var rgb     = { r:this.r, g:this.g, b:this.b };
-                var hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
                     hsv.h   = this._hueShift(   hsv.h, config.angle     );
                     rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
 
                 this._schemeVarient( rgb, scheme, config);
 
-                var rgb     = { r:this.r, g:this.g, b:this.b };
-                var hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
                     hsv.h   = this._hueShift(   hsv.h, 0.0-config.angle );
                     rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
 
@@ -622,8 +624,8 @@ define(function(){
 
                 this.schemes[scheme] = []; // clear previous colors
 
-                var rgb     = { r:this.r, g:this.g, b:this.b };
-                var hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
                     hsv.h   = this._hueShift(   hsv.h, 180  );
                     rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
 
@@ -646,15 +648,15 @@ define(function(){
 
                 this.schemes[scheme] = []; // clear previous colors
 
-                var rgb     = { r:this.r, g:this.g, b:this.b };
-                var hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
                     hsv.h   = this._hueShift(   hsv.h, 180.0-config.angle);
                     rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
 
                 this._schemeVarient( rgb, scheme, config);
 
-                var rgb     = { r:this.r, g:this.g, b:this.b };
-                var hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
                     hsv.h   = this._hueShift(   hsv.h, 180.0+config.angle);
                     rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
 
@@ -671,15 +673,15 @@ define(function(){
 
                 this.schemes[scheme] = []; // clear previous colors
 
-                var rgb     = { r:this.r, g:this.g, b:this.b };
-                var hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
                     hsv.h   = this._hueShift(   hsv.h, 240  );
                     rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
 
                 this._schemeVarient( rgb, scheme, config);
 
-                var rgb     = { r:this.r, g:this.g, b:this.b };
-                var hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
                     hsv.h   = this._hueShift(   hsv.h, 120  );
                     rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
 
@@ -701,22 +703,22 @@ define(function(){
 
                 this.schemes[scheme] = []; // clear previous colors
 
-                var rgb     = { r:this.r, g:this.g, b:this.b };
-                var hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
                     hsv.h   = this._hueShift(   hsv.h, 180  );
                     rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
 
                 this._schemeVarient( rgb, scheme, config);
 
-                var rgb     = { r:this.r, g:this.g, b:this.b };
-                var hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
                     hsv.h   = this._hueShift(   hsv.h, -config.angle    );
                     rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
 
                 this._schemeVarient( rgb, scheme, config);
                 
-                var rgb     = { r:this.r, g:this.g, b:this.b };
-                var hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+                    rgb     = { r:this.r, g:this.g, b:this.b };
+                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
                     hsv.h   = this._hueShift(   hsv.h, -config.angle+180.0  );
                     rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
 
