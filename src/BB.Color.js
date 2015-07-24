@@ -223,6 +223,18 @@ function(  BB){
 
 
     /**
+     * sets color value to match another color object's value
+     * @method clone
+     * @param {Object} color takes another color object to match
+     */
+    BB.Color.prototype.clone = function( color ) { 
+        if (! color || !(color instanceof BB.Color) ) {
+            throw new Error("BB.Color.clone: color parameter is not an instance of BB.Color");
+        }
+        this.setRGBA( color.r, color.g, color.b, color.a );
+    };
+
+    /**
      * sets the rgba value of the color
      * @method setRGBA
      * @param {Number} r sets the red value from 0 - 255 
