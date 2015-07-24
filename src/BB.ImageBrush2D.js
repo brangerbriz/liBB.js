@@ -66,6 +66,17 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
         this._lastVariant = null;
 
         /**
+         * An internal variable to check if the color has been changed since
+         * the last update().
+         * @protected
+         * @property _lastColor
+         * @type Object
+         * @default null
+         */
+        this._lastColor = new BB.Color();
+
+
+        /**
          * A private method used by src's getters and setters.
          * @private
          * @property _src
@@ -95,7 +106,7 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
             'shield',
             'locking',
             'seal',
-            'circleslas'
+            'circleslash'
         ];
 
         if (config) {
@@ -212,7 +223,8 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
             typeof this.variant === 'string') {
 
             // if the variant is new or has changed
-            if (this.variant !== this._lastVariant) {
+            // or if the color is new or has changed
+            if (this.variant !== this._lastVariant || !this.color.isEqual(this._lastColor) ) {
 
                 // if this is an acceptable variant
                 if (this.variants.indexOf(this.variant) !== -1) {
@@ -223,6 +235,7 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
                     this.variant = variant;
 
                     this._lastVariant = this.variant;  
+                    this._lastColor.clone( this.color );
                 
                 } else {
                     throw new Error('BB.ImageBrush2D draw: ' + this.variant + ' is not a valid variant for BB.ImageBrush2D');
