@@ -23,32 +23,32 @@ function(  BB){
 
         // see getter/setter below
         if( typeof r == "undefined" ){
-            this._r = 0; 
+            this._r = 204; 
         }
         else if( typeof r !== 'number' || r<0 || r>255 ){
             throw new Error("BB.Color: red parameter neeeds to be a NUMBER between 0 - 255");
         } else {
-            this._r = r || 0;     
+            this._r = r || 204;     
         }
 
         // see getter/setter below
         if( typeof g == "undefined" ){
-            this._g = 0; 
+            this._g = 51; 
         }
         else if( typeof g !== 'number' || g<0 || g>255 ){
             throw new Error("BB.Color: green parameter neeeds to be a NUMBER between 0 - 255");
         } else {
-            this._g = g || 0;        
+            this._g = g || 51;        
         }
 
         // see getter/setter below
         if( typeof b == "undefined" ){
-            this._b = 0; 
+            this._b = 153; 
         }
         else if( typeof b !== 'number' || b<0 || b>255 ){
             throw new Error("BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255");
         } else {
-            this._b = b || 0;        
+            this._b = b || 153;        
         }
 
         // see getter/setter below
@@ -84,7 +84,7 @@ function(  BB){
      * the red value between 0 - 255
      * @property r
      * @type Number
-     * @default 0
+     * @default 204
      */   
     Object.defineProperty(BB.Color.prototype, "r", {
         get: function() {
@@ -94,7 +94,7 @@ function(  BB){
             if( typeof r !== 'number' || r<0 || r>255 ){
                 throw new Error("BB.Color: red parameter neeeds to be a NUMBER between 0 - 255");
             } else {
-                this._r = r || 0;    
+                this._r = r || 204;    
                 this.rgb2hsv(); 
             }
         }
@@ -104,7 +104,7 @@ function(  BB){
      * the green value between 0 - 255
      * @property g
      * @type Number
-     * @default 0
+     * @default 51
      */   
     Object.defineProperty(BB.Color.prototype, "g", {
         get: function() {
@@ -114,7 +114,7 @@ function(  BB){
             if( typeof g !== 'number' || g<0 || g>255 ){
                 throw new Error("BB.Color: green parameter neeeds to be a NUMBER between 0 - 255");
             } else {
-                this._g = g || 0;    
+                this._g = g || 51;    
                 this.rgb2hsv(); 
             }
         }
@@ -124,7 +124,7 @@ function(  BB){
      * the blue value between 0 - 255
      * @property b
      * @type Number
-     * @default 0
+     * @default 153
      */   
     Object.defineProperty(BB.Color.prototype, "b", {
         get: function() {
@@ -134,7 +134,7 @@ function(  BB){
             if( typeof b !== 'number' || b<0 || b>255 ){
                 throw new Error("BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255");
             } else {
-                this._b = b || 0;    
+                this._b = b || 153;    
                 this.rgb2hsv(); 
             }
         }
