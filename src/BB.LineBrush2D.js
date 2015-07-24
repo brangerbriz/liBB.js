@@ -181,7 +181,7 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
 
                         if( this.weight > 100){ this.weight = 100; }
 
-                        context.lineWidth = BB.MathUtils.map(this.weight, 0, 100, this.height / 2.5, this.height * 2.5);
+                        context.lineWidth = BB.MathUtils.map(this.weight, 0, 100, this.width / 2.5, this.width * 2.5);
                         context.lineTo(this.x, this.y);
                         context.strokeStyle = "rgba(" + r + ", " + g + ", " + b + ", " + alphaFloat + ")";
                         context.stroke();
@@ -196,33 +196,33 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
                         for (var i = 0; i < dist; i++) {
                             var x = this.prevX + (Math.sin(angle) * i);
                             var y = this.prevY + (Math.cos(angle) * i);
-                            var gradient = context.createRadialGradient(x, y, this.width/6, x, y, this.height/2);
+                            var gradient = context.createRadialGradient(x, y, this.width/6, x, y, this.width/2);
                             gradient.addColorStop(0, "rgba(" + r + ", " + g + ", " + b + ', 0.1)');
                             gradient.addColorStop(1, "rgba(" + r + ", " + g + ", " + b + ', 0)');
                             context.fillStyle = gradient;
-                            context.fillRect(x - this.height/2, y - this.height/2, this.height, this.height);
+                            context.fillRect(x - this.width/2, y - this.width/2, this.width, this.width);
                         }
 
                     } else if(this.variant == 'lines' || this.variant == 'calligraphy'){
 
-                        if(this.variant == 'lines'){ context.lineWidth = (this.height < 1) ? 1 : this.height * 0.05; }
-                        if(this.variant == 'calig'){ context.lineWidth = this.height * 0.2; }
+                        if(this.variant == 'lines'){ context.lineWidth = (this.width < 1) ? 1 : this.width * 0.05; }
+                        if(this.variant == 'calligraphy'){ context.lineWidth = this.width * 0.25; }
 
                         context.strokeStyle = "rgb(" + r + ", " + g + ", " + b + ")";
                         context.moveTo(this.prevX, this.prevY);
                         context.lineTo(this.x, this.y);
                         context.stroke();
-                        context.moveTo(this.prevX - this.height * 0.2, this.prevY - this.height * 0.2);
-                        context.lineTo(this.x - this.height * 0.2, this.y - this.height * 0.2);
+                        context.moveTo(this.prevX - this.width * 0.2, this.prevY - this.width * 0.2);
+                        context.lineTo(this.x - this.width * 0.2, this.y - this.width * 0.2);
                         context.stroke();
-                        context.moveTo(this.prevX - this.height * 0.1, this.prevY - this.height * 0.1);
-                        context.lineTo(this.x - this.height * 0.1, this.y - this.height * 0.1);
+                        context.moveTo(this.prevX - this.width * 0.1, this.prevY - this.width * 0.1);
+                        context.lineTo(this.x - this.width * 0.1, this.y - this.width * 0.1);
                         context.stroke();
-                        context.moveTo(this.prevX + this.height * 0.1, this.prevY + this.height * 0.1);
-                        context.lineTo(this.x + this.height * 0.1, this.y + this.height * 0.1);
+                        context.moveTo(this.prevX + this.width * 0.1, this.prevY + this.width * 0.1);
+                        context.lineTo(this.x + this.width * 0.1, this.y + this.width * 0.1);
                         context.stroke();
-                        context.moveTo(this.prevX + this.height * 0.2, this.prevY + this.height * 0.2);
-                        context.lineTo(this.x + this.height * 0.2, this.y + this.height * 0.2);
+                        context.moveTo(this.prevX + this.width * 0.2, this.prevY + this.width * 0.2);
+                        context.lineTo(this.x + this.width * 0.2, this.y + this.width * 0.2);
                         context.stroke();
                     }
                 }
