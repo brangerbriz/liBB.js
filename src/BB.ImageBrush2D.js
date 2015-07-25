@@ -235,7 +235,7 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
                     this.variant = variant;
 
                     this._lastVariant = this.variant;  
-                    this._lastColor.clone( this.color );
+                    this._lastColor.copy( this.color );
                 
                 } else {
                     throw new Error('BB.ImageBrush2D draw: ' + this.variant + ' is not a valid variant for BB.ImageBrush2D');
