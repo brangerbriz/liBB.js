@@ -65,8 +65,10 @@ function(  BB){
 
         /**
          * object with properties ( named after different color schemes ) for
-         * holding arrays of the color values generated with the <code>colorScheme()</code>
-         * method
+         * holding arrays of the color values generated with the
+         * <code>createScheme()</code> method. the colors are Objects with r, g,
+         * b, a values as well as rgb(string), rgba(string) and hex(string)
+         * 
          * @type {Object}
          * @property schemes
          */
@@ -221,17 +223,59 @@ function(  BB){
     });
 
 
+    /**
+     * returns rgb string for color
+     * @method getRGB
+     * @return {String} for example <code>'rgb(255,0,0)'</code>
+     */
+    BB.Color.prototype.getRGB = function() { 
+        return 'rgb('+this.r+', '+this.g+', '+this.b+')';
+    };
+
+    /**
+     * returns rgba string for color
+     * @method getRGBA
+     * @return {String} for example <code>'rgba(255,0,0,255)'</code>
+     */
+    BB.Color.prototype.getRGBA = function() { 
+        return 'rgba('+this.r+', '+this.g+', '+this.b+', '+this.a+')';
+    };
+
+    /**
+     * returns hex string for color
+     * @method getHex
+     * @return {String} for example <code>'#ff0000'</code>
+     */
+    BB.Color.prototype.getHex = function() { 
+        return "#" +((this.r << 16) | (this.g << 8) | this.b).toString(16);
+    };
+
+
+
+    //
+
 
     /**
      * sets color value to match another color object's value
-     * @method clone
-     * @param {Object} color takes another color object to match
+     * @method copy
+     * @param {BB.Color} color another color object to copy from
      */
-    BB.Color.prototype.clone = function( color ) { 
-        if (! color || !(color instanceof BB.Color) ) {
-            throw new Error("BB.Color.clone: color parameter is not an instance of BB.Color");
+    BB.Color.prototype.copy = function( color ) { 
+        if (! color || !this.isLikeColor( color ) ) {
+            throw new Error("BB.Color.copy: color parameter is not an instance of BB.Color");
         }
         this.setRGBA( color.r, color.g, color.b, color.a );
+    };
+
+    /**
+     * creates a new color object that is a copy of itself
+     * @method clone
+     * @return {BB.Color} a new color object copied from this one
+     */
+    BB.Color.prototype.clone = function() { 
+        var child = new BB.Color();
+            child.copy( this );
+        return child;
     };
 
     /**
@@ -310,34 +354,18 @@ function(  BB){
     };
 
 
-    /**
-     * returns rgb string for color
-     * @method getRGB
-     * @return {String} for example <code>'rgb(255,0,0)'</code>
-     */
-    BB.Color.prototype.getRGB = function() { 
-        return 'rgb('+this.r+', '+this.g+', '+this.b+')';
-    };
+
+    //
+
 
     /**
-     * returns rgba string for color
-     * @method getRGBA
-     * @return {String} for example <code>'rgba(255,0,0,255)'</code>
+     * checks if another color object is equal to itself
+     * 
+     * @method isEqual
+     * @param {BB.Color} color another color object to compare to
+     * @param {Boolean} excludeAlpha whether or not to exlude Alpha property
+     * @return {Boolean}     true if it's equal, fals if it's not
      */
-    BB.Color.prototype.getRGBA = function() { 
-        return 'rgba('+this.r+', '+this.g+', '+this.b+', '+this.a+')';
-    };
-
-    /**
-     * returns hex string for color
-     * @method getHex
-     * @return {String} for example <code>'#ff0000'</code>
-     */
-    BB.Color.prototype.getHex = function() { 
-        return "#" +((this.r << 16) | (this.g << 8) | this.b).toString(16);
-    };
-
-
     BB.Color.prototype.isEqual = function(color, excludeAlpha) {
 
         if (! color || !(color instanceof BB.Color) ) {
@@ -356,6 +384,13 @@ function(  BB){
         }
     };
 
+    BB.Color.prototype.isLikeColor = function( obj) { 
+       return   typeof obj.r !== "undefined" &&
+                typeof obj.g !== "undefined" &&
+                typeof obj.b !== "undefined" &&
+                typeof obj.a !== "undefined";
+    }; 
+
     BB.Color.prototype.min3 = function( a,b,c ) { 
         return ( a<b )   ?   ( ( a<c ) ? a : c )   :   ( ( b<c ) ? b : c ); 
     }; 
@@ -363,6 +398,9 @@ function(  BB){
     BB.Color.prototype.max3 = function( a,b,c ) { 
         return ( a>b )   ?   ( ( a>c ) ? a : c )   :   ( ( b>c ) ? b : c );
     };
+
+
+    //
 
 
     /**
@@ -496,67 +534,79 @@ function(  BB){
         }
     };
 
+
     //
 
-    // private function for shifting hue
-    // used by color scheme functions 
-    BB.Color.prototype._hueShift = function( h,s ) { 
-        
-        h += s; 
+    /**
+     * changes the color by shifting current hue value by a number of degrees, also chainable ( see example )
+     *
+     * can also take an additional hue parameter when used as a utility ( see example ), used this way internally by <code>.createScheme</code>
+     *
+     * @method shift
+     * @chainable
+     * @param {Number} degrees number of degress to shift current hue by ( think rotating a color wheel )
+     * @return {BB.Color} this color
+     * @example
+     * <code class="code prettyprint">
+     * &nbsp; color.shift( 10 ); // shifts by 10 degrees <br>
+     * &nbsp; var comp = color.clone().shift( 180 ); // new complementary color obj <br><br>
+     * &nbsp; // as a utility ( without changing the color )  <br>
+     * &nbsp; color.shift( 180, color.h ); // returns the complementary hue ( in degrees ) 
+     * </code>
+     */
+    BB.Color.prototype.shift = function( degrees, hue ) { 
+        var h;
+
+        if( typeof hue === "undefined" ) h = this.h;
+        else  h = hue;
+        h += degrees; 
         
         while ( h>=360.0 )  h -= 360.0; 
         while ( h<0.0 )     h += 360.0; 
 
-        return h; 
+        if( typeof hue === "undefined" ){
+            this.h = h;
+            return this; // for chainging
+        } 
+        else {  return h; }
     };
 
-    // private function for creating scheme variants
-    // used by scheme functions 
-    BB.Color.prototype._schemeVarient = function( rgb, scheme, config ) { 
-
-        
-        if( typeof config.tint !== "undefined" ){
-
-            config.tint.sort(function(a,b){return b - a;}); // reorder largest to smallest
-
-            for (var i = 0; i < config.tint.length; i++) {
-                var col = {};                                                     
-                col.r = Math.round( rgb.r+(255-rgb.r ) * config.tint[i] );
-                col.g = Math.round( rgb.g+(255-rgb.g ) * config.tint[i] );
-                col.b = Math.round( rgb.b+(255-rgb.b ) * config.tint[i] );
-                col.a = this.a;
-
-                this.schemes[scheme].push( col );
-            }
-
-        }
-
-        this.schemes[scheme].push({ r:rgb.r, g:rgb.g, b:rgb.b, a:this.a });
-        
-        if( typeof config.shade !== "undefined" ){
-            
-            config.shade.sort(function(a,b){return b - a;}); // reorder largest to smallest
-
-            for (var j = 0; j < config.shade.length; j++) {
-                var col2 = {};                                                     
-                col2.r = Math.round( rgb.r * config.shade[j] );
-                col2.g = Math.round( rgb.g * config.shade[j] );
-                col2.b = Math.round( rgb.b * config.shade[j] );
-                col2.a = this.a;
-
-                this.schemes[scheme].push( col2 );
-            }
-        }
-
-        for (var ii = 0; ii < this.schemes[scheme].length; ii++) {
-            var self = this.schemes[scheme][ii];
-                self.hex = "#" +((self.r << 16) | (self.g << 8) | self.b).toString(16);
-                self.rgb = 'rgb('+self.r+', '+self.g+', '+self.b+')';
-                self.rgba = 'rgba('+self.r+', '+self.g+', '+self.b+', '+self.a+')';
-        }
+    /**
+     * changes the color by lightening it by a certain percentage
+     *
+     * @method tint
+     * @param {Number} percentage float between 0 and 1
+     */
+    BB.Color.prototype.tint = function( percentage, _schemeUse ) { 
+        var col = {};
+        var tint = percentage;
+        col.r = Math.round( this.r+(255-this.r ) * tint );
+        col.g = Math.round( this.g+(255-this.g ) * tint );
+        col.b = Math.round( this.b+(255-this.b ) * tint );
+        col.a = this.a;
+        if( typeof _schemeUse !== "undefined") return col;
+        else this.setRGBA( col.r, col.g, col.b, col.a );
     };
 
-    // config.angle = "30"; config.tint = [ 0.4, 0.8 ]; config.shade = [ 0.3, 0.6 ]
+
+    /**
+     * changes the color by darkening it by a certain percentage
+     *
+     * @method shade
+     * @param {Number} percentage float between 0 and 1
+     */
+    BB.Color.prototype.shade = function( percentage, _schemeUse ) { 
+        var col = {};
+        var shade = percentage;
+        col.r = Math.round( this.r * shade );
+        col.g = Math.round( this.g * shade );
+        col.b = Math.round( this.b * shade );
+        col.a = this.a;
+        if( typeof _schemeUse !== "undefined") return col;
+        else this.setRGBA( col.r, col.g, col.b, col.a );
+    };
+
+
 
     /**
      * generates a color scheme ( array of additional color values ) from the
@@ -567,7 +617,7 @@ function(  BB){
      * scheme you generated like so: <code> .schemes["triadic"] </code>, which
      * will return an array of objects ( with r, g, b, a properties )
      * 
-     * @method colorScheme
+     * @method createScheme
      * 
      * @param  {String} scheme name of the color scheme you want to generate.
      * can be either "monochromatic", "analogous", "complementary", "split
@@ -586,7 +636,7 @@ function(  BB){
      * 
      * @example 
      * <code class="code prettyprint"> 
-     * &nbsp; color.colorScheme("analogous",{                          <br>        
+     * &nbsp; color.createScheme("analogous",{                          <br>        
      * &nbsp;&nbsp;&nbsp;&nbsp; angle: 30,                             <br> 
      * &nbsp;&nbsp;&nbsp;&nbsp; tint:[ 0.4, 0.8 ],                     <br> 
      * &nbsp;&nbsp;&nbsp;&nbsp; shade:[ 0.3, 0.6 ]                     <br> 
@@ -595,164 +645,98 @@ function(  BB){
      * &nbsp; color.schemes["analogous"][1] // returns second color    <br> 
      * </code>
      */
-    BB.Color.prototype.colorScheme = function( scheme, config ) { 
+    BB.Color.prototype.createScheme = function( scheme, config ) { 
+
+        if( !(scheme in this.schemes) ) {
+            throw new Error("BB.Color.createScheme: '"+scheme+"' is not a valid scheme name, choose from: "+Object.keys(this.schemes) );
+        }
+
+        var errorMsg;
+        switch( scheme ) {
+            case "monochromatic": errorMsg = '"monochromatic" requires a second parameter: a config object with tint Array and/or shade Array'; break;
+            case "analogous": errorMsg = "this scheme requires a config object with an angle property"; break;
+            case "complementary" : errorMsg=false; break;
+            case "split complementary": errorMsg = "this scheme requires a config object with an angle property"; break;
+            case "triadic" : errorMsg=false; break;
+            case "tetradic": errorMsg = "this scheme requires a config object with an angle property"; break;
+        }
+
+        if(typeof config !== "object" && errorMsg){ 
+            
+            throw new Error("BB.Color.createScheme: "+errorMsg );
+        
+        } else {
+
+            if(typeof config !== "object"){
+                config = {}; // bug fix, schemes that don't require config erroring w/out some kinda object
+            }
+
+            this.schemes[scheme] = []; // clear previous colors
+
+            var angles;
+            switch( scheme ) {
+                case "analogous": angles = [ config.angle, 0-config.angle ];  break;
+                case "complementary" : angles = [ 180 ];  break;
+                case "split complementary": angles = [ 180-config.angle, 180+config.angle];  break;
+                case "triadic" : angles = [ 240, 120 ];  break;
+                case "tetradic": angles = [ 180, -config.angle, -config.angle+180 ];  break;
+            }
+
+            var ones = ["analogous","complementary","split complementary","triadic","tetradic"];
+            var twos = ["analogous","split complementary","triadic","tetradic"];
+            var threes = ["tetradic"];
+
+            if( scheme == "monochromatic" )     this._schemeVarient( scheme, config );
+            if( ones.indexOf( scheme ) >= 0 )    this._schemeVarient( scheme, config, angles[0] );
+            if( twos.indexOf( scheme ) >= 0 )    this._schemeVarient( scheme, config, angles[1] );
+            if( threes.indexOf( scheme ) >= 0 )  this._schemeVarient( scheme, config, angles[2] );
+                         
+        }
+
+    };
+
+    // private function for creating scheme variants
+    // used by scheme functions 
+    BB.Color.prototype._schemeVarient = function( scheme, config, angle ) { 
 
         var rgb, hsv;
+
+        if( scheme == "monochromatic" ){
+            rgb = this;
+        } else {
+            rgb     = { r:this.r, g:this.g, b:this.b };
+            hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+            hsv.h   = this.shift(   hsv.h, angle  );
+            rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );            
+        }
+
+
+        if( typeof config.tint !== "undefined" ){
+            config.tint.sort(function(a,b){return b - a;}); // reorder largest to smallest
+
+            for (var i = 0; i < config.tint.length; i++) {
+                var col = this.tint( config.tint[i], true );
+                this.schemes[scheme].push( col );
+            }
+        }
+
+        this.schemes[scheme].push({ r:rgb.r, g:rgb.g, b:rgb.b, a:this.a });
         
-        if( scheme == "monochromatic" ){ // -----------------------------------------------------------
-            if(typeof config !== "object"){
-                
-                throw new Error("BB.Color.colorScheme: expecting a config object");
-            
-            } else {                
-                this.schemes[scheme] = []; // clear previous colors
-                this._schemeVarient( this, scheme, config);
+        if( typeof config.shade !== "undefined" ){
+            config.shade.sort(function(a,b){return b - a;}); // reorder largest to smallest
+
+            for (var j = 0; j < config.shade.length; j++) {
+                var col2 = this.shade( config.shade[j], true );
+                this.schemes[scheme].push( col2 );
             }
         }
 
-        if( scheme == "analogous" ){ // -----------------------------------------------------------
-            if(typeof config !== "object"){
-                
-                throw new Error("BB.Color.colorScheme: expecting a config object");
-            
-            } else {
-
-                if( typeof config.angle == "undefined" ){
-
-                    throw new Error("BB.Color.colorScheme: this scheme requires a config object with an angle property");
-
-                }
-
-                this.schemes[scheme] = []; // clear previous colors
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, config.angle     );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, 0.0-config.angle );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-            }
+        for (var ii = 0; ii < this.schemes[scheme].length; ii++) {
+            var self = this.schemes[scheme][ii];
+                self.hex = "#" +((self.r << 16) | (self.g << 8) | self.b).toString(16);
+                self.rgb = 'rgb('+self.r+', '+self.g+', '+self.b+')';
+                self.rgba = 'rgba('+self.r+', '+self.g+', '+self.b+', '+self.a+')';
         }
-
-
-        if( scheme == "complementary" ){ // -----------------------------------------------------------
-            if(typeof config !== "object"){
-                
-                throw new Error("BB.Color.colorScheme: expecting a config object");
-            
-            } else {
-
-                this.schemes[scheme] = []; // clear previous colors
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, 180  );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-            }
-        }
-
-
-        if( scheme == "split complementary" ){ // -----------------------------------------------------------
-            if(typeof config !== "object"){
-                
-                throw new Error("BB.Color.colorScheme: expecting a config object");
-            
-            } else {
-
-                if( typeof config.angle == "undefined" ){
-
-                    throw new Error("BB.Color.colorScheme: this scheme requires a config object with an angle property");
-                }
-
-                this.schemes[scheme] = []; // clear previous colors
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, 180.0-config.angle);
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, 180.0+config.angle);
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-            }
-        }
-
-        if( scheme == "triadic" ){ // -----------------------------------------------------------
-            if(typeof config !== "object"){
-                
-                throw new Error("BB.Color.colorScheme: expecting a config object");
-            
-            } else {
-
-                this.schemes[scheme] = []; // clear previous colors
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, 240  );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, 120  );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-            }
-        }
-
-        if( scheme == "tetradic" ){ // -----------------------------------------------------------
-            if(typeof config !== "object"){
-                
-                throw new Error("BB.Color.colorScheme: expecting a config object");
-            
-            } else {
-
-                if( typeof config.angle == "undefined" ){
-
-                    throw new Error("BB.Color.colorScheme: this scheme requires a config object with an angle property");
-                }
-
-                this.schemes[scheme] = []; // clear previous colors
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, 180  );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, -config.angle    );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-                
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, -config.angle+180.0  );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);                  
-            }
-        }           
-
     };
 
     return BB.Color;
