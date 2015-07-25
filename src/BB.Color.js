@@ -651,25 +651,49 @@ function(  BB){
             throw new Error("BB.Color.createScheme: '"+scheme+"' is not a valid scheme name, choose from: "+Object.keys(this.schemes) );
         }
 
-        var errorMsg;
-        switch( scheme ) {
-            case "monochromatic": errorMsg = '"monochromatic" requires a second parameter: a config object with tint Array and/or shade Array'; break;
-            case "analogous": errorMsg = "this scheme requires a config object with an angle property"; break;
-            case "complementary" : errorMsg=false; break;
-            case "split complementary": errorMsg = "this scheme requires a config object with an angle property"; break;
-            case "triadic" : errorMsg=false; break;
-            case "tetradic": errorMsg = "this scheme requires a config object with an angle property"; break;
+        // var errorMsg;
+        // switch( scheme ) {
+        //     case "monochromatic": errorMsg = '"monochromatic" requires a second parameter: a config object with tint Array and/or shade Array'; break;
+        //     case "analogous": errorMsg = "this scheme requires a config object with an angle property"; break;
+        //     case "complementary" : errorMsg=false; break;
+        //     case "split complementary": errorMsg = "this scheme requires a config object with an angle property"; break;
+        //     case "triadic" : errorMsg=false; break;
+        //     case "tetradic": errorMsg = "this scheme requires a config object with an angle property"; break;
+        // }
+
+        // if(typeof config !== "object" && errorMsg){ 
+        if( typeof config === "object" || typeof config === "undefined"  ){ 
+            
+            // throw new Error("BB.Color.createScheme: "+errorMsg );
+            
+            if( typeof config === "undefined" ) config = {};
+            
+            if( typeof config.angle === "undefined" ){
+                if(scheme=="tetradic") config.angle = 40;
+                else config.angle = 30;
+            }
+            if( scheme == "monochromatic" ){
+                if( typeof config.tint === "undefined" ){ config.tint = [0.4,0.8]; }
+                else if( !(config.tint instanceof Array) ){
+                  throw new Error("BB.Color.createScheme: tint should be an Array of floats between 0.0-1.0");  
+                } 
+                if( typeof config.shade === "undefined" ){ config.shade = [0.3,0.6]; }
+                else if( !(config.shade instanceof Array) ){
+                  throw new Error("BB.Color.createScheme: shade should be an Array of floats between 0.0-1.0");  
+                } 
+            }
+        
         }
 
-        if(typeof config !== "object" && errorMsg){ 
-            
-            throw new Error("BB.Color.createScheme: "+errorMsg );
-        
+        if( typeof config !== "object" ) {
+
+            throw new Error("BB.Color.createScheme: config parameter should be an Object" );
+
         } else {
 
-            if(typeof config !== "object"){
-                config = {}; // bug fix, schemes that don't require config erroring w/out some kinda object
-            }
+            // if(typeof config !== "object"){
+            //     config = {}; // bug fix, schemes that don't require config erroring w/out some kinda object
+            // }
 
             this.schemes[scheme] = []; // clear previous colors
 
