@@ -455,15 +455,793 @@ define('BB',[],function(){
 
     return BB;
 });
+// This class is a direct copy of the Three.js Vector2 class
+// from March 14, 2015 @ 1f97cfaa5d931ae34229ff8fa9c632e99a3b8249
+
+/**
+ * A vector in 2 dimensional space. A direct copy of Three.js's Vector2 class.
+ * @module BB.Vector2
+ * @author mrdoob / http://mrdoob.com/
+ * @author philogb / http://blog.thejit.org/
+ * @author egraether / http://egraether.com/
+ * @author zz85 / http://www.lab4games.net/zz85/blog
+ */
+
+/**
+ * A vector in 2 dimensional space. A direct copy of Three.js's THREE.Vector2 class.
+ * @class BB.Vector2
+ * @constructor
+ * @param {Number} x Represents the x value of the vector
+ * @param {Number} y Represents the y value of the vector
+ */
+
+/**
+ * This vector's x value
+ * @property x
+ */
+
+/**
+ * This vector's y value
+ * @property y
+ */
+
+/**
+ * Sets value of this vector.
+ * @method set
+ * @chainable
+ * @param {Number} x Represents the x value of the vector
+ * @param {Number} y Represents the y value of the vector
+ * @return {BB.Vector2} this vector.
+ */
+
+/**
+ * Replace this vector's x value with x.
+ * @method setX
+ * @chainable
+ * @param {Number} x Represents the x value of the vector.
+ * @return {BB.Vector2} this vector.
+ */
+
+/**
+ * Replace this vector's y value with y.
+ * @method setY
+ * @chainable
+ * @param {Number} y Represents the y value of the vector.
+ * @return {BB.Vector2} this vector.
+ */
+
+/**
+ * Sets this vector's x and y values by index (0 and 1 respectively).
+ * If index equals 0 method replaces this.x with value. 
+ * If index equals 1 method replaces this.y with value.
+ * @method setComponent
+ * @param {Number} index 0 or 1
+ * @param {Number} value Value to be assigned to corresponding index
+ */
+
+/**
+ * Get this vector's x and y values by index (0 and 1 respectively).
+ * If index equals 0 method returns vector's x value.
+ * If index equals 1 method returns vector's y value.
+ * @method getComponent
+ * @param  {[type]} index 0 or 1
+ * @return {Number} Vector's x or y dependent on index
+ */
+
+/**
+ * Copies value of v to this vector. Note: Does not return a copy of this vector.
+ * @method copy
+ * @chainable
+ * @param  {BB.Vector2} v
+ * @return {BB.Vector2} This vector.
+ */
+
+/**
+ * Adds vector v to this vector.
+ * @method add
+ * @chainable
+ * @param {BB.Vector2} v The vector to add to this vector
+ * @return {BB.Vector2} this vector.
+ */
+
+/**
+ * Add the scalar value s to this vector's x and y values.
+ * @method addScalar
+ * @chainable
+ * @return {BB.Vector2} this vector.
+ * @param {Number} s Scalar to add vector with.
+ */
+
+/**
+ * Sets this vector to a + b.
+ * @method addVectors
+ * @chainable
+ * @param {BB.Vector2} a The first vector.
+ * @param {BB.Vector2} b The second vector.
+ * @return {BB.Vector2} This vector.
+ */
+
+/**
+ * Subtracts vector v from this vector.
+ * @method sub
+ * @chainable
+ * @param {BB.Vector2} v The vector to subtract from this vector
+ * @return {BB.Vector2} this vector.
+ */
+
+/**
+ * Subtracts the scalar value s from this vector's x and y values.
+ * @method subScalar
+ * @chainable
+ * @return {BB.Vector2} this vector.
+ * @param {Number} s Scalar to subract vector by.
+ */
+
+/**
+ * Sets this vector to a - b.
+ * @method subVectors
+ * @chainable
+ * @param {BB.Vector2} a The first vector.
+ * @param {BB.Vector2} b The second vector.
+ * @return {BB.Vector2} This vector.
+ */
+
+/**
+ * Multiplies this vector by v.
+ * @method multiply
+ * @chainable
+ * @param {BB.Vector2} v The vector to subtract from this vector
+ * @return {BB.Vector2} this vector.
+ */
+
+/**
+ * Multiplies this vector by scalar s.
+ * @method mutliplyScalar
+ * @param  {Number} s The scalar to multiply this vector by.
+ * @return {BB.Vector2} This vector.
+ */
+
+/**
+ * Divides this vector by v.
+ * @method divide
+ * @chainable
+ * @param {BB.Vector2} v The vector to subtract from this vector
+ * @return {BB.Vector2} this vector.
+ */
+
+/**
+ * Divides this vector by scalar s.
+ * @method divideScalar
+ * @param  {Number} s The scalar to divide this vector by.
+ * @return {BB.Vector2} This vector.
+ */
+
+/**
+ * If this vector's x or y value is less than v's x or y value, replace that value with the corresponding min value.
+ * @method min
+ * @chainable
+ * @param  {BB.Vector2} v The vector to check and assign min values from
+ * @return {BB.Vector2}   This vector.
+ */
+
+/**
+ * If this vector's x or y value is less than v's x or y value, replace that value with the corresponding min value.
+ * @method max
+ * @chainable
+ * @param  {BB.Vector2} v The vector to check and assign max values from
+ * @return {BB.Vector2}   This vector.
+ */
+
+/**
+ * If this vector's x or y value is greater than the max vector's x or y
+ * value, it is replaced by the corresponding value. If this vector's x
+ * or y value is less than the min vector's x or y value, it is replace
+ * by the corresponding value. Note: This function assumes min < max, if
+ * this assumption isn't true it will not operate correctly
+ * @method clamp
+ * @chainable
+ * @param  {BB.Vector2} min The vector containing the min x and y values in the desired range.
+ * @param  {BB.Vector2} max The vector containing the max x and y values in the desired range.
+ * @return {BB.Vector2}     This vector.
+ */
+
+/**
+ * If this vector's x or y values are greater than the max value, they
+ * are replaced by the max value. If this vector's x or y values are
+ * less than the min value, they are replace by the min value.
+ * @method clampScalar
+ * @chainable
+ * @param  {Number} min the minimum value the components will be clamped to.
+ * @param  {Number} max the minimum value the components will be clamped to.
+ * @return {BB.Vector2}     This vector.
+ */
+
+/**
+ * The components of the vector are rounded downwards (towards negative infinity) to an integer value.
+ * @method floor
+ * @chainable
+ * @return {BB.Vector2} This vector.
+ */
+
+/**
+ * The components of the vector are rounded upwards (towards positive infinity) to an integer value.
+ * @method ceil
+ * @chainable
+ * @return {BB.Vector2} This vector.
+ */
+
+/**
+ * The components of the vector are rounded towards the nearest integer value.
+ * @method round
+ * @chainable
+ * @return {BB.Vector2} This vector.
+ */
+
+/**
+ * The components of the vector are rounded towards zero (up if negative, down if positive) to an integer value.
+ * @method roundToZero
+ * @chainable
+ * @return {BB.Vector2} This vector.
+ */
+
+ /**
+ * Inverts this vector.
+ * @method negate
+ * @chainable
+ * @return {BB.Vector2} this vector.
+ */
+
+/**
+ * Computes dot product of this vector and v.
+ * @method dot
+ * @param  {BB.Vector2} v
+ * @return {Number}   The dot product of this vector and v.
+ */
+
+/**
+ * Computes squared length of this vector.
+ * @method lengthSq
+ * @return {Number}  The squared length of this vector.
+ */
+
+/**
+ * Computes the length of this vector.
+ * @method length
+ * @return {Number}   The length of this vector.
+ */
+
+/**
+ * Normalizes this vector.
+ * @method normalize
+ * @chainable
+ * @return {BB.Vector2} This vector.
+ */
+
+/**
+ * Computes distance of this vector to v.
+ * @method distanceTo
+ * @param  {BB.Vector2} v 
+ * @return {Number}   Distance from this vector to v.
+ */
+
+/**
+ * Computes squared distance of this vector to v.
+ * @method distanceToSquared
+ * @param  {BB.Vector2} v 
+ * @return {Number}   Squared distance from this vector to v.
+ */
+
+/**
+ * Normalizes this vector and multiplies it by l.
+ * @method setLength
+ * @chainable
+ * @param {Number} l The new length of the vector.
+ * @return {BB.Vector2} This vector.
+ */
+
+/**
+ * Linear interpolation between this vector and v, where alpha is the
+ * percent along the line.
+ * @method lerp
+ * @chainable
+ * @param  {BB.Vector2} v  The vector to lerp this vector with.
+ * @param  {Number} alpha Percentage along the line (0 - 1).
+ * @return {BB.Vector2}  This vector.
+ */
+
+/**
+ * Sets this vector to be the vector linearly interpolated between v1
+ * and v2 with alpha factor.
+ * @method lerpVectors
+ * @chainable
+ * @param  {BB.Vector2} v1  The first vector.
+ * @param  {BB.Vector2} v2  The second vector.
+ * @param  {Number} alpha Percentage along the line (0 - 1).
+ * @return {BB.Vector2}  This vector.
+ */
+
+/**
+ * Checks for strict equality of this vector and v.
+ * @method equals
+ * @param  {BB.Vector2} v The vector to check equality against.
+ * @return {Boolean}
+ */
+
+/**
+ * Sets this vector's x value to be array[0] and y value to be array[1].
+ * @method fromArray
+ * @chainable
+ * @param  {[type]} array  Array of length 2.
+ * @return {BB.Vector2}  This vector.
+ */
+
+/**
+ * Returns an array [x, y].
+ * @method toArray
+ * @param  {Array} [array] Optional array that will be filled if provided.
+ * @return {Array}  Array [x, y].
+ */
+
+/**
+ * Clones this vector.
+ * @method clone
+ * @return {BB.Vector2} A new vector with this vectors x and y values.
+ */
+    
+// note: fromAttribute(...) is not documented because the Three.js website
+// provides no documentation for it and it doesn't really make sense without
+// our library.
+
+define('BB.Vector2',['./BB'],
+function(  THREE) { 
+//NOTE: importing BB core as THREE (just a name) so that Three.js' Vector2 class code
+//can be copied and pasted below when it is updated.
+
+    'use strict';
+
+    THREE.Vector2 = function ( x, y ) {
+
+        this.x = x || 0;
+        this.y = y || 0;
+
+    };
+
+    THREE.Vector2.prototype = {
+
+        constructor: THREE.Vector2,
+
+        set: function ( x, y ) {
+
+            this.x = x;
+            this.y = y;
+
+            return this;
+
+        },
+
+        setX: function ( x ) {
+
+            this.x = x;
+
+            return this;
+
+        },
+
+        setY: function ( y ) {
+
+            this.y = y;
+
+            return this;
+
+        },
+
+        setComponent: function ( index, value ) {
+
+            switch ( index ) {
+
+                case 0: this.x = value; break;
+                case 1: this.y = value; break;
+                default: throw new Error( 'BB.Vector2.setComponent: index is out of range: ' + index );
+
+            }
+
+        },
+
+        getComponent: function ( index ) {
+
+            switch ( index ) {
+
+                case 0: return this.x;
+                case 1: return this.y;
+                default: throw new Error( 'BB.Vector2.getComponent: index is out of range: ' + index );
+
+            }
+
+        },
+
+        copy: function ( v ) {
+
+            this.x = v.x;
+            this.y = v.y;
+
+            return this;
+
+        },
+
+        add: function ( v, w ) {
+
+            if ( w !== undefined ) {
+                return this.addVectors( v, w );
+
+            }
+
+            this.x += v.x;
+            this.y += v.y;
+
+            return this;
+
+        },
+
+        addScalar: function ( s ) {
+
+            this.x += s;
+            this.y += s;
+
+            return this;
+
+        },
+
+        addVectors: function ( a, b ) {
+
+            this.x = a.x + b.x;
+            this.y = a.y + b.y;
+
+            return this;
+
+        },
+
+        sub: function ( v, w ) {
+
+            if ( w !== undefined ) {
+
+                // THREE.warn( 'THREE.Vector2: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.' );
+                return this.subVectors( v, w );
+
+            }
+
+            this.x -= v.x;
+            this.y -= v.y;
+
+            return this;
+
+        },
+
+        subScalar: function ( s ) {
+
+            this.x -= s;
+            this.y -= s;
+
+            return this;
+
+        },
+
+        subVectors: function ( a, b ) {
+
+            this.x = a.x - b.x;
+            this.y = a.y - b.y;
+
+            return this;
+
+        },
+
+        multiply: function ( v ) {
+
+            this.x *= v.x;
+            this.y *= v.y;
+
+            return this;
+
+        },
+
+        multiplyScalar: function ( s ) {
+
+            this.x *= s;
+            this.y *= s;
+
+            return this;
+
+        },
+
+        divide: function ( v ) {
+
+            this.x /= v.x;
+            this.y /= v.y;
+
+            return this;
+
+        },
+
+        divideScalar: function ( scalar ) {
+
+            if ( scalar !== 0 ) {
+
+                var invScalar = 1 / scalar;
+
+                this.x *= invScalar;
+                this.y *= invScalar;
+
+            } else {
+
+                this.x = 0;
+                this.y = 0;
+
+            }
+
+            return this;
+
+        },
+
+        min: function ( v ) {
+
+            if ( this.x > v.x ) {
+
+                this.x = v.x;
+
+            }
+
+            if ( this.y > v.y ) {
+
+                this.y = v.y;
+
+            }
+
+            return this;
+
+        },
+
+        max: function ( v ) {
+
+            if ( this.x < v.x ) {
+
+                this.x = v.x;
+
+            }
+
+            if ( this.y < v.y ) {
+
+                this.y = v.y;
+
+            }
+
+            return this;
+
+        },
+
+        clamp: function ( min, max ) {
+
+            // This function assumes min < max, if this assumption isn't true it will not operate correctly
+
+            if ( this.x < min.x ) {
+
+                this.x = min.x;
+
+            } else if ( this.x > max.x ) {
+
+                this.x = max.x;
+
+            }
+
+            if ( this.y < min.y ) {
+
+                this.y = min.y;
+
+            } else if ( this.y > max.y ) {
+
+                this.y = max.y;
+
+            }
+
+            return this;
+        },
+
+        clampScalar: ( function () {
+
+            var min, max;
+
+            return function ( minVal, maxVal ) {
+
+                if ( min === undefined ) {
+
+                    min = new THREE.Vector2();
+                    max = new THREE.Vector2();
+
+                }
+
+                min.set( minVal, minVal );
+                max.set( maxVal, maxVal );
+
+                return this.clamp( min, max );
+
+            };
+
+        } )(),
+
+       
+        floor: function () {
+
+            this.x = Math.floor( this.x );
+            this.y = Math.floor( this.y );
+
+            return this;
+
+        },
+
+        ceil: function () {
+
+            this.x = Math.ceil( this.x );
+            this.y = Math.ceil( this.y );
+
+            return this;
+
+        },
+
+        round: function () {
+
+            this.x = Math.round( this.x );
+            this.y = Math.round( this.y );
+
+            return this;
+
+        },
+
+        roundToZero: function () {
+
+            this.x = ( this.x < 0 ) ? Math.ceil( this.x ) : Math.floor( this.x );
+            this.y = ( this.y < 0 ) ? Math.ceil( this.y ) : Math.floor( this.y );
+
+            return this;
+
+        },
+
+        negate: function () {
+
+            this.x = - this.x;
+            this.y = - this.y;
+
+            return this;
+
+        },
+
+        dot: function ( v ) {
+
+            return this.x * v.x + this.y * v.y;
+
+        },
+
+        lengthSq: function () {
+
+            return this.x * this.x + this.y * this.y;
+
+        },
+
+        length: function () {
+
+            return Math.sqrt( this.x * this.x + this.y * this.y );
+
+        },
+
+        normalize: function () {
+
+            return this.divideScalar( this.length() );
+
+        },
+
+        distanceTo: function ( v ) {
+
+            return Math.sqrt( this.distanceToSquared( v ) );
+
+        },
+
+        distanceToSquared: function ( v ) {
+
+            var dx = this.x - v.x, dy = this.y - v.y;
+            return dx * dx + dy * dy;
+
+        },
+
+        setLength: function ( l ) {
+
+            var oldLength = this.length();
+
+            if ( oldLength !== 0 && l !== oldLength ) {
+
+                this.multiplyScalar( l / oldLength );
+            }
+
+            return this;
+
+        },
+
+        lerp: function ( v, alpha ) {
+
+            this.x += ( v.x - this.x ) * alpha;
+            this.y += ( v.y - this.y ) * alpha;
+
+            return this;
+
+        },
+
+        lerpVectors: function ( v1, v2, alpha ) {
+
+            this.subVectors( v2, v1 ).multiplyScalar( alpha ).add( v1 );
+
+            return this;
+
+        },
+
+        equals: function ( v ) {
+
+            return ( ( v.x === this.x ) && ( v.y === this.y ) );
+
+        },
+
+        fromArray: function ( array, offset ) {
+
+            if ( offset === undefined ) offset = 0;
+
+            this.x = array[ offset ];
+            this.y = array[ offset + 1 ];
+
+            return this;
+
+        },
+
+        toArray: function ( array, offset ) {
+
+            if ( array === undefined ) array = [];
+            if ( offset === undefined ) offset = 0;
+
+            array[ offset ] = this.x;
+            array[ offset + 1 ] = this.y;
+
+            return array;
+
+        },
+
+        fromAttribute: function ( attribute, index, offset ) {
+
+            if ( offset === undefined ) offset = 0;
+
+            index = index * attribute.itemSize + offset;
+
+            this.x = attribute.array[ index ];
+            this.y = attribute.array[ index + 1 ];
+
+            return this;
+
+        },
+
+        clone: function () {
+
+            return new THREE.Vector2( this.x, this.y );
+
+        }
+    };
+
+    return THREE.Vector2;
+});
 /**
  * A static utilitites class for all things math.
  * @module BB.MathUtils
+ * @class BB.MathUtils
  * @static
  */
-define('BB.MathUtils',['./BB'], 
-function(  BB){
+define('BB.MathUtils',['./BB', './BB.Vector2'], 
+function(  BB,        Vector2){
 
     'use strict';
+
+    BB.Vector2 = Vector2;
 
     BB.MathUtils = function() {};
 
@@ -618,6 +1396,52 @@ function(  BB){
         return degrees * (Math.PI / 180.0);
     };
 
+    /**
+     * Translate from polar coordinates to cartesian coordinates.
+     * @method polarToCartesian
+     * @static
+     * @param  {Number} radius  The straight line distance from the origin.
+     * @param  {Number} degrees The angle in degrees measured clockwise from the
+     * positive x axis.
+     * @return {Array}         An array of length two where the first element is
+     * the x value and the second element is the y value.
+     */
+    BB.MathUtils.polarToCartesian = function(radius, degrees) {
+
+        if (typeof radius !== "number" || typeof degrees !== "number") {
+            throw new Error("BB.MathUtils.polarToCartesian: invalid arguments, function expects two Number type parameters.");
+        }
+
+        return [ radius * Math.cos(degrees), radius * Math.sin(degrees) ];
+    };
+
+    /**
+     * Translate from cartesian to polar coordinates.
+     * @method cartesianToPolar
+     * @static
+     * @param  {Number} x The x coordinate.
+     * @param  {Number} y The y coordinate.
+     * @return {Array}  An array of length two where the first element is the
+     * polar radius and the second element is the polar angle in degrees
+     * measured clockwise from the positive x axis.
+     */
+    BB.MathUtils.cartesianToPolar = function(x, y) {
+
+        if (typeof x !== "number" || typeof y !== "number") {
+            throw new Error("BB.MathUtils.cartesianToPolar: invalid arguments, function expects two Number type parameters.");
+        }
+
+        return [ Math.sqrt((x * x) + (y * y)), Math.atan(y / x) ];
+    };
+
+    BB.MathUtils.randomInt = function(min, max) {
+        return Math.floor(min + Math.random() * (max - min + 1));
+    };
+
+    BB.MathUtils.randomFloat = function(min, max) {
+        return min + Math.random() * (max - min);
+    };
+
     return BB.MathUtils;
 });
 /**
@@ -638,41 +1462,39 @@ function(  BB){
      * @param {Number} [b] optional parameter for setting the blue value (0-255)
      * @param {Number} [a] optional parameter for setting the alpha value (0-255)
      * @example 
-     * <section><code class="javascript"> 
-     * &nbsp; var color = new BB.Color(255,0,0); 
-     * </code></section>
+     * <pre class="code prettyprint"> var color = new BB.Color(255,0,0); </pre>
      */
 
     BB.Color = function(r, g, b, a) {
 
         // see getter/setter below
         if( typeof r == "undefined" ){
-            this._r = 0; 
+            this._r = 204; 
         }
         else if( typeof r !== 'number' || r<0 || r>255 ){
             throw new Error("BB.Color: red parameter neeeds to be a NUMBER between 0 - 255");
         } else {
-            this._r = r || 0;     
+            this._r = r || 204;     
         }
 
         // see getter/setter below
         if( typeof g == "undefined" ){
-            this._g = 0; 
+            this._g = 51; 
         }
         else if( typeof g !== 'number' || g<0 || g>255 ){
             throw new Error("BB.Color: green parameter neeeds to be a NUMBER between 0 - 255");
         } else {
-            this._g = g || 0;        
+            this._g = g || 51;        
         }
 
         // see getter/setter below
         if( typeof b == "undefined" ){
-            this._b = 0; 
+            this._b = 153; 
         }
         else if( typeof b !== 'number' || b<0 || b>255 ){
             throw new Error("BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255");
         } else {
-            this._b = b || 0;        
+            this._b = b || 153;        
         }
 
         // see getter/setter below
@@ -689,8 +1511,10 @@ function(  BB){
 
         /**
          * object with properties ( named after different color schemes ) for
-         * holding arrays of the color values generated with the <code>colorScheme()</code>
-         * method
+         * holding arrays of the color values generated with the
+         * <code>createScheme()</code> method. the colors are Objects with r, g,
+         * b, a values as well as rgb(string), rgba(string) and hex(string)
+         * 
          * @type {Object}
          * @property schemes
          */
@@ -708,7 +1532,7 @@ function(  BB){
      * the red value between 0 - 255
      * @property r
      * @type Number
-     * @default 0
+     * @default 204
      */   
     Object.defineProperty(BB.Color.prototype, "r", {
         get: function() {
@@ -718,7 +1542,7 @@ function(  BB){
             if( typeof r !== 'number' || r<0 || r>255 ){
                 throw new Error("BB.Color: red parameter neeeds to be a NUMBER between 0 - 255");
             } else {
-                this._r = r || 0;    
+                this._r = r || 204;    
                 this.rgb2hsv(); 
             }
         }
@@ -728,7 +1552,7 @@ function(  BB){
      * the green value between 0 - 255
      * @property g
      * @type Number
-     * @default 0
+     * @default 51
      */   
     Object.defineProperty(BB.Color.prototype, "g", {
         get: function() {
@@ -738,7 +1562,7 @@ function(  BB){
             if( typeof g !== 'number' || g<0 || g>255 ){
                 throw new Error("BB.Color: green parameter neeeds to be a NUMBER between 0 - 255");
             } else {
-                this._g = g || 0;    
+                this._g = g || 51;    
                 this.rgb2hsv(); 
             }
         }
@@ -748,7 +1572,7 @@ function(  BB){
      * the blue value between 0 - 255
      * @property b
      * @type Number
-     * @default 0
+     * @default 153
      */   
     Object.defineProperty(BB.Color.prototype, "b", {
         get: function() {
@@ -758,7 +1582,7 @@ function(  BB){
             if( typeof b !== 'number' || b<0 || b>255 ){
                 throw new Error("BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255");
             } else {
-                this._b = b || 0;    
+                this._b = b || 153;    
                 this.rgb2hsv(); 
             }
         }
@@ -845,6 +1669,60 @@ function(  BB){
     });
 
 
+    /**
+     * returns rgb string for color
+     * @method getRGB
+     * @return {String} for example <code>'rgb(255,0,0)'</code>
+     */
+    BB.Color.prototype.getRGB = function() { 
+        return 'rgb('+this.r+', '+this.g+', '+this.b+')';
+    };
+
+    /**
+     * returns rgba string for color
+     * @method getRGBA
+     * @return {String} for example <code>'rgba(255,0,0,255)'</code>
+     */
+    BB.Color.prototype.getRGBA = function() { 
+        return 'rgba('+this.r+', '+this.g+', '+this.b+', '+this.a+')';
+    };
+
+    /**
+     * returns hex string for color
+     * @method getHex
+     * @return {String} for example <code>'#ff0000'</code>
+     */
+    BB.Color.prototype.getHex = function() { 
+        return "#" +((this.r << 16) | (this.g << 8) | this.b).toString(16);
+    };
+
+
+
+    //
+
+
+    /**
+     * sets color value to match another color object's value
+     * @method copy
+     * @param {BB.Color} color another color object to copy from
+     */
+    BB.Color.prototype.copy = function( color ) { 
+        if (! color || !this.isLikeColor( color ) ) {
+            throw new Error("BB.Color.copy: color parameter is not an instance of BB.Color");
+        }
+        this.setRGBA( color.r, color.g, color.b, color.a );
+    };
+
+    /**
+     * creates a new color object that is a copy of itself
+     * @method clone
+     * @return {BB.Color} a new color object copied from this one
+     */
+    BB.Color.prototype.clone = function() { 
+        var child = new BB.Color();
+            child.copy( this );
+        return child;
+    };
 
     /**
      * sets the rgba value of the color
@@ -921,19 +1799,19 @@ function(  BB){
         this.hsv2rgb();
     };
 
-    BB.Color.prototype.getRGB = function() { 
-        return 'rgb('+this.r+', '+this.g+', '+this.b+')';
-    };
-
-    BB.Color.prototype.getRGBA = function() { 
-        return 'rgba('+this.r+', '+this.g+', '+this.b+', '+this.a+')';
-    };
-
-    BB.Color.prototype.getHex = function() { 
-        return "#" +((this.r << 16) | (this.g << 8) | this.b).toString(16);
-    };
 
 
+    //
+
+
+    /**
+     * checks if another color object is equal to itself
+     * 
+     * @method isEqual
+     * @param {BB.Color} color another color object to compare to
+     * @param {Boolean} excludeAlpha whether or not to exlude Alpha property
+     * @return {Boolean}     true if it's equal, fals if it's not
+     */
     BB.Color.prototype.isEqual = function(color, excludeAlpha) {
 
         if (! color || !(color instanceof BB.Color) ) {
@@ -952,6 +1830,13 @@ function(  BB){
         }
     };
 
+    BB.Color.prototype.isLikeColor = function( obj) { 
+       return   typeof obj.r !== "undefined" &&
+                typeof obj.g !== "undefined" &&
+                typeof obj.b !== "undefined" &&
+                typeof obj.a !== "undefined";
+    }; 
+
     BB.Color.prototype.min3 = function( a,b,c ) { 
         return ( a<b )   ?   ( ( a<c ) ? a : c )   :   ( ( b<c ) ? b : c ); 
     }; 
@@ -959,6 +1844,9 @@ function(  BB){
     BB.Color.prototype.max3 = function( a,b,c ) { 
         return ( a>b )   ?   ( ( a>c ) ? a : c )   :   ( ( b>c ) ? b : c );
     };
+
+
+    //
 
 
     /**
@@ -1092,67 +1980,79 @@ function(  BB){
         }
     };
 
+
     //
 
-    // private function for shifting hue
-    // used by color scheme functions 
-    BB.Color.prototype._hueShift = function( h,s ) { 
-        
-        h += s; 
+    /**
+     * changes the color by shifting current hue value by a number of degrees, also chainable ( see example )
+     *
+     * can also take an additional hue parameter when used as a utility ( see example ), used this way internally by <code>.createScheme</code>
+     *
+     * @method shift
+     * @chainable
+     * @param {Number} degrees number of degress to shift current hue by ( think rotating a color wheel )
+     * @return {BB.Color} this color
+     * @example
+     * <code class="code prettyprint">
+     * &nbsp; color.shift( 10 ); // shifts by 10 degrees <br>
+     * &nbsp; var comp = color.clone().shift( 180 ); // new complementary color obj <br><br>
+     * &nbsp; // as a utility ( without changing the color )  <br>
+     * &nbsp; color.shift( 180, color.h ); // returns the complementary hue ( in degrees ) 
+     * </code>
+     */
+    BB.Color.prototype.shift = function( degrees, hue ) { 
+        var h;
+
+        if( typeof hue === "undefined" ) h = this.h;
+        else  h = hue;
+        h += degrees; 
         
         while ( h>=360.0 )  h -= 360.0; 
         while ( h<0.0 )     h += 360.0; 
 
-        return h; 
+        if( typeof hue === "undefined" ){
+            this.h = h;
+            return this; // for chainging
+        } 
+        else {  return h; }
     };
 
-    // private function for creating scheme variants
-    // used by scheme functions 
-    BB.Color.prototype._schemeVarient = function( rgb, scheme, config ) { 
-
-        
-        if( typeof config.tint !== "undefined" ){
-
-            config.tint.sort(function(a,b){return b - a;}); // reorder largest to smallest
-
-            for (var i = 0; i < config.tint.length; i++) {
-                var col = {};                                                     
-                col.r = Math.round( rgb.r+(255-rgb.r ) * config.tint[i] );
-                col.g = Math.round( rgb.g+(255-rgb.g ) * config.tint[i] );
-                col.b = Math.round( rgb.b+(255-rgb.b ) * config.tint[i] );
-                col.a = this.a;
-
-                this.schemes[scheme].push( col );
-            }
-
-        }
-
-        this.schemes[scheme].push({ r:rgb.r, g:rgb.g, b:rgb.b, a:this.a });
-        
-        if( typeof config.shade !== "undefined" ){
-            
-            config.shade.sort(function(a,b){return b - a;}); // reorder largest to smallest
-
-            for (var j = 0; j < config.shade.length; j++) {
-                var col2 = {};                                                     
-                col2.r = Math.round( rgb.r * config.shade[j] );
-                col2.g = Math.round( rgb.g * config.shade[j] );
-                col2.b = Math.round( rgb.b * config.shade[j] );
-                col2.a = this.a;
-
-                this.schemes[scheme].push( col2 );
-            }
-        }
-
-        for (var ii = 0; ii < this.schemes[scheme].length; ii++) {
-            var self = this.schemes[scheme][ii];
-                self.hex = "#" +((self.r << 16) | (self.g << 8) | self.b).toString(16);
-                self.rgb = 'rgb('+self.r+', '+self.g+', '+self.b+')';
-                self.rgba = 'rgba('+self.r+', '+self.g+', '+self.b+', '+self.a+')';
-        }
+    /**
+     * changes the color by lightening it by a certain percentage
+     *
+     * @method tint
+     * @param {Number} percentage float between 0 and 1
+     */
+    BB.Color.prototype.tint = function( percentage, _schemeUse ) { 
+        var col = {};
+        var tint = percentage;
+        col.r = Math.round( this.r+(255-this.r ) * tint );
+        col.g = Math.round( this.g+(255-this.g ) * tint );
+        col.b = Math.round( this.b+(255-this.b ) * tint );
+        col.a = this.a;
+        if( typeof _schemeUse !== "undefined") return col;
+        else this.setRGBA( col.r, col.g, col.b, col.a );
     };
 
-    // config.angle = "30"; config.tint = [ 0.4, 0.8 ]; config.shade = [ 0.3, 0.6 ]
+
+    /**
+     * changes the color by darkening it by a certain percentage
+     *
+     * @method shade
+     * @param {Number} percentage float between 0 and 1
+     */
+    BB.Color.prototype.shade = function( percentage, _schemeUse ) { 
+        var col = {};
+        var shade = percentage;
+        col.r = Math.round( this.r * shade );
+        col.g = Math.round( this.g * shade );
+        col.b = Math.round( this.b * shade );
+        col.a = this.a;
+        if( typeof _schemeUse !== "undefined") return col;
+        else this.setRGBA( col.r, col.g, col.b, col.a );
+    };
+
+
 
     /**
      * generates a color scheme ( array of additional color values ) from the
@@ -1163,7 +2063,7 @@ function(  BB){
      * scheme you generated like so: <code> .schemes["triadic"] </code>, which
      * will return an array of objects ( with r, g, b, a properties )
      * 
-     * @method colorScheme
+     * @method createScheme
      * 
      * @param  {String} scheme name of the color scheme you want to generate.
      * can be either "monochromatic", "analogous", "complementary", "split
@@ -1181,174 +2081,132 @@ function(  BB){
      * by that particular scheme )
      * 
      * @example 
-     * <section><code class="javascript"> 
-     * &nbsp; color.colorScheme("analogous",{                           <br>
-     * &nbsp;&nbsp;&nbsp;&nbsp; angle: 30,                              <br>
-     * &nbsp;&nbsp;&nbsp;&nbsp; tint:[ 0.4, 0.8 ],                      <br>
-     * &nbsp;&nbsp;&nbsp;&nbsp; shade:[ 0.3, 0.6 ]                      <br>
-     * &nbsp; });                                                       <br><br>
-     * &nbsp; color.schemes["analogous"][0] // returns first color      <br>
-     * &nbsp; color.schemes["analogous"][1] // returns second color     <br>
-     *</code></section>
+     * <code class="code prettyprint"> 
+     * &nbsp; color.createScheme("analogous",{                          <br>        
+     * &nbsp;&nbsp;&nbsp;&nbsp; angle: 30,                             <br> 
+     * &nbsp;&nbsp;&nbsp;&nbsp; tint:[ 0.4, 0.8 ],                     <br> 
+     * &nbsp;&nbsp;&nbsp;&nbsp; shade:[ 0.3, 0.6 ]                     <br> 
+     *&nbsp; });                                                       <br><br>
+     * &nbsp; color.schemes["analogous"][0] // returns first color     <br> 
+     * &nbsp; color.schemes["analogous"][1] // returns second color    <br> 
+     * </code>
      */
-    BB.Color.prototype.colorScheme = function( scheme, config ) { 
+    BB.Color.prototype.createScheme = function( scheme, config ) { 
+
+        if( !(scheme in this.schemes) ) {
+            throw new Error("BB.Color.createScheme: '"+scheme+"' is not a valid scheme name, choose from: "+Object.keys(this.schemes) );
+        }
+
+        // var errorMsg;
+        // switch( scheme ) {
+        //     case "monochromatic": errorMsg = '"monochromatic" requires a second parameter: a config object with tint Array and/or shade Array'; break;
+        //     case "analogous": errorMsg = "this scheme requires a config object with an angle property"; break;
+        //     case "complementary" : errorMsg=false; break;
+        //     case "split complementary": errorMsg = "this scheme requires a config object with an angle property"; break;
+        //     case "triadic" : errorMsg=false; break;
+        //     case "tetradic": errorMsg = "this scheme requires a config object with an angle property"; break;
+        // }
+
+        // if(typeof config !== "object" && errorMsg){ 
+        if( typeof config === "object" || typeof config === "undefined"  ){ 
+            
+            // throw new Error("BB.Color.createScheme: "+errorMsg );
+            
+            if( typeof config === "undefined" ) config = {};
+            
+            if( typeof config.angle === "undefined" ){
+                if(scheme=="tetradic") config.angle = 40;
+                else config.angle = 30;
+            }
+            if( scheme == "monochromatic" ){
+                if( typeof config.tint === "undefined" ){ config.tint = [0.4,0.8]; }
+                else if( !(config.tint instanceof Array) ){
+                  throw new Error("BB.Color.createScheme: tint should be an Array of floats between 0.0-1.0");  
+                } 
+                if( typeof config.shade === "undefined" ){ config.shade = [0.3,0.6]; }
+                else if( !(config.shade instanceof Array) ){
+                  throw new Error("BB.Color.createScheme: shade should be an Array of floats between 0.0-1.0");  
+                } 
+            }
+        
+        }
+
+        if( typeof config !== "object" ) {
+
+            throw new Error("BB.Color.createScheme: config parameter should be an Object" );
+
+        } else {
+
+            // if(typeof config !== "object"){
+            //     config = {}; // bug fix, schemes that don't require config erroring w/out some kinda object
+            // }
+
+            this.schemes[scheme] = []; // clear previous colors
+
+            var angles;
+            switch( scheme ) {
+                case "analogous": angles = [ config.angle, 0-config.angle ];  break;
+                case "complementary" : angles = [ 180 ];  break;
+                case "split complementary": angles = [ 180-config.angle, 180+config.angle];  break;
+                case "triadic" : angles = [ 240, 120 ];  break;
+                case "tetradic": angles = [ 180, -config.angle, -config.angle+180 ];  break;
+            }
+
+            var ones = ["analogous","complementary","split complementary","triadic","tetradic"];
+            var twos = ["analogous","split complementary","triadic","tetradic"];
+            var threes = ["tetradic"];
+
+            if( scheme == "monochromatic" )     this._schemeVarient( scheme, config );
+            if( ones.indexOf( scheme ) >= 0 )    this._schemeVarient( scheme, config, angles[0] );
+            if( twos.indexOf( scheme ) >= 0 )    this._schemeVarient( scheme, config, angles[1] );
+            if( threes.indexOf( scheme ) >= 0 )  this._schemeVarient( scheme, config, angles[2] );
+                         
+        }
+
+    };
+
+    // private function for creating scheme variants
+    // used by scheme functions 
+    BB.Color.prototype._schemeVarient = function( scheme, config, angle ) { 
 
         var rgb, hsv;
+
+        if( scheme == "monochromatic" ){
+            rgb = this;
+        } else {
+            rgb     = { r:this.r, g:this.g, b:this.b };
+            hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
+            hsv.h   = this.shift(   hsv.h, angle  );
+            rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );            
+        }
+
+
+        if( typeof config.tint !== "undefined" ){
+            config.tint.sort(function(a,b){return b - a;}); // reorder largest to smallest
+
+            for (var i = 0; i < config.tint.length; i++) {
+                var col = this.tint( config.tint[i], true );
+                this.schemes[scheme].push( col );
+            }
+        }
+
+        this.schemes[scheme].push({ r:rgb.r, g:rgb.g, b:rgb.b, a:this.a });
         
-        if( scheme == "monochromatic" ){ // -----------------------------------------------------------
-            if(typeof config !== "object"){
-                
-                throw new Error("BB.Color.colorScheme: expecting a config object");
-            
-            } else {                
-                this.schemes[scheme] = []; // clear previous colors
-                this._schemeVarient( this, scheme, config);
+        if( typeof config.shade !== "undefined" ){
+            config.shade.sort(function(a,b){return b - a;}); // reorder largest to smallest
+
+            for (var j = 0; j < config.shade.length; j++) {
+                var col2 = this.shade( config.shade[j], true );
+                this.schemes[scheme].push( col2 );
             }
         }
 
-        if( scheme == "analogous" ){ // -----------------------------------------------------------
-            if(typeof config !== "object"){
-                
-                throw new Error("BB.Color.colorScheme: expecting a config object");
-            
-            } else {
-
-                if( typeof config.angle == "undefined" ){
-
-                    throw new Error("BB.Color.colorScheme: this scheme requires a config object with an angle property");
-
-                }
-
-                this.schemes[scheme] = []; // clear previous colors
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, config.angle     );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, 0.0-config.angle );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-            }
+        for (var ii = 0; ii < this.schemes[scheme].length; ii++) {
+            var self = this.schemes[scheme][ii];
+                self.hex = "#" +((self.r << 16) | (self.g << 8) | self.b).toString(16);
+                self.rgb = 'rgb('+self.r+', '+self.g+', '+self.b+')';
+                self.rgba = 'rgba('+self.r+', '+self.g+', '+self.b+', '+self.a+')';
         }
-
-
-        if( scheme == "complementary" ){ // -----------------------------------------------------------
-            if(typeof config !== "object"){
-                
-                throw new Error("BB.Color.colorScheme: expecting a config object");
-            
-            } else {
-
-                this.schemes[scheme] = []; // clear previous colors
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, 180  );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-            }
-        }
-
-
-        if( scheme == "split complementary" ){ // -----------------------------------------------------------
-            if(typeof config !== "object"){
-                
-                throw new Error("BB.Color.colorScheme: expecting a config object");
-            
-            } else {
-
-                if( typeof config.angle == "undefined" ){
-
-                    throw new Error("BB.Color.colorScheme: this scheme requires a config object with an angle property");
-                }
-
-                this.schemes[scheme] = []; // clear previous colors
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, 180.0-config.angle);
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, 180.0+config.angle);
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-            }
-        }
-
-        if( scheme == "triadic" ){ // -----------------------------------------------------------
-            if(typeof config !== "object"){
-                
-                throw new Error("BB.Color.colorScheme: expecting a config object");
-            
-            } else {
-
-                this.schemes[scheme] = []; // clear previous colors
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, 240  );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, 120  );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-            }
-        }
-
-        if( scheme == "tetradic" ){ // -----------------------------------------------------------
-            if(typeof config !== "object"){
-                
-                throw new Error("BB.Color.colorScheme: expecting a config object");
-            
-            } else {
-
-                if( typeof config.angle == "undefined" ){
-
-                    throw new Error("BB.Color.colorScheme: this scheme requires a config object with an angle property");
-                }
-
-                this.schemes[scheme] = []; // clear previous colors
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, 180  );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, -config.angle    );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);
-                
-                    rgb     = { r:this.r, g:this.g, b:this.b };
-                    hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
-                    hsv.h   = this._hueShift(   hsv.h, -config.angle+180.0  );
-                    rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );
-
-                this._schemeVarient( rgb, scheme, config);                  
-            }
-        }           
-
     };
 
     return BB.Color;
@@ -1741,8 +2599,7 @@ function(  BB,     MouseInput){
     };
 
     /**
-     * A method used to register "activestart", "activestop", "movestart", and
-     * "movestop" events.
+     * A method used to register "activestart", "activestop", "movestart", "movestop", and "move" events.
      * @method on
      * @param  {String}   eventName   The event to register callback to.
      * "activestart", "activestop", "movestart", and "movestop" are all valid
@@ -2319,17 +3176,17 @@ function(  BB,        BrushManager2D,        Color){
          * The brush's width.
          * @property w
          * @type Number
-         * @default 50
+         * @default 10
          */
-        this.width    = (config && config.width && typeof config.width === 'number') ? config.width : 50;
+        this.width    = (config && config.width && typeof config.width === 'number') ? config.width : 10;
 
         /**
          * The brush's height.
          * @property height
          * @type Number
-         * @default 50
+         * @default 10
          */
-        this.height   = (config && config.height && typeof config.height === 'number') ? config.height : 50;
+        this.height   = (config && config.height && typeof config.height === 'number') ? config.height : 10;
 
         /**
          * The brush's rotation in degrees. This property is not always used with each brush variant.
@@ -2503,6 +3360,17 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
         this._lastVariant = null;
 
         /**
+         * An internal variable to check if the color has been changed since
+         * the last update().
+         * @protected
+         * @property _lastColor
+         * @type Object
+         * @default null
+         */
+        this._lastColor = new BB.Color();
+
+
+        /**
          * A private method used by src's getters and setters.
          * @private
          * @property _src
@@ -2532,7 +3400,7 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
             'shield',
             'locking',
             'seal',
-            'circleslas'
+            'circleslash'
         ];
 
         if (config) {
@@ -2649,7 +3517,8 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
             typeof this.variant === 'string') {
 
             // if the variant is new or has changed
-            if (this.variant !== this._lastVariant) {
+            // or if the color is new or has changed
+            if (this.variant !== this._lastVariant || !this.color.isEqual(this._lastColor) ) {
 
                 // if this is an acceptable variant
                 if (this.variants.indexOf(this.variant) !== -1) {
@@ -2660,6 +3529,7 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
                     this.variant = variant;
 
                     this._lastVariant = this.variant;  
+                    this._lastColor.copy( this.color );
                 
                 } else {
                     throw new Error('BB.ImageBrush2D draw: ' + this.variant + ' is not a valid variant for BB.ImageBrush2D');
@@ -2871,7 +3741,7 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
 
                         if( this.weight > 100){ this.weight = 100; }
 
-                        context.lineWidth = BB.MathUtils.map(this.weight, 0, 100, this.height / 2.5, this.height * 2.5);
+                        context.lineWidth = BB.MathUtils.map(this.weight, 0, 100, this.width / 2.5, this.width * 2.5);
                         context.lineTo(this.x, this.y);
                         context.strokeStyle = "rgba(" + r + ", " + g + ", " + b + ", " + alphaFloat + ")";
                         context.stroke();
@@ -2886,33 +3756,33 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
                         for (var i = 0; i < dist; i++) {
                             var x = this.prevX + (Math.sin(angle) * i);
                             var y = this.prevY + (Math.cos(angle) * i);
-                            var gradient = context.createRadialGradient(x, y, this.width/6, x, y, this.height/2);
+                            var gradient = context.createRadialGradient(x, y, this.width/6, x, y, this.width/2);
                             gradient.addColorStop(0, "rgba(" + r + ", " + g + ", " + b + ', 0.1)');
                             gradient.addColorStop(1, "rgba(" + r + ", " + g + ", " + b + ', 0)');
                             context.fillStyle = gradient;
-                            context.fillRect(x - this.height/2, y - this.height/2, this.height, this.height);
+                            context.fillRect(x - this.width/2, y - this.width/2, this.width, this.width);
                         }
 
                     } else if(this.variant == 'lines' || this.variant == 'calligraphy'){
 
-                        if(this.variant == 'lines'){ context.lineWidth = (this.height < 1) ? 1 : this.height * 0.05; }
-                        if(this.variant == 'calig'){ context.lineWidth = this.height * 0.2; }
+                        if(this.variant == 'lines'){ context.lineWidth = (this.width < 1) ? 1 : this.width * 0.05; }
+                        if(this.variant == 'calligraphy'){ context.lineWidth = this.width * 0.25; }
 
                         context.strokeStyle = "rgb(" + r + ", " + g + ", " + b + ")";
                         context.moveTo(this.prevX, this.prevY);
                         context.lineTo(this.x, this.y);
                         context.stroke();
-                        context.moveTo(this.prevX - this.height * 0.2, this.prevY - this.height * 0.2);
-                        context.lineTo(this.x - this.height * 0.2, this.y - this.height * 0.2);
+                        context.moveTo(this.prevX - this.width * 0.2, this.prevY - this.width * 0.2);
+                        context.lineTo(this.x - this.width * 0.2, this.y - this.width * 0.2);
                         context.stroke();
-                        context.moveTo(this.prevX - this.height * 0.1, this.prevY - this.height * 0.1);
-                        context.lineTo(this.x - this.height * 0.1, this.y - this.height * 0.1);
+                        context.moveTo(this.prevX - this.width * 0.1, this.prevY - this.width * 0.1);
+                        context.lineTo(this.x - this.width * 0.1, this.y - this.width * 0.1);
                         context.stroke();
-                        context.moveTo(this.prevX + this.height * 0.1, this.prevY + this.height * 0.1);
-                        context.lineTo(this.x + this.height * 0.1, this.y + this.height * 0.1);
+                        context.moveTo(this.prevX + this.width * 0.1, this.prevY + this.width * 0.1);
+                        context.lineTo(this.x + this.width * 0.1, this.y + this.width * 0.1);
                         context.stroke();
-                        context.moveTo(this.prevX + this.height * 0.2, this.prevY + this.height * 0.2);
-                        context.lineTo(this.x + this.height * 0.2, this.y + this.height * 0.2);
+                        context.moveTo(this.prevX + this.width * 0.2, this.prevY + this.width * 0.2);
+                        context.lineTo(this.x + this.width * 0.2, this.y + this.width * 0.2);
                         context.stroke();
                     }
                 }
@@ -2934,7 +3804,215 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
     return BB.LineBrush2D;
 });
 
-define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.ImageBrush2D','BB.LineBrush2D','BB.BrushManager2D','BB.MouseInput','BB.Pointer'],function (require) {
+define('BB.Particle2D',['./BB', './BB.Vector2'], 
+function(  BB,        Vector2){
+
+    'use strict';
+
+    BB.Vector2 = Vector2;
+
+    BB.Particle2D = function(config) {
+
+        if (config &&
+            typeof config.heading === 'number' &&
+            typeof config.velocity === 'number') {
+            throw new Error('BB.Particle2D: Heading and velocity cannot both be properties included '
+                            + 'in the BB.Particle2D constructor config parameter.');
+        }
+
+        this.velocity = new BB.Vector2(0, 0);
+
+        var x = (config && typeof config.x === 'number') ? config.x : 0;
+        var y = (config && typeof config.y === 'number') ? config.y : 0;
+        
+        this.speed    = (config && typeof config.speed === 'number') ? config.speed : 1;
+
+        var heading   = (config && typeof config.heading === 'number') ? config.heading : 1.5 * Math.PI;
+
+        this.position = (config && typeof config.position === 'object' && config.position instanceof BB.Vector2) 
+                            ? config.position : new BB.Vector2(x, y);
+                            
+        this.velocity = (config && typeof config.velocity === 'object' && config.velocity instanceof BB.Vector2) 
+                            ? config.velocity : new BB.Vector2(0, 0);
+
+        this.acceleration = (config && typeof config.acceleration === 'object' && config.acceleration instanceof BB.Vector2) 
+                            ? config.acceleration : new BB.Vector2(0, 0);
+
+        this.mass     = (config && typeof config.mass === 'number') ? config.mass : 1;
+        this.radius   = (config && typeof config.radius === 'number') ? config.radius : 0;
+        this.friction = (config && typeof config.friction === 'number') ? config.friction : 1;
+        
+        // NOTE: should this really be here? This is making a strange assumption that gravity is pointing -y
+        // which is not actually how gravity works in physics.
+        this.gravity  = (config && typeof config.gravity === 'number') ? config.gravity : 0;
+
+        this.maxSpeed = (config && typeof config.maxSpeed === 'number') ? config.maxSpeed : 10;
+
+        this._springs      = [];
+        this._gravitations = []; // Array of BB.Vector2s
+
+        // console.log('this.position:', this.position);
+
+    };
+
+    BB.Particle2D.prototype.gravitate = function(vector2, mass) {
+
+        if (typeof vector2 !== 'object' || ! (vector2 instanceof BB.Vector2)) {
+            throw new Error('BB.Particle2D.gravitate: vector2 parameter must be present and an instance of BB.Vector2.');
+        }
+
+        if (typeof mass !== 'number') {
+            throw new Error('BB.Particle2D.gravitate: mass parameter must be present and a Number type.');
+        }
+
+        this._gravitations.push({
+            position: vector2,
+            mass: mass
+        });
+    };
+
+     BB.Particle2D.prototype.gravitateArray = function(array) {
+
+        if (typeof array === 'undefined' || ! (array instanceof Array)) {
+            throw new Error('BB.Particle2D.gravitateArray: array parameter must be present and an array of objects with position and mass properties.');
+        }
+
+        for (var i = 0; i < array.length; i++) {
+            
+            if (typeof array[i].position !== 'object' || ! (array[i].position instanceof BB.Vector2)) {
+                throw new Error('BB.Particle2D.gravitateArray: array element ' + i 
+                                + ' does not have a position property that is an instance of BB.Vector2.');
+            }
+
+            if (typeof array[i].mass !== 'number') {
+                throw new Error('BB.Particle2D.gravitateArray: array element ' + i 
+                                + ' does not have a mass property that is an instance of BB.Vector2.');
+            }
+
+            this._gravitations.push(array[i]);
+        }
+    };
+
+    BB.Particle2D.prototype.spring = function(vector2, k, length) {
+
+         if (typeof vector2 !== 'object' || ! (vector2 instanceof BB.Vector2)) {
+            throw new Error('BB.Particle2D.spring: vector2 parameter must be present and an instance of BB.Vector2.');
+        }
+
+        if (typeof k !== 'number') {
+            throw new Error('BB.Particle2D.spring: k parameter must be present and a Number type.');
+        }
+
+        if (typeof length !== 'undefined' && typeof length !== 'number') {
+            throw new Error('BB.Particle2D.spring: length parameter is present but is not a Number type.');
+        }
+
+        this._springs.push({
+            point: vector2,
+            k: k,
+            length: length || 0
+        });
+    };
+
+    Object.defineProperty(BB.Particle2D.prototype, 'speed', {
+        get: function() {
+            return Math.sqrt((this.velocity.x * this.velocity.x) + (this.velocity.y * this.velocity.y));
+        },
+        set: function(speed) {
+            var heading = this.heading;
+            this.velocity.set(Math.cos(heading) * speed, Math.sin(heading) * speed);
+        }
+    });
+
+    Object.defineProperty(BB.Particle2D.prototype, 'heading', {
+        get: function() {
+            return Math.atan2(this.velocity.y, this.velocity.x);
+        },
+        set: function(heading) {
+            var speed = this.speed;
+            this.velocity.set(Math.cos(heading) * speed, Math.sin(heading) * speed);
+        }
+    });
+
+    BB.Particle2D.prototype.update = function() {
+
+        var i = 0;
+
+        // for (; i < this._springs.length; i++) {
+            
+        // }
+
+        // apply gravitations
+        for (i = 0; i < this._gravitations.length; i++) {
+            
+            var g = this._gravitations[i];
+            // console.log('gravitation', i, ':', this._gravitations[i]);
+            var distance = g.position.distanceTo(this.position);
+            // console.log('distance:', distance);
+            var force = g.position.sub(this.position);
+            // console.log('force:', force);
+            force.setLength(g.mass / (distance * distance));
+            // console.log('force:', force);
+            this.applyForce(force);
+
+            // var dx = p2.x - this.x,
+            // dy = p2.y - this.y,
+            // distSQ = dx * dx + dy * dy,
+            // dist = Math.sqrt(distSQ),
+            // force = p2.mass / distSQ,
+            
+            // ax = dx / dist * force,
+            // ay = dy / dist * force;
+
+            // this.vx += ax;
+            // this.vy += ay;
+
+        }
+
+        // console.log('position: ', this.position.x, this.position.y);
+        // console.log('acceleration: ', this.acceleration.x, this.acceleration.y);
+        // console.log('velocity: ', this.velocity.x, this.velocity.y);
+        this.acceleration.multiplyScalar(this.friction);
+
+        //console.log('acceleration: ', this.acceleration.x, this.acceleration.y);
+        this.velocity.add(this.acceleration);
+        console.log(this.velocity);
+        // console.log('velocity: ', this.velocity.x, this.velocity.y);
+        this.velocity.setLength(this.maxSpeed);
+        // console.log('velocity: ', this.velocity.x, this.velocity.y);
+        this.position.add(this.velocity);
+        // console.log('position: ', this.position.x, this.position.y);
+        this.acceleration.multiplyScalar(0);
+        // console.log('acceleration: ', this.acceleration.x, this.acceleration.y);
+        // console.log('position: ', this.position.x, this.position.y);
+        // console.log();
+        // debugger;
+        
+        // debugger;
+
+        // this.vx *= this.friction;
+        // this.vy *= this.friction;
+        // this.vy += this.gravity;
+        // this.x += this.vx;
+        // this.y += this.vy;
+
+        this._gravitations = [];
+        this._springs = [];
+    };
+
+    BB.Particle2D.prototype.applyForce = function(force) {
+
+        if (typeof force !== 'object' || ! (force instanceof BB.Vector2)) {
+            throw new Error('BB.Particle2D.applyForce: force parameter must be present and an instance of BB.Vector2');
+        }
+
+        return this.acceleration.add(force.clone().divideScalar(this.mass));
+
+    };
+
+    return BB.Particle2D;
+});
+define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.ImageBrush2D','BB.LineBrush2D','BB.BrushManager2D','BB.MouseInput','BB.Pointer','BB.Vector2','BB.Particle2D'],function (require) {
 
   'use strict';
 
@@ -2953,6 +4031,10 @@ define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.Ima
   // inputs, etc...
   BB.MouseInput     = require('BB.MouseInput');
   BB.Pointer        = require('BB.Pointer');
+
+  // physics
+  BB.Vector2        = require('BB.Vector2');
+  BB.Particle2D     = require('BB.Particle2D');
 
   return BB;
 

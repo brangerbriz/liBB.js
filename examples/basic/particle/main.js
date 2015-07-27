@@ -25,16 +25,16 @@ function update() {
         createParticle(pointer.x, pointer.y, prevX, prevY);
     }
 
-    console.log('There are ' + particles.length + ' particles:');
-    console.log(particles);
+    // console.log('There are ' + particles.length + ' particles:');
+    
     for (var i = 0; i < particles.length; i++) {
         // particles[i].gravitateArray(particles);
         particles[i].update();
     }
 
-    if (typeof particles[0] !== 'undefined') {
-        console.log(particles[0].position);    
-    }
+    // if (typeof particles[0] !== 'undefined') {
+    //     console.log(particles[0].position);    
+    // }
     
     prevX = pointer.x;
     prevY = pointer.y;
@@ -60,11 +60,16 @@ function draw() {
 function createParticle(x, y, prevX, prevY) {
     
     var pos = new BB.Vector2(x, y);
+    var acc = (x == prevX && y == prevY) ? 
+        new BB.Vector2(BB.MathUtils.randomFloat(-1, 1),
+                       BB.MathUtils.randomFloat(-1, 1)) 
+        : pos.clone().sub(new BB.Vector2(prevX, prevY));
+ 
     particles.push(new BB.Particle2D({
         position: pos,
-        velocity: pos.clone().sub(new BB.Vector2(prevX, prevY)),
+        acceleration: acc,
         mass: BB.MathUtils.randomInt(10, 30),
-        maxSpeed: 1
+        maxSpeed: 2
     }));
 }
 
