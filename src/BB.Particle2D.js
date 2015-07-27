@@ -36,10 +36,6 @@ function(  BB,        Vector2){
         this.mass     = (config && typeof config.mass === 'number') ? config.mass : 1;
         this.radius   = (config && typeof config.radius === 'number') ? config.radius : 0;
         this.friction = (config && typeof config.friction === 'number') ? config.friction : 1;
-        
-        // NOTE: should this really be here? This is making a strange assumption that gravity is pointing -y
-        // which is not actually how gravity works in physics.
-        this.gravity  = (config && typeof config.gravity === 'number') ? config.gravity : 0;
 
         this.maxSpeed = (config && typeof config.maxSpeed === 'number') ? config.maxSpeed : 10;
 
@@ -81,7 +77,7 @@ function(  BB,        Vector2){
 
             if (typeof array[i].mass !== 'number') {
                 throw new Error('BB.Particle2D.gravitateArray: array element ' + i 
-                                + ' does not have a mass property that is an instance of BB.Vector2.');
+                                + ' does not have a mass property that is an instance of type Number.');
             }
 
             this._gravitations.push(array[i]);
@@ -90,7 +86,7 @@ function(  BB,        Vector2){
 
     BB.Particle2D.prototype.spring = function(vector2, k, length) {
 
-         if (typeof vector2 !== 'object' || ! (vector2 instanceof BB.Vector2)) {
+        if (typeof vector2 !== 'object' || ! (vector2 instanceof BB.Vector2)) {
             throw new Error('BB.Particle2D.spring: vector2 parameter must be present and an instance of BB.Vector2.');
         }
 
@@ -107,6 +103,38 @@ function(  BB,        Vector2){
             k: k,
             length: length || 0
         });
+    };
+
+    BB.Particle2D.prototype.springArray = function(array) {
+
+        if (typeof array === 'undefined' || ! (array instanceof Array)) {
+            throw new Error('BB.Particle2D.springArray: array parameter must '
+                + 'be present and an array of objects with position, k, and length properties.');
+        }
+
+        for (var i = 0; i < array.length; i++) {
+            
+            if (typeof array[i].position !== 'object' || ! (array[i].position instanceof BB.Vector2)) {
+                throw new Error('BB.Particle2D.springArray: array element ' + i 
+                                + ' does not have a position property that is an instance of BB.Vector2.');
+            }
+
+            if (typeof array[i].k !== 'number') {
+                throw new Error('BB.Particle2D.springArray: array element ' + i 
+                                + ' does not have a k property that is an instance of type Number.');
+            }
+
+            if (typeof array[i].length !== 'undefined' && typeof array[i].length !== 'number') {
+                throw new Error('BB.Particle2D.springArray: array element ' + i 
+                                + ' does not have a length property that is an instance of type Number.');
+            }
+
+            this._springs.push({
+                point: vector2,
+                k: k,
+                length: length || 0
+            });
+        }
     };
 
     Object.defineProperty(BB.Particle2D.prototype, 'speed', {
@@ -141,54 +169,34 @@ function(  BB,        Vector2){
         for (i = 0; i < this._gravitations.length; i++) {
             
             var g = this._gravitations[i];
-            // console.log('gravitation', i, ':', this._gravitations[i]);
-            var distance = g.position.distanceTo(this.position);
-            console.log('distance:', distance);
-            var force = g.position.sub(this.position);
-            // console.log('force:', force);
-            force.setLength(g.mass / (distance * distance));
-            // console.log('force:', force);
-            this.applyForce(force);
-
-            // var dx = p2.x - this.x,
-            // dy = p2.y - this.y,
-            // distSQ = dx * dx + dy * dy,
-            // dist = Math.sqrt(distSQ),
-            // force = p2.mass / distSQ,
+            // var distance = g.position.distanceTo(this.position);
+            // var force = g.position.clone().sub(this.position);
             
-            // ax = dx / dist * force,
-            // ay = dy / dist * force;
+            // force.setLength(g.mass / (distance * distance));
 
-            // this.vx += ax;
-            // this.vy += ay;
+            // this.applyForce(force);
 
+            var dx = g.position.x - this.position.x;
+            var dy = g.position.y - this.position.y;
+            var distSQ = dx * dx + dy * dy;
+            var dist = Math.sqrt(distSQ);
+            var force = g.mass / distSQ;
+            
+            var ax = dx / dist * force;
+            var ay = dy / dist * force;
+
+            this.acceleration.x += ax;
+            this.acceleration.y += ay;
+
+            // this.applyForce(new BB.Vector2(ax, ay));
         }
 
-        // console.log('position: ', this.position.x, this.position.y);
-        // console.log('acceleration: ', this.acceleration.x, this.acceleration.y);
-        // console.log('velocity: ', this.velocity.x, this.velocity.y);
         this.acceleration.multiplyScalar(this.friction);
 
-        //console.log('acceleration: ', this.acceleration.x, this.acceleration.y);
         this.velocity.add(this.acceleration);
-        // console.log('velocity: ', this.velocity.x, this.velocity.y);
         this.velocity.setLength(this.maxSpeed);
-        // console.log('velocity: ', this.velocity.x, this.velocity.y);
         this.position.add(this.velocity);
-        // console.log('position: ', this.position.x, this.position.y);
         this.acceleration.multiplyScalar(0);
-        // console.log('acceleration: ', this.acceleration.x, this.acceleration.y);
-        // console.log('position: ', this.position.x, this.position.y);
-        // console.log();
-        // debugger;
-        
-        // debugger;
-
-        // this.vx *= this.friction;
-        // this.vy *= this.friction;
-        // this.vy += this.gravity;
-        // this.x += this.vx;
-        // this.y += this.vy;
 
         this._gravitations = [];
         this._springs = [];
