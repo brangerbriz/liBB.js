@@ -20,7 +20,7 @@ function setup() {
     brushManager.trackPointers([pointer]);
 
     imageBrush = new BB.ImageBrush2D({
-        src: "flower.png",
+        src: "../../assets/images/flower.png",
         color: new BB.Color(255, 0, 0),
         width: 50,
         height: 50,
