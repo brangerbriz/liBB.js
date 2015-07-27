@@ -142,8 +142,7 @@ function(  BB,     MouseInput){
     };
 
     /**
-     * A method used to register "activestart", "activestop", "movestart", and
-     * "movestop" events.
+     * A method used to register "activestart", "activestop", "movestart", "movestop", and "move" events.
      * @method on
      * @param  {String}   eventName   The event to register callback to.
      * "activestart", "activestop", "movestart", and "movestop" are all valid
