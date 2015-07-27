@@ -3,7 +3,7 @@ var ctx        = canvas.getContext('2d');
 var mouseInput = new BB.MouseInput(canvas);
 var pointer    = new BB.Pointer(mouseInput);
 
-var prevX, prevY, particles = [];
+var prevX, prevY, color, particles = [];
 
 function setup() {
     
@@ -14,6 +14,9 @@ function setup() {
     
     window.onresize();
 
+    document.body.style.backgroundColor = "#000";
+
+    color = new BB.Color();
 }
 
 function update() {
@@ -25,16 +28,9 @@ function update() {
         createParticle(pointer.x, pointer.y, prevX, prevY);
     }
 
-    // console.log('There are ' + particles.length + ' particles:');
-    
     for (var i = 0; i < particles.length; i++) {
-        // particles[i].gravitateArray(particles);
         particles[i].update();
     }
-
-    // if (typeof particles[0] !== 'undefined') {
-    //     console.log(particles[0].position);    
-    // }
     
     prevX = pointer.x;
     prevY = pointer.y;
@@ -42,11 +38,10 @@ function update() {
 
 function draw() {
 
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    ctx.fillStyle = '#cc3399';
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);    
 
     for (var i = 0; i < particles.length; i++) {
-    
+        ctx.fillStyle = particles[i].color;
         ctx.beginPath();
         ctx.arc(particles[i].position.x, 
                 particles[i].position.y,
@@ -60,17 +55,22 @@ function draw() {
 function createParticle(x, y, prevX, prevY) {
     
     var pos = new BB.Vector2(x, y);
+
     var acc = (x == prevX && y == prevY) ? 
         new BB.Vector2(BB.MathUtils.randomFloat(-1, 1),
                        BB.MathUtils.randomFloat(-1, 1)) 
         : pos.clone().sub(new BB.Vector2(prevX, prevY));
  
-    particles.push(new BB.Particle2D({
+    var particle = new BB.Particle2D({
         position: pos,
         acceleration: acc,
         mass: BB.MathUtils.randomInt(10, 30),
         maxSpeed: 2
-    }));
+    });
+
+    color.shift(2);
+    particle.color = color.getRGB();
+    particles.push(particle);
 }
 
 setup();
