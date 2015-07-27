@@ -18,6 +18,10 @@ define(function (require) {
   BB.MouseInput     = require('BB.MouseInput');
   BB.Pointer        = require('BB.Pointer');
 
+  // physics
+  BB.Vector2        = require('BB.Vector2');
+  BB.Particle2D     = require('BB.Particle2D');
+
   return BB;
 
 });
