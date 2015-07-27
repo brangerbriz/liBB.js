@@ -42,17 +42,17 @@ function(  BB,        BrushManager2D,        Color){
          * The brush's width.
          * @property w
          * @type Number
-         * @default 50
+         * @default 10
          */
-        this.width    = (config && config.width && typeof config.width === 'number') ? config.width : 50;
+        this.width    = (config && config.width && typeof config.width === 'number') ? config.width : 10;
 
         /**
          * The brush's height.
          * @property height
          * @type Number
-         * @default 50
+         * @default 10
          */
-        this.height   = (config && config.height && typeof config.height === 'number') ? config.height : 50;
+        this.height   = (config && config.height && typeof config.height === 'number') ? config.height : 10;
 
         /**
          * The brush's rotation in degrees. This property is not always used with each brush variant.
