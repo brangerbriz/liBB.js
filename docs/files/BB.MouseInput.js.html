@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>BB.MouseInput.js - BBMod</title>
+        
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/prettify-nick.css">
+
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    
+    <script src="../assets/vendor/yui-min.js"></script>
+</head>
+<body>
+
+<div id="doc">
+    <div id="bd" class="main-body">
+
+        <div id="docs-sidebar" class="sidebar apidocs">
+            <div id="api-list">
+                <div id="api-tabview" class="tabview">
+                    <ul class="tabs">
+                        <li><a href="#api-classes">Classes</a></li>
+                        <!-- <li><a href="#api-modules">Modules</a></li> -->
+                    </ul>
+            
+                    <div id="api-tabview-filter">
+                        <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                    </div>
+            
+                    <div id="api-tabview-panel">
+                        <ul id="api-classes" class="apis classes">
+                            <li><a class="type" href="../classes/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
+                            <li><a class="type" href="../classes/BB.Color.html">BB.Color</a></li>
+                            <li><a class="type" href="../classes/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.MathUtils.html">BB.MathUtils</a></li>
+                            <li><a class="type" href="../classes/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="type" href="../classes/BB.Pointer.html">BB.Pointer</a></li>
+                            <li><a class="type" href="../classes/BB.Vector2.html">BB.Vector2</a></li>
+                        </ul>
+            
+                      <!--   <ul id="api-modules" class="apis modules">
+                            <li><a class="module" href="../modules/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
+                            <li><a class="module" href="../modules/BB.Color.html">BB.Color</a></li>
+                            <li><a class="module" href="../modules/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.MathUtils.html">BB.MathUtils</a></li>
+                            <li><a class="module" href="../modules/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="module" href="../modules/BB.Pointer.html">BB.Pointer</a></li>
+                            <li><a class="module" href="../modules/BB.Vector2.html">BB.Vector2</a></li>
+                        </ul> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="docs-main" class="apidocs">
+            <div class="content container">
+    <h1 class="file-heading">File: BB.MouseInput.js</h1>
+    
+    <div class="file">
+    <pre class="code prettyprint overflow">
+    /**
+     * A module for standardizing mouse events so that they may be used with
+     * the event funnel suite of modules. For use with HTML5 canvas only.
+     * @module BB.MouseInput
+     */
+    define([&#x27;./BB&#x27;], 
+    function(  BB){
+        
+        &#x27;use strict&#x27;;
+        
+        /**
+         * A module for standardizing mouse events so that they may be used with
+         * the event funnel suite of modules.
+         * @class  BB.MouseInput
+         * @constructor
+         * @param {HTMLCanvasElement} canvasElement The HTML5 canvas object listening for mouse input.
+         */
+        BB.MouseInput = function(canvasElement) {
+    
+            if (typeof canvasElement === &#x27;undefined&#x27; || 
+                !(canvasElement instanceof HTMLCanvasElement)) {
+                throw new Error(&#x27;BB.MouseInput: An HTML5 canvas object must be supplied as a first parameter.&#x27;);
+            }
+    
+            var self = this;
+            var movingTimeout = null;
+    
+            /**
+             * The current x position.
+             * @property x
+             * @type {Number}
+             * @default 0
+             */
+            this.x          = 0;
+    
+            /**
+             * The current y position.
+             * @property y
+             * @type {Number}
+             * @default 0
+             */
+            this.y          = 0;
+    
+            /**
+             * The last clicked x position.
+             * @property clickX
+             * @type {Number}
+             * @default 0
+             */
+            this.clickX     = 0;
+    
+            /**
+             * The last clicked y position.
+             * @property clickY
+             * @type {Number}
+             * @default 0
+             */
+            this.clickY     = 0;
+    
+            /**
+             * Time in milliseconds that the mouse has been still before considering it&#x27;s movement to be finished.
+             * @property moveDebounce
+             * @type {Number}
+             */
+            this.moveDebounce = 150;
+    
+            this._isMoving = false;
+            this._isDown = false;
+    
+            /**
+             * The HTML5 canvas element passed into BB.MouseInput during
+             * construction.
+             * @property canvasElem
+             * @type {Object}
+             */
+            this.canvasElem = canvasElement;
+    
+            this.canvasElem.addEventListener(&#x27;mousemove&#x27;, function(e) {
+    
+                var mouse = getCanvasMouseCoords(e);
+                self.x = mouse.x;
+                self.y = mouse.y;
+                    
+                if (!self.isMoving &amp;&amp; self.hasOwnProperty(&#x27;_moveStartCallback&#x27;) &amp;&amp;
+                    typeof self._moveStartCallback === &#x27;function&#x27;) {
+    
+                    self._moveStartCallback(self.x, self.y);
+                }
+            
+                self._isMoving = true;
+    
+                clearTimeout(movingTimeout);
+                movingTimeout = setTimeout(function(){
+    
+                    if (self.isMoving &amp;&amp;
+                        self.hasOwnProperty(&#x27;_moveStopCallback&#x27;) &amp;&amp;
+                        typeof self._moveStartCallback === &#x27;function&#x27;) {
+    
+                        self._isMoving = false;
+                        self._moveStopCallback(self.x, self.y);
+                    }
+                }, self.moveDebounce);
+            });
+    
+            this.canvasElem.addEventListener(&#x27;mousedown&#x27;, function(e){
+                
+                if (e.button === BB.MouseInput.LEFT_BUTTON) {
+    
+                    self._isDown = true;
+    
+                    if (self.hasOwnProperty(&#x27;_activeStartCallback&#x27;) &amp;&amp; 
+                        typeof self._activeStartCallback === &#x27;function&#x27;) {
+    
+                        self._activeStartCallback(self.x, self.y);
+                    }
+                }
+            });
+    
+            this.canvasElem.addEventListener(&#x27;mouseup&#x27;, function(e){
+    
+                if (e.button === BB.MouseInput.LEFT_BUTTON) {
+                    self._isDown = false;
+    
+                    if (self.hasOwnProperty(&#x27;_activeStopCallback&#x27;) &amp;&amp;
+                        typeof self._activeStopCallback === &#x27;function&#x27;) {
+    
+                        self._activeStopCallback(self.x, self.y);
+                    }
+                }
+            });
+    
+            this.canvasElem.addEventListener(&#x27;click&#x27;, function(e){
+    
+                var mouse = getCanvasMouseCoords(e);
+                self.clickX = mouse.x;
+                self.clickY = mouse.y;
+            });
+    
+            this.canvasElem.addEventListener(&#x27;mouseleave&#x27;, function() {
+    
+                if (self._isDown &amp;&amp; 
+                    self.hasOwnProperty(&#x27;_activeStopCallback&#x27;) &amp;&amp; 
+                    typeof self._activeStopCallback === &#x27;function&#x27;) {
+    
+                    self._activeStopCallback(self.x, self.y);
+                }
+    
+                if (self.isMoving &amp;&amp;
+                    self.hasOwnProperty(&#x27;_moveStopCallback&#x27;) &amp;&amp; 
+                    typeof self._moveStopCallback === &#x27;function&#x27;) {
+    
+                    self._moveStopCallback(self.x, self.y);
+                }
+    
+                self._isMoving = false;
+                self._isDown   = false;
+            });
+    
+            function getCanvasMouseCoords(e) {
+    
+                var rect = self.canvasElem.getBoundingClientRect();
+    
+                return {
+                    x: Math.round((e.clientX - rect.left) / (rect.right - rect.left) * self.canvasElem.width),
+                    y: Math.round((e.clientY - rect.top) / (rect.bottom - rect.top) * self.canvasElem.height)
+                };
+            }
+        };
+    
+        /**
+         * Utility property that hold&#x27;s the value of a JavaScript MouseEvent&#x27;s left mouse button.
+         * @property
+         * @static
+         * @type {Number}
+         * @default 0
+         * @readOnly
+         */
+        BB.MouseInput.LEFT_BUTTON   = 0;
+    
+        /**
+         * Utility property that hold&#x27;s the value of a JavaScript MouseEvent&#x27;s scroll wheel button.
+         * @property
+         * @static
+         * @type {Number}
+         * @default 1
+         * @readOnly
+         */
+        BB.MouseInput.SCROLL_BUTTON = 1;
+    
+        /**
+         * Utility property that hold&#x27;s the value of a JavaScript MouseEvent&#x27;s right mouse button.
+         * @property
+         * @static
+         * @type {Number}
+         * @default 2
+         * @readOnly
+         */
+        BB.MouseInput.RIGHT_BUTTON  = 2;
+    
+        /**
+         * Holds wether or not the mouse is currently moving. This property is read-only.
+         * @property isMoving
+         * @type {Boolean}
+         * @default false
+         * @readOnly
+         */
+        Object.defineProperty(BB.MouseInput.prototype, &#x27;isMoving&#x27;, {
+            get: function(){
+                return this._isMoving;
+            },
+            set: function(val){
+                throw new Error(&#x27;BB.MouseInput.isMoving (setter): BB.MouseInput.isMoving is a read-only property.&#x27;);
+            }
+        });
+    
+         /**
+         * Holds wether or not the left mouse button is currently depressed. This property is read-only.
+         * @property isDown
+         * @type {Boolean}
+         * @default false
+         * @readOnly
+         */
+        Object.defineProperty(BB.MouseInput.prototype, &#x27;isDown&#x27;, {
+            get: function(){
+                return this._isDown;
+            },
+            set: function(val){
+                throw new Error(&#x27;BB.MouseInput.isDown (setter): BB.MouseInput.isDown is a read-only property.&#x27;);
+            }
+        });
+    
+        BB.MouseInput.prototype.update = function() {
+    
+            if (this.isMoving &amp;&amp;
+                this.hasOwnProperty(&#x27;_moveCallback&#x27;) &amp;&amp;
+                typeof this._moveCallback === &#x27;function&#x27;) {
+                
+                this._moveCallback(this.x, this.y);
+            }
+        };
+    
+        return BB.MouseInput;
+    });
+    
+    </pre>
+    </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

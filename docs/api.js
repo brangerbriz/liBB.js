@@ -6,6 +6,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "BB.Color",
         "BB.ImageBrush2D",
         "BB.LineBrush2D",
+        "BB.MathUtils",
         "BB.MouseInput",
         "BB.Pointer",
         "BB.Vector2"

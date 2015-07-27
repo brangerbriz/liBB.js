@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/BB.MathUtils.js - BBMod</title>
+        
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/prettify-nick.css">
+
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    
+    <script src="../assets/vendor/yui-min.js"></script>
+</head>
+<body>
+
+<div id="doc">
+    <div id="bd" class="main-body">
+
+        <div id="docs-sidebar" class="sidebar apidocs">
+            <div id="api-list">
+                <div id="api-tabview" class="tabview">
+                    <ul class="tabs">
+                        <li><a href="#api-classes">Classes</a></li>
+                        <!-- <li><a href="#api-modules">Modules</a></li> -->
+                    </ul>
+            
+                    <div id="api-tabview-filter">
+                        <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                    </div>
+            
+                    <div id="api-tabview-panel">
+                        <ul id="api-classes" class="apis classes">
+                            <li><a class="type" href="../classes/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
+                            <li><a class="type" href="../classes/BB.Color.html">BB.Color</a></li>
+                            <li><a class="type" href="../classes/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.MathUtils.html">BB.MathUtils</a></li>
+                            <li><a class="type" href="../classes/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="type" href="../classes/BB.Pointer.html">BB.Pointer</a></li>
+                            <li><a class="type" href="../classes/BB.Vector2.html">BB.Vector2</a></li>
+                        </ul>
+            
+                      <!--   <ul id="api-modules" class="apis modules">
+                            <li><a class="module" href="../modules/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
+                            <li><a class="module" href="../modules/BB.Color.html">BB.Color</a></li>
+                            <li><a class="module" href="../modules/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.MathUtils.html">BB.MathUtils</a></li>
+                            <li><a class="module" href="../modules/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="module" href="../modules/BB.Pointer.html">BB.Pointer</a></li>
+                            <li><a class="module" href="../modules/BB.Vector2.html">BB.Vector2</a></li>
+                        </ul> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="docs-main" class="apidocs">
+            <div class="content container">
+    <h1 class="file-heading">File: src/BB.MathUtils.js</h1>
+    
+    <div class="file">
+    <pre class="code prettyprint overflow">
+    /**
+     * A static utilitites class for all things math.
+     * @module BB.MathUtils
+     * @class BB.MathUtils
+     * @static
+     */
+    define([&#x27;./BB&#x27;, &#x27;./BB.Vector2&#x27;], 
+    function(  BB,        Vector2){
+    
+        &#x27;use strict&#x27;;
+    
+        BB.Vector2 = Vector2;
+    
+        BB.MathUtils = function() {};
+    
+        /**
+         * Scales value using min and max. This is the inverse of BB.MathUtils.lerp(...).
+         * @method norm
+         * @static
+         * @param  {Number} value The value to be scaled.
+         * @param  {Number} min
+         * @param  {Number} max
+         * @return {Number}       Returns the scaled value.
+         */
+        BB.MathUtils.norm = function(value, min, max) {
+    
+            if (typeof value !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.norm: value is not a number type&quot;);
+            } else if (typeof min !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.norm: min is not a number type&quot;);
+            } else if (typeof max !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.norm: max is not a number type&quot;);
+            }
+    
+            return (value - min) / (max - min);
+        };
+    
+         /**
+         * Linear interpolate norm from min and max. This is the inverse of BB.MathUtils.norm(...).
+         * @method lerp
+         * @static
+         * @param  {Number} value
+         * @param  {Number} min
+         * @param  {Number} max
+         * @return {Number}       Returns the lerped norm.
+         */
+        BB.MathUtils.lerp = function(norm, min, max) {
+    
+            if (typeof norm !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.lerp: norm is not a number type&quot;);
+            } else if (typeof min !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.lerp: min is not a number type&quot;);
+            } else if (typeof max !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.lerp: max is not a number type&quot;);
+            }
+    
+            return (max - min) * norm + min;
+        };
+        /**
+         * Maps (scales) value between sourceMin and sourceMax to destMin and destMax.
+         * @method map
+         * @static
+         * @param  {Number} value The value to be mapped.
+         * @param  {Number} sourceMin 
+         * @param  {Number} sourceMax
+         * @param  {Number} destMin 
+         * @param  {Number} destMax
+         * @return {Number} Returns the mapped value.
+         */
+        BB.MathUtils.map = function(value, sourceMin, sourceMax, destMin, destMax) {
+    
+            if (typeof value !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.map: value is not a number type&quot;);
+            } else if (typeof sourceMin !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.map: sourceMin is not a number type&quot;);
+            } else if (typeof sourceMax !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.map: sourceMax is not a number type&quot;);
+            } else if (typeof destMin !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.map: destMin is not a number type&quot;);
+            } else if (typeof destMax !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.map: destMax is not a number type&quot;);
+            }
+    
+            return this.lerp(this.norm(value, sourceMin, sourceMax), destMin, destMax);
+        };
+        /**
+         * Get the distance between two points.
+         * @method  dist
+         * @static
+         * @param  {Number} p1x The x value of the first point.
+         * @param  {Number} p1y The y value of the first point.
+         * @param  {Number} p2x The x value of the second point.
+         * @param  {Number} p2y The y value of the second point.
+         * @return {Number} Returns the distance between (p1x, p1y) and (p2x, p2y).
+         */
+        BB.MathUtils.dist = function(p1x, p1y, p2x, p2y){
+            
+            if (typeof p1x !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.dist: p1x is not a number type&quot;);
+            } else if (typeof p1y !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.dist: p1y is not a number type&quot;);
+            } else if (typeof p2x !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.dist: p2x is not a number type&quot;);
+            } else if (typeof p2y !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.dist: p2y is not a number type&quot;);
+            }
+    
+            return Math.sqrt(Math.pow(p2x - p1x, 2) + Math.pow(p2y - p1y, 2));
+        };
+        /**
+         * Get the angle between two points in radians. For degrees process this
+         * return value through BB.MathUtils.radToDegree(...).
+         * @method angleBtwn
+         * @static
+         * @param  {Number} p1x The x value of the first point.
+         * @param  {Number} p1y The y value of the first point.
+         * @param  {Number} p2x The x value of the second point.
+         * @param  {Number} p2y The y value of the second point.
+         * @return {Number} Returns the angle between (p1x, p1y) and (p2x, p2y) in
+         * radians.
+         */
+        BB.MathUtils.angleBtw = function(p1x, p1y, p2x, p2y){
+    
+            if (typeof p1x !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.angleBtwn: p1x is not a number type&quot;);
+            } else if (typeof p1y !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.angleBtwn: p1y is not a number type&quot;);
+            } else if (typeof p2x !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.angleBtwn: p2x is not a number type&quot;);
+            } else if (typeof p2y !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.angleBtwn: p2y is not a number type&quot;);
+            }
+    
+            return Math.atan2( p2x - p1x, p2y - p1y );
+        };
+        /**
+         * Translate radians into degrees.
+         * @method  radToDeg
+         * @static
+         * @param  {[type]} radians
+         * @return {[type]}         Returns radians in degrees.
+         */
+        BB.MathUtils.radToDeg = function(radians) {
+    
+            if (typeof radians !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.radToDegree: radians is not a number type&quot;);
+            }
+    
+            return radians * (180.0 / Math.PI);
+        };
+        /**
+         * Translate degrees into radians.
+         * @method  degToRad
+         * @static
+         * @param  {[type]} degrees
+         * @return {[type]}         Returns degrees in radians.
+         */
+        BB.MathUtils.degToRad = function(degrees) {
+    
+            if (typeof degrees !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.degToRad: degrees is not a number type&quot;);
+            }
+    
+            return degrees * (Math.PI / 180.0);
+        };
+    
+        /**
+         * Translate from polar coordinates to cartesian coordinates.
+         * @method polarToCartesian
+         * @static
+         * @param  {Number} radius  The straight line distance from the origin.
+         * @param  {Number} degrees The angle in degrees measured clockwise from the
+         * positive x axis.
+         * @return {Array}         An array of length two where the first element is
+         * the x value and the second element is the y value.
+         */
+        BB.MathUtils.polarToCartesian = function(radius, degrees) {
+    
+            if (typeof radius !== &quot;number&quot; || typeof degrees !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.polarToCartesian: invalid arguments, function expects two Number type parameters.&quot;);
+            }
+    
+            return [ radius * Math.cos(degrees), radius * Math.sin(degrees) ];
+        };
+    
+        /**
+         * Translate from cartesian to polar coordinates.
+         * @method cartesianToPolar
+         * @static
+         * @param  {Number} x The x coordinate.
+         * @param  {Number} y The y coordinate.
+         * @return {Array}  An array of length two where the first element is the
+         * polar radius and the second element is the polar angle in degrees
+         * measured clockwise from the positive x axis.
+         */
+        BB.MathUtils.cartesianToPolar = function(x, y) {
+    
+            if (typeof x !== &quot;number&quot; || typeof y !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.cartesianToPolar: invalid arguments, function expects two Number type parameters.&quot;);
+            }
+    
+            return [ Math.sqrt((x * x) + (y * y)), Math.atan(y / x) ];
+        };
+    
+        BB.MathUtils.randomInt = function(min, max) {
+            return Math.floor(min + Math.random() * (max - min + 1));
+        };
+    
+        BB.MathUtils.randomFloat = function(min, max) {
+            return min + Math.random() * (max - min);
+        };
+    
+        return BB.MathUtils;
+    });
+    </pre>
+    </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

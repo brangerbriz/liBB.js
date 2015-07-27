@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>BB.MathUtils - BBMod</title>
+        
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/prettify-nick.css">
+
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    
+    <script src="../assets/vendor/yui-min.js"></script>
+</head>
+<body>
+
+<div id="doc">
+    <div id="bd" class="main-body">
+
+        <div id="docs-sidebar" class="sidebar apidocs">
+            <div id="api-list">
+                <div id="api-tabview" class="tabview">
+                    <ul class="tabs">
+                        <li><a href="#api-classes">Classes</a></li>
+                        <!-- <li><a href="#api-modules">Modules</a></li> -->
+                    </ul>
+            
+                    <div id="api-tabview-filter">
+                        <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                    </div>
+            
+                    <div id="api-tabview-panel">
+                        <ul id="api-classes" class="apis classes">
+                            <li><a class="type" href="../classes/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
+                            <li><a class="type" href="../classes/BB.Color.html">BB.Color</a></li>
+                            <li><a class="type" href="../classes/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.MathUtils.html">BB.MathUtils</a></li>
+                            <li><a class="type" href="../classes/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="type" href="../classes/BB.Pointer.html">BB.Pointer</a></li>
+                            <li><a class="type" href="../classes/BB.Vector2.html">BB.Vector2</a></li>
+                        </ul>
+            
+                      <!--   <ul id="api-modules" class="apis modules">
+                            <li><a class="module" href="../modules/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
+                            <li><a class="module" href="../modules/BB.Color.html">BB.Color</a></li>
+                            <li><a class="module" href="../modules/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.MathUtils.html">BB.MathUtils</a></li>
+                            <li><a class="module" href="../modules/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="module" href="../modules/BB.Pointer.html">BB.Pointer</a></li>
+                            <li><a class="module" href="../modules/BB.Vector2.html">BB.Vector2</a></li>
+                        </ul> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="docs-main" class="apidocs">
+            <div class="content container">
+    <h1>BB.MathUtils </h1>
+    <div class="box meta">
+    
+    
+            <div class="foundat">
+                Defined in: <a href="../files/src_BB.MathUtils.js.html#l1"><code>src&#x2F;BB.MathUtils.js:1</code></a>
+            </div>
+    
+    </div>
+    
+    
+    <div class="box intro">
+        <p>A static utilitites class for all things math.</p>
+    
+    </div>
+    
+    <!-- Class member index -->
+    
+    <a name="index" class="anchor-link"></a>
+    <div class="index">
+    <h2>Index</h2>
+    
+    <!--     <div id="api-options">
+            Show:
+            <label for="api-show-inherited">
+                <input type="checkbox" id="api-show-inherited" checked>
+                Inherited
+            </label>
+    
+            <label for="api-show-protected">
+                <input type="checkbox" id="api-show-protected">
+                Protected
+            </label>
+    
+            <label for="api-show-private">
+                <input type="checkbox" id="api-show-private">
+                Private
+            </label>
+            <label for="api-show-deprecated">
+                <input type="checkbox" id="api-show-deprecated">
+                Deprecated
+            </label>
+    
+        </div>
+    
+     -->
+    
+    
+    
+        <div class="index-section methods">
+            <h3>Methods</h3>
+    
+            <ul class="index-list methods">
+    
+    
+                    <li class="index-item method">
+                        <a href="#method_angleBtwn">angleBtwn</a>
+    
+                            <span class="flag static">static</span>
+                    </li>
+                    <li class="index-item method">
+                        <a href="#method_cartesianToPolar">cartesianToPolar</a>
+    
+                            <span class="flag static">static</span>
+                    </li>
+                    <li class="index-item method">
+                        <a href="#method_degToRad">degToRad</a>
+    
+                            <span class="flag static">static</span>
+                    </li>
+                    <li class="index-item method">
+                        <a href="#method_dist">dist</a>
+    
+                            <span class="flag static">static</span>
+                    </li>
+                    <li class="index-item method">
+                        <a href="#method_lerp">lerp</a>
+    
+                            <span class="flag static">static</span>
+                    </li>
+                    <li class="index-item method">
+                        <a href="#method_map">map</a>
+    
+                            <span class="flag static">static</span>
+                    </li>
+                    <li class="index-item method">
+                        <a href="#method_norm">norm</a>
+    
+                            <span class="flag static">static</span>
+                    </li>
+                    <li class="index-item method">
+                        <a href="#method_polarToCartesian">polarToCartesian</a>
+    
+                            <span class="flag static">static</span>
+                    </li>
+                    <li class="index-item method">
+                        <a href="#method_radToDeg">radToDeg</a>
+    
+                            <span class="flag static">static</span>
+                    </li>
+            </ul>
+        </div>
+    
+    </div>
+    
+    
+    <div class="class-detail">
+    
+    
+    
+    
+    
+        <div class="methods-detail">
+            <h2>Methods</h2>
+    
+                <a name="method_angleBtwn" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>angleBtwn</code>
+                
+                        <div class="args">
+                            <span class="paren">(</span><ul class="args-list inline commas">
+                                <li class="arg">
+                                        <code>p1x</code>
+                                </li>
+                                <li class="arg">
+                                        <code>p1y</code>
+                                </li>
+                                <li class="arg">
+                                        <code>p2x</code>
+                                </li>
+                                <li class="arg">
+                                        <code>p2y</code>
+                                </li>
+                            </ul><span class="paren">)</span>
+                        </div>
+                
+                        <span class="returns-inline">
+                            <span class="type">Number</span>
+                        </span>
+                
+                
+                
+                
+                        <span class="flag static">static</span>
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.MathUtils.js.html#l110"><code>src&#x2F;BB.MathUtils.js:110</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>Get the angle between two points in radians. For degrees process this
+                return value through BB.MathUtils.radToDegree(...).</p>
+                
+                        </div>
+                
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">p1x</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The x value of the first point.</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">p1y</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The y value of the first point.</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">p2x</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The x value of the second point.</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">p2y</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The y value of the second point.</p>
+                
+                                        </div>
+                
+                                    </li>
+                                </ul>
+                            </div>
+                
+                            <div class="returns">
+                                <h4>
+                                    Returns:
+                                        <span class="type">Number</span>
+                                </h4> 
+                
+                                <div class="returns-description">
+                                       
+                                        <p>Returns the angle between (p1x, p1y) and (p2x, p2y) in
+                radians.</p>
+                
+                                </div>
+                            </div>
+                
+                    </div>
+                </div>
+                <a name="method_cartesianToPolar" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>cartesianToPolar</code>
+                
+                        <div class="args">
+                            <span class="paren">(</span><ul class="args-list inline commas">
+                                <li class="arg">
+                                        <code>x</code>
+                                </li>
+                                <li class="arg">
+                                        <code>y</code>
+                                </li>
+                            </ul><span class="paren">)</span>
+                        </div>
+                
+                        <span class="returns-inline">
+                            <span class="type">Array</span>
+                        </span>
+                
+                
+                
+                
+                        <span class="flag static">static</span>
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.MathUtils.js.html#l186"><code>src&#x2F;BB.MathUtils.js:186</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>Translate from cartesian to polar coordinates.</p>
+                
+                        </div>
+                
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">x</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The x coordinate.</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">y</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The y coordinate.</p>
+                
+                                        </div>
+                
+                                    </li>
+                                </ul>
+                            </div>
+                
+                            <div class="returns">
+                                <h4>
+                                    Returns:
+                                        <span class="type">Array</span>
+                                </h4> 
+                
+                                <div class="returns-description">
+                                       
+                                        <p>An array of length two where the first element is the
+                polar radius and the second element is the polar angle in degrees
+                measured clockwise from the positive x axis.</p>
+                
+                                </div>
+                            </div>
+                
+                    </div>
+                </div>
+                <a name="method_degToRad" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>degToRad</code>
+                
+                        <div class="args">
+                            <span class="paren">(</span><ul class="args-list inline commas">
+                                <li class="arg">
+                                        <code>degrees</code>
+                                </li>
+                            </ul><span class="paren">)</span>
+                        </div>
+                
+                        <span class="returns-inline">
+                            <span class="type">type</span>
+                        </span>
+                
+                
+                
+                
+                        <span class="flag static">static</span>
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.MathUtils.js.html#l151"><code>src&#x2F;BB.MathUtils.js:151</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>Translate degrees into radians.</p>
+                
+                        </div>
+                
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">degrees</code>
+                                            <span class="type">type</span>
+                
+                
+                                        <div class="param-description">
+                                             
+                                        </div>
+                
+                                    </li>
+                                </ul>
+                            </div>
+                
+                            <div class="returns">
+                                <h4>
+                                    Returns:
+                                        <span class="type">type</span>
+                                </h4> 
+                
+                                <div class="returns-description">
+                                       
+                                        <p>Returns degrees in radians.</p>
+                
+                                </div>
+                            </div>
+                
+                    </div>
+                </div>
+                <a name="method_dist" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>dist</code>
+                
+                        <div class="args">
+                            <span class="paren">(</span><ul class="args-list inline commas">
+                                <li class="arg">
+                                        <code>p1x</code>
+                                </li>
+                                <li class="arg">
+                                        <code>p1y</code>
+                                </li>
+                                <li class="arg">
+                                        <code>p2x</code>
+                                </li>
+                                <li class="arg">
+                                        <code>p2y</code>
+                                </li>
+                            </ul><span class="paren">)</span>
+                        </div>
+                
+                        <span class="returns-inline">
+                            <span class="type">Number</span>
+                        </span>
+                
+                
+                
+                
+                        <span class="flag static">static</span>
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.MathUtils.js.html#l86"><code>src&#x2F;BB.MathUtils.js:86</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>Get the distance between two points.</p>
+                
+                        </div>
+                
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">p1x</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The x value of the first point.</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">p1y</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The y value of the first point.</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">p2x</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The x value of the second point.</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">p2y</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The y value of the second point.</p>
+                
+                                        </div>
+                
+                                    </li>
+                                </ul>
+                            </div>
+                
+                            <div class="returns">
+                                <h4>
+                                    Returns:
+                                        <span class="type">Number</span>
+                                </h4> 
+                
+                                <div class="returns-description">
+                                       
+                                        <p>Returns the distance between (p1x, p1y) and (p2x, p2y).</p>
+                
+                                </div>
+                            </div>
+                
+                    </div>
+                </div>
+                <a name="method_lerp" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>lerp</code>
+                
+                        <div class="args">
+                            <span class="paren">(</span><ul class="args-list inline commas">
+                                <li class="arg">
+                                        <code>value</code>
+                                </li>
+                                <li class="arg">
+                                        <code>min</code>
+                                </li>
+                                <li class="arg">
+                                        <code>max</code>
+                                </li>
+                            </ul><span class="paren">)</span>
+                        </div>
+                
+                        <span class="returns-inline">
+                            <span class="type">Number</span>
+                        </span>
+                
+                
+                
+                
+                        <span class="flag static">static</span>
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.MathUtils.js.html#l38"><code>src&#x2F;BB.MathUtils.js:38</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>Linear interpolate norm from min and max. This is the inverse of BB.MathUtils.norm(...).</p>
+                
+                        </div>
+                
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">value</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                             
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">min</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                             
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">max</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                             
+                                        </div>
+                
+                                    </li>
+                                </ul>
+                            </div>
+                
+                            <div class="returns">
+                                <h4>
+                                    Returns:
+                                        <span class="type">Number</span>
+                                </h4> 
+                
+                                <div class="returns-description">
+                                       
+                                        <p>Returns the lerped norm.</p>
+                
+                                </div>
+                            </div>
+                
+                    </div>
+                </div>
+                <a name="method_map" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>map</code>
+                
+                        <div class="args">
+                            <span class="paren">(</span><ul class="args-list inline commas">
+                                <li class="arg">
+                                        <code>value</code>
+                                </li>
+                                <li class="arg">
+                                        <code>sourceMin</code>
+                                </li>
+                                <li class="arg">
+                                        <code>sourceMax</code>
+                                </li>
+                                <li class="arg">
+                                        <code>destMin</code>
+                                </li>
+                                <li class="arg">
+                                        <code>destMax</code>
+                                </li>
+                            </ul><span class="paren">)</span>
+                        </div>
+                
+                        <span class="returns-inline">
+                            <span class="type">Number</span>
+                        </span>
+                
+                
+                
+                
+                        <span class="flag static">static</span>
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.MathUtils.js.html#l59"><code>src&#x2F;BB.MathUtils.js:59</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>Maps (scales) value between sourceMin and sourceMax to destMin and destMax.</p>
+                
+                        </div>
+                
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">value</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The value to be mapped.</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">sourceMin</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                             
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">sourceMax</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                             
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">destMin</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                             
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">destMax</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                             
+                                        </div>
+                
+                                    </li>
+                                </ul>
+                            </div>
+                
+                            <div class="returns">
+                                <h4>
+                                    Returns:
+                                        <span class="type">Number</span>
+                                </h4> 
+                
+                                <div class="returns-description">
+                                       
+                                        <p>Returns the mapped value.</p>
+                
+                                </div>
+                            </div>
+                
+                    </div>
+                </div>
+                <a name="method_norm" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>norm</code>
+                
+                        <div class="args">
+                            <span class="paren">(</span><ul class="args-list inline commas">
+                                <li class="arg">
+                                        <code>value</code>
+                                </li>
+                                <li class="arg">
+                                        <code>min</code>
+                                </li>
+                                <li class="arg">
+                                        <code>max</code>
+                                </li>
+                            </ul><span class="paren">)</span>
+                        </div>
+                
+                        <span class="returns-inline">
+                            <span class="type">Number</span>
+                        </span>
+                
+                
+                
+                
+                        <span class="flag static">static</span>
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.MathUtils.js.html#l16"><code>src&#x2F;BB.MathUtils.js:16</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>Scales value using min and max. This is the inverse of BB.MathUtils.lerp(...).</p>
+                
+                        </div>
+                
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">value</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The value to be scaled.</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">min</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                             
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">max</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                             
+                                        </div>
+                
+                                    </li>
+                                </ul>
+                            </div>
+                
+                            <div class="returns">
+                                <h4>
+                                    Returns:
+                                        <span class="type">Number</span>
+                                </h4> 
+                
+                                <div class="returns-description">
+                                       
+                                        <p>Returns the scaled value.</p>
+                
+                                </div>
+                            </div>
+                
+                    </div>
+                </div>
+                <a name="method_polarToCartesian" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>polarToCartesian</code>
+                
+                        <div class="args">
+                            <span class="paren">(</span><ul class="args-list inline commas">
+                                <li class="arg">
+                                        <code>radius</code>
+                                </li>
+                                <li class="arg">
+                                        <code>degrees</code>
+                                </li>
+                            </ul><span class="paren">)</span>
+                        </div>
+                
+                        <span class="returns-inline">
+                            <span class="type">Array</span>
+                        </span>
+                
+                
+                
+                
+                        <span class="flag static">static</span>
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.MathUtils.js.html#l167"><code>src&#x2F;BB.MathUtils.js:167</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>Translate from polar coordinates to cartesian coordinates.</p>
+                
+                        </div>
+                
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">radius</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The straight line distance from the origin.</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">degrees</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The angle in degrees measured clockwise from the
+                positive x axis.</p>
+                
+                                        </div>
+                
+                                    </li>
+                                </ul>
+                            </div>
+                
+                            <div class="returns">
+                                <h4>
+                                    Returns:
+                                        <span class="type">Array</span>
+                                </h4> 
+                
+                                <div class="returns-description">
+                                       
+                                        <p>An array of length two where the first element is
+                the x value and the second element is the y value.</p>
+                
+                                </div>
+                            </div>
+                
+                    </div>
+                </div>
+                <a name="method_radToDeg" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>radToDeg</code>
+                
+                        <div class="args">
+                            <span class="paren">(</span><ul class="args-list inline commas">
+                                <li class="arg">
+                                        <code>radians</code>
+                                </li>
+                            </ul><span class="paren">)</span>
+                        </div>
+                
+                        <span class="returns-inline">
+                            <span class="type">type</span>
+                        </span>
+                
+                
+                
+                
+                        <span class="flag static">static</span>
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.MathUtils.js.html#l136"><code>src&#x2F;BB.MathUtils.js:136</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>Translate radians into degrees.</p>
+                
+                        </div>
+                
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">radians</code>
+                                            <span class="type">type</span>
+                
+                
+                                        <div class="param-description">
+                                             
+                                        </div>
+                
+                                    </li>
+                                </ul>
+                            </div>
+                
+                            <div class="returns">
+                                <h4>
+                                    Returns:
+                                        <span class="type">type</span>
+                                </h4> 
+                
+                                <div class="returns-description">
+                                       
+                                        <p>Returns radians in degrees.</p>
+                
+                                </div>
+                            </div>
+                
+                    </div>
+                </div>
+    
+            <div class="no-visible-items-message">
+                <p>There are no methods that match your current filter settings. You can change your filter settings in the index section on this page. <a href="#index">index</a></p>
+            </div>
+    
+        </div>
+    
+    
+    </div>
+    
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
