@@ -4,11 +4,12 @@
  * @class BB.MathUtils
  * @static
  */
-define(['./BB'], 
-function(  BB){
+define(['./BB', './BB.Vector2'], 
+function(  BB,        Vector2){
 
     'use strict';
 
+    BB.Vector2 = Vector2;
 
     BB.MathUtils = function() {};
 
@@ -54,6 +55,27 @@ function(  BB){
         }
 
         return (max - min) * norm + min;
+    };
+    /**
+     * Constrains value using min and max as the upper and lower bounds.
+     * @method clamp
+     * @static
+     * @param  {Number} value The value to be clamped.
+     * @param  {Number} min   The lower limit to clamp value by.
+     * @param  {Number} max   The upper limit to clamp value by.
+     * @return {Number}       The clamped value.
+     */
+    BB.MathUtils.clamp = function(value, min, max) {
+
+        if (typeof value !== "number") {
+            throw new Error("BB.MathUtils.clamp: norm is not a number type");
+        } else if (typeof min !== "number") {
+            throw new Error("BB.MathUtils.clamp: min is not a number type");
+        } else if (typeof max !== "number") {
+            throw new Error("BB.MathUtils.clamp: max is not a number type");
+        }
+
+        return Math.max(min, Math.min(max, value));
     };
     /**
      * Maps (scales) value between sourceMin and sourceMax to destMin and destMax.
@@ -161,6 +183,52 @@ function(  BB){
         }
 
         return degrees * (Math.PI / 180.0);
+    };
+
+    /**
+     * Translate from polar coordinates to cartesian coordinates.
+     * @method polarToCartesian
+     * @static
+     * @param  {Number} radius  The straight line distance from the origin.
+     * @param  {Number} degrees The angle in degrees measured clockwise from the
+     * positive x axis.
+     * @return {Array}         An array of length two where the first element is
+     * the x value and the second element is the y value.
+     */
+    BB.MathUtils.polarToCartesian = function(radius, degrees) {
+
+        if (typeof radius !== "number" || typeof degrees !== "number") {
+            throw new Error("BB.MathUtils.polarToCartesian: invalid arguments, function expects two Number type parameters.");
+        }
+
+        return [ radius * Math.cos(degrees), radius * Math.sin(degrees) ];
+    };
+
+    /**
+     * Translate from cartesian to polar coordinates.
+     * @method cartesianToPolar
+     * @static
+     * @param  {Number} x The x coordinate.
+     * @param  {Number} y The y coordinate.
+     * @return {Array}  An array of length two where the first element is the
+     * polar radius and the second element is the polar angle in degrees
+     * measured clockwise from the positive x axis.
+     */
+    BB.MathUtils.cartesianToPolar = function(x, y) {
+
+        if (typeof x !== "number" || typeof y !== "number") {
+            throw new Error("BB.MathUtils.cartesianToPolar: invalid arguments, function expects two Number type parameters.");
+        }
+
+        return [ Math.sqrt((x * x) + (y * y)), Math.atan(y / x) ];
+    };
+
+    BB.MathUtils.randomInt = function(min, max) {
+        return Math.floor(min + Math.random() * (max - min + 1));
+    };
+
+    BB.MathUtils.randomFloat = function(min, max) {
+        return min + Math.random() * (max - min);
     };
 
     return BB.MathUtils;
