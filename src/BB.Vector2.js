@@ -336,22 +336,20 @@
 // our library.
 
 define(['./BB'],
-function(  THREE) { 
-//NOTE: importing BB core as THREE (just a name) so that Three.js' Vector2 class code
-//can be copied and pasted below when it is updated.
+function(  BB) { 
 
     'use strict';
 
-    THREE.Vector2 = function ( x, y ) {
+    BB.Vector2 = function ( x, y ) {
 
         this.x = x || 0;
         this.y = y || 0;
 
     };
 
-    THREE.Vector2.prototype = {
+    BB.Vector2.prototype = {
 
-        constructor: THREE.Vector2,
+        constructor: BB.Vector2,
 
         set: function ( x, y ) {
 
@@ -447,7 +445,6 @@ function(  THREE) {
 
             if ( w !== undefined ) {
 
-                // THREE.warn( 'THREE.Vector2: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.' );
                 return this.subVectors( v, w );
 
             }
@@ -595,8 +592,8 @@ function(  THREE) {
 
                 if ( min === undefined ) {
 
-                    min = new THREE.Vector2();
-                    max = new THREE.Vector2();
+                    min = new BB.Vector2();
+                    max = new BB.Vector2();
 
                 }
 
@@ -766,10 +763,10 @@ function(  THREE) {
 
         clone: function () {
 
-            return new THREE.Vector2( this.x, this.y );
+            return new BB.Vector2( this.x, this.y );
 
         }
     };
 
-    return THREE.Vector2;
+    return BB.Vector2;
 });
