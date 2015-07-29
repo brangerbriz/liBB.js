@@ -19,7 +19,7 @@ function(  BB,        Vector2){
         var x = (config && typeof config.x === 'number') ? config.x : 0;
         var y = (config && typeof config.y === 'number') ? config.y : 0;
         
-        this.speed    = (config && typeof config.speed === 'number') ? config.speed : 1;
+        // this.speed    = (config && typeof config.speed === 'number') ? config.speed : 0;
 
         var heading   = (config && typeof config.heading === 'number') ? config.heading : 1.5 * Math.PI;
 
@@ -45,6 +45,16 @@ function(  BB,        Vector2){
         // console.log('this.position:', this.position);
 
     };
+
+    Object.defineProperty(BB.Particle2D.prototype, 'heading', {
+        get: function() {
+            return Math.atan2(this.velocity.y, this.velocity.x);
+        },
+        set: function(heading) {
+            var speed = this.velocity.getLength();
+            this.velocity.set(Math.cos(heading) * speed, Math.sin(heading) * speed);
+        }
+    });
 
     BB.Particle2D.prototype.gravitate = function(vector2, mass) {
 
@@ -137,25 +147,17 @@ function(  BB,        Vector2){
         }
     };
 
-    Object.defineProperty(BB.Particle2D.prototype, 'speed', {
-        get: function() {
-            return Math.sqrt((this.velocity.x * this.velocity.x) + (this.velocity.y * this.velocity.y));
-        },
-        set: function(speed) {
-            var heading = this.heading;
-            this.velocity.set(Math.cos(heading) * speed, Math.sin(heading) * speed);
-        }
-    });
-
-    Object.defineProperty(BB.Particle2D.prototype, 'heading', {
-        get: function() {
-            return Math.atan2(this.velocity.y, this.velocity.x);
-        },
-        set: function(heading) {
-            var speed = this.speed;
-            this.velocity.set(Math.cos(heading) * speed, Math.sin(heading) * speed);
-        }
-    });
+    // Object.defineProperty(BB.Particle2D.prototype, 'speed', {
+    //     get: function() {
+    //         return this.velocity.length();
+    //          // Math.sqrt((this.velocity.x * this.velocity.x) + (this.velocity.y * this.velocity.y));
+    //     },
+    //     set: function(speed) {
+    //         // var heading = this.heading;
+    //         // this.velocity.set(Math.cos(heading) * speed, Math.sin(heading) * speed);
+    //         this.velocity.setLength(speed);
+    //     }
+    // });
 
     BB.Particle2D.prototype.update = function() {
 
@@ -176,24 +178,63 @@ function(  BB,        Vector2){
 
             // this.applyForce(force);
 
-            var dx = g.position.x - this.position.x;
-            var dy = g.position.y - this.position.y;
-            var distSQ = dx * dx + dy * dy;
-            var dist = Math.sqrt(distSQ);
-            var force = g.mass / distSQ;
+            // var dx = g.position.x - this.position.x;
+            // var dy = g.position.y - this.position.y;
+            // var distSQ = dx * dx + dy * dy;
+            // var dist = Math.sqrt(distSQ);
+            // var force = g.mass / distSQ;
             
-            var ax = dx / dist * force;
-            var ay = dy / dist * force;
+            // var ax = dx / dist * force;
+            // var ay = dy / dist * force;
 
-            this.acceleration.x += ax;
-            this.acceleration.y += ay;
+            // if (flag) {
+            //     this.acceleration.x += ax;
+            //     this.acceleration.y += ay;
+            // } else {
+            //     this.applyForce(new BB.Vector2(ax, ay));
+            // }
+            
 
-            // this.applyForce(new BB.Vector2(ax, ay));
+                // Calculate direction of force
+                var force = this.position.clone().sub(g.position);
+        
+                // Distance between objects       
+                var distance = force.length();
+                
+                // Limiting the distance to eliminate "extreme" results for very close or very far objects                            
+                distance = BB.MathUtils.clamp(distance, 5, 25);
+                
+                // Normalize vector (distance doesn't matter here, we just want this vector for direction)                                  
+                force.normalize();
+                
+                // Calculate gravitional force magnitude  
+                var strength = (/*this.G * */this.mass * g.mass) / (distance * distance);
+                
+                // Get force vector --> magnitude * direction
+                force.multiplyScalar(strength);
+                // force.negate(); // attract instead
+
+                // this.applyForce(force);
+
+                this.acceleration.x += force.x; //ax;
+                this.acceleration.y += force.y; //ay;
+            // 
         }
 
         this.acceleration.multiplyScalar(this.friction);
 
+        // if (this.acceleration.x !== 0 && this.acceleration.y !== 0) {
+
+        //     console.log("velocity before:", this.velocity);
+        // }
+
         this.velocity.add(this.acceleration);
+        
+        // if (this.acceleration.x !== 0 && this.acceleration.y !== 0) {
+        //     console.log('acceleration:', this.acceleration);
+        //     console.log("velocity after:", this.velocity);
+        // }
+
         this.velocity.setLength(this.maxSpeed);
         this.position.add(this.velocity);
         this.acceleration.multiplyScalar(0);
