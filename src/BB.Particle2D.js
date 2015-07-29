@@ -37,8 +37,6 @@ function(  BB,        Vector2){
         this.radius   = (config && typeof config.radius === 'number') ? config.radius : 0;
         this.friction = (config && typeof config.friction === 'number') ? config.friction : 1;
 
-        this.maxSpeed = (config && typeof config.maxSpeed === 'number') ? config.maxSpeed : 10;
-
         this._springs      = [];
         this._gravitations = []; // Array of BB.Vector2s
 
@@ -168,79 +166,37 @@ function(  BB,        Vector2){
         // }
 
         // apply gravitations
+        var accVector = new BB.Vector2();
         for (i = 0; i < this._gravitations.length; i++) {
             
             var g = this._gravitations[i];
-            // var distance = g.position.distanceTo(this.position);
-            // var force = g.position.clone().sub(this.position);
-            
-            // force.setLength(g.mass / (distance * distance));
+            var dx = g.position.x - this.position.x,
+                dy = g.position.y - this.position.y,
+                distSQ = dx * dx + dy * dy,
+                dist = Math.sqrt(distSQ),
+                force = g.mass / distSQ,
+                ax = dx / dist * force,
+                ay = dy / dist * force;
 
-            // this.applyForce(force);
+            // this.velocity.x += ax;
+            // this.velocity.y += ay; 
+            accVector.set( ax, ay );
+            this.applyForce( accVector );
+            // this.acceleration.add( new BB.Vector2(ax,ay) );
 
-            // var dx = g.position.x - this.position.x;
-            // var dy = g.position.y - this.position.y;
-            // var distSQ = dx * dx + dy * dy;
-            // var dist = Math.sqrt(distSQ);
-            // var force = g.mass / distSQ;
-            
-            // var ax = dx / dist * force;
-            // var ay = dy / dist * force;
-
-            // if (flag) {
-            //     this.acceleration.x += ax;
-            //     this.acceleration.y += ay;
-            // } else {
-            //     this.applyForce(new BB.Vector2(ax, ay));
-            // }
-            
-
-                // Calculate direction of force
-                var force = this.position.clone().sub(g.position);
-        
-                // Distance between objects       
-                var distance = force.length();
-                
-                // Limiting the distance to eliminate "extreme" results for very close or very far objects                            
-                distance = BB.MathUtils.clamp(distance, 5, 25);
-                
-                // Normalize vector (distance doesn't matter here, we just want this vector for direction)                                  
-                force.normalize();
-                
-                // Calculate gravitional force magnitude  
-                var strength = (/*this.G * */this.mass * g.mass) / (distance * distance);
-                
-                // Get force vector --> magnitude * direction
-                force.multiplyScalar(strength);
-                // force.negate(); // attract instead
-
-                // this.applyForce(force);
-
-                this.acceleration.x += force.x; //ax;
-                this.acceleration.y += force.y; //ay;
-            // 
         }
 
         this.acceleration.multiplyScalar(this.friction);
-
-        // if (this.acceleration.x !== 0 && this.acceleration.y !== 0) {
-
-        //     console.log("velocity before:", this.velocity);
-        // }
-
+       
         this.velocity.add(this.acceleration);
-        
-        // if (this.acceleration.x !== 0 && this.acceleration.y !== 0) {
-        //     console.log('acceleration:', this.acceleration);
-        //     console.log("velocity after:", this.velocity);
-        // }
 
-        this.velocity.setLength(this.maxSpeed);
         this.position.add(this.velocity);
+
         this.acceleration.multiplyScalar(0);
 
         this._gravitations = [];
         this._springs = [];
+        
     };
 
     BB.Particle2D.prototype.applyForce = function(force) {
@@ -250,6 +206,7 @@ function(  BB,        Vector2){
         }
 
         return this.acceleration.add(force.clone().divideScalar(this.mass));
+        // return this.acceleration.add( force );
 
     };
 
