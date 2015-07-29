@@ -64,7 +64,7 @@
     <h1 class="file-heading">File: src/BB.Vector2.js</h1>
     
     <div class="file">
-    <pre class="code prettyprint overflow">
+    <pre class="code prettyprint overflow linenums">
     // This class is a direct copy of the Three.js Vector2 class
     // from March 14, 2015 @ 1f97cfaa5d931ae34229ff8fa9c632e99a3b8249
     
@@ -403,22 +403,20 @@
     // our library.
     
     define([&#x27;./BB&#x27;],
-    function(  THREE) { 
-    //NOTE: importing BB core as THREE (just a name) so that Three.js&#x27; Vector2 class code
-    //can be copied and pasted below when it is updated.
+    function(  BB) { 
     
         &#x27;use strict&#x27;;
     
-        THREE.Vector2 = function ( x, y ) {
+        BB.Vector2 = function ( x, y ) {
     
             this.x = x || 0;
             this.y = y || 0;
     
         };
     
-        THREE.Vector2.prototype = {
+        BB.Vector2.prototype = {
     
-            constructor: THREE.Vector2,
+            constructor: BB.Vector2,
     
             set: function ( x, y ) {
     
@@ -514,7 +512,6 @@
     
                 if ( w !== undefined ) {
     
-                    // THREE.warn( &#x27;THREE.Vector2: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.&#x27; );
                     return this.subVectors( v, w );
     
                 }
@@ -662,8 +659,8 @@
     
                     if ( min === undefined ) {
     
-                        min = new THREE.Vector2();
-                        max = new THREE.Vector2();
+                        min = new BB.Vector2();
+                        max = new BB.Vector2();
     
                     }
     
@@ -833,12 +830,12 @@
     
             clone: function () {
     
-                return new THREE.Vector2( this.x, this.y );
+                return new BB.Vector2( this.x, this.y );
     
             }
         };
     
-        return THREE.Vector2;
+        return BB.Vector2;
     });
     </pre>
     </div>

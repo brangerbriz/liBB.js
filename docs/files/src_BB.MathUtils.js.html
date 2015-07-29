@@ -64,7 +64,7 @@
     <h1 class="file-heading">File: src/BB.MathUtils.js</h1>
     
     <div class="file">
-    <pre class="code prettyprint overflow">
+    <pre class="code prettyprint overflow linenums">
     /**
      * A static utilitites class for all things math.
      * @module BB.MathUtils
@@ -122,6 +122,27 @@
             }
     
             return (max - min) * norm + min;
+        };
+        /**
+         * Constrains value using min and max as the upper and lower bounds.
+         * @method clamp
+         * @static
+         * @param  {Number} value The value to be clamped.
+         * @param  {Number} min   The lower limit to clamp value by.
+         * @param  {Number} max   The upper limit to clamp value by.
+         * @return {Number}       The clamped value.
+         */
+        BB.MathUtils.clamp = function(value, min, max) {
+    
+            if (typeof value !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.clamp: norm is not a number type&quot;);
+            } else if (typeof min !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.clamp: min is not a number type&quot;);
+            } else if (typeof max !== &quot;number&quot;) {
+                throw new Error(&quot;BB.MathUtils.clamp: max is not a number type&quot;);
+            }
+    
+            return Math.max(min, Math.min(max, value));
         };
         /**
          * Maps (scales) value between sourceMin and sourceMax to destMin and destMax.

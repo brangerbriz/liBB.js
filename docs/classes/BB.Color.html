@@ -73,7 +73,7 @@
     
     
     <div class="box intro">
-        <p>A module for creating color objects and doing color maths</p>
+        <p>A module for creating color objects, color schemes and doing color maths</p>
     
     </div>
     
@@ -113,27 +113,39 @@
     
             <ul class="index-list properties">
                     <li class="index-item property">
-                        <a href="#property_a">a</a>
+                        <a href="#property_a (alpha)">a (alpha)</a>
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_b">b</a>
+                        <a href="#property_b (blue)">b (blue)</a>
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_g">g</a>
+                        <a href="#property_g (green)">g (green)</a>
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_h">h</a>
+                        <a href="#property_h (hue)">h (hue)</a>
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_r">r</a>
+                        <a href="#property_hex">hex</a>
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_s">s</a>
+                        <a href="#property_r (red)">r (red)</a>
+    
+                    </li>
+                    <li class="index-item property">
+                        <a href="#property_rgb">rgb</a>
+    
+                    </li>
+                    <li class="index-item property">
+                        <a href="#property_rgba">rgba</a>
+    
+                    </li>
+                    <li class="index-item property">
+                        <a href="#property_s (saturatoin)">s (saturatoin)</a>
     
                     </li>
                     <li class="index-item property">
@@ -141,7 +153,7 @@
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_v">v</a>
+                        <a href="#property_v (value)">v (value)</a>
     
                     </li>
             </ul>
@@ -170,18 +182,6 @@
                     </li>
                     <li class="index-item method">
                         <a href="#method_createScheme">createScheme</a>
-    
-                    </li>
-                    <li class="index-item method">
-                        <a href="#method_getHex">getHex</a>
-    
-                    </li>
-                    <li class="index-item method">
-                        <a href="#method_getRGB">getRGB</a>
-    
-                    </li>
-                    <li class="index-item method">
-                        <a href="#method_getRGBA">getRGBA</a>
     
                     </li>
                     <li class="index-item method">
@@ -344,9 +344,9 @@
             <h2>Properties</h2>
     
             <div class="prop-container clearfix">
-                <a name="property_a" class="anchor-link"></a>
+                <a name="property_a (alpha)" class="anchor-link"></a>
                 <div class="property item">
-                    <h3 class="name"><code>a</code>
+                    <h3 class="name"><code>a (alpha)</code>
                     <span class="type">Number</span>
                 
                 
@@ -377,9 +377,9 @@
                 
                     </div>
                 </div>
-                <a name="property_b" class="anchor-link"></a>
+                <a name="property_b (blue)" class="anchor-link"></a>
                 <div class="property item">
-                    <h3 class="name"><code>b</code>
+                    <h3 class="name"><code>b (blue)</code>
                     <span class="type">Number</span>
                 
                 
@@ -410,9 +410,9 @@
                 
                     </div>
                 </div>
-                <a name="property_g" class="anchor-link"></a>
+                <a name="property_g (green)" class="anchor-link"></a>
                 <div class="property item">
-                    <h3 class="name"><code>g</code>
+                    <h3 class="name"><code>g (green)</code>
                     <span class="type">Number</span>
                 
                 
@@ -443,9 +443,9 @@
                 
                     </div>
                 </div>
-                <a name="property_h" class="anchor-link"></a>
+                <a name="property_h (hue)" class="anchor-link"></a>
                 <div class="property item">
-                    <h3 class="name"><code>h</code>
+                    <h3 class="name"><code>h (hue)</code>
                     <span class="type">Number</span>
                 
                 
@@ -476,9 +476,42 @@
                 
                     </div>
                 </div>
-                <a name="property_r" class="anchor-link"></a>
+                <a name="property_hex" class="anchor-link"></a>
                 <div class="property item">
-                    <h3 class="name"><code>r</code>
+                    <h3 class="name"><code>hex</code>
+                    <span class="type">String</span>
+                
+                
+                
+                
+                
+                            <span class="default">default:<span class="default-value">&quot;#cc3399&quot;</span></span>
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.Color.js.html#l306"><code>src&#x2F;BB.Color.js:306</code></a>
+                        </p>
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                        <div class="description">
+                            <p>the base color&#39;s hex string</p>
+                
+                        </div>
+                
+                       
+                
+                
+                    </div>
+                </div>
+                <a name="property_r (red)" class="anchor-link"></a>
+                <div class="property item">
+                    <h3 class="name"><code>r (red)</code>
                     <span class="type">Number</span>
                 
                 
@@ -509,9 +542,75 @@
                 
                     </div>
                 </div>
-                <a name="property_s" class="anchor-link"></a>
+                <a name="property_rgb" class="anchor-link"></a>
                 <div class="property item">
-                    <h3 class="name"><code>s</code>
+                    <h3 class="name"><code>rgb</code>
+                    <span class="type">String</span>
+                
+                
+                
+                
+                
+                            <span class="default">default:<span class="default-value">&quot;rgb(204,51,153)&quot;</span></span>
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.Color.js.html#l226"><code>src&#x2F;BB.Color.js:226</code></a>
+                        </p>
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                        <div class="description">
+                            <p>the base color&#39;s rgb string</p>
+                
+                        </div>
+                
+                       
+                
+                
+                    </div>
+                </div>
+                <a name="property_rgba" class="anchor-link"></a>
+                <div class="property item">
+                    <h3 class="name"><code>rgba</code>
+                    <span class="type">String</span>
+                
+                
+                
+                
+                
+                            <span class="default">default:<span class="default-value">&quot;rgba(204,51,153,1)&quot;</span></span>
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.Color.js.html#l265"><code>src&#x2F;BB.Color.js:265</code></a>
+                        </p>
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                        <div class="description">
+                            <p>the base color&#39;s rgba string</p>
+                
+                        </div>
+                
+                       
+                
+                
+                    </div>
+                </div>
+                <a name="property_s (saturatoin)" class="anchor-link"></a>
+                <div class="property item">
+                    <h3 class="name"><code>s (saturatoin)</code>
                     <span class="type">Number</span>
                 
                 
@@ -566,9 +665,8 @@
                     <div class="extended-detail">
                         <div class="description">
                             <p>object with properties ( named after different color schemes ) for
-                holding arrays of the color values generated with the
-                <code>createScheme()</code> method. the colors are Objects with r, g,
-                b, a values as well as rgb(string), rgba(string) and hex(string)</p>
+                holding arrays of new BB.Color objects generated with the
+                <a href="#method_createScheme"><code>createScheme()</code></a> method.</p>
                 
                         </div>
                 
@@ -577,9 +675,9 @@
                 
                     </div>
                 </div>
-                <a name="property_v" class="anchor-link"></a>
+                <a name="property_v (value)" class="anchor-link"></a>
                 <div class="property item">
-                    <h3 class="name"><code>v</code>
+                    <h3 class="name"><code>v (value)</code>
                     <span class="type">Number</span>
                 
                 
@@ -643,7 +741,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.Color.js.html#l270"><code>src&#x2F;BB.Color.js:270</code></a>
+                        <a href="../files/src_BB.Color.js.html#l370"><code>src&#x2F;BB.Color.js:370</code></a>
                         </p>
                 
                 
@@ -671,6 +769,18 @@
                                 </div>
                             </div>
                 
+                            <div class="example">
+                                <h4>Example:</h4>
+                
+                                <div class="example-content">
+                <p><code class="code prettyprint">
+                &nbsp; var x = new color(0,255,0); <br>
+                &nbsp; var y = x.clone(); <br>
+                &nbsp; y.rgb; // returns &#39;rgb(0,255,0)&#39;;
+                </code></p>
+                
+                                </div>
+                            </div>
                     </div>
                 </div>
                 <a name="method_copy" class="anchor-link"></a>
@@ -697,7 +807,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.Color.js.html#l258"><code>src&#x2F;BB.Color.js:258</code></a>
+                        <a href="../files/src_BB.Color.js.html#l351"><code>src&#x2F;BB.Color.js:351</code></a>
                         </p>
                 
                 
@@ -730,6 +840,18 @@
                             </div>
                 
                 
+                            <div class="example">
+                                <h4>Example:</h4>
+                
+                                <div class="example-content">
+                <p><code class="code prettyprint">
+                &nbsp; var x = new color(0,255,0); <br>
+                &nbsp; var y = new color(100,100,100); <br>
+                &nbsp; y.copy( x ); <br>
+                &nbsp; y.rgb; // returns &#39;rgb(0,255,0)&#39;;<br></code></p>
+                
+                                </div>
+                            </div>
                     </div>
                 </div>
                 <a name="method_createScheme" class="anchor-link"></a>
@@ -742,7 +864,7 @@
                                         <code>scheme</code>
                                 </li>
                                 <li class="arg">
-                                        <code>config</code>
+                                        <code>optional</code>
                                 </li>
                             </ul><span class="paren">)</span>
                         </div>
@@ -759,7 +881,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.Color.js.html#l611"><code>src&#x2F;BB.Color.js:611</code></a>
+                        <a href="../files/src_BB.Color.js.html#l705"><code>src&#x2F;BB.Color.js:705</code></a>
                         </p>
                 
                 
@@ -772,9 +894,9 @@
                             <p>generates a color scheme ( array of additional color values ) from the
                 base color.</p>
                 <p>the colors are stored in an array in the <code>.schemes</code> property (
-                object ) and can be accessed by passing it the key ( name of ) the color
-                scheme you generated like so: <code> .schemes[&quot;triadic&quot;] </code>, which
-                will return an array of objects ( with r, g, b, a properties )</p>
+                object ) and can be accessed by querying the key ( name ) of the color
+                scheme you generated like so: <code> .schemes.triadic </code>, which
+                will return an array of BB.Color objects</p>
                 
                         </div>
                 
@@ -790,27 +912,26 @@
                                         <div class="param-description">
                                             <p>name of the color scheme you want to generate.
                 can be either &quot;monochromatic&quot;, &quot;analogous&quot;, &quot;complementary&quot;, &quot;split
-                complementary&quot;, &quot;triadic&quot; or &quot;tetradic&quot;</p>
+                complementary&quot;, &quot;triadic&quot;, &quot;tetradic&quot; or &quot;random&quot;</p>
                 
                                         </div>
                 
                                     </li>
                                     <li class="param">
-                                            <code class="param-name">config</code>
+                                            <code class="param-name">optional</code>
                                             <span class="type">Object</span>
                 
                 
                                         <div class="param-description">
-                                            <p>object with properties for angle (Number) for hue
-                shift ( this is required by all schemes except for &quot;complimentary&quot; and
-                &quot;triadaic&quot;, which by definition have hardcoded angles of 180 and 240/120
-                respectively ), tint (Array of Floats) and shade (Array of Flaots), which
-                are used to create monochromatic colors ( tint for light variations of
-                the base color and shade for dark ), these are required when creating
-                &quot;monochromatic&quot; scheme ( which is essentially just a set of tint/shade
-                variations from the base color ) and optional for the other schemes (
-                used if you want monochromatic varients calculated of the colors produced
-                by that particular scheme )</p>
+                                            <p>config object with properties for angle (Number) for hue
+                shift ( for schemes other than &quot;complimentary&quot; or &quot;triadic&quot; which have fixed 
+                angles ), tint (Array of Floats) and shade (Array of Flaots), which
+                are used to create aditional monochromatic colors ( tint for light variations of
+                the base color and shade for dark ) in relation to the base colors of each scheme</p>
+                <p>the &quot;random&quot; scheme takes an entirely different config object with values for hue,
+                saturation and value. when no config is sent it generates entirely random colors.
+                when a <code>{ hue: 200 }</code> is passed than you&#39;d get random shades of blue, etc.</p>
+                <p>if you need a color scheme/theory refersher: <a href="http://www.tigercolor.com/color-lab/color-theory/color-theory-intro.htm" target="_blank"> check this out</a></p>
                 
                                         </div>
                 
@@ -823,170 +944,24 @@
                                 <h4>Example:</h4>
                 
                                 <div class="example-content">
-                <p><code class="code prettyprint"> 
-                &nbsp; color.createScheme(&quot;analogous&quot;,{                          <br><br>&nbsp;&nbsp;&nbsp;&nbsp; angle: 30,                             <br> 
-                &nbsp;&nbsp;&nbsp;&nbsp; tint:[ 0.4, 0.8 ],                     <br> 
-                &nbsp;&nbsp;&nbsp;&nbsp; shade:[ 0.3, 0.6 ]                     <br> 
-                &nbsp; });                                                       <br><br>
-                &nbsp; color.schemes[&quot;analogous&quot;][0] // returns first color     <br> 
-                &nbsp; color.schemes[&quot;analogous&quot;][1] // returns second color    <br> 
-                </code></p>
+                <p>  <code class="code prettyprint"><br>&nbsp; color.createScheme(&quot;complementary&quot;); // creates single complementary color <br><br>
+                &nbsp; // creates two analogous colors <br>
+                &nbsp; // as well as 2 shades and 2 tints for each of the two analogous colors<br>
+                &nbsp; // so color.schemes.analogous.length will be 10<br>
+                &nbsp; color.createScheme(&quot;analogous&quot;,{ <br> 
+                &nbsp;&nbsp;&nbsp;&nbsp; angle: 30,<br> 
+                &nbsp;&nbsp;&nbsp;&nbsp; tint:[ 0.4, 0.8 ], <br>
+                &nbsp;&nbsp;&nbsp;&nbsp; shade:[ 0.3, 0.6 ] <br> 
+                &nbsp; }); <br><br>
+                &nbsp; color.createScheme(&quot;random&quot;,{ <br> 
+                &nbsp;&nbsp;&nbsp;&nbsp; hue: 200,<br> 
+                &nbsp; }); <br><br>
+                &nbsp; color.schemes.analogous[0] // returns first analogous color <br> 
+                &nbsp; color.schemes.analogous[1] // returns second analogous color <br> 
+                &nbsp; color.schemes.random[0] // returns first random blue shade <br> </code></p>
                 
                                 </div>
                             </div>
-                    </div>
-                </div>
-                <a name="method_getHex" class="anchor-link"></a>
-                <div class="method item">
-                    <h3 class="name"><code>getHex</code>
-                
-                        <span class="paren">()</span>
-                
-                        <span class="returns-inline">
-                            <span class="type">String</span>
-                        </span>
-                
-                
-                
-                
-                
-                
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.Color.js.html#l244"><code>src&#x2F;BB.Color.js:244</code></a>
-                        </p>
-                
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                
-                        <div class="description">
-                            <p>returns hex string for color</p>
-                
-                        </div>
-                
-                
-                            <div class="returns">
-                                <h4>
-                                    Returns:
-                                        <span class="type">String</span>
-                                </h4> 
-                
-                                <div class="returns-description">
-                                       
-                                        <p>for example <code>&#39;#ff0000&#39;</code></p>
-                
-                                </div>
-                            </div>
-                
-                    </div>
-                </div>
-                <a name="method_getRGB" class="anchor-link"></a>
-                <div class="method item">
-                    <h3 class="name"><code>getRGB</code>
-                
-                        <span class="paren">()</span>
-                
-                        <span class="returns-inline">
-                            <span class="type">String</span>
-                        </span>
-                
-                
-                
-                
-                
-                
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.Color.js.html#l226"><code>src&#x2F;BB.Color.js:226</code></a>
-                        </p>
-                
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                
-                        <div class="description">
-                            <p>returns rgb string for color</p>
-                
-                        </div>
-                
-                
-                            <div class="returns">
-                                <h4>
-                                    Returns:
-                                        <span class="type">String</span>
-                                </h4> 
-                
-                                <div class="returns-description">
-                                       
-                                        <p>for example <code>&#39;rgb(255,0,0)&#39;</code></p>
-                
-                                </div>
-                            </div>
-                
-                    </div>
-                </div>
-                <a name="method_getRGBA" class="anchor-link"></a>
-                <div class="method item">
-                    <h3 class="name"><code>getRGBA</code>
-                
-                        <span class="paren">()</span>
-                
-                        <span class="returns-inline">
-                            <span class="type">String</span>
-                        </span>
-                
-                
-                
-                
-                
-                
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.Color.js.html#l235"><code>src&#x2F;BB.Color.js:235</code></a>
-                        </p>
-                
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                
-                        <div class="description">
-                            <p>returns rgba string for color</p>
-                
-                        </div>
-                
-                
-                            <div class="returns">
-                                <h4>
-                                    Returns:
-                                        <span class="type">String</span>
-                                </h4> 
-                
-                                <div class="returns-description">
-                                       
-                                        <p>for example <code>&#39;rgba(255,0,0,255)&#39;</code></p>
-                
-                                </div>
-                            </div>
-                
                     </div>
                 </div>
                 <a name="method_hsv2rgb" class="anchor-link"></a>
@@ -996,7 +971,7 @@
                         <div class="args">
                             <span class="paren">(</span><ul class="args-list inline commas">
                                 <li class="arg">
-                                        <code class="optional">[hsv]</code>
+                                        <code class="optional">[h]</code>
                                 </li>
                                 <li class="arg">
                                         <code class="optional">[s]</code>
@@ -1022,7 +997,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.Color.js.html#l457"><code>src&#x2F;BB.Color.js:457</code></a>
+                        <a href="../files/src_BB.Color.js.html#l563"><code>src&#x2F;BB.Color.js:563</code></a>
                         </p>
                 
                 
@@ -1046,7 +1021,7 @@
                 
                                 <ul class="params-list">
                                     <li class="param">
-                                            <code class="param-name optional">[hsv]</code>
+                                            <code class="param-name optional">[h]</code>
                                             <span class="type">Number</span>
                                             <span class="flag optional" title="This parameter is optional.">optional</span>
                 
@@ -1129,7 +1104,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.Color.js.html#l361"><code>src&#x2F;BB.Color.js:361</code></a>
+                        <a href="../files/src_BB.Color.js.html#l467"><code>src&#x2F;BB.Color.js:467</code></a>
                         </p>
                 
                 
@@ -1220,7 +1195,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.Color.js.html#l406"><code>src&#x2F;BB.Color.js:406</code></a>
+                        <a href="../files/src_BB.Color.js.html#l512"><code>src&#x2F;BB.Color.js:512</code></a>
                         </p>
                 
                 
@@ -1331,7 +1306,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.Color.js.html#l319"><code>src&#x2F;BB.Color.js:319</code></a>
+                        <a href="../files/src_BB.Color.js.html#l425"><code>src&#x2F;BB.Color.js:425</code></a>
                         </p>
                 
                 
@@ -1432,7 +1407,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.Color.js.html#l281"><code>src&#x2F;BB.Color.js:281</code></a>
+                        <a href="../files/src_BB.Color.js.html#l387"><code>src&#x2F;BB.Color.js:387</code></a>
                         </p>
                 
                 
@@ -1524,7 +1499,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.Color.js.html#l592"><code>src&#x2F;BB.Color.js:592</code></a>
+                        <a href="../files/src_BB.Color.js.html#l684"><code>src&#x2F;BB.Color.js:684</code></a>
                         </p>
                 
                 
@@ -1587,7 +1562,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.Color.js.html#l540"><code>src&#x2F;BB.Color.js:540</code></a>
+                        <a href="../files/src_BB.Color.js.html#l630"><code>src&#x2F;BB.Color.js:630</code></a>
                         </p>
                 
                 
@@ -1672,7 +1647,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.Color.js.html#l574"><code>src&#x2F;BB.Color.js:574</code></a>
+                        <a href="../files/src_BB.Color.js.html#l664"><code>src&#x2F;BB.Color.js:664</code></a>
                         </p>
                 
                 
