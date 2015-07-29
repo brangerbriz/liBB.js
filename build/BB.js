@@ -793,22 +793,20 @@ define('BB',[],function(){
 // our library.
 
 define('BB.Vector2',['./BB'],
-function(  THREE) { 
-//NOTE: importing BB core as THREE (just a name) so that Three.js' Vector2 class code
-//can be copied and pasted below when it is updated.
+function(  BB) { 
 
     'use strict';
 
-    THREE.Vector2 = function ( x, y ) {
+    BB.Vector2 = function ( x, y ) {
 
         this.x = x || 0;
         this.y = y || 0;
 
     };
 
-    THREE.Vector2.prototype = {
+    BB.Vector2.prototype = {
 
-        constructor: THREE.Vector2,
+        constructor: BB.Vector2,
 
         set: function ( x, y ) {
 
@@ -904,7 +902,6 @@ function(  THREE) {
 
             if ( w !== undefined ) {
 
-                // THREE.warn( 'THREE.Vector2: .sub() now only accepts one argument. Use .subVectors( a, b ) instead.' );
                 return this.subVectors( v, w );
 
             }
@@ -1052,8 +1049,8 @@ function(  THREE) {
 
                 if ( min === undefined ) {
 
-                    min = new THREE.Vector2();
-                    max = new THREE.Vector2();
+                    min = new BB.Vector2();
+                    max = new BB.Vector2();
 
                 }
 
@@ -1223,12 +1220,12 @@ function(  THREE) {
 
         clone: function () {
 
-            return new THREE.Vector2( this.x, this.y );
+            return new BB.Vector2( this.x, this.y );
 
         }
     };
 
-    return THREE.Vector2;
+    return BB.Vector2;
 });
 /**
  * A static utilitites class for all things math.
@@ -1287,6 +1284,27 @@ function(  BB,        Vector2){
         }
 
         return (max - min) * norm + min;
+    };
+    /**
+     * Constrains value using min and max as the upper and lower bounds.
+     * @method clamp
+     * @static
+     * @param  {Number} value The value to be clamped.
+     * @param  {Number} min   The lower limit to clamp value by.
+     * @param  {Number} max   The upper limit to clamp value by.
+     * @return {Number}       The clamped value.
+     */
+    BB.MathUtils.clamp = function(value, min, max) {
+
+        if (typeof value !== "number") {
+            throw new Error("BB.MathUtils.clamp: norm is not a number type");
+        } else if (typeof min !== "number") {
+            throw new Error("BB.MathUtils.clamp: min is not a number type");
+        } else if (typeof max !== "number") {
+            throw new Error("BB.MathUtils.clamp: max is not a number type");
+        }
+
+        return Math.max(min, Math.min(max, value));
     };
     /**
      * Maps (scales) value between sourceMin and sourceMax to destMin and destMax.
@@ -1445,7 +1463,7 @@ function(  BB,        Vector2){
     return BB.MathUtils;
 });
 /**
- * A module for creating color objects and doing color maths
+ * A module for creating color objects, color schemes and doing color maths
  * @module BB.Color
  */
 define('BB.Color',['./BB'],
@@ -1454,7 +1472,7 @@ function(  BB){
     'use strict';
     
     /**
-     * A module for creating color objects and doing color maths
+     * A module for creating color objects, color schemes and doing color maths
      * @class BB.Color
      * @constructor
      * @param {Number} [r] optional parameter for setting the red value (0-255)
@@ -1474,7 +1492,7 @@ function(  BB){
         else if( typeof r !== 'number' || r<0 || r>255 ){
             throw new Error("BB.Color: red parameter neeeds to be a NUMBER between 0 - 255");
         } else {
-            this._r = r || 204;     
+            this._r = r;     
         }
 
         // see getter/setter below
@@ -1484,7 +1502,7 @@ function(  BB){
         else if( typeof g !== 'number' || g<0 || g>255 ){
             throw new Error("BB.Color: green parameter neeeds to be a NUMBER between 0 - 255");
         } else {
-            this._g = g || 51;        
+            this._g = g;        
         }
 
         // see getter/setter below
@@ -1494,7 +1512,7 @@ function(  BB){
         else if( typeof b !== 'number' || b<0 || b>255 ){
             throw new Error("BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255");
         } else {
-            this._b = b || 153;        
+            this._b = b;        
         }
 
         // see getter/setter below
@@ -1504,16 +1522,15 @@ function(  BB){
         else if(  a<0 || a>255 ){
             throw new Error("BB.Color: alpha parameter neeeds to be a NUMBER between 0 - 255");
         } else {
-            this._a = a || 255;        
+            this._a = a;        
         }
 
        this.rgb2hsv();
 
         /**
          * object with properties ( named after different color schemes ) for
-         * holding arrays of the color values generated with the
-         * <code>createScheme()</code> method. the colors are Objects with r, g,
-         * b, a values as well as rgb(string), rgba(string) and hex(string)
+         * holding arrays of new BB.Color objects generated with the
+         * <a href="#method_createScheme"><code>createScheme()</code></a> method. 
          * 
          * @type {Object}
          * @property schemes
@@ -1524,13 +1541,14 @@ function(  BB){
             'complementary' : [],
             'split complementary' : [],
             'triadic' : [],
-            'tetradic' : []
+            'tetradic' : [],
+            'random' : []
         };
     };
 
     /**
      * the red value between 0 - 255
-     * @property r
+     * @property r (red)
      * @type Number
      * @default 204
      */   
@@ -1542,7 +1560,7 @@ function(  BB){
             if( typeof r !== 'number' || r<0 || r>255 ){
                 throw new Error("BB.Color: red parameter neeeds to be a NUMBER between 0 - 255");
             } else {
-                this._r = r || 204;    
+                this._r = r;    
                 this.rgb2hsv(); 
             }
         }
@@ -1550,7 +1568,7 @@ function(  BB){
 
     /**
      * the green value between 0 - 255
-     * @property g
+     * @property g (green)
      * @type Number
      * @default 51
      */   
@@ -1562,7 +1580,7 @@ function(  BB){
             if( typeof g !== 'number' || g<0 || g>255 ){
                 throw new Error("BB.Color: green parameter neeeds to be a NUMBER between 0 - 255");
             } else {
-                this._g = g || 51;    
+                this._g = g;    
                 this.rgb2hsv(); 
             }
         }
@@ -1570,7 +1588,7 @@ function(  BB){
 
     /**
      * the blue value between 0 - 255
-     * @property b
+     * @property b (blue)
      * @type Number
      * @default 153
      */   
@@ -1582,7 +1600,7 @@ function(  BB){
             if( typeof b !== 'number' || b<0 || b>255 ){
                 throw new Error("BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255");
             } else {
-                this._b = b || 153;    
+                this._b = b;    
                 this.rgb2hsv(); 
             }
         }
@@ -1590,7 +1608,7 @@ function(  BB){
 
     /**
      * the alpha value between 0 - 255
-     * @property a
+     * @property a (alpha)
      * @type Number
      * @default 255
      */   
@@ -1602,7 +1620,7 @@ function(  BB){
             if( typeof a !== 'number' || a<0 || a>255 ){
                 throw new Error("BB.Color: alpha parameter neeeds to be a NUMBER between 0 - 255");
             } else {
-                this._a = a || 0;    
+                this._a = a;    
                 this.rgb2hsv(); 
             }
         }
@@ -1610,7 +1628,7 @@ function(  BB){
 
     /**
      * the hue value between 0 - 359
-     * @property h
+     * @property h (hue)
      * @type Number
      * @default 0
      */   
@@ -1622,7 +1640,7 @@ function(  BB){
             if( typeof h !== 'number' || h<0 || h>359 ){
                 throw new Error("BB.Color: hue parameter neeeds to be a NUMBER between 0 - 359");
             } else {
-                this._h = h || 0;    
+                this._h = h;    
                 this.hsv2rgb(); 
             }
         }
@@ -1630,7 +1648,7 @@ function(  BB){
 
     /**
      * the saturation value between 0 - 100
-     * @property s
+     * @property s (saturatoin)
      * @type Number
      * @default 0
      */   
@@ -1642,7 +1660,7 @@ function(  BB){
             if( typeof s !== 'number' || s<0 || s>100 ){
                 throw new Error("BB.Color: saturation parameter neeeds to be a NUMBER between 0 - 100");
             } else {
-                this._s = s || 0;    
+                this._s = s;    
                 this.hsv2rgb(); 
             }
         }
@@ -1650,7 +1668,7 @@ function(  BB){
 
     /**
      * the brightness/lightness value between 0 - 100
-     * @property v
+     * @property v (value)
      * @type Number
      * @default 0
      */   
@@ -1662,7 +1680,7 @@ function(  BB){
             if( typeof v !== 'number' || v<0 || v>100 ){
                 throw new Error("BB.Color: brightness/lightness parameter neeeds to be a NUMBER between 0 - 100");
             } else {
-                this._v = v || 0;    
+                this._v = v;    
                 this.hsv2rgb(); 
             }
         }
@@ -1670,41 +1688,141 @@ function(  BB){
 
 
     /**
-     * returns rgb string for color
-     * @method getRGB
-     * @return {String} for example <code>'rgb(255,0,0)'</code>
-     */
-    BB.Color.prototype.getRGB = function() { 
-        return 'rgb('+this.r+', '+this.g+', '+this.b+')';
-    };
+     * the base color's rgb string
+     * @property rgb
+     * @type String
+     * @default "rgb(204,51,153)"
+     */   
+    Object.defineProperty(BB.Color.prototype, "rgb", {
+        get: function() {
+            return 'rgb('+this.r+', '+this.g+', '+this.b+')';
+        },
+        set: function(v) {
+            if( typeof v !== 'string' ){
+                throw new Error("BB.Color: rgb parameter expects an rgb(...) string");
+            } else {
+                if( v.indexOf('rgb(') !== 0){
+                    throw new Error("BB.Color: expecting string staring with 'rgb(' ");
+                }
+                else if( v[v.length-1] !== ")"){
+                    throw new Error("BB.Color: expecting string ending with ')' ");
+                } 
+                else {
+                    v = v.substr(4,v.length-5);
+                    v = v.split(',');
+                    if( v.length < 3 ) throw new Error("BB.Color: rgb(...) requires 3 properties");
+                    v[0] = parseInt(v[0]);
+                    v[1] = parseInt(v[1]);
+                    v[2] = parseInt(v[2]);
+                    if( v[0] < 0 || v[0] > 255 ) throw new Error("BB.Color: red value must be between 0 - 255 ");
+                    if( v[1] < 0 || v[1] > 255 ) throw new Error("BB.Color: green value must be between 0 - 255 ");
+                    if( v[2] < 0 || v[2] > 255 ) throw new Error("BB.Color: blue value must be between 0 - 255 ");
+                    this.r = v[0];
+                    this.g = v[1];
+                    this.b = v[2];
+                }
+            }
+        }
+    });
+
 
     /**
-     * returns rgba string for color
-     * @method getRGBA
-     * @return {String} for example <code>'rgba(255,0,0,255)'</code>
-     */
-    BB.Color.prototype.getRGBA = function() { 
-        return 'rgba('+this.r+', '+this.g+', '+this.b+', '+this.a+')';
-    };
+     * the base color's rgba string
+     * @property rgba
+     * @type String
+     * @default "rgba(204,51,153,1)"
+     */   
+    Object.defineProperty(BB.Color.prototype, "rgba", {
+        get: function() {
+            return 'rgba('+this.r+', '+this.g+', '+this.b+','+Math.floor((this.a/255)*100)/100+')';
+        },
+        set: function(v) {
+            if( typeof v !== 'string' ){
+                throw new Error("BB.Color: rgba parameter expects an rgba(...) string");
+            } else {
+                if( v.indexOf('rgba(') !== 0){
+                    throw new Error("BB.Color: expecting string staring with 'rgba(' ");
+                }
+                else if( v[v.length-1] !== ")"){
+                    throw new Error("BB.Color: expecting string ending with ')' ");
+                } 
+                else {
+                    v = v.substr(5,v.length-6);
+                    v = v.split(',');
+                    if( v.length < 4 ) throw new Error("BB.Color: rgba(...) requires 4 properties");
+                    v[0] = parseInt(v[0]);
+                    v[1] = parseInt(v[1]);
+                    v[2] = parseInt(v[2]);
+                    v[3] = parseFloat(v[3]);
+                    if( v[0] < 0 || v[0] > 255 ) throw new Error("BB.Color: red value must be between 0 - 255 ");
+                    if( v[1] < 0 || v[1] > 255 ) throw new Error("BB.Color: green value must be between 0 - 255 ");
+                    if( v[2] < 0 || v[2] > 255 ) throw new Error("BB.Color: blue value must be between 0 - 255 ");
+                    if( v[3] < 0.0 || v[3] > 1.0 ) throw new Error("BB.Color: alpha value must be between 0.0 - 1.0 ");
+                    this.r = v[0];
+                    this.g = v[1];
+                    this.b = v[2];
+                    this.a = Math.floor( v[3] * 255 );
+                }
+            }
+        }
+    });
 
     /**
-     * returns hex string for color
-     * @method getHex
-     * @return {String} for example <code>'#ff0000'</code>
-     */
-    BB.Color.prototype.getHex = function() { 
-        return "#" +((this.r << 16) | (this.g << 8) | this.b).toString(16);
-    };
+     * the base color's hex string
+     * @property hex
+     * @type String
+     * @default "#cc3399"
+     */   
+    Object.defineProperty(BB.Color.prototype, "hex", {
+        get: function() {
+            return "#" +((this.r << 16) | (this.g << 8) | this.b).toString(16);
+        },
+        set: function(v) {
+            if( typeof v !== 'string' ){
+                throw new Error("BB.Color: hex parameter expects a # string");
+            } 
+            else {
+                   if (v.indexOf('#') !== 0) {
+                        throw new Error("BB.Color: expecting string staring with '#' ");
+                    }
+                    else if( v.length !== 7 && v.length !== 4  ){
+                        throw new Error("BB.Color: hex string is too long or short ");
+                    }
+                    else {
+                        var a;
+                        if(v.length === 7 ){
+                            v = v.substr(1,v.length-1);
+                            a = [ v.substr(0,v.length-4), v.substr(2,v.length-4), v.substr(4,v.length-4)];
+                            console.log( parseInt('0x'+a[0]), parseInt('0x'+a[1]), parseInt('0x'+a[2]) );
+                            this.r = parseInt('0x'+a[0]);
+                            this.g = parseInt('0x'+a[1]);
+                            this.b = parseInt('0x'+a[2]);
+                        }
+                        else {
+                            v = v.substr(1,v.length-1);
+                            a = [ v.substr(0,v.length-2), v.substr(1,v.length-2), v.substr(2,v.length-2)];
+                            this.r = parseInt('0x'+a[0]+a[0]);
+                            this.g = parseInt('0x'+a[1]+a[1]);
+                            this.b = parseInt('0x'+a[2]+a[2]);
+                        }
+                    }
+            }
+        }
+    });
 
-
-
-    //
 
 
     /**
      * sets color value to match another color object's value
      * @method copy
      * @param {BB.Color} color another color object to copy from
+     * @example
+     * <code class="code prettyprint">
+     * &nbsp; var x = new color(0,255,0); <br>
+     * &nbsp; var y = new color(100,100,100); <br>
+     * &nbsp; y.copy( x ); <br>
+     * &nbsp; y.rgb; // returns 'rgb(0,255,0)';                         
+     * </code>
      */
     BB.Color.prototype.copy = function( color ) { 
         if (! color || !this.isLikeColor( color ) ) {
@@ -1717,6 +1835,12 @@ function(  BB){
      * creates a new color object that is a copy of itself
      * @method clone
      * @return {BB.Color} a new color object copied from this one
+     * @example
+     * <code class="code prettyprint">
+     * &nbsp; var x = new color(0,255,0); <br>
+     * &nbsp; var y = x.clone(); <br>
+     * &nbsp; y.rgb; // returns 'rgb(0,255,0)';
+     * </code>
      */
     BB.Color.prototype.clone = function() { 
         var child = new BB.Color();
@@ -1910,74 +2034,58 @@ function(  BB){
      * functionality is used internally, for ex. by the getters && setters )
      *
      * @method hsv2rgb
-     * @param  {Number} [hsv] either an instance of BB.Color or a h value between 0 - 359
+     * @param  {Number} [h] either an instance of BB.Color or a h value between 0 - 359
      * @param  {Number} [s]   a saturation value between 0 - 100
      * @param  {Number} [v]   a brightness/lightness value value between 0 - 100
      * @return {Object}     an object with r, g, b properties
      */
-    BB.Color.prototype.hsv2rgb = function( hsv, s, v ) { 
+    BB.Color.prototype.hsv2rgb = function( h, s, v ) { 
+        var rgb, hsv;
 
-        var rgb;
-        if( typeof hsv == "undefined"){
+        if( typeof h == "undefined"){
 
-            rgb = this;
-            hsv = { h:this.h, s:this.s, v:this.v };
+            rgb = { r:this.r, g:this.g, b:this.b };
+            hsv = { h:this.h, s:this.s, v:this.v }; 
 
         } else {
 
             rgb = {};
-            hsv = ( hsv instanceof BB.Color ) ? hsv : { h:hsv, s:s, v:v };
-
+            hsv = ( h instanceof BB.Color ) ? h.clone() : { h:h, s:s, v:v };
+        }
+   
+        hsv.h /= 60;
+        hsv.s /= 100;
+        hsv.v /= 100;
+        
+        var i = Math.floor( hsv.h );
+        var f = hsv.h - i;
+        var p = hsv.v * ( 1- hsv.s );
+        var q = hsv.v * ( 1 - hsv.s * f );
+        var t = hsv.v * ( 1 - hsv.s * (1-f) );
+        
+        switch( i ) {
+            case 0: rgb.r = hsv.v; rgb.g = t; rgb.b = p; break;
+            case 1: rgb.r = q; rgb.g = hsv.v; rgb.b = p; break;
+            case 2: rgb.r = p; rgb.g = hsv.v; rgb.b = t; break;
+            case 3: rgb.r = p; rgb.g = q; rgb.b = hsv.v; break;
+            case 4: rgb.r = t; rgb.g = p; rgb.b = hsv.v; break;
+            default: rgb.r = hsv.v; rgb.g = p; rgb.b = q;
         }
 
+        rgb.r = Math.round(rgb.r * 255);
+        rgb.g = Math.round(rgb.g * 255);
+        rgb.b = Math.round(rgb.b * 255);
 
-        if( typeof hsv == "undefined" && hsv.s === 0 ){
+        if( arguments.length === 0 ){
 
-            this._r = this._g = this._b = Math.round( hsv.v * 2.55 );
+            this._r = rgb.r;         
+            this._g = rgb.g;  
+            this._b = rgb.b;    
 
-            return this;
-
-        } else if ( typeof hsv !== "undefined" && hsv.s === 0 ) {
-
-            rgb.r = rgb.g = rgb.b = Math.round( hsv.v * 2.55 );
-
-            return rgb;
-
-        } else {
-
-            hsv.h /= 60;
-            hsv.s /= 100;
-            hsv.v /= 100;
-            
-            var i = Math.floor( hsv.h );
-            var f = hsv.h - i;
-            var p = hsv.v * ( 1- hsv.s );
-            var q = hsv.v * ( 1 - hsv.s * f );
-            var t = hsv.v * ( 1 - hsv.s * (1-f) );
-            
-            switch( i ) {
-                case 0: rgb.r = hsv.v; rgb.g = t; rgb.b = p; break;
-                case 1: rgb.r = q; rgb.g = hsv.v; rgb.b = p; break;
-                case 2: rgb.r = p; rgb.g = hsv.v; rgb.b = t; break;
-                case 3: rgb.r = p; rgb.g = q; rgb.b = hsv.v; break;
-                case 4: rgb.r = t; rgb.g = p; rgb.b = hsv.v; break;
-                default: rgb.r = hsv.v; rgb.g = p; rgb.b = q;
-            }
-
-            rgb.r = Math.round(rgb.r * 255);
-            rgb.g = Math.round(rgb.g * 255);
-            rgb.b = Math.round(rgb.b * 255);
-
-            if( typeof hsv == "undefined"){
-
-                this._r = rgb.r;         
-                this._g = rgb.g;  
-                this._b = rgb.b;    
-
-            } 
-            
-            return rgb;
-        }
+        } 
+        
+        return rgb;
+    
     };
 
 
@@ -2030,8 +2138,10 @@ function(  BB){
         col.g = Math.round( this.g+(255-this.g ) * tint );
         col.b = Math.round( this.b+(255-this.b ) * tint );
         col.a = this.a;
-        if( typeof _schemeUse !== "undefined") return col;
-        else this.setRGBA( col.r, col.g, col.b, col.a );
+        if( typeof _schemeUse !== "undefined") {
+            return new BB.Color( col.r, col.g, col.b, col.a );
+        }
+        else { this.setRGBA( col.r, col.g, col.b, col.a ); }
     };
 
 
@@ -2048,8 +2158,10 @@ function(  BB){
         col.g = Math.round( this.g * shade );
         col.b = Math.round( this.b * shade );
         col.a = this.a;
-        if( typeof _schemeUse !== "undefined") return col;
-        else this.setRGBA( col.r, col.g, col.b, col.a );
+        if( typeof _schemeUse !== "undefined") {
+            return new BB.Color( col.r, col.g, col.b, col.a );
+        }
+        else { this.setRGBA( col.r, col.g, col.b, col.a ); }
     };
 
 
@@ -2059,60 +2171,58 @@ function(  BB){
      * base color.
      *
      * the colors are stored in an array in the <code>.schemes</code> property (
-     * object ) and can be accessed by passing it the key ( name of ) the color
-     * scheme you generated like so: <code> .schemes["triadic"] </code>, which
-     * will return an array of objects ( with r, g, b, a properties )
+     * object ) and can be accessed by querying the key ( name ) of the color
+     * scheme you generated like so: <code> .schemes.triadic </code>, which
+     * will return an array of BB.Color objects
      * 
      * @method createScheme
      * 
      * @param  {String} scheme name of the color scheme you want to generate.
      * can be either "monochromatic", "analogous", "complementary", "split
-     * complementary", "triadic" or "tetradic"
+     * complementary", "triadic", "tetradic" or "random"
      * 
-     * @param  {Object} config object with properties for angle (Number) for hue
-     * shift ( this is required by all schemes except for "complimentary" and
-     * "triadaic", which by definition have hardcoded angles of 180 and 240/120
-     * respectively ), tint (Array of Floats) and shade (Array of Flaots), which
-     * are used to create monochromatic colors ( tint for light variations of
-     * the base color and shade for dark ), these are required when creating
-     * "monochromatic" scheme ( which is essentially just a set of tint/shade
-     * variations from the base color ) and optional for the other schemes (
-     * used if you want monochromatic varients calculated of the colors produced
-     * by that particular scheme )
+     * @param  {Object} optional config object with properties for angle (Number) for hue
+     * shift ( for schemes other than "complimentary" or "triadic" which have fixed 
+     * angles ), tint (Array of Floats) and shade (Array of Flaots), which
+     * are used to create aditional monochromatic colors ( tint for light variations of
+     * the base color and shade for dark ) in relation to the base colors of each scheme
+     *
+     * the "random" scheme takes an entirely different config object with values for hue,
+     * saturation and value. when no config is sent it generates entirely random colors.
+     * when a <code>{ hue: 200 }</code> is passed than you'd get random shades of blue, etc.
+     *
+     * if you need a color scheme/theory refersher: <a href="http://www.tigercolor.com/color-lab/color-theory/color-theory-intro.htm" target="_blank"> check this out</a>
      * 
-     * @example 
-     * <code class="code prettyprint"> 
-     * &nbsp; color.createScheme("analogous",{                          <br>        
-     * &nbsp;&nbsp;&nbsp;&nbsp; angle: 30,                             <br> 
-     * &nbsp;&nbsp;&nbsp;&nbsp; tint:[ 0.4, 0.8 ],                     <br> 
-     * &nbsp;&nbsp;&nbsp;&nbsp; shade:[ 0.3, 0.6 ]                     <br> 
-     *&nbsp; });                                                       <br><br>
-     * &nbsp; color.schemes["analogous"][0] // returns first color     <br> 
-     * &nbsp; color.schemes["analogous"][1] // returns second color    <br> 
-     * </code>
+     * @example  <code class="code prettyprint">  
+     * &nbsp; color.createScheme("complementary"); // creates single complementary color <br><br>
+     * &nbsp; // creates two analogous colors <br>
+     * &nbsp; // as well as 2 shades and 2 tints for each of the two analogous colors<br>
+     * &nbsp; // so color.schemes.analogous.length will be 10<br>
+     * &nbsp; color.createScheme("analogous",{ <br> 
+     * &nbsp;&nbsp;&nbsp;&nbsp; angle: 30,<br> 
+     * &nbsp;&nbsp;&nbsp;&nbsp; tint:[ 0.4, 0.8 ], <br>
+     * &nbsp;&nbsp;&nbsp;&nbsp; shade:[ 0.3, 0.6 ] <br> 
+     * &nbsp; }); <br><br>
+     * &nbsp; color.createScheme("random",{ <br> 
+     * &nbsp;&nbsp;&nbsp;&nbsp; hue: 200,<br> 
+     * &nbsp; }); <br><br>
+     * &nbsp; color.schemes.analogous[0] // returns first analogous color <br> 
+     * &nbsp; color.schemes.analogous[1] // returns second analogous color <br> 
+     * &nbsp; color.schemes.random[0] // returns first random blue shade <br> </code>
      */
     BB.Color.prototype.createScheme = function( scheme, config ) { 
+
+        // ERROR CHECKING -----------------------------------------------------------
 
         if( !(scheme in this.schemes) ) {
             throw new Error("BB.Color.createScheme: '"+scheme+"' is not a valid scheme name, choose from: "+Object.keys(this.schemes) );
         }
 
-        // var errorMsg;
-        // switch( scheme ) {
-        //     case "monochromatic": errorMsg = '"monochromatic" requires a second parameter: a config object with tint Array and/or shade Array'; break;
-        //     case "analogous": errorMsg = "this scheme requires a config object with an angle property"; break;
-        //     case "complementary" : errorMsg=false; break;
-        //     case "split complementary": errorMsg = "this scheme requires a config object with an angle property"; break;
-        //     case "triadic" : errorMsg=false; break;
-        //     case "tetradic": errorMsg = "this scheme requires a config object with an angle property"; break;
-        // }
-
-        // if(typeof config !== "object" && errorMsg){ 
-        if( typeof config === "object" || typeof config === "undefined"  ){ 
-            
-            // throw new Error("BB.Color.createScheme: "+errorMsg );
-            
+        if( typeof config === "object" || typeof config === "undefined"  ){  
+                        
             if( typeof config === "undefined" ) config = {};
+
+            // defaults for color schemes
             
             if( typeof config.angle === "undefined" ){
                 if(scheme=="tetradic") config.angle = 40;
@@ -2128,7 +2238,12 @@ function(  BB){
                   throw new Error("BB.Color.createScheme: shade should be an Array of floats between 0.0-1.0");  
                 } 
             }
-        
+
+            // defaults for random schemes
+            
+            if( scheme == "random" ){
+                if( typeof config.count === "undefined" ){ config.count = 5; } 
+            }
         }
 
         if( typeof config !== "object" ) {
@@ -2137,9 +2252,7 @@ function(  BB){
 
         } else {
 
-            // if(typeof config !== "object"){
-            //     config = {}; // bug fix, schemes that don't require config erroring w/out some kinda object
-            // }
+        // GENERATING THE SCHEME ----------------------------------------------------
 
             this.schemes[scheme] = []; // clear previous colors
 
@@ -2156,10 +2269,12 @@ function(  BB){
             var twos = ["analogous","split complementary","triadic","tetradic"];
             var threes = ["tetradic"];
 
-            if( scheme == "monochromatic" )     this._schemeVarient( scheme, config );
+            if( scheme == "monochromatic" )      this._schemeVarient( scheme, config );
             if( ones.indexOf( scheme ) >= 0 )    this._schemeVarient( scheme, config, angles[0] );
             if( twos.indexOf( scheme ) >= 0 )    this._schemeVarient( scheme, config, angles[1] );
             if( threes.indexOf( scheme ) >= 0 )  this._schemeVarient( scheme, config, angles[2] );
+
+            if( scheme == "random" ) this._randomVarients( scheme, config );
                          
         }
 
@@ -2190,7 +2305,8 @@ function(  BB){
             }
         }
 
-        this.schemes[scheme].push({ r:rgb.r, g:rgb.g, b:rgb.b, a:this.a });
+        var copy = this.clone();
+        this.schemes[scheme].push( copy );
         
         if( typeof config.shade !== "undefined" ){
             config.shade.sort(function(a,b){return b - a;}); // reorder largest to smallest
@@ -2200,13 +2316,32 @@ function(  BB){
                 this.schemes[scheme].push( col2 );
             }
         }
+    };
 
-        for (var ii = 0; ii < this.schemes[scheme].length; ii++) {
-            var self = this.schemes[scheme][ii];
-                self.hex = "#" +((self.r << 16) | (self.g << 8) | self.b).toString(16);
-                self.rgb = 'rgb('+self.r+', '+self.g+', '+self.b+')';
-                self.rgba = 'rgba('+self.r+', '+self.g+', '+self.b+', '+self.a+')';
+    // private function for creating random variants
+    // used by scheme functions 
+    BB.Color.prototype._randomVarients = function( scheme, config ) { 
+
+        if( typeof config.count === "undefined" ) config.count = 5;
+
+        for (var i = 0; i < config.count; i++) {
+
+            var hue = ( typeof config.hue === "undefined" ) ? Math.floor( Math.random()*360 ) : config.hue;
+            var sat = ( typeof config.saturation === "undefined" ) ? Math.floor( Math.random()*100 ) : config.saturation;
+            var value = ( typeof config.value === "undefined" ) ? Math.floor( Math.random()*100 ) : config.value;
+            var alpha;
+            if( typeof config.alpha !== "undefined" ){
+                alpha = ( config.alpha == "random" ) ? Math.floor( Math.random() * 255 ) : config.alpha;
+            } else { alpha = 255; }
+
+            var clr = this.hsv2rgb( hue, sat, value ); 
+                clr.a = alpha;
+
+            var col = new BB.Color( clr.r, clr.g, clr.b, clr.a );
+
+            this.schemes[scheme].push( col );
         }
+    
     };
 
     return BB.Color;
@@ -3825,15 +3960,16 @@ function(  BB,        Vector2){
         var x = (config && typeof config.x === 'number') ? config.x : 0;
         var y = (config && typeof config.y === 'number') ? config.y : 0;
         
-        this.speed    = (config && typeof config.speed === 'number') ? config.speed : 1;
+        // this.speed    = (config && typeof config.speed === 'number') ? config.speed : 0;
 
         var heading   = (config && typeof config.heading === 'number') ? config.heading : 1.5 * Math.PI;
 
         this.position = (config && typeof config.position === 'object' && config.position instanceof BB.Vector2) 
                             ? config.position : new BB.Vector2(x, y);
                             
-        this.velocity = (config && typeof config.velocity === 'object' && config.velocity instanceof BB.Vector2) 
-                            ? config.velocity : new BB.Vector2(0, 0);
+        if (config && typeof config.velocity === 'object' && config.velocity instanceof BB.Vector2) {
+            this.velocity = config.velocity;
+        }
 
         this.acceleration = (config && typeof config.acceleration === 'object' && config.acceleration instanceof BB.Vector2) 
                             ? config.acceleration : new BB.Vector2(0, 0);
@@ -3841,10 +3977,6 @@ function(  BB,        Vector2){
         this.mass     = (config && typeof config.mass === 'number') ? config.mass : 1;
         this.radius   = (config && typeof config.radius === 'number') ? config.radius : 0;
         this.friction = (config && typeof config.friction === 'number') ? config.friction : 1;
-        
-        // NOTE: should this really be here? This is making a strange assumption that gravity is pointing -y
-        // which is not actually how gravity works in physics.
-        this.gravity  = (config && typeof config.gravity === 'number') ? config.gravity : 0;
 
         this.maxSpeed = (config && typeof config.maxSpeed === 'number') ? config.maxSpeed : 10;
 
@@ -3854,6 +3986,16 @@ function(  BB,        Vector2){
         // console.log('this.position:', this.position);
 
     };
+
+    Object.defineProperty(BB.Particle2D.prototype, 'heading', {
+        get: function() {
+            return Math.atan2(this.velocity.y, this.velocity.x);
+        },
+        set: function(heading) {
+            var speed = this.velocity.getLength();
+            this.velocity.set(Math.cos(heading) * speed, Math.sin(heading) * speed);
+        }
+    });
 
     BB.Particle2D.prototype.gravitate = function(vector2, mass) {
 
@@ -3886,7 +4028,7 @@ function(  BB,        Vector2){
 
             if (typeof array[i].mass !== 'number') {
                 throw new Error('BB.Particle2D.gravitateArray: array element ' + i 
-                                + ' does not have a mass property that is an instance of BB.Vector2.');
+                                + ' does not have a mass property that is an instance of type Number.');
             }
 
             this._gravitations.push(array[i]);
@@ -3895,7 +4037,7 @@ function(  BB,        Vector2){
 
     BB.Particle2D.prototype.spring = function(vector2, k, length) {
 
-         if (typeof vector2 !== 'object' || ! (vector2 instanceof BB.Vector2)) {
+        if (typeof vector2 !== 'object' || ! (vector2 instanceof BB.Vector2)) {
             throw new Error('BB.Particle2D.spring: vector2 parameter must be present and an instance of BB.Vector2.');
         }
 
@@ -3914,25 +4056,49 @@ function(  BB,        Vector2){
         });
     };
 
-    Object.defineProperty(BB.Particle2D.prototype, 'speed', {
-        get: function() {
-            return Math.sqrt((this.velocity.x * this.velocity.x) + (this.velocity.y * this.velocity.y));
-        },
-        set: function(speed) {
-            var heading = this.heading;
-            this.velocity.set(Math.cos(heading) * speed, Math.sin(heading) * speed);
-        }
-    });
+    BB.Particle2D.prototype.springArray = function(array) {
 
-    Object.defineProperty(BB.Particle2D.prototype, 'heading', {
-        get: function() {
-            return Math.atan2(this.velocity.y, this.velocity.x);
-        },
-        set: function(heading) {
-            var speed = this.speed;
-            this.velocity.set(Math.cos(heading) * speed, Math.sin(heading) * speed);
+        if (typeof array === 'undefined' || ! (array instanceof Array)) {
+            throw new Error('BB.Particle2D.springArray: array parameter must '
+                + 'be present and an array of objects with position, k, and length properties.');
         }
-    });
+
+        for (var i = 0; i < array.length; i++) {
+            
+            if (typeof array[i].position !== 'object' || ! (array[i].position instanceof BB.Vector2)) {
+                throw new Error('BB.Particle2D.springArray: array element ' + i 
+                                + ' does not have a position property that is an instance of BB.Vector2.');
+            }
+
+            if (typeof array[i].k !== 'number') {
+                throw new Error('BB.Particle2D.springArray: array element ' + i 
+                                + ' does not have a k property that is an instance of type Number.');
+            }
+
+            if (typeof array[i].length !== 'undefined' && typeof array[i].length !== 'number') {
+                throw new Error('BB.Particle2D.springArray: array element ' + i 
+                                + ' does not have a length property that is an instance of type Number.');
+            }
+
+            this._springs.push({
+                point: vector2,
+                k: k,
+                length: length || 0
+            });
+        }
+    };
+
+    // Object.defineProperty(BB.Particle2D.prototype, 'speed', {
+    //     get: function() {
+    //         return this.velocity.length();
+    //          // Math.sqrt((this.velocity.x * this.velocity.x) + (this.velocity.y * this.velocity.y));
+    //     },
+    //     set: function(speed) {
+    //         // var heading = this.heading;
+    //         // this.velocity.set(Math.cos(heading) * speed, Math.sin(heading) * speed);
+    //         this.velocity.setLength(speed);
+    //     }
+    // });
 
     BB.Particle2D.prototype.update = function() {
 
@@ -3946,55 +4112,73 @@ function(  BB,        Vector2){
         for (i = 0; i < this._gravitations.length; i++) {
             
             var g = this._gravitations[i];
-            // console.log('gravitation', i, ':', this._gravitations[i]);
-            var distance = g.position.distanceTo(this.position);
-            // console.log('distance:', distance);
-            var force = g.position.sub(this.position);
-            // console.log('force:', force);
-            force.setLength(g.mass / (distance * distance));
-            // console.log('force:', force);
-            this.applyForce(force);
-
-            // var dx = p2.x - this.x,
-            // dy = p2.y - this.y,
-            // distSQ = dx * dx + dy * dy,
-            // dist = Math.sqrt(distSQ),
-            // force = p2.mass / distSQ,
+            // var distance = g.position.distanceTo(this.position);
+            // var force = g.position.clone().sub(this.position);
             
-            // ax = dx / dist * force,
-            // ay = dy / dist * force;
+            // force.setLength(g.mass / (distance * distance));
 
-            // this.vx += ax;
-            // this.vy += ay;
+            // this.applyForce(force);
 
+            // var dx = g.position.x - this.position.x;
+            // var dy = g.position.y - this.position.y;
+            // var distSQ = dx * dx + dy * dy;
+            // var dist = Math.sqrt(distSQ);
+            // var force = g.mass / distSQ;
+            
+            // var ax = dx / dist * force;
+            // var ay = dy / dist * force;
+
+            // if (flag) {
+            //     this.acceleration.x += ax;
+            //     this.acceleration.y += ay;
+            // } else {
+            //     this.applyForce(new BB.Vector2(ax, ay));
+            // }
+            
+
+                // Calculate direction of force
+                var force = this.position.clone().sub(g.position);
+        
+                // Distance between objects       
+                var distance = force.length();
+                
+                // Limiting the distance to eliminate "extreme" results for very close or very far objects                            
+                distance = BB.MathUtils.clamp(distance, 5, 25);
+                
+                // Normalize vector (distance doesn't matter here, we just want this vector for direction)                                  
+                force.normalize();
+                
+                // Calculate gravitional force magnitude  
+                var strength = (/*this.G * */this.mass * g.mass) / (distance * distance);
+                
+                // Get force vector --> magnitude * direction
+                force.multiplyScalar(strength);
+                // force.negate(); // attract instead
+
+                // this.applyForce(force);
+
+                this.acceleration.x += force.x; //ax;
+                this.acceleration.y += force.y; //ay;
+            // 
         }
 
-        // console.log('position: ', this.position.x, this.position.y);
-        // console.log('acceleration: ', this.acceleration.x, this.acceleration.y);
-        // console.log('velocity: ', this.velocity.x, this.velocity.y);
         this.acceleration.multiplyScalar(this.friction);
 
-        //console.log('acceleration: ', this.acceleration.x, this.acceleration.y);
-        this.velocity.add(this.acceleration);
-        console.log(this.velocity);
-        // console.log('velocity: ', this.velocity.x, this.velocity.y);
-        this.velocity.setLength(this.maxSpeed);
-        // console.log('velocity: ', this.velocity.x, this.velocity.y);
-        this.position.add(this.velocity);
-        // console.log('position: ', this.position.x, this.position.y);
-        this.acceleration.multiplyScalar(0);
-        // console.log('acceleration: ', this.acceleration.x, this.acceleration.y);
-        // console.log('position: ', this.position.x, this.position.y);
-        // console.log();
-        // debugger;
-        
-        // debugger;
+        // if (this.acceleration.x !== 0 && this.acceleration.y !== 0) {
 
-        // this.vx *= this.friction;
-        // this.vy *= this.friction;
-        // this.vy += this.gravity;
-        // this.x += this.vx;
-        // this.y += this.vy;
+        //     console.log("velocity before:", this.velocity);
+        // }
+
+        this.velocity.add(this.acceleration);
+        
+        // if (this.acceleration.x !== 0 && this.acceleration.y !== 0) {
+        //     console.log('acceleration:', this.acceleration);
+        //     console.log("velocity after:", this.velocity);
+        // }
+
+        this.velocity.setLength(this.maxSpeed);
+        this.position.add(this.velocity);
+        this.acceleration.multiplyScalar(0);
 
         this._gravitations = [];
         this._springs = [];
