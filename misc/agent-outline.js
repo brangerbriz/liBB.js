@@ -13,6 +13,13 @@ agent.groupSeek = function() {
 
 }
 
-agent.addBehavior('groupSeek');
+// agent.addBehavior('groupSeek');
+
+agent.seek([]);
+
+
+// particle stuff
+
+var particles = [/* Array of particles */];
 
 

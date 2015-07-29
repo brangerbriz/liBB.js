@@ -36,7 +36,7 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "BB.Color",
             "name": "BB.Color",
-            "description": "A module for creating color objects and doing color maths"
+            "description": "A module for creating color objects, color schemes and doing color maths"
         },
         {
             "displayName": "BB.ImageBrush2D",

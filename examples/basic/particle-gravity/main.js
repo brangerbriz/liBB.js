@@ -62,7 +62,7 @@ function draw() {
         ctx.beginPath();
         ctx.arc(particles[i].position.x, 
                 particles[i].position.y,
-                particles[i].mass,
+                particles[i].mass/10,
                 0, 2 * Math.PI);
         ctx.closePath();
         ctx.fill();
@@ -92,7 +92,7 @@ function createParticle(x, y, prevX, prevY) {
     var particle = new BB.Particle2D({
         position: pos,
         acceleration: acc,
-        mass: BB.MathUtils.randomInt(10, 30),
+        mass: BB.MathUtils.randomInt(100, 300),
         maxSpeed: 2
     });
 

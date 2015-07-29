@@ -64,9 +64,9 @@
     <h1 class="file-heading">File: src/BB.Color.js</h1>
     
     <div class="file">
-    <pre class="code prettyprint overflow">
+    <pre class="code prettyprint overflow linenums">
     /**
-     * A module for creating color objects and doing color maths
+     * A module for creating color objects, color schemes and doing color maths
      * @module BB.Color
      */
     define([&#x27;./BB&#x27;],
@@ -75,7 +75,7 @@
         &#x27;use strict&#x27;;
         
         /**
-         * A module for creating color objects and doing color maths
+         * A module for creating color objects, color schemes and doing color maths
          * @class BB.Color
          * @constructor
          * @param {Number} [r] optional parameter for setting the red value (0-255)
@@ -95,7 +95,7 @@
             else if( typeof r !== &#x27;number&#x27; || r&lt;0 || r&gt;255 ){
                 throw new Error(&quot;BB.Color: red parameter neeeds to be a NUMBER between 0 - 255&quot;);
             } else {
-                this._r = r || 204;     
+                this._r = r;     
             }
     
             // see getter/setter below
@@ -105,7 +105,7 @@
             else if( typeof g !== &#x27;number&#x27; || g&lt;0 || g&gt;255 ){
                 throw new Error(&quot;BB.Color: green parameter neeeds to be a NUMBER between 0 - 255&quot;);
             } else {
-                this._g = g || 51;        
+                this._g = g;        
             }
     
             // see getter/setter below
@@ -115,7 +115,7 @@
             else if( typeof b !== &#x27;number&#x27; || b&lt;0 || b&gt;255 ){
                 throw new Error(&quot;BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255&quot;);
             } else {
-                this._b = b || 153;        
+                this._b = b;        
             }
     
             // see getter/setter below
@@ -125,16 +125,15 @@
             else if(  a&lt;0 || a&gt;255 ){
                 throw new Error(&quot;BB.Color: alpha parameter neeeds to be a NUMBER between 0 - 255&quot;);
             } else {
-                this._a = a || 255;        
+                this._a = a;        
             }
     
            this.rgb2hsv();
     
             /**
              * object with properties ( named after different color schemes ) for
-             * holding arrays of the color values generated with the
-             * &lt;code&gt;createScheme()&lt;/code&gt; method. the colors are Objects with r, g,
-             * b, a values as well as rgb(string), rgba(string) and hex(string)
+             * holding arrays of new BB.Color objects generated with the
+             * &lt;a href=&quot;#method_createScheme&quot;&gt;&lt;code&gt;createScheme()&lt;/code&gt;&lt;/a&gt; method. 
              * 
              * @type {Object}
              * @property schemes
@@ -145,13 +144,14 @@
                 &#x27;complementary&#x27; : [],
                 &#x27;split complementary&#x27; : [],
                 &#x27;triadic&#x27; : [],
-                &#x27;tetradic&#x27; : []
+                &#x27;tetradic&#x27; : [],
+                &#x27;random&#x27; : []
             };
         };
     
         /**
          * the red value between 0 - 255
-         * @property r
+         * @property r (red)
          * @type Number
          * @default 204
          */   
@@ -163,7 +163,7 @@
                 if( typeof r !== &#x27;number&#x27; || r&lt;0 || r&gt;255 ){
                     throw new Error(&quot;BB.Color: red parameter neeeds to be a NUMBER between 0 - 255&quot;);
                 } else {
-                    this._r = r || 204;    
+                    this._r = r;    
                     this.rgb2hsv(); 
                 }
             }
@@ -171,7 +171,7 @@
     
         /**
          * the green value between 0 - 255
-         * @property g
+         * @property g (green)
          * @type Number
          * @default 51
          */   
@@ -183,7 +183,7 @@
                 if( typeof g !== &#x27;number&#x27; || g&lt;0 || g&gt;255 ){
                     throw new Error(&quot;BB.Color: green parameter neeeds to be a NUMBER between 0 - 255&quot;);
                 } else {
-                    this._g = g || 51;    
+                    this._g = g;    
                     this.rgb2hsv(); 
                 }
             }
@@ -191,7 +191,7 @@
     
         /**
          * the blue value between 0 - 255
-         * @property b
+         * @property b (blue)
          * @type Number
          * @default 153
          */   
@@ -203,7 +203,7 @@
                 if( typeof b !== &#x27;number&#x27; || b&lt;0 || b&gt;255 ){
                     throw new Error(&quot;BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255&quot;);
                 } else {
-                    this._b = b || 153;    
+                    this._b = b;    
                     this.rgb2hsv(); 
                 }
             }
@@ -211,7 +211,7 @@
     
         /**
          * the alpha value between 0 - 255
-         * @property a
+         * @property a (alpha)
          * @type Number
          * @default 255
          */   
@@ -223,7 +223,7 @@
                 if( typeof a !== &#x27;number&#x27; || a&lt;0 || a&gt;255 ){
                     throw new Error(&quot;BB.Color: alpha parameter neeeds to be a NUMBER between 0 - 255&quot;);
                 } else {
-                    this._a = a || 0;    
+                    this._a = a;    
                     this.rgb2hsv(); 
                 }
             }
@@ -231,7 +231,7 @@
     
         /**
          * the hue value between 0 - 359
-         * @property h
+         * @property h (hue)
          * @type Number
          * @default 0
          */   
@@ -243,7 +243,7 @@
                 if( typeof h !== &#x27;number&#x27; || h&lt;0 || h&gt;359 ){
                     throw new Error(&quot;BB.Color: hue parameter neeeds to be a NUMBER between 0 - 359&quot;);
                 } else {
-                    this._h = h || 0;    
+                    this._h = h;    
                     this.hsv2rgb(); 
                 }
             }
@@ -251,7 +251,7 @@
     
         /**
          * the saturation value between 0 - 100
-         * @property s
+         * @property s (saturatoin)
          * @type Number
          * @default 0
          */   
@@ -263,7 +263,7 @@
                 if( typeof s !== &#x27;number&#x27; || s&lt;0 || s&gt;100 ){
                     throw new Error(&quot;BB.Color: saturation parameter neeeds to be a NUMBER between 0 - 100&quot;);
                 } else {
-                    this._s = s || 0;    
+                    this._s = s;    
                     this.hsv2rgb(); 
                 }
             }
@@ -271,7 +271,7 @@
     
         /**
          * the brightness/lightness value between 0 - 100
-         * @property v
+         * @property v (value)
          * @type Number
          * @default 0
          */   
@@ -283,7 +283,7 @@
                 if( typeof v !== &#x27;number&#x27; || v&lt;0 || v&gt;100 ){
                     throw new Error(&quot;BB.Color: brightness/lightness parameter neeeds to be a NUMBER between 0 - 100&quot;);
                 } else {
-                    this._v = v || 0;    
+                    this._v = v;    
                     this.hsv2rgb(); 
                 }
             }
@@ -291,41 +291,141 @@
     
     
         /**
-         * returns rgb string for color
-         * @method getRGB
-         * @return {String} for example &lt;code&gt;&#x27;rgb(255,0,0)&#x27;&lt;/code&gt;
-         */
-        BB.Color.prototype.getRGB = function() { 
-            return &#x27;rgb(&#x27;+this.r+&#x27;, &#x27;+this.g+&#x27;, &#x27;+this.b+&#x27;)&#x27;;
-        };
+         * the base color&#x27;s rgb string
+         * @property rgb
+         * @type String
+         * @default &quot;rgb(204,51,153)&quot;
+         */   
+        Object.defineProperty(BB.Color.prototype, &quot;rgb&quot;, {
+            get: function() {
+                return &#x27;rgb(&#x27;+this.r+&#x27;, &#x27;+this.g+&#x27;, &#x27;+this.b+&#x27;)&#x27;;
+            },
+            set: function(v) {
+                if( typeof v !== &#x27;string&#x27; ){
+                    throw new Error(&quot;BB.Color: rgb parameter expects an rgb(...) string&quot;);
+                } else {
+                    if( v.indexOf(&#x27;rgb(&#x27;) !== 0){
+                        throw new Error(&quot;BB.Color: expecting string staring with &#x27;rgb(&#x27; &quot;);
+                    }
+                    else if( v[v.length-1] !== &quot;)&quot;){
+                        throw new Error(&quot;BB.Color: expecting string ending with &#x27;)&#x27; &quot;);
+                    } 
+                    else {
+                        v = v.substr(4,v.length-5);
+                        v = v.split(&#x27;,&#x27;);
+                        if( v.length &lt; 3 ) throw new Error(&quot;BB.Color: rgb(...) requires 3 properties&quot;);
+                        v[0] = parseInt(v[0]);
+                        v[1] = parseInt(v[1]);
+                        v[2] = parseInt(v[2]);
+                        if( v[0] &lt; 0 || v[0] &gt; 255 ) throw new Error(&quot;BB.Color: red value must be between 0 - 255 &quot;);
+                        if( v[1] &lt; 0 || v[1] &gt; 255 ) throw new Error(&quot;BB.Color: green value must be between 0 - 255 &quot;);
+                        if( v[2] &lt; 0 || v[2] &gt; 255 ) throw new Error(&quot;BB.Color: blue value must be between 0 - 255 &quot;);
+                        this.r = v[0];
+                        this.g = v[1];
+                        this.b = v[2];
+                    }
+                }
+            }
+        });
+    
     
         /**
-         * returns rgba string for color
-         * @method getRGBA
-         * @return {String} for example &lt;code&gt;&#x27;rgba(255,0,0,255)&#x27;&lt;/code&gt;
-         */
-        BB.Color.prototype.getRGBA = function() { 
-            return &#x27;rgba(&#x27;+this.r+&#x27;, &#x27;+this.g+&#x27;, &#x27;+this.b+&#x27;, &#x27;+this.a+&#x27;)&#x27;;
-        };
+         * the base color&#x27;s rgba string
+         * @property rgba
+         * @type String
+         * @default &quot;rgba(204,51,153,1)&quot;
+         */   
+        Object.defineProperty(BB.Color.prototype, &quot;rgba&quot;, {
+            get: function() {
+                return &#x27;rgba(&#x27;+this.r+&#x27;, &#x27;+this.g+&#x27;, &#x27;+this.b+&#x27;,&#x27;+Math.floor((this.a/255)*100)/100+&#x27;)&#x27;;
+            },
+            set: function(v) {
+                if( typeof v !== &#x27;string&#x27; ){
+                    throw new Error(&quot;BB.Color: rgba parameter expects an rgba(...) string&quot;);
+                } else {
+                    if( v.indexOf(&#x27;rgba(&#x27;) !== 0){
+                        throw new Error(&quot;BB.Color: expecting string staring with &#x27;rgba(&#x27; &quot;);
+                    }
+                    else if( v[v.length-1] !== &quot;)&quot;){
+                        throw new Error(&quot;BB.Color: expecting string ending with &#x27;)&#x27; &quot;);
+                    } 
+                    else {
+                        v = v.substr(5,v.length-6);
+                        v = v.split(&#x27;,&#x27;);
+                        if( v.length &lt; 4 ) throw new Error(&quot;BB.Color: rgba(...) requires 4 properties&quot;);
+                        v[0] = parseInt(v[0]);
+                        v[1] = parseInt(v[1]);
+                        v[2] = parseInt(v[2]);
+                        v[3] = parseFloat(v[3]);
+                        if( v[0] &lt; 0 || v[0] &gt; 255 ) throw new Error(&quot;BB.Color: red value must be between 0 - 255 &quot;);
+                        if( v[1] &lt; 0 || v[1] &gt; 255 ) throw new Error(&quot;BB.Color: green value must be between 0 - 255 &quot;);
+                        if( v[2] &lt; 0 || v[2] &gt; 255 ) throw new Error(&quot;BB.Color: blue value must be between 0 - 255 &quot;);
+                        if( v[3] &lt; 0.0 || v[3] &gt; 1.0 ) throw new Error(&quot;BB.Color: alpha value must be between 0.0 - 1.0 &quot;);
+                        this.r = v[0];
+                        this.g = v[1];
+                        this.b = v[2];
+                        this.a = Math.floor( v[3] * 255 );
+                    }
+                }
+            }
+        });
     
         /**
-         * returns hex string for color
-         * @method getHex
-         * @return {String} for example &lt;code&gt;&#x27;#ff0000&#x27;&lt;/code&gt;
-         */
-        BB.Color.prototype.getHex = function() { 
-            return &quot;#&quot; +((this.r &lt;&lt; 16) | (this.g &lt;&lt; 8) | this.b).toString(16);
-        };
+         * the base color&#x27;s hex string
+         * @property hex
+         * @type String
+         * @default &quot;#cc3399&quot;
+         */   
+        Object.defineProperty(BB.Color.prototype, &quot;hex&quot;, {
+            get: function() {
+                return &quot;#&quot; +((this.r &lt;&lt; 16) | (this.g &lt;&lt; 8) | this.b).toString(16);
+            },
+            set: function(v) {
+                if( typeof v !== &#x27;string&#x27; ){
+                    throw new Error(&quot;BB.Color: hex parameter expects a # string&quot;);
+                } 
+                else {
+                       if (v.indexOf(&#x27;#&#x27;) !== 0) {
+                            throw new Error(&quot;BB.Color: expecting string staring with &#x27;#&#x27; &quot;);
+                        }
+                        else if( v.length !== 7 &amp;&amp; v.length !== 4  ){
+                            throw new Error(&quot;BB.Color: hex string is too long or short &quot;);
+                        }
+                        else {
+                            var a;
+                            if(v.length === 7 ){
+                                v = v.substr(1,v.length-1);
+                                a = [ v.substr(0,v.length-4), v.substr(2,v.length-4), v.substr(4,v.length-4)];
+                                console.log( parseInt(&#x27;0x&#x27;+a[0]), parseInt(&#x27;0x&#x27;+a[1]), parseInt(&#x27;0x&#x27;+a[2]) );
+                                this.r = parseInt(&#x27;0x&#x27;+a[0]);
+                                this.g = parseInt(&#x27;0x&#x27;+a[1]);
+                                this.b = parseInt(&#x27;0x&#x27;+a[2]);
+                            }
+                            else {
+                                v = v.substr(1,v.length-1);
+                                a = [ v.substr(0,v.length-2), v.substr(1,v.length-2), v.substr(2,v.length-2)];
+                                this.r = parseInt(&#x27;0x&#x27;+a[0]+a[0]);
+                                this.g = parseInt(&#x27;0x&#x27;+a[1]+a[1]);
+                                this.b = parseInt(&#x27;0x&#x27;+a[2]+a[2]);
+                            }
+                        }
+                }
+            }
+        });
     
-    
-    
-        //
     
     
         /**
          * sets color value to match another color object&#x27;s value
          * @method copy
          * @param {BB.Color} color another color object to copy from
+         * @example
+         * &lt;code class=&quot;code prettyprint&quot;&gt;
+         * &amp;nbsp; var x = new color(0,255,0); &lt;br&gt;
+         * &amp;nbsp; var y = new color(100,100,100); &lt;br&gt;
+         * &amp;nbsp; y.copy( x ); &lt;br&gt;
+         * &amp;nbsp; y.rgb; // returns &#x27;rgb(0,255,0)&#x27;;                         
+         * &lt;/code&gt;
          */
         BB.Color.prototype.copy = function( color ) { 
             if (! color || !this.isLikeColor( color ) ) {
@@ -338,6 +438,12 @@
          * creates a new color object that is a copy of itself
          * @method clone
          * @return {BB.Color} a new color object copied from this one
+         * @example
+         * &lt;code class=&quot;code prettyprint&quot;&gt;
+         * &amp;nbsp; var x = new color(0,255,0); &lt;br&gt;
+         * &amp;nbsp; var y = x.clone(); &lt;br&gt;
+         * &amp;nbsp; y.rgb; // returns &#x27;rgb(0,255,0)&#x27;;
+         * &lt;/code&gt;
          */
         BB.Color.prototype.clone = function() { 
             var child = new BB.Color();
@@ -531,74 +637,58 @@
          * functionality is used internally, for ex. by the getters &amp;&amp; setters )
          *
          * @method hsv2rgb
-         * @param  {Number} [hsv] either an instance of BB.Color or a h value between 0 - 359
+         * @param  {Number} [h] either an instance of BB.Color or a h value between 0 - 359
          * @param  {Number} [s]   a saturation value between 0 - 100
          * @param  {Number} [v]   a brightness/lightness value value between 0 - 100
          * @return {Object}     an object with r, g, b properties
          */
-        BB.Color.prototype.hsv2rgb = function( hsv, s, v ) { 
+        BB.Color.prototype.hsv2rgb = function( h, s, v ) { 
+            var rgb, hsv;
     
-            var rgb;
-            if( typeof hsv == &quot;undefined&quot;){
+            if( typeof h == &quot;undefined&quot;){
     
-                rgb = this;
-                hsv = { h:this.h, s:this.s, v:this.v };
+                rgb = { r:this.r, g:this.g, b:this.b };
+                hsv = { h:this.h, s:this.s, v:this.v }; 
     
             } else {
     
                 rgb = {};
-                hsv = ( hsv instanceof BB.Color ) ? hsv : { h:hsv, s:s, v:v };
-    
+                hsv = ( h instanceof BB.Color ) ? h.clone() : { h:h, s:s, v:v };
+            }
+       
+            hsv.h /= 60;
+            hsv.s /= 100;
+            hsv.v /= 100;
+            
+            var i = Math.floor( hsv.h );
+            var f = hsv.h - i;
+            var p = hsv.v * ( 1- hsv.s );
+            var q = hsv.v * ( 1 - hsv.s * f );
+            var t = hsv.v * ( 1 - hsv.s * (1-f) );
+            
+            switch( i ) {
+                case 0: rgb.r = hsv.v; rgb.g = t; rgb.b = p; break;
+                case 1: rgb.r = q; rgb.g = hsv.v; rgb.b = p; break;
+                case 2: rgb.r = p; rgb.g = hsv.v; rgb.b = t; break;
+                case 3: rgb.r = p; rgb.g = q; rgb.b = hsv.v; break;
+                case 4: rgb.r = t; rgb.g = p; rgb.b = hsv.v; break;
+                default: rgb.r = hsv.v; rgb.g = p; rgb.b = q;
             }
     
+            rgb.r = Math.round(rgb.r * 255);
+            rgb.g = Math.round(rgb.g * 255);
+            rgb.b = Math.round(rgb.b * 255);
     
-            if( typeof hsv == &quot;undefined&quot; &amp;&amp; hsv.s === 0 ){
+            if( arguments.length === 0 ){
     
-                this._r = this._g = this._b = Math.round( hsv.v * 2.55 );
+                this._r = rgb.r;         
+                this._g = rgb.g;  
+                this._b = rgb.b;    
     
-                return this;
-    
-            } else if ( typeof hsv !== &quot;undefined&quot; &amp;&amp; hsv.s === 0 ) {
-    
-                rgb.r = rgb.g = rgb.b = Math.round( hsv.v * 2.55 );
-    
-                return rgb;
-    
-            } else {
-    
-                hsv.h /= 60;
-                hsv.s /= 100;
-                hsv.v /= 100;
-                
-                var i = Math.floor( hsv.h );
-                var f = hsv.h - i;
-                var p = hsv.v * ( 1- hsv.s );
-                var q = hsv.v * ( 1 - hsv.s * f );
-                var t = hsv.v * ( 1 - hsv.s * (1-f) );
-                
-                switch( i ) {
-                    case 0: rgb.r = hsv.v; rgb.g = t; rgb.b = p; break;
-                    case 1: rgb.r = q; rgb.g = hsv.v; rgb.b = p; break;
-                    case 2: rgb.r = p; rgb.g = hsv.v; rgb.b = t; break;
-                    case 3: rgb.r = p; rgb.g = q; rgb.b = hsv.v; break;
-                    case 4: rgb.r = t; rgb.g = p; rgb.b = hsv.v; break;
-                    default: rgb.r = hsv.v; rgb.g = p; rgb.b = q;
-                }
-    
-                rgb.r = Math.round(rgb.r * 255);
-                rgb.g = Math.round(rgb.g * 255);
-                rgb.b = Math.round(rgb.b * 255);
-    
-                if( typeof hsv == &quot;undefined&quot;){
-    
-                    this._r = rgb.r;         
-                    this._g = rgb.g;  
-                    this._b = rgb.b;    
-    
-                } 
-                
-                return rgb;
-            }
+            } 
+            
+            return rgb;
+        
         };
     
     
@@ -651,8 +741,10 @@
             col.g = Math.round( this.g+(255-this.g ) * tint );
             col.b = Math.round( this.b+(255-this.b ) * tint );
             col.a = this.a;
-            if( typeof _schemeUse !== &quot;undefined&quot;) return col;
-            else this.setRGBA( col.r, col.g, col.b, col.a );
+            if( typeof _schemeUse !== &quot;undefined&quot;) {
+                return new BB.Color( col.r, col.g, col.b, col.a );
+            }
+            else { this.setRGBA( col.r, col.g, col.b, col.a ); }
         };
     
     
@@ -669,8 +761,10 @@
             col.g = Math.round( this.g * shade );
             col.b = Math.round( this.b * shade );
             col.a = this.a;
-            if( typeof _schemeUse !== &quot;undefined&quot;) return col;
-            else this.setRGBA( col.r, col.g, col.b, col.a );
+            if( typeof _schemeUse !== &quot;undefined&quot;) {
+                return new BB.Color( col.r, col.g, col.b, col.a );
+            }
+            else { this.setRGBA( col.r, col.g, col.b, col.a ); }
         };
     
     
@@ -680,60 +774,58 @@
          * base color.
          *
          * the colors are stored in an array in the &lt;code&gt;.schemes&lt;/code&gt; property (
-         * object ) and can be accessed by passing it the key ( name of ) the color
-         * scheme you generated like so: &lt;code&gt; .schemes[&quot;triadic&quot;] &lt;/code&gt;, which
-         * will return an array of objects ( with r, g, b, a properties )
+         * object ) and can be accessed by querying the key ( name ) of the color
+         * scheme you generated like so: &lt;code&gt; .schemes.triadic &lt;/code&gt;, which
+         * will return an array of BB.Color objects
          * 
          * @method createScheme
          * 
          * @param  {String} scheme name of the color scheme you want to generate.
          * can be either &quot;monochromatic&quot;, &quot;analogous&quot;, &quot;complementary&quot;, &quot;split
-         * complementary&quot;, &quot;triadic&quot; or &quot;tetradic&quot;
+         * complementary&quot;, &quot;triadic&quot;, &quot;tetradic&quot; or &quot;random&quot;
          * 
-         * @param  {Object} config object with properties for angle (Number) for hue
-         * shift ( this is required by all schemes except for &quot;complimentary&quot; and
-         * &quot;triadaic&quot;, which by definition have hardcoded angles of 180 and 240/120
-         * respectively ), tint (Array of Floats) and shade (Array of Flaots), which
-         * are used to create monochromatic colors ( tint for light variations of
-         * the base color and shade for dark ), these are required when creating
-         * &quot;monochromatic&quot; scheme ( which is essentially just a set of tint/shade
-         * variations from the base color ) and optional for the other schemes (
-         * used if you want monochromatic varients calculated of the colors produced
-         * by that particular scheme )
+         * @param  {Object} optional config object with properties for angle (Number) for hue
+         * shift ( for schemes other than &quot;complimentary&quot; or &quot;triadic&quot; which have fixed 
+         * angles ), tint (Array of Floats) and shade (Array of Flaots), which
+         * are used to create aditional monochromatic colors ( tint for light variations of
+         * the base color and shade for dark ) in relation to the base colors of each scheme
+         *
+         * the &quot;random&quot; scheme takes an entirely different config object with values for hue,
+         * saturation and value. when no config is sent it generates entirely random colors.
+         * when a &lt;code&gt;{ hue: 200 }&lt;/code&gt; is passed than you&#x27;d get random shades of blue, etc.
+         *
+         * if you need a color scheme/theory refersher: &lt;a href=&quot;http://www.tigercolor.com/color-lab/color-theory/color-theory-intro.htm&quot; target=&quot;_blank&quot;&gt; check this out&lt;/a&gt;
          * 
-         * @example 
-         * &lt;code class=&quot;code prettyprint&quot;&gt; 
-         * &amp;nbsp; color.createScheme(&quot;analogous&quot;,{                          &lt;br&gt;        
-         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; angle: 30,                             &lt;br&gt; 
-         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; tint:[ 0.4, 0.8 ],                     &lt;br&gt; 
-         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; shade:[ 0.3, 0.6 ]                     &lt;br&gt; 
-         *&amp;nbsp; });                                                       &lt;br&gt;&lt;br&gt;
-         * &amp;nbsp; color.schemes[&quot;analogous&quot;][0] // returns first color     &lt;br&gt; 
-         * &amp;nbsp; color.schemes[&quot;analogous&quot;][1] // returns second color    &lt;br&gt; 
-         * &lt;/code&gt;
+         * @example  &lt;code class=&quot;code prettyprint&quot;&gt;  
+         * &amp;nbsp; color.createScheme(&quot;complementary&quot;); // creates single complementary color &lt;br&gt;&lt;br&gt;
+         * &amp;nbsp; // creates two analogous colors &lt;br&gt;
+         * &amp;nbsp; // as well as 2 shades and 2 tints for each of the two analogous colors&lt;br&gt;
+         * &amp;nbsp; // so color.schemes.analogous.length will be 10&lt;br&gt;
+         * &amp;nbsp; color.createScheme(&quot;analogous&quot;,{ &lt;br&gt; 
+         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; angle: 30,&lt;br&gt; 
+         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; tint:[ 0.4, 0.8 ], &lt;br&gt;
+         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; shade:[ 0.3, 0.6 ] &lt;br&gt; 
+         * &amp;nbsp; }); &lt;br&gt;&lt;br&gt;
+         * &amp;nbsp; color.createScheme(&quot;random&quot;,{ &lt;br&gt; 
+         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; hue: 200,&lt;br&gt; 
+         * &amp;nbsp; }); &lt;br&gt;&lt;br&gt;
+         * &amp;nbsp; color.schemes.analogous[0] // returns first analogous color &lt;br&gt; 
+         * &amp;nbsp; color.schemes.analogous[1] // returns second analogous color &lt;br&gt; 
+         * &amp;nbsp; color.schemes.random[0] // returns first random blue shade &lt;br&gt; &lt;/code&gt;
          */
         BB.Color.prototype.createScheme = function( scheme, config ) { 
+    
+            // ERROR CHECKING -----------------------------------------------------------
     
             if( !(scheme in this.schemes) ) {
                 throw new Error(&quot;BB.Color.createScheme: &#x27;&quot;+scheme+&quot;&#x27; is not a valid scheme name, choose from: &quot;+Object.keys(this.schemes) );
             }
     
-            // var errorMsg;
-            // switch( scheme ) {
-            //     case &quot;monochromatic&quot;: errorMsg = &#x27;&quot;monochromatic&quot; requires a second parameter: a config object with tint Array and/or shade Array&#x27;; break;
-            //     case &quot;analogous&quot;: errorMsg = &quot;this scheme requires a config object with an angle property&quot;; break;
-            //     case &quot;complementary&quot; : errorMsg=false; break;
-            //     case &quot;split complementary&quot;: errorMsg = &quot;this scheme requires a config object with an angle property&quot;; break;
-            //     case &quot;triadic&quot; : errorMsg=false; break;
-            //     case &quot;tetradic&quot;: errorMsg = &quot;this scheme requires a config object with an angle property&quot;; break;
-            // }
-    
-            // if(typeof config !== &quot;object&quot; &amp;&amp; errorMsg){ 
-            if( typeof config === &quot;object&quot; || typeof config === &quot;undefined&quot;  ){ 
-                
-                // throw new Error(&quot;BB.Color.createScheme: &quot;+errorMsg );
-                
+            if( typeof config === &quot;object&quot; || typeof config === &quot;undefined&quot;  ){  
+                            
                 if( typeof config === &quot;undefined&quot; ) config = {};
+    
+                // defaults for color schemes
                 
                 if( typeof config.angle === &quot;undefined&quot; ){
                     if(scheme==&quot;tetradic&quot;) config.angle = 40;
@@ -749,7 +841,12 @@
                       throw new Error(&quot;BB.Color.createScheme: shade should be an Array of floats between 0.0-1.0&quot;);  
                     } 
                 }
-            
+    
+                // defaults for random schemes
+                
+                if( scheme == &quot;random&quot; ){
+                    if( typeof config.count === &quot;undefined&quot; ){ config.count = 5; } 
+                }
             }
     
             if( typeof config !== &quot;object&quot; ) {
@@ -758,9 +855,7 @@
     
             } else {
     
-                // if(typeof config !== &quot;object&quot;){
-                //     config = {}; // bug fix, schemes that don&#x27;t require config erroring w/out some kinda object
-                // }
+            // GENERATING THE SCHEME ----------------------------------------------------
     
                 this.schemes[scheme] = []; // clear previous colors
     
@@ -777,10 +872,12 @@
                 var twos = [&quot;analogous&quot;,&quot;split complementary&quot;,&quot;triadic&quot;,&quot;tetradic&quot;];
                 var threes = [&quot;tetradic&quot;];
     
-                if( scheme == &quot;monochromatic&quot; )     this._schemeVarient( scheme, config );
+                if( scheme == &quot;monochromatic&quot; )      this._schemeVarient( scheme, config );
                 if( ones.indexOf( scheme ) &gt;= 0 )    this._schemeVarient( scheme, config, angles[0] );
                 if( twos.indexOf( scheme ) &gt;= 0 )    this._schemeVarient( scheme, config, angles[1] );
                 if( threes.indexOf( scheme ) &gt;= 0 )  this._schemeVarient( scheme, config, angles[2] );
+    
+                if( scheme == &quot;random&quot; ) this._randomVarients( scheme, config );
                              
             }
     
@@ -811,7 +908,8 @@
                 }
             }
     
-            this.schemes[scheme].push({ r:rgb.r, g:rgb.g, b:rgb.b, a:this.a });
+            var copy = this.clone();
+            this.schemes[scheme].push( copy );
             
             if( typeof config.shade !== &quot;undefined&quot; ){
                 config.shade.sort(function(a,b){return b - a;}); // reorder largest to smallest
@@ -821,13 +919,32 @@
                     this.schemes[scheme].push( col2 );
                 }
             }
+        };
     
-            for (var ii = 0; ii &lt; this.schemes[scheme].length; ii++) {
-                var self = this.schemes[scheme][ii];
-                    self.hex = &quot;#&quot; +((self.r &lt;&lt; 16) | (self.g &lt;&lt; 8) | self.b).toString(16);
-                    self.rgb = &#x27;rgb(&#x27;+self.r+&#x27;, &#x27;+self.g+&#x27;, &#x27;+self.b+&#x27;)&#x27;;
-                    self.rgba = &#x27;rgba(&#x27;+self.r+&#x27;, &#x27;+self.g+&#x27;, &#x27;+self.b+&#x27;, &#x27;+self.a+&#x27;)&#x27;;
+        // private function for creating random variants
+        // used by scheme functions 
+        BB.Color.prototype._randomVarients = function( scheme, config ) { 
+    
+            if( typeof config.count === &quot;undefined&quot; ) config.count = 5;
+    
+            for (var i = 0; i &lt; config.count; i++) {
+    
+                var hue = ( typeof config.hue === &quot;undefined&quot; ) ? Math.floor( Math.random()*360 ) : config.hue;
+                var sat = ( typeof config.saturation === &quot;undefined&quot; ) ? Math.floor( Math.random()*100 ) : config.saturation;
+                var value = ( typeof config.value === &quot;undefined&quot; ) ? Math.floor( Math.random()*100 ) : config.value;
+                var alpha;
+                if( typeof config.alpha !== &quot;undefined&quot; ){
+                    alpha = ( config.alpha == &quot;random&quot; ) ? Math.floor( Math.random() * 255 ) : config.alpha;
+                } else { alpha = 255; }
+    
+                var clr = this.hsv2rgb( hue, sat, value ); 
+                    clr.a = alpha;
+    
+                var col = new BB.Color( clr.r, clr.g, clr.b, clr.a );
+    
+                this.schemes[scheme].push( col );
             }
+        
         };
     
         return BB.Color;

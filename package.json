@@ -38,6 +38,7 @@
     "gulp-uglify": "^1.2.0",
     "gulp-yuidoc-relative": "^0.1.2",
     "jshint-stylish": "^2.0.1",
-    "madge": "^0.5.0"
+    "madge": "^0.5.0",
+    "nw-builder": "^2.0.2"
   }
 }
