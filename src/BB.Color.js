@@ -1,5 +1,5 @@
 /**
- * A module for creating color objects and doing color maths
+ * A module for creating color objects, color schemes and doing color maths
  * @module BB.Color
  */
 define(['./BB'],
@@ -8,7 +8,7 @@ function(  BB){
     'use strict';
     
     /**
-     * A module for creating color objects and doing color maths
+     * A module for creating color objects, color schemes and doing color maths
      * @class BB.Color
      * @constructor
      * @param {Number} [r] optional parameter for setting the red value (0-255)
@@ -28,7 +28,7 @@ function(  BB){
         else if( typeof r !== 'number' || r<0 || r>255 ){
             throw new Error("BB.Color: red parameter neeeds to be a NUMBER between 0 - 255");
         } else {
-            this._r = r || 204;     
+            this._r = r;     
         }
 
         // see getter/setter below
@@ -38,7 +38,7 @@ function(  BB){
         else if( typeof g !== 'number' || g<0 || g>255 ){
             throw new Error("BB.Color: green parameter neeeds to be a NUMBER between 0 - 255");
         } else {
-            this._g = g || 51;        
+            this._g = g;        
         }
 
         // see getter/setter below
@@ -48,7 +48,7 @@ function(  BB){
         else if( typeof b !== 'number' || b<0 || b>255 ){
             throw new Error("BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255");
         } else {
-            this._b = b || 153;        
+            this._b = b;        
         }
 
         // see getter/setter below
@@ -58,16 +58,15 @@ function(  BB){
         else if(  a<0 || a>255 ){
             throw new Error("BB.Color: alpha parameter neeeds to be a NUMBER between 0 - 255");
         } else {
-            this._a = a || 255;        
+            this._a = a;        
         }
 
        this.rgb2hsv();
 
         /**
          * object with properties ( named after different color schemes ) for
-         * holding arrays of the color values generated with the
-         * <code>createScheme()</code> method. the colors are Objects with r, g,
-         * b, a values as well as rgb(string), rgba(string) and hex(string)
+         * holding arrays of new BB.Color objects generated with the
+         * <a href="#method_createScheme"><code>createScheme()</code></a> method. 
          * 
          * @type {Object}
          * @property schemes
@@ -85,7 +84,7 @@ function(  BB){
 
     /**
      * the red value between 0 - 255
-     * @property r
+     * @property r (red)
      * @type Number
      * @default 204
      */   
@@ -105,7 +104,7 @@ function(  BB){
 
     /**
      * the green value between 0 - 255
-     * @property g
+     * @property g (green)
      * @type Number
      * @default 51
      */   
@@ -125,7 +124,7 @@ function(  BB){
 
     /**
      * the blue value between 0 - 255
-     * @property b
+     * @property b (blue)
      * @type Number
      * @default 153
      */   
@@ -145,7 +144,7 @@ function(  BB){
 
     /**
      * the alpha value between 0 - 255
-     * @property a
+     * @property a (alpha)
      * @type Number
      * @default 255
      */   
@@ -165,7 +164,7 @@ function(  BB){
 
     /**
      * the hue value between 0 - 359
-     * @property h
+     * @property h (hue)
      * @type Number
      * @default 0
      */   
@@ -185,7 +184,7 @@ function(  BB){
 
     /**
      * the saturation value between 0 - 100
-     * @property s
+     * @property s (saturatoin)
      * @type Number
      * @default 0
      */   
@@ -205,7 +204,7 @@ function(  BB){
 
     /**
      * the brightness/lightness value between 0 - 100
-     * @property v
+     * @property v (value)
      * @type Number
      * @default 0
      */   
@@ -360,7 +359,7 @@ function(  BB){
      * &nbsp; var x = new color(0,255,0); <br>
      * &nbsp; var y = new color(100,100,100); <br>
      * &nbsp; y.copy( x ); <br>
-     * &nbsp; y.getRGB(); // returns 'rgb(0,255,0)';                          <<<<<<< EDIT <<<<<<<< NO MORE RGB
+     * &nbsp; y.rgb; // returns 'rgb(0,255,0)';                         
      * </code>
      */
     BB.Color.prototype.copy = function( color ) { 
@@ -378,7 +377,7 @@ function(  BB){
      * <code class="code prettyprint">
      * &nbsp; var x = new color(0,255,0); <br>
      * &nbsp; var y = x.clone(); <br>
-     * &nbsp; y.getRGB(); // returns 'rgb(0,255,0)';
+     * &nbsp; y.rgb; // returns 'rgb(0,255,0)';
      * </code>
      */
     BB.Color.prototype.clone = function() { 
@@ -580,22 +579,21 @@ function(  BB){
      */
     BB.Color.prototype.hsv2rgb = function( h, s, v ) { 
         var rgb, hsv;
+
         if( typeof h == "undefined"){
 
-            rgb = this;
+            rgb = { r:this.r, g:this.g, b:this.b };
             hsv = { h:this.h, s:this.s, v:this.v }; 
 
         } else {
 
             rgb = {};
-            hsv = ( h instanceof BB.Color ) ? h : { h:h, s:s, v:v };
+            hsv = ( h instanceof BB.Color ) ? h.clone() : { h:h, s:s, v:v };
         }
    
         hsv.h /= 60;
         hsv.s /= 100;
         hsv.v /= 100;
-
-        if(hsv.v===0) hsv.v = 0.1; // hack, bugging out when hsv.v is 0 
         
         var i = Math.floor( hsv.h );
         var f = hsv.h - i;
@@ -711,32 +709,44 @@ function(  BB){
      * base color.
      *
      * the colors are stored in an array in the <code>.schemes</code> property (
-     * object ) and can be accessed by passing it the key ( name of ) the color
-     * scheme you generated like so: <code> .schemes["triadic"] </code>, which
-     * will return an array of objects ( with r, g, b, a, rgb[string],
-     * rgba[string], hex[string] properties )
+     * object ) and can be accessed by querying the key ( name ) of the color
+     * scheme you generated like so: <code> .schemes.triadic </code>, which
+     * will return an array of BB.Color objects
      * 
      * @method createScheme
      * 
      * @param  {String} scheme name of the color scheme you want to generate.
      * can be either "monochromatic", "analogous", "complementary", "split
-     * complementary", "triadic" or "tetradic"
+     * complementary", "triadic", "tetradic" or "random"
      * 
      * @param  {Object} optional config object with properties for angle (Number) for hue
      * shift ( for schemes other than "complimentary" or "triadic" which have fixed 
      * angles ), tint (Array of Floats) and shade (Array of Flaots), which
-     * are used to create monochromatic colors ( tint for light variations of
+     * are used to create aditional monochromatic colors ( tint for light variations of
      * the base color and shade for dark ) in relation to the base colors of each scheme
+     *
+     * the "random" scheme takes an entirely different config object with values for hue,
+     * saturation and value. when no config is sent it generates entirely random colors.
+     * when a <code>{ hue: 200 }</code> is passed than you'd get random shades of blue, etc.
+     *
+     * if you need a color scheme/theory refersher: <a href="http://www.tigercolor.com/color-lab/color-theory/color-theory-intro.htm" target="_blank"> check this out</a>
      * 
      * @example  <code class="code prettyprint">  
-     * &nbsp; color.createScheme("complementary");<br>
+     * &nbsp; color.createScheme("complementary"); // creates single complementary color <br><br>
+     * &nbsp; // creates two analogous colors <br>
+     * &nbsp; // as well as 2 shades and 2 tints for each of the two analogous colors<br>
+     * &nbsp; // so color.schemes.analogous.length will be 10<br>
      * &nbsp; color.createScheme("analogous",{ <br> 
      * &nbsp;&nbsp;&nbsp;&nbsp; angle: 30,<br> 
      * &nbsp;&nbsp;&nbsp;&nbsp; tint:[ 0.4, 0.8 ], <br>
      * &nbsp;&nbsp;&nbsp;&nbsp; shade:[ 0.3, 0.6 ] <br> 
      * &nbsp; }); <br><br>
-     * &nbsp; color.schemes["analogous"][0] // returns first color <br> &nbsp;
-     * color.schemes["analogous"][1] // returns second color <br> </code>
+     * &nbsp; color.createScheme("random",{ <br> 
+     * &nbsp;&nbsp;&nbsp;&nbsp; hue: 200,<br> 
+     * &nbsp; }); <br><br>
+     * &nbsp; color.schemes.analogous[0] // returns first analogous color <br> 
+     * &nbsp; color.schemes.analogous[1] // returns second analogous color <br> 
+     * &nbsp; color.schemes.random[0] // returns first random blue shade <br> </code>
      */
     BB.Color.prototype.createScheme = function( scheme, config ) { 
 
