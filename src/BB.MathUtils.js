@@ -223,12 +223,44 @@ function(  BB,        Vector2){
         return [ Math.sqrt((x * x) + (y * y)), Math.atan(y / x) ];
     };
 
-    BB.MathUtils.randomInt = function(min, max) {
-        return Math.floor(min + Math.random() * (max - min + 1));
+    /**
+     * return a random int between a min and a max
+     * @method randomInt
+     * @static
+     * @param  {Number} min minimum value ( default to 0 if only one argument is passed )
+     * @param  {Number} max maximum value
+     * @return {Number}  random integer
+     */
+    BB.MathUtils.randomInt = function( min, max) {
+        if( arguments.length === 0 ){
+            throw new Error("BB.MathUtils.cartesianToPolar: requires at least one argument");
+        }
+        else if( arguments.length === 1 ){
+            return Math.floor(0 + Math.random() * (min - 0 + 1));
+        }
+        else {
+            return Math.floor(min + Math.random() * (max - min + 1));
+        }
     };
 
-    BB.MathUtils.randomFloat = function(min, max) {
-        return min + Math.random() * (max - min);
+    /**
+     * return a random float between a min and a max
+     * @method randomFloat
+     * @static
+     * @param  {Number} min minimum value ( default to 0 if only one argument is passed )
+     * @param  {Number} max maximum value
+     * @return {Number}  random float
+     */
+    BB.MathUtils.randomFloat = function( min, max ) {
+        if( arguments.length === 0 ){
+            throw new Error("BB.MathUtils.cartesianToPolar: requires at least one argument");
+        }
+        else if( arguments.length === 1 ){
+            return 0 + Math.random() * (min - 0);
+        }
+        else {
+            return min + Math.random() * (max - min);
+        }
     };
 
     return BB.MathUtils;
