@@ -1,103 +1,69 @@
 var canvas     = document.getElementById('canvas');
 var ctx        = canvas.getContext('2d');
-var mouseInput = new BB.MouseInput(canvas);
-var pointer    = new BB.Pointer(mouseInput);
+var logo = new logo(ctx);
+var WIDTH, HEIGHT;
+var star, planet, comet;
 
-var prevX, prevY, color, particles = [], gravitators = [];
 
 function setup() {
     
-    
-
     window.onresize = function() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        WIDTH = canvas.width = window.innerWidth;
+        HEIGHT = canvas.height = window.innerHeight;
     }
     
     window.onresize();
 
-    document.body.style.backgroundColor = "#FF8CD9";
+    star = new BB.Particle2D({
+        position: new BB.Vector2( WIDTH/2, HEIGHT/2 ),
+        radius: 30,
+        mass: 20000
+    });
 
-    color = new BB.Color();
+    planet = new BB.Particle2D({
+        position: new BB.Vector2( WIDTH/2+200, HEIGHT/2 ),
+        heading: -Math.PI / 2,
+        speed: 10
+    });
 
-    for (var i = 0; i < 5; i++) {
-        gravitators.push({
-            position: new BB.Vector2(BB.MathUtils.randomInt(0, window.innerWidth),
-                                     BB.MathUtils.randomInt(0, window.innerHeight)),
-            mass: BB.MathUtils.randomInt(1000, 5000)
-        });
-    }
-
+    comet = new BB.Particle2D({
+        position: new BB.Vector2( BB.MathUtils.randomInt(WIDTH), BB.MathUtils.randomInt(HEIGHT) ),
+        velocity: new BB.Vector2( BB.MathUtils.randomInt(10), BB.MathUtils.randomInt(10) )
+    });
 }
 
 function update() {
+    // update logo
+    logo.update( star )
 
-    mouseInput.update();
-    pointer.update();
-    
-    if (pointer.isDown) {
-        createParticle(pointer.x, pointer.y, prevX, prevY);
-    }
-    
-    for (var i = 0; i < particles.length; i++) {
-        particles[i].gravitateArray(gravitators);
-        particles[i].update();
-    }
+    // update planet
+    // planet.gravitate( star );                
+    // planet.gravitate( star.position, star.mass );
+    planet.gravitate( { x:WIDTH/2, y:HEIGHT/2 }, 20000 );
+    planet.update();
 
-    // if (typeof particles[0] !== 'undefined') {
-    //     console.log(particles[0].position);    
-    // }
-    
-    prevX = pointer.x;
-    prevY = pointer.y;
+    // update comet
+    comet.gravitate([ star, planet ]);
+    comet.update();
 }
 
 function draw() {
+    ctx.clearRect( 0, 0, WIDTH, HEIGHT );
+                
+    // draw logo ( ie. star )
+    logo.draw();
 
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);    
-    ctx.fillStyle = '#cc3399';
+    // draw planet              
+    ctx.beginPath();
+    ctx.arc( planet.position.x, planet.position.y, 15, 0, Math.PI*2 );
+    ctx.closePath();
+    ctx.fill();
 
-    for (var i = 0; i < particles.length; i++) {
-        ctx.fillStyle = particles[i].color;
-        ctx.beginPath();
-        ctx.arc(particles[i].position.x, 
-                particles[i].position.y,
-                particles[i].mass/10,
-                0, 2 * Math.PI);
-        ctx.closePath();
-        ctx.fill();
-    }
-
-    ctx.fillStyle = '#7F2060';
-
-    for (i = 0; i < gravitators.length; i++) {
-        ctx.beginPath();
-        ctx.arc(gravitators[i].position.x, 
-                gravitators[i].position.y,
-                gravitators[i].mass/50,
-                0, 2 * Math.PI);
-        ctx.closePath();
-        ctx.fill();
-    }
+    // draw comet
+    var sz = 10;
+    ctx.fillRect( comet.position.x-sz/2, comet.position.y-sz/2, sz, sz  );
 }
 
-function createParticle(x, y, prevX, prevY) {
-    
-    var pos = new BB.Vector2(x, y);
-    var acc = (x == prevX && y == prevY) ? 
-        new BB.Vector2(BB.MathUtils.randomFloat(-1, 1),
-                       BB.MathUtils.randomFloat(-1, 1)) 
-        : pos.clone().sub(new BB.Vector2(prevX, prevY));
- 
-    var particle = new BB.Particle2D({
-        position: pos,
-        acceleration: acc,
-        mass: BB.MathUtils.randomInt(100, 300),
-        maxSpeed: 2
-    });
-
-    particles.push(particle);
-}
 
 setup();
 
