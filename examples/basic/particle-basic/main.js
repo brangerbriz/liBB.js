@@ -3,18 +3,16 @@ var ctx        = canvas.getContext('2d');
 var mouseInput = new BB.MouseInput(canvas);
 var pointer    = new BB.Pointer(mouseInput);
 
-var color, prevX, prevY, color, particles = [];
+var color, prevX, prevY, color, WIDTH, HEIGHT, particles = [];
 
 function setup() {
     
     window.onresize = function() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        WIDTH = canvas.width = window.innerWidth;
+        HEIGHT = canvas.height = window.innerHeight;
     }
     
     window.onresize();
-
-    document.body.style.backgroundColor = "#000";
 
     color = new BB.Color();
 }
@@ -41,6 +39,19 @@ function update() {
             particles.splice(i, 1);
             if (i > 0) i--;
         }
+
+
+
+        if( Math.abs(particles[i].velocity.x) > 2 || Math.abs(particles[i].velocity.y) > 2  ){
+            particles[i].mass+=2;
+        } else {
+            particles[i].mass--;
+        }
+
+        if( particles[i].mass <= 10 ){
+            particles.splice(i, 1);
+            if (i > 0) i--;
+        }
     }
     
     prevX = pointer.x;
@@ -48,8 +59,7 @@ function update() {
 }
 
 function draw() {
-
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);    
+    ctx.clearRect(0,0,WIDTH,HEIGHT);
 
     for (var i = 0; i < particles.length; i++) {
         ctx.fillStyle = particles[i].color;
