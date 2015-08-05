@@ -1,5 +1,6 @@
 var canvas     = document.getElementById('canvas');
 var ctx        = canvas.getContext('2d');
+var gravity    = new BB.Vector2();
 
 var WIDTH, HEIGHT, balls = [];
 
@@ -12,13 +13,14 @@ function setup() {
     
     window.onresize();
 
-    for (var i = 0; i < 50; i++) {
+    var amount = 50; //gui -name amount
+    for (var i = 0; i < amount; i++) {
         
         var ball = new BB.Particle2D({
             position: new BB.Vector2( Math.random()*WIDTH, Math.random()*HEIGHT ),
             velocity: new BB.Vector2( BB.MathUtils.randomFloat(-1,1), BB.MathUtils.randomFloat(-5,5) ),
             radius: BB.MathUtils.randomInt(15, 30),
-            elasticity: 0.1
+            elasticity: 0.1 //gui -name elasticity -min 0.0 -max 0.5 -steps 0.01
         });
 
         balls.push( ball );
@@ -26,6 +28,8 @@ function setup() {
 }
 
 function update() {
+    gravity.y = 0; //gui -name gravity.y -max 0.5 -steps 0.1
+
     for (var i = 0; i < balls.length; i++) {
 
         balls[i].collide({
@@ -36,8 +40,9 @@ function update() {
             particles: balls
         });
 
-        balls[i].update();
+        balls[i].applyForce( gravity );
 
+        balls[i].update();
     };
 }
 
@@ -46,7 +51,6 @@ function draw() {
 
     for (var i = 0; i < balls.length; i++) {
         ctx.fillStyle = "#cc3399";
-        ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.arc( balls[i].position.x, balls[i].position.y, balls[i].radius, 0, Math.PI*2 );
         ctx.closePath();

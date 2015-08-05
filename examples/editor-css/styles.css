@@ -1,0 +1,158 @@
+	@font-face {
+
+		font-family: 'inconsolata';
+		src: url('font/inconsolata.woff') format('woff');
+		font-weight: normal;
+		font-style: normal;
+
+	}
+
+	html, body {
+		height: 100%;
+		-webkit-touch-callout: none;
+	    -webkit-user-select: none;
+	    -khtml-user-select: none;
+	    -moz-user-select: none;
+	    -ms-user-select: none;
+	    user-select: none;
+	}
+
+	body {
+
+		margin: 0px;
+		overflow: hidden;
+
+		font-family: Arial;
+	}
+
+
+	#helper {
+
+		position: absolute;
+		top:0; left:0;
+		z-index: 5;
+		color:#fff;
+		font-size:16px;
+		width:50%;
+	}
+
+		#top { background: rgba(0,0,0,0.6); width:100%; }
+		#mid { display: inline-block; position: absolute; }
+		#bot { background: rgba(0,0,0,0.6); width:100%; position: absolute; }
+
+	#guide-line {
+		background: red;
+		width: 200px;
+		height: 1px;
+		position: absolute;
+		top:0px;
+		left:0px;
+		transform: rotate(90deg);
+		display: none;
+	}
+
+
+	#preview {
+
+		position: absolute;
+		left: 50%;
+		top: 0px;
+		width: 50%;
+		height: 100%;
+
+	}
+
+	#editor {
+
+		position: absolute;
+		width: 50%;
+		height: 100%;
+
+	}
+
+	#editor .CodeMirror {
+
+		height: 100%;
+		font-family: inconsolata;
+		font-size: 16px;
+		/*background-color: rgba(39,40,34,0.85);*/
+		background-color: #272822;
+
+		-webkit-transform: translateZ(0); /* Workaround for OSX antialias issue */
+
+	}
+
+	#editor .CodeMirror-scroll {
+
+		height: 100%;
+
+	}
+
+	#editor .CodeMirror div.CodeMirror-selected {
+
+		background: rgba(0,0,0,0.1);
+
+	}
+
+	#editor .CodeMirror-focused div.CodeMirror-selected {
+
+		/*background: rgba(0,0,255,0.1);*/
+		background: rgba(186,186,186,0.1);
+
+	}
+
+	#editor .CodeMirror .errorLine {
+
+		background: rgba(255,0,0,0.25);
+
+	}
+
+	#editor .CodeMirror .esprima-error {
+
+		color: #f00;
+		text-align: right;
+		padding: 0px 20px;
+
+		text-decoration: underline;
+	}
+
+	#editor .CodeMirror  .esprima-error:hover {
+		cursor: pointer;
+		text-decoration: none;
+	}
+
+
+	/* ------------------ CODEMIRROR OVERRIDES ------------------ */
+	
+	.cm-s-default .cm-keyword {color: #64d6eb;} /* edit */
+	.cm-s-default .cm-atom {color: #ae81f2;} /* edit */
+	.cm-s-default .cm-number {color: #ae81f2;} /* edit */
+	.cm-s-default .cm-def {color: #fff;} /* edit */
+	.cm-s-default .cm-variable {color: white;} /* edit */
+	.cm-s-default .cm-variable-2 {color: #fff;} /* edit */
+	.cm-s-default .cm-variable-3 {color: #fff;} /* edit */
+	.cm-s-default .cm-property {color: #64d6eb;} /* edit */
+	.cm-s-default .cm-operator {color: #f92672;} /* edit */
+	.cm-s-default .cm-comment {color: #75715e;} /* edit */
+	.cm-s-default .cm-string {color: #dad06f;} /* edit */
+	.cm-s-default .cm-string-2 {color: #64d6eb;} /* edit */
+	.cm-s-default .cm-meta {color: #fff;} /* edit */
+	.cm-s-default .cm-error {color: #64d6eb;} /* edit */
+	.cm-s-default .cm-qualifier {color: #a6da27;} /* edit */
+	.cm-s-default .cm-builtin {color: #a6da27;} /* edit */
+	.cm-s-default .cm-bracket {color: #997;}
+	.cm-s-default .cm-tag {color: #f92672;} /* edit */ 
+	.cm-s-default .cm-attribute {color: #a6da27;} /* edit */
+	.cm-s-default .cm-header {color: blue;}
+	.cm-s-default .cm-quote {color: #090;}
+	.cm-s-default .cm-hr {color: #999;}
+	.cm-s-default .cm-link {color: #00c;}
+
+	.cm-negative {color: #d44;}
+	.cm-positive {color: #292;}
+	.cm-header, .cm-strong {font-weight: bold;}
+	.cm-em {font-style: italic;}
+	.cm-emstrong {font-style: italic; font-weight: bold;}
+	.cm-link {text-decoration: underline;}
+
+	.cm-invalidchar {color: #f00;}

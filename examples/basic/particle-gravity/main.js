@@ -17,13 +17,13 @@ function setup() {
     star = new BB.Particle2D({
         position: new BB.Vector2( WIDTH/2, HEIGHT/2 ),
         radius: 30,
-        mass: 20000
+        mass: 20000 
     });
 
     planet = new BB.Particle2D({
         position: new BB.Vector2( WIDTH/2+200, HEIGHT/2 ),
-        heading: -Math.PI / 2,
-        speed: 10
+        heading: -Math.PI/2, //gui -name heading -min -6.0 -max 6.0 -steps 0.1
+        speed: 10 //gui -name speed -min 1 -max 15
     });
 
     comet = new BB.Particle2D({
@@ -37,9 +37,10 @@ function update() {
     logo.update( star )
 
     // update planet
-    // planet.gravitate( star );                
+    planet.gravitate( star );        
+    // or...        
     // planet.gravitate( star.position, star.mass );
-    planet.gravitate( { x:WIDTH/2, y:HEIGHT/2 }, 20000 );
+    // planet.gravitate( { x:WIDTH/2, y:HEIGHT/2 }, 20000 );
     planet.update();
 
     // update comet
@@ -48,7 +49,9 @@ function update() {
 }
 
 function draw() {
-    ctx.clearRect( 0, 0, WIDTH, HEIGHT );
+    ctx.fillStyle = "rgba(0,0,0,0.1)";
+    ctx.fillRect(0,0,WIDTH,HEIGHT);
+    ctx.fillStyle = "#fff";
                 
     // draw logo ( ie. star )
     logo.draw();
@@ -60,7 +63,7 @@ function draw() {
     ctx.fill();
 
     // draw comet
-    var sz = 10;
+    var sz = 5;
     ctx.fillRect( comet.position.x-sz/2, comet.position.y-sz/2, sz, sz  );
 }
 

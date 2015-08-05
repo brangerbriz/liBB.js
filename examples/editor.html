@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title> editor </title>
+
+	<link rel="stylesheet" href="editor-js/codemirror/codemirror.css">
+	<link rel="stylesheet" href="editor-css/styles.css">
+
+	<script src="editor-js/codemirror/codemirror.js"></script>
+	<script src="editor-js/codemirror/mode/javascript.js"></script>
+	<script src="editor-js/esprima.js" id="test"></script>
+	<script src="editor-js/dat.gui.min.js"></script>
+
+</head>
+<body>
+
+	<div id="preview"></div>
+	<div id="editor"></div>
+
+	<script>
+
+
+		// GET URL PARAMETER
+		// via http://stackoverflow.com/questions/979975/how-to-get-the-value-from-url-parameter 
+		var QueryString = function () {
+		  var query_string = {};
+		  var query = window.location.search.substring(1);
+		  var vars = query.split("&");
+		  for (var i=0;i<vars.length;i++) {
+		    var pair = vars[i].split("=");
+		    if (typeof query_string[pair[0]] === "undefined") { query_string[pair[0]] = pair[1]; } 
+		    else if (typeof query_string[pair[0]] === "string") {
+		      var arr = [ query_string[pair[0]], pair[1] ];
+		      query_string[pair[0]] = arr;
+		    } else { query_string[pair[0]].push(pair[1]); }
+		  } return query_string;
+		} ();
+
+		var Q = QueryString; //alias
+
+
+
+
+		// =^..^=   =^..^=   =^..^=    =^..^=    =^..^=    =^..^=    =^..^=
+		// =^..^=   =^..^=   =^..^=    =^..^=    =^..^=    =^..^=    =^..^=
+		//
+		//			             >>>  SETUP <<<
+		//
+		// =^..^=   =^..^=   =^..^=    =^..^=    =^..^=    =^..^=    =^..^=
+		// =^..^=   =^..^=   =^..^=    =^..^=    =^..^=    =^..^=    =^..^=
+		// 
+		window.URL = window.URL || window.webkitURL;
+
+		var preview = document.getElementById( 'preview' );
+		var interval, editor;
+
+		// url params    	-----			------				------				------
+
+		var type = ( Q.type ) ? Q.type : "basic";
+
+		var file = ( Q.file ) ? Q.file : "template";
+
+		// editor code   	------			------				------				------
+
+		var whiteHead = '<!DOCTYPE html><html><head><title>example</title><link rel="stylesheet" href="editor-css/white.css"></head><body><canvas id="canvas"><\/canvas><script src="..\/build\/BB.min.js"><\/script><script src="..\/toys\/logo.js"><\/script><script src="assets\/js\/dat.gui.min.js"><\/script><script>';
+		
+		var blackHead = '<!DOCTYPE html><html><head><title>example</title><link rel="stylesheet" href="editor-css/black.css"></head><body><canvas id="canvas"><\/canvas><script src="..\/build\/BB.min.js"><\/script><script src="..\/toys\/logo.js"><\/script><script src="assets\/js\/dat.gui.min.js"><\/script><script>';
+		
+		var head = ( Q.bg ) ? (Q.bg=="white") ? whiteHead : blackHead : whiteHead;
+
+		var tail = '<\/script></body></html>';
+
+
+		// editor/preview 	------			------				------				------
+
+		var req = new XMLHttpRequest();
+		req.open("GET", type+"/"+file+"/main.js", true);
+		req.addEventListener("load", function() {
+		  
+		 	createEditor( req.responseText );	// create editor
+		 	update();							// initial update
+			generateGUI();						// generate gui 
+
+		});
+		req.send(null);
+
+
+		var createEditor = function( val ){
+
+			editor = CodeMirror( document.getElementById( 'editor' ), {
+				value: val,
+				mode: 'text/javascript',
+				lineNumbers: true,
+				matchBrackets: true,
+				indentWithTabs: true,
+				tabSize: 4,
+				indentUnit: 4
+			});
+
+			editor.on( 'change', function() {
+				clearTimeout( interval );
+				interval = setTimeout( update, 500 );
+			});
+		}
+
+
+
+
+		// =^..^=   =^..^=   =^..^=    =^..^=    =^..^=    =^..^=    =^..^=
+		// =^..^=   =^..^=   =^..^=    =^..^=    =^..^=    =^..^=    =^..^=
+		//
+		//			UPDATE && VALIDATE via mr.doob's html editor
+		//
+		// =^..^=   =^..^=   =^..^=    =^..^=    =^..^=    =^..^=    =^..^=
+		// =^..^=   =^..^=   =^..^=    =^..^=    =^..^=    =^..^=    =^..^=
+		// 
+
+		var update = function () {
+			// var value = editor.getValue();
+			var value = head + editor.getValue() + tail;
+			if ( validate( value ) ) {
+				// remove previous iframe
+				if ( preview.children.length > 0 ) { preview.removeChild( preview.firstChild ); }
+				//
+				var iframe = document.createElement( 'iframe' );
+				iframe.style.width = '100%';
+				iframe.style.height = '100%';
+				iframe.style.border = '0';
+				preview.appendChild( iframe );
+				var content = iframe.contentDocument || iframe.contentWindow.document;
+				// workaround for chrome bug
+				// http://code.google.com/p/chromium/issues/detail?id=35980#c12
+				value = value.replace( '<script>', '<script>if ( window.innerWidth === 0 ) { window.innerWidth = parent.innerWidth; window.innerHeight = parent.innerHeight; }' );
+				content.open();
+				content.write( value );
+				content.close();
+			}
+		};
+
+		var errorLines = [], widgets = [];
+
+		var validate = function ( value ) {
+			return editor.operation( function () {
+				while ( errorLines.length > 0 ) { editor.removeLineClass( errorLines.shift(), 'background', 'errorLine' ); }
+				for ( var i = 0; i < widgets.length; i ++ ) { editor.removeLineWidget( widgets[ i ] ); }
+				widgets.length = 0;
+				// remove html
+				var string = '\n';
+				var lines = value.split( '\n' );
+				var lineCurrent = 0, lineTotal = lines.length;
+				while ( lineCurrent < lineTotal && lines[ lineCurrent ].indexOf( '<script>' ) === -1 ) { string += '\n'; lineCurrent ++; }
+				var lineStart = lineCurrent ++;
+				while ( lineCurrent < lineTotal && lines[ lineCurrent ].indexOf( '<\/script>' ) === -1 ) { string += lines[ lineCurrent ] + '\n'; lineCurrent ++;}
+				//
+				try {
+					var result = esprima.parse( string, { tolerant: true } ).errors;
+					for ( var i = 0; i < result.length; i ++ ) {
+						var error = result[ i ];
+						var message = document.createElement( 'div' );
+						message.className = 'esprima-error';
+						// message.textContent = error.message.replace(/Line [0-9]+: /, '');
+						message.textContent = "check console for error";
+						var lineNumber = error.lineNumber - 1;
+						errorLines.push( lineNumber );
+						editor.addLineClass( lineNumber, 'background', 'errorLine' );
+						var widget = editor.addLineWidget( lineNumber, message );
+						widgets.push( widget );
+					}
+				} catch ( error ) {
+					var message = document.createElement( 'div' );
+					message.className = 'esprima-error';
+					// message.textContent = error.message.replace(/Line [0-9]+: /, '');
+					message.textContent = "check console for error";
+					var lineNumber = error.lineNumber - 1;
+					errorLines.push( lineNumber );
+					editor.addLineClass( lineNumber, 'background', 'errorLine' );
+					var widget = editor.addLineWidget( lineNumber, message );
+					widgets.push( widget );
+					
+					throw new Error( error.message.replace(/Line [0-9]+: /, ''), 'editor', error.lineNumber-10 )
+				}
+				return errorLines.length === 0;
+			});
+		};
+
+		
+
+		//
+
+		// =^..^=   =^..^=   =^..^=    =^..^=    =^..^=    =^..^=    =^..^=
+		// =^..^=   =^..^=   =^..^=    =^..^=    =^..^=    =^..^=    =^..^=
+		//
+		//						REALTIME DAT GUI STUFFS
+		//
+		// =^..^=   =^..^=   =^..^=    =^..^=    =^..^=    =^..^=    =^..^=
+		// =^..^=   =^..^=   =^..^=    =^..^=    =^..^=    =^..^=    =^..^=
+		// 
+		
+		var gui;
+		var obj = {}; // settings object for gui
+		var escapeCodes = { 
+		    '\\': '\\',
+		    'r':  '\r',
+		    'n':  '\n',
+		    't':  '\t'
+		}; // escapeCodes >> http://stackoverflow.com/a/2966840/1104148
+
+
+		// parses the //gui... string and returns it as an object 
+		function parseGuiFlags( string ){
+			var parsed = {string:string};
+			var str, end, val;
+			var max;
+
+			if(string.indexOf("-max") > 0){
+				str 	= string.slice(string.indexOf("-max") + 5, string.length);
+				end 	= (str.indexOf("-") >0) ? str.indexOf("-") : str.length; 
+				val 	= (str.slice(0, end).indexOf(".")>0) ? parseFloat( str.slice(0, end) ) : parseInt( str.slice(0, end) ); 
+				parsed.max = val;	
+			} else { parsed.max = 100; }
+			
+			if(string.indexOf("-min") > 0){
+				str 	= string.slice(string.indexOf("-min") + 5, string.length);
+				end 	= (str.indexOf("-") >0) ? str.indexOf("-") : str.length; 
+				val 	= (str.slice(0, end).indexOf(".")>0) ? parseFloat( str.slice(0, end) ) : parseInt( str.slice(0, end) ); 
+				parsed.min = val;	
+			} else { parsed.min = 0 }
+
+			if(string.indexOf("-step") > 0){
+				str 	= string.slice(string.indexOf("-step") + 6, string.length);
+				end 	= (str.indexOf("-") >0) ? str.indexOf("-") : str.length; 
+				val 	= (str.slice(0, end).indexOf(".")>0) ? parseFloat( str.slice(0, end) ) : parseInt( str.slice(0, end) ); 
+				parsed.step = val;	
+			} else { parsed.step = 1 }
+
+			if(string.indexOf("-name") > 0){
+				str 	= string.slice(string.indexOf("-name") + 6, string.length);
+				end 	= (str.indexOf("-") >0) ? str.indexOf("-") : str.length; 
+				val 	= str.slice(0, end); 
+				parsed.name = val;	
+			} else { throw new Error("EDITOR: //gui comment must have -name flag set") }
+
+			return parsed;
+
+		}
+
+		// updates the editor value when changes are made in the GUI
+		function guiUpdate( obj, exp, value){
+			var code = editor.doc.getValue().split("\n");
+			var tabs, left, comment, idx;
+			
+			for (var i = 0; i < code.length; i++) {
+				// target specifically the line that gui changed
+				if( code[i].indexOf("-name "+obj.name) >= 0 ){ 
+					idx = obj.string.indexOf('//gui');
+					comment = " "+obj.string.slice(idx, obj.string.length);
+
+					if(exp.type ==="LabeledStatement"){ // ex: prop: val,
+					
+						left = exp.label.name;
+						idx = obj.string.indexOf(left);
+						tabs = obj.string.slice(0,idx);
+						comma = ( exp.comma ) ? ", " : " ";
+						code[i] = tabs + left +": "+ value + comma + comment;
+					
+					}
+					else if(exp.type === "AssignmentExpression" ){ // ex: obj.prop = val;
+						
+						left = (exp.left.name) ? exp.left.name : exp.left.object.name +"."+ exp.left.property.name;
+						idx = obj.string.indexOf(left);
+						tabs = obj.string.slice(0,idx);
+						code[i] = tabs + left +" "+ exp.operator +" "+ value +";"+comment;
+					
+					}
+					else if(exp.type === "VariableDeclarator" ){ //ex: var x = val;
+						left = exp.id.name;
+						idx = obj.string.indexOf(left);
+						tabs = obj.string.slice(0,idx);
+						code[i] = tabs + left +" = "+ value +";"+comment;
+					}
+
+				}
+			}
+
+			var newCode = code.join('\n');
+			editor.getDoc().setValue( newCode );
+		}
+
+		// evaluate non-literal expressions 
+		function evaluate( string ){
+			var b = (string.indexOf('=')>0) ? string.indexOf('=')+1 : string.indexOf(':')+1;
+			var e = string.indexOf('//gui');
+			string = string.slice(b,e);
+			string = string.replace(",","");
+			return eval(string);  
+		}
+		
+		function generateGUI(){
+
+			var code = editor.doc.getValue().split("\n");
+			var parsed, exp, name, value, _gui, f;
+			var comma = false; // fix esprima parse bug when parsing config properties that end in comma
+
+			for (var i = 0; i < code.length; i++) {
+				if( code[i].indexOf("//gui") > 0 ){
+					if(typeof gui === "undefined" ) gui = new dat.GUI();
+
+					if( code[i].slice(code[i].indexOf("//gui")-2,code[i].indexOf("//gui")-1) ==="," ||
+						code[i].slice(code[i].indexOf("//gui")-1,code[i].indexOf("//gui")-0) ===","  ) { // bug fix
+						comma = true; 
+						code[i] = code[i].replace(',','');
+					}
+
+					parsed = esprima.parse( code[i] ).body[0];
+
+					if( parsed.type === "VariableDeclaration" ){ //ex: var x = val;
+						exp = parsed.declarations[0];
+						name = exp.id.name;
+						value = (exp.init.value) ? exp.init.value : evaluate( code[i] );
+
+						if(typeof value === "number") {
+							obj[name] = value;
+							f = parseGuiFlags( code[i] ); 
+							_gui = gui.add(obj, name, f.min, f.max).step(f.step).name(f.name);
+							_gui.f = f;
+							_gui.exp = exp;
+							_gui.onFinishChange(function(value) {
+								guiUpdate(this.f, this.exp, value );
+							});
+						}
+					}	
+
+					else if( parsed.type === "LabeledStatement"){ // ex: prop: val
+						
+						exp = parsed.body.expression;
+						name = parsed.label.name;
+						value = (exp.value) ? exp.value : evaluate( code[i] ) ;
+						
+						// if(typeof value === "string") gui.add(obj, obj );
+						if(typeof value === "number") {
+							obj[name] = value;
+							f = parseGuiFlags( code[i] ); 
+							_gui = gui.add(obj, name, f.min, f.max).step(f.step).name(f.name);
+							_gui.f = f;
+							_gui.exp = parsed;
+							_gui.exp.comma = comma;
+							_gui.onFinishChange(function(value) {
+								guiUpdate(this.f, this.exp, value );
+							});
+						}
+					}
+
+					else if(parsed.type === "ExpressionStatement") { // ex: obj.method() or obj.prop
+						exp = parsed.expression;
+
+						if(exp.type === "CallExpression"){
+							// ...
+						}
+						else if(exp.type === "AssignmentExpression"){							
+
+							name = (typeof exp.left.name !== "undefined") ? exp.left.name : exp.left.property.name;
+							value = exp.right.value;
+							
+							// if(typeof value === "string") gui.add(obj, obj );
+							if(typeof value === "number") {
+								obj[name] = value;
+								f = parseGuiFlags( code[i] ); 
+								_gui = gui.add(obj, name, f.min, f.max).step(f.step).name(f.name);
+								_gui.f = f;
+								_gui.exp = exp;
+								_gui.onFinishChange(function(value) {
+									guiUpdate(this.f, this.exp, value );
+								});
+								
+							}
+
+						}
+					}
+					
+				}
+			};
+
+
+		}
+
+
+
+
+
+		// get encode code --------------- to add to snippets arrary -----------------------
+		document.onkeydown=function(e){
+			e = e || window.event; 
+		    if(e.keyCode == 192) {  console.log( encode( editor.getValue() ) ); } 		// ~
+		}
+
+
+		// window.onresize = function(){
+
+		// 	// setTimeout("location.reload(true);",1000);
+		// 	setupHelper();
+		
+		// }
+
+
+
+
+	</script>
+
+</body>
+</html>
