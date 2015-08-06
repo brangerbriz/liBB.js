@@ -24,6 +24,7 @@ POG.BrushManager
 - Most Pixels Ever
 - GPGPU
 - Shaders
+- tweening ( similar to threejs tween function )
 
 ## Tools
 It would be helpful if there were a way to quickly wrap and build any BBMod project/example (or any HTML + JavaScript Web Apps) w/ NW.js. Perhaps we could write and include a script that automatically creates builds for these small experiments. e.g:
