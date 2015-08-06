@@ -136,6 +136,12 @@
 				content.write( value );
 				content.close();
 			}
+			if(gui){
+				// redo gui
+				gui.destroy();
+				gui = undefined;
+				generateGUI();
+			}
 		};
 
 		var errorLines = [], widgets = [];
@@ -261,7 +267,7 @@
 						left = exp.label.name;
 						idx = obj.string.indexOf(left);
 						tabs = obj.string.slice(0,idx);
-						comma = ( exp.comma ) ? ", " : " ";
+						comma = ( exp.comma ) ? "," : " ";
 						code[i] = tabs + left +": "+ value + comma + comment;
 					
 					}
