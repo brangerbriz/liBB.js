@@ -2,7 +2,6 @@ var canvas 	    = document.getElementById('canvas');
 var ctx    	    = canvas.getContext('2d');
 var box1        = new BB.Color();
 var box2        = box1.clone();
-var rows        = [], r, c, l;
 canvas.width    = window.innerWidth;
 canvas.height   = window.innerHeight;
 
@@ -34,7 +33,7 @@ function setup2(){
     });
     box2.createScheme("tetradic");
     box2.createScheme("random",{
-        hue: 320
+        hue: box2.h
     });
 }
 
