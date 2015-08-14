@@ -33,6 +33,9 @@ function(  BB,      Pointer ){
      * @constructor
      * @param {[HTMLCanvasElement]} canvas The HTML5 canvas element for the
      * brush manager to use.
+     * @example
+     * <code class="code prettyprint">&nbsp;var brushManager = new BB.BrushManager2D(document.getElementById('canvas'));
+     * </code>
      */    
     BB.BrushManager2D = function(canvas) {
 
@@ -205,7 +208,7 @@ function(  BB,      Pointer ){
         this._pointerStates = [];
 
         /**
-         * Internal flag to determin if BB.BrushManager2D.undo() was called
+         * Internal flag to determine if BB.BrushManager2D.undo() was called
          * since the BB.BrushManager2D.update()
          * @property _needsUndo
          * @type {Boolean}
@@ -214,7 +217,7 @@ function(  BB,      Pointer ){
         this._needsUndo = false;
 
         /**
-         * Internal flag to determin if BB.BrushManager2D.redo() was called
+         * Internal flag to determine if BB.BrushManager2D.redo() was called
          * since the BB.BrushManager2D.update()
          * @property _needsRedo
          * @type {Boolean}
@@ -324,27 +327,27 @@ function(  BB,      Pointer ){
     };
 
     /**
-     * A method to determin if the brush manager is currently tracking pointers
+     * A method to determine if the brush manager is currently tracking pointers.
      * @method hasPointers
-     * @return {Boolean}
+     * @return {Boolean} True if brush manager is tracking pointers.
      */
     BB.BrushManager2D.prototype.hasPointers = function() {
         return this._pointers.length > 0;
     };
 
     /**
-     * A method to determin if the brush manager currently has an undo state.
+     * A method to determine if the brush manager currently has an undo state.
      * @method hasUndo
-     * @return {Boolean}
+     * @return {Boolean} True if brush manager has an undo state in its queue.
      */
     BB.BrushManager2D.prototype.hasUndo = function() {
         return this._history.length > 1;
     };
 
     /**
-     * A method to determin if the brush manager currently has an redo state.
+     * A method to determine if the brush manager currently has an redo state.
      * @method hasRedo
-     * @return {Boolean}
+     * @return {Boolean} True if brush manager has an redo state in its queue.
      */
     BB.BrushManager2D.prototype.hasRedo = function() {
         return this._purgatory.length > 0;
@@ -472,6 +475,17 @@ function(  BB,      Pointer ){
      * canvas is changed so that BB.BrushManager2D's internal canvases may be
      * updated upropriately.
      * @method updateCanvasPosition
+     * @example
+     * <code class="code prettyprint">
+     * &nbsp;var canvas = document.getElementById('canvas');<br>
+     * &nbsp;var brushManager = new BB.BrushManager(canvas);<br>
+     * <br>
+     * &nbsp;window.onresize = function() {<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;canvas.width  = window.innerWidth;<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;canvas.height = window.innerHeight;<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;brushManager.updateCanvasPosition();<br>
+     * &nbsp;}
+     * </code>
      */
     BB.BrushManager2D.prototype.updateCanvasPosition = function() {
 
