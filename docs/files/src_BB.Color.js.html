@@ -71,10 +71,12 @@
      * A module for creating color objects, color schemes and doing color maths
      * @module BB.Color
      */
-    define([&#x27;./BB&#x27;],
-    function(  BB){
+    define([&#x27;./BB&#x27;, &#x27;./BB.MathUtils&#x27;],
+    function(  BB,        MathUtils) {
     
         &#x27;use strict&#x27;;
+    
+        BB.MathUtils = MathUtils;
         
         /**
          * A module for creating color objects, color schemes and doing color maths.
@@ -421,6 +423,8 @@
          * sets color value to match another color object&#x27;s value
          * @method copy
          * @param {BB.Color} color another color object to copy from
+         * @return {BB.Color} this color
+         * @chainable
          * @example
          * &lt;code class=&quot;code prettyprint&quot;&gt;
          * &amp;nbsp; var x = new color(0,255,0); &lt;br&gt;
@@ -430,10 +434,13 @@
          * &lt;/code&gt;
          */
         BB.Color.prototype.copy = function( color ) { 
-            if (! color || !this.isLikeColor( color ) ) {
+            
+            if (typeof color === &quot;undefined&quot; || ! (color instanceof BB.Color)) {
                 throw new Error(&quot;BB.Color.copy: color parameter is not an instance of BB.Color&quot;);
             }
+    
             this.setRGBA( color.r, color.g, color.b, color.a );
+            return this;
         };
     
         /**
@@ -460,6 +467,8 @@
          * @param {Number} g sets the green value from 0 - 255 
          * @param {Number} b sets the blue value from 0 - 255 
          * @param {Number} a sets the alpha value from 0 - 255 
+         * @return {BB.Color} this color
+         * @chainable
          */
         BB.Color.prototype.setRGBA = function(r, g, b, a) {
     
@@ -489,6 +498,7 @@
             }
     
             this.rgb2hsv();
+            return this;
         };
         
         /**
@@ -498,6 +508,8 @@
          * @param {Number} s sets the saturation value from 0 - 100
          * @param {Number} v sets the light/bright value from 0 - 100
          * @param {Number} a sets the alpha value from 0 - 255
+         * @return {BB.Color} this color
+         * @chainable
          */
         BB.Color.prototype.setHSVA = function(h, s, v, a) {
             
@@ -526,6 +538,7 @@
             }
     
             this.hsv2rgb();
+            return this;
         };
     
     
@@ -559,13 +572,6 @@
             }
         };
     
-        BB.Color.prototype.isLikeColor = function( obj) { 
-           return   typeof obj.r !== &quot;undefined&quot; &amp;&amp;
-                    typeof obj.g !== &quot;undefined&quot; &amp;&amp;
-                    typeof obj.b !== &quot;undefined&quot; &amp;&amp;
-                    typeof obj.a !== &quot;undefined&quot;;
-        }; 
-    
         BB.Color.prototype.min3 = function( a,b,c ) { 
             return ( a&lt;b )   ?   ( ( a&lt;c ) ? a : c )   :   ( ( b&lt;c ) ? b : c ); 
         }; 
@@ -573,10 +579,6 @@
         BB.Color.prototype.max3 = function( a,b,c ) { 
             return ( a&gt;b )   ?   ( ( a&gt;c ) ? a : c )   :   ( ( b&gt;c ) ? b : c );
         };
-    
-    
-        //
-    
     
         /**
          * converts rgb values into hsv values, you can pass it an instance of
@@ -604,8 +606,8 @@
             }
     
             var hsv = {};
-            var max = this.max3( self.r, self.g, self.b );
-            var dif = max - this.min3( self.r, self.g, self.b );
+            var max = Math.max(self.r, Math.max(self.g, self.b));
+            var dif = max - Math.min(self.r, Math.min(self.g, self.b));
     
             hsv.s = (max===0.0) ? 0 : (100*dif/max);
     
@@ -727,7 +729,7 @@
     
             if( typeof hue === &quot;undefined&quot; ){
                 this.h = h;
-                return this; // for chainging
+                return this; // for chaining
             } 
             else {  return h; }
         };
@@ -737,6 +739,8 @@
          *
          * @method tint
          * @param {Number} percentage float between 0 and 1
+         * @return {BB.Color} this color
+         * @chainable
          */
         BB.Color.prototype.tint = function( percentage, _schemeUse ) { 
             var col = {};
@@ -745,10 +749,13 @@
             col.g = Math.round( this.g+(255-this.g ) * tint );
             col.b = Math.round( this.b+(255-this.b ) * tint );
             col.a = this.a;
-            if( typeof _schemeUse !== &quot;undefined&quot;) {
+            if( typeof _schemeUse !== &quot;undefined&quot; &amp;&amp; _schemeUse === true) {
                 return new BB.Color( col.r, col.g, col.b, col.a );
             }
-            else { this.setRGBA( col.r, col.g, col.b, col.a ); }
+            else { 
+                this.setRGBA( col.r, col.g, col.b, col.a );
+                return this;
+            }
         };
     
     
@@ -757,6 +764,8 @@
          *
          * @method shade
          * @param {Number} percentage float between 0 and 1
+         * @return {BB.Color} this color
+         * @chainable
          */
         BB.Color.prototype.shade = function( percentage, _schemeUse ) { 
             var col = {};
@@ -765,10 +774,13 @@
             col.g = Math.round( this.g * shade );
             col.b = Math.round( this.b * shade );
             col.a = this.a;
-            if( typeof _schemeUse !== &quot;undefined&quot;) {
+            if( typeof _schemeUse !== &quot;undefined&quot; &amp;&amp; _schemeUse === true) {
                 return new BB.Color( col.r, col.g, col.b, col.a );
             }
-            else { this.setRGBA( col.r, col.g, col.b, col.a ); }
+            else { 
+                this.setRGBA( col.r, col.g, col.b, col.a );
+                return this;
+            }
         };
     
     
