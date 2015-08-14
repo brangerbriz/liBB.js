@@ -17,8 +17,8 @@ function(  BB,        BrushManager2D,        Color){
      * @constructor
      * @param {Object} [config] An optional config hash to initialize any of
      * BB.BaseBrush2D's public properties
-     * @example <div><code> var baseBrush = new BB.BaseBrush2D({ width: 100,
-     * height: 100, color: new BB.Color(255, 0, 0) }); </code></div>
+     * @example <code class="code prettyprint">&nbsp;var brush = new BB.BaseBrush2D({ width: 100,
+     * height: 100, color: new BB.Color(255, 0, 0) }); </code>
      */
     BB.BaseBrush2D = function(config) {
 
@@ -40,7 +40,7 @@ function(  BB,        BrushManager2D,        Color){
 
         /**
          * The brush's width.
-         * @property w
+         * @property width
          * @type Number
          * @default 10
          */
@@ -97,6 +97,11 @@ function(  BB,        BrushManager2D,        Color){
      * @param {Object} controllerModule An object with x and y properties and
      * optionally an isDown boolean (used for beginning and ending
      * strokeds/marks).
+     * @example  <code class="code prettyprint"> &nbsp; var brush = new BB.BaseBrush2D({ width: 50, height: 100 });<br>
+     * &nbsp; brush.scale(2);<br>
+     * &nbsp; brush.width // 100<br>
+     * &nbsp; brush.heigh // 200
+     * </code>
      */
     BB.BaseBrush2D.prototype.update = function(controllerModule) {
 
@@ -142,6 +147,18 @@ function(  BB,        BrushManager2D,        Color){
      * Multiplies width and height properties by amount.
      * @method scale
      * @param {Number} amount Amount to scale width and height by
+     * @example  <code class="code prettyprint">
+     * &nbsp;var mouseInput = new BB.MouseInput(document.getElementById('canvas'));<br>
+     * &nbsp;var pointer = new BB.Pointer(mouseInput);<br>
+     * &nbsp;var brush = new BB.BaseBrush();<br>
+     * <br>
+     * &nbsp; // called once per animation frame (from somewhere else in your app)<br>
+     * &nbsp;function update() {<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;mouseInput.update();<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;pointer.update();<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;brush.update(pointer); // update the brush using the pointer<br>
+     * &nbsp;}
+     * </code>
      */
     BB.BaseBrush2D.prototype.scale = function(amount) {
         
