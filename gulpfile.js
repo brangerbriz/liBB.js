@@ -29,12 +29,18 @@ var uglify            = require('gulp-uglify');
 var rename            = require('gulp-rename');
 var yuidoc            = require('gulp-yuidoc-relative');
 var requireJSOptimize = require('gulp-requirejs-optimize');
+var express           = require('express');
+var path              = require('path');
 
 var packageName = 'BB';
 var srcDir      = 'src';
 var buildDir    = 'build';
 var docsDir     = 'docs';
 var mainFile    = 'main.js';
+var serverPort  = 3000;
+
+var app = express();
+var server = require('http').Server(app);
 
 var requireJSOptimizeConfig = {
     baseUrl: "./src",
@@ -75,6 +81,15 @@ gulp.task('scripts', function () {
 
 gulp.task('watch', function() {
     gulp.watch(srcDir + '/*.js', ['lint', 'scripts']);
+});
+
+gulp.task('serve', function() {
+    app.use('/docs', express.static(path.resolve(__dirname + '/docs')));
+    app.use('/build', express.static(path.resolve(__dirname + '/build')));
+    app.use('/examples', express.static(path.resolve(__dirname + '/examples')));
+    server.listen(serverPort, function() {
+        console.log('[server] Server listening on port', serverPort);
+    });
 });
 
 gulp.task('build', ['lint', 'scripts', 'docs']);
