@@ -75,7 +75,7 @@
     
     
     <div class="box intro">
-        <p>A module for creating color objects, color schemes and doing color maths</p>
+        <p>A module for creating color objects, color schemes and doing color maths.</p>
     
     </div>
     
@@ -147,7 +147,7 @@
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_s (saturatoin)">s (saturatoin)</a>
+                        <a href="#property_s (saturation)">s (saturation)</a>
     
                     </li>
                     <li class="index-item property">
@@ -610,9 +610,9 @@
                 
                     </div>
                 </div>
-                <a name="property_s (saturatoin)" class="anchor-link"></a>
+                <a name="property_s (saturation)" class="anchor-link"></a>
                 <div class="property item">
-                    <h3 class="name"><code>s (saturatoin)</code>
+                    <h3 class="name"><code>s (saturation)</code>
                     <span class="type">Number</span>
                 
                 
@@ -883,7 +883,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.Color.js.html#l705"><code>src&#x2F;BB.Color.js:705</code></a>
+                        <a href="../files/src_BB.Color.js.html#l707"><code>src&#x2F;BB.Color.js:707</code></a>
                         </p>
                 
                 
@@ -927,7 +927,7 @@
                                         <div class="param-description">
                                             <p>config object with properties for angle (Number) for hue
                 shift ( for schemes other than &quot;complimentary&quot; or &quot;triadic&quot; which have fixed 
-                angles ), tint (Array of Floats) and shade (Array of Flaots), which
+                angles ), tint (Array of Floats) and shade (Array of Floats), which
                 are used to create aditional monochromatic colors ( tint for light variations of
                 the base color and shade for dark ) in relation to the base colors of each scheme</p>
                 <p>the &quot;random&quot; scheme takes an entirely different config object with values for hue,
@@ -973,7 +973,7 @@
                         <div class="args">
                             <span class="paren">(</span><ul class="args-list inline commas">
                                 <li class="arg">
-                                        <code class="optional">[h]</code>
+                                        <code class="optional">[hsv]</code>
                                 </li>
                                 <li class="arg">
                                         <code class="optional">[s]</code>
@@ -1023,7 +1023,7 @@
                 
                                 <ul class="params-list">
                                     <li class="param">
-                                            <code class="param-name optional">[h]</code>
+                                            <code class="param-name optional">[hsv]</code>
                                             <span class="type">Number</span>
                                             <span class="flag optional" title="This parameter is optional.">optional</span>
                 
@@ -1141,7 +1141,7 @@
                 
                 
                                         <div class="param-description">
-                                            <p>whether or not to exlude Alpha property</p>
+                                            <p>Whether or not to exlude Alpha property. True by default.</p>
                 
                                         </div>
                 
@@ -1157,7 +1157,7 @@
                 
                                 <div class="returns-description">
                                        
-                                        <p>true if it&#39;s equal, fals if it&#39;s not</p>
+                                        <p>true if it&#39;s equal, false if it&#39;s not</p>
                 
                                 </div>
                             </div>
@@ -1501,7 +1501,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.Color.js.html#l684"><code>src&#x2F;BB.Color.js:684</code></a>
+                        <a href="../files/src_BB.Color.js.html#l686"><code>src&#x2F;BB.Color.js:686</code></a>
                         </p>
                 
                 
@@ -1545,6 +1545,9 @@
                                 <li class="arg">
                                         <code>degrees</code>
                                 </li>
+                                <li class="arg">
+                                        <code class="optional">[hue]</code>
+                                </li>
                             </ul><span class="paren">)</span>
                         </div>
                 
@@ -1574,8 +1577,10 @@
                     <div class="extended-detail">
                 
                         <div class="description">
-                            <p>changes the color by shifting current hue value by a number of degrees, also chainable ( see example )</p>
-                <p>can also take an additional hue parameter when used as a utility ( see example ), used this way internally by <code>.createScheme</code></p>
+                            <p>changes the color by shifting current hue value by a number of degrees,
+                also chainable ( see example )</p>
+                <p>can also take an additional hue parameter when used as a utility ( see
+                example ), used this way internally by <code>.createScheme</code></p>
                 
                         </div>
                 
@@ -1589,7 +1594,21 @@
                 
                 
                                         <div class="param-description">
-                                            <p>number of degress to shift current hue by ( think rotating a color wheel )</p>
+                                            <p>number of degress to shift current hue by ( think
+                rotating a color wheel )</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name optional">[hue]</code>
+                                            <span class="type">Number</span>
+                                            <span class="flag optional" title="This parameter is optional.">optional</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The hue parameter to use. Including this parameter
+                changes the behavior of this function to act as a utility function.</p>
                 
                                         </div>
                 
@@ -1614,12 +1633,11 @@
                                 <h4>Example:</h4>
                 
                                 <div class="example-content">
-                <p><code class="code prettyprint">
-                &nbsp; color.shift( 10 ); // shifts by 10 degrees <br>
-                &nbsp; var comp = color.clone().shift( 180 ); // new complementary color obj <br><br>
-                &nbsp; // as a utility ( without changing the color )  <br>
-                &nbsp; color.shift( 180, color.h ); // returns the complementary hue ( in degrees ) 
-                </code></p>
+                <p> <code class="code prettyprint"> &nbsp; color.shift( 10 ); //
+                shifts by 10 degrees <br> &nbsp; var comp = color.clone().shift( 180 );
+                // new complementary color obj <br><br> &nbsp; // as a utility ( without
+                changing the color ) <br> &nbsp; color.shift( 180, color.h ); // returns
+                the complementary hue ( in degrees ) </code></p>
                 
                                 </div>
                             </div>
@@ -1649,7 +1667,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.Color.js.html#l664"><code>src&#x2F;BB.Color.js:664</code></a>
+                        <a href="../files/src_BB.Color.js.html#l666"><code>src&#x2F;BB.Color.js:666</code></a>
                         </p>
                 
                 

@@ -8,7 +8,7 @@ function(  BB){
     'use strict';
     
     /**
-     * A module for creating color objects, color schemes and doing color maths
+     * A module for creating color objects, color schemes and doing color maths.
      * @class BB.Color
      * @constructor
      * @param {Number} [r] optional parameter for setting the red value (0-255)
@@ -184,7 +184,7 @@ function(  BB){
 
     /**
      * the saturation value between 0 - 100
-     * @property s (saturatoin)
+     * @property s (saturation)
      * @type Number
      * @default 0
      */   
@@ -469,8 +469,8 @@ function(  BB){
      * 
      * @method isEqual
      * @param {BB.Color} color another color object to compare to
-     * @param {Boolean} excludeAlpha whether or not to exlude Alpha property
-     * @return {Boolean}     true if it's equal, fals if it's not
+     * @param {Boolean} excludeAlpha Whether or not to exlude Alpha property. True by default.
+     * @return {Boolean}     true if it's equal, false if it's not
      */
     BB.Color.prototype.isEqual = function(color, excludeAlpha) {
 
@@ -570,7 +570,7 @@ function(  BB){
      * functionality is used internally, for ex. by the getters && setters )
      *
      * @method hsv2rgb
-     * @param  {Number} [h] either an instance of BB.Color or a h value between 0 - 359
+     * @param  {Number} [hsv] either an instance of BB.Color or a h value between 0 - 359
      * @param  {Number} [s]   a saturation value between 0 - 100
      * @param  {Number} [v]   a brightness/lightness value value between 0 - 100
      * @return {Object}     an object with r, g, b properties
@@ -628,21 +628,23 @@ function(  BB){
     //
 
     /**
-     * changes the color by shifting current hue value by a number of degrees, also chainable ( see example )
+     * changes the color by shifting current hue value by a number of degrees,
+     * also chainable ( see example )
      *
-     * can also take an additional hue parameter when used as a utility ( see example ), used this way internally by <code>.createScheme</code>
-     *
+     * can also take an additional hue parameter when used as a utility ( see
+     * example ), used this way internally by <code>.createScheme</code>
      * @method shift
      * @chainable
-     * @param {Number} degrees number of degress to shift current hue by ( think rotating a color wheel )
+     * @param {Number} degrees number of degress to shift current hue by ( think
+     * rotating a color wheel )
+     * @param {Number} [hue] The hue parameter to use. Including this parameter
+     * changes the behavior of this function to act as a utility function.
      * @return {BB.Color} this color
-     * @example
-     * <code class="code prettyprint">
-     * &nbsp; color.shift( 10 ); // shifts by 10 degrees <br>
-     * &nbsp; var comp = color.clone().shift( 180 ); // new complementary color obj <br><br>
-     * &nbsp; // as a utility ( without changing the color )  <br>
-     * &nbsp; color.shift( 180, color.h ); // returns the complementary hue ( in degrees ) 
-     * </code>
+     * @example <code class="code prettyprint"> &nbsp; color.shift( 10 ); //
+     * shifts by 10 degrees <br> &nbsp; var comp = color.clone().shift( 180 );
+     * // new complementary color obj <br><br> &nbsp; // as a utility ( without
+     * changing the color ) <br> &nbsp; color.shift( 180, color.h ); // returns
+     * the complementary hue ( in degrees ) </code>
      */
     BB.Color.prototype.shift = function( degrees, hue ) { 
         var h;
@@ -719,7 +721,7 @@ function(  BB){
      * 
      * @param  {Object} optional config object with properties for angle (Number) for hue
      * shift ( for schemes other than "complimentary" or "triadic" which have fixed 
-     * angles ), tint (Array of Floats) and shade (Array of Flaots), which
+     * angles ), tint (Array of Floats) and shade (Array of Floats), which
      * are used to create aditional monochromatic colors ( tint for light variations of
      * the base color and shade for dark ) in relation to the base colors of each scheme
      *
