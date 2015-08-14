@@ -2,12 +2,10 @@
  * A module for creating color objects, color schemes and doing color maths
  * @module BB.Color
  */
-define(['./BB', './BB.MathUtils'],
-function(  BB,        MathUtils) {
+define(['./BB'],
+function(  BB) {
 
     'use strict';
-
-    BB.MathUtils = MathUtils;
     
     /**
      * A module for creating color objects, color schemes and doing color maths.
