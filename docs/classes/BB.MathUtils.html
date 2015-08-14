@@ -39,6 +39,7 @@
                             <li><a class="type" href="../classes/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
                             <li><a class="type" href="../classes/BB.MathUtils.html">BB.MathUtils</a></li>
                             <li><a class="type" href="../classes/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="type" href="../classes/BB.Particle2D.html">BB.Particle2D</a></li>
                             <li><a class="type" href="../classes/BB.Pointer.html">BB.Pointer</a></li>
                             <li><a class="type" href="../classes/BB.Vector2.html">BB.Vector2</a></li>
                         </ul>
@@ -51,6 +52,7 @@
                             <li><a class="module" href="../modules/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
                             <li><a class="module" href="../modules/BB.MathUtils.html">BB.MathUtils</a></li>
                             <li><a class="module" href="../modules/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="module" href="../modules/BB.particle2D.html">BB.particle2D</a></li>
                             <li><a class="module" href="../modules/BB.Pointer.html">BB.Pointer</a></li>
                             <li><a class="module" href="../modules/BB.Vector2.html">BB.Vector2</a></li>
                         </ul> -->
@@ -163,6 +165,16 @@
                     </li>
                     <li class="index-item method">
                         <a href="#method_radToDeg">radToDeg</a>
+    
+                            <span class="flag static">static</span>
+                    </li>
+                    <li class="index-item method">
+                        <a href="#method_randomFloat">randomFloat</a>
+    
+                            <span class="flag static">static</span>
+                    </li>
+                    <li class="index-item method">
+                        <a href="#method_randomInt">randomInt</a>
     
                             <span class="flag static">static</span>
                     </li>
@@ -1172,6 +1184,184 @@
                                 <div class="returns-description">
                                        
                                         <p>Returns radians in degrees.</p>
+                
+                                </div>
+                            </div>
+                
+                    </div>
+                </div>
+                <a name="method_randomFloat" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>randomFloat</code>
+                
+                        <div class="args">
+                            <span class="paren">(</span><ul class="args-list inline commas">
+                                <li class="arg">
+                                        <code>min</code>
+                                </li>
+                                <li class="arg">
+                                        <code>max</code>
+                                </li>
+                            </ul><span class="paren">)</span>
+                        </div>
+                
+                        <span class="returns-inline">
+                            <span class="type">Number</span>
+                        </span>
+                
+                
+                
+                
+                        <span class="flag static">static</span>
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.MathUtils.js.html#l246"><code>src&#x2F;BB.MathUtils.js:246</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>return a random float between a min and a max</p>
+                
+                        </div>
+                
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">min</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>minimum value ( default to 0 if only one argument is passed )</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">max</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>maximum value</p>
+                
+                                        </div>
+                
+                                    </li>
+                                </ul>
+                            </div>
+                
+                            <div class="returns">
+                                <h4>
+                                    Returns:
+                                        <span class="type">Number</span>
+                                </h4> 
+                
+                                <div class="returns-description">
+                                       
+                                        <p>random float</p>
+                
+                                </div>
+                            </div>
+                
+                    </div>
+                </div>
+                <a name="method_randomInt" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>randomInt</code>
+                
+                        <div class="args">
+                            <span class="paren">(</span><ul class="args-list inline commas">
+                                <li class="arg">
+                                        <code>min</code>
+                                </li>
+                                <li class="arg">
+                                        <code>max</code>
+                                </li>
+                            </ul><span class="paren">)</span>
+                        </div>
+                
+                        <span class="returns-inline">
+                            <span class="type">Number</span>
+                        </span>
+                
+                
+                
+                
+                        <span class="flag static">static</span>
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.MathUtils.js.html#l226"><code>src&#x2F;BB.MathUtils.js:226</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>return a random int between a min and a max</p>
+                
+                        </div>
+                
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">min</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>minimum value ( default to 0 if only one argument is passed )</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">max</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>maximum value</p>
+                
+                                        </div>
+                
+                                    </li>
+                                </ul>
+                            </div>
+                
+                            <div class="returns">
+                                <h4>
+                                    Returns:
+                                        <span class="type">Number</span>
+                                </h4> 
+                
+                                <div class="returns-description">
+                                       
+                                        <p>random integer</p>
                 
                                 </div>
                             </div>

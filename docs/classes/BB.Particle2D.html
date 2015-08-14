@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>BB.LineBrush2D - BBMod</title>
+    <title>BB.Particle2D - BBMod</title>
         
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/prettify-nick.css">
@@ -63,25 +63,19 @@
 
         <div id="docs-main" class="apidocs">
             <div class="content container">
-    <h1>BB.LineBrush2D </h1>
+    <h1>BB.Particle2D </h1>
     <div class="box meta">
     
-            <div class="extends">
-                Extends <a href="../classes/BB.BaseBrush2D.html" class="crosslink">BB.BaseBrush2D</a>
-            </div>
     
             <div class="foundat">
-                Defined in: <a href="../files/src_BB.LineBrush2D.js.html#l18"><code>src&#x2F;BB.LineBrush2D.js:18</code></a>
+                Defined in: <a href="../files/src_BB.Particle2D.js.html#l13"><code>src&#x2F;BB.Particle2D.js:13</code></a>
             </div>
     
     </div>
     
     
     <div class="box intro">
-        <p>A 2D brush module for drawing contiguous lines in a stamp-like fashion.
-    What makes BB.LineBrush2D fundamentally different from BB.BaseBrush
-    is that each new drawing instance is influenced by the previous position of
-    the brush (usually to adjust for drawing angle or brush width).</p>
+        <p>A 2D Particle class for all your physics needs</p>
     
     </div>
     
@@ -119,61 +113,37 @@
         <div class="index-section properties">
             <h3>Properties</h3>
     
-            <ul class="index-list properties extends">
-                    <li class="index-item property inherited">
-                        <a href="#property_color">color</a>
-    
-                    </li>
-                    <li class="index-item property inherited">
-                        <a href="#property_height">height</a>
-    
-                    </li>
-                    <li class="index-item property inherited">
-                        <a href="#property_hidden">hidden</a>
+            <ul class="index-list properties">
+                    <li class="index-item property">
+                        <a href="#property_acceleration">acceleration</a>
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_prevX">prevX</a>
+                        <a href="#property_elasticity">elasticity</a>
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_prevY">prevY</a>
-    
-                    </li>
-                    <li class="index-item property inherited">
-                        <a href="#property_rotation">rotation</a>
-    
-                    </li>
-                    <li class="index-item property inherited">
-                        <a href="#property_type">type</a>
+                        <a href="#property_friction">friction</a>
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_variant">variant</a>
+                        <a href="#property_heading">heading</a>
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_variants">variants</a>
-    
-                    </li>
-                    <li class="index-item property protected">
-                        <a href="#property_variants">variants</a>
-    
-                    </li>
-                    <li class="index-item property inherited">
-                        <a href="#property_w">w</a>
+                        <a href="#property_mass">mass</a>
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_weight">weight</a>
+                        <a href="#property_radius">radius</a>
     
                     </li>
-                    <li class="index-item property inherited">
-                        <a href="#property_x">x</a>
+                    <li class="index-item property">
+                        <a href="#property_speed">speed</a>
     
                     </li>
-                    <li class="index-item property inherited">
-                        <a href="#property_y">y</a>
+                    <li class="index-item property">
+                        <a href="#property_velocity">velocity</a>
     
                     </li>
             </ul>
@@ -183,25 +153,29 @@
         <div class="index-section methods">
             <h3>Methods</h3>
     
-            <ul class="index-list methods extends">
+            <ul class="index-list methods">
     
                     <li class="index-item method constructor">
-                        <a href="#method_BB.LineBrush2D">BB.LineBrush2D</a>
+                        <a href="#method_BB.Particle2D">BB.Particle2D</a>
     
                         <span class="flag constructor">constructor</span>
     
                     </li>
     
-                    <li class="index-item method inherited">
-                        <a href="#method_draw">draw</a>
+                    <li class="index-item method">
+                        <a href="#method_applyForce">applyForce</a>
     
                     </li>
-                    <li class="index-item method inherited">
-                        <a href="#method_scale">scale</a>
+                    <li class="index-item method">
+                        <a href="#method_collide">collide</a>
     
                     </li>
-                    <li class="index-item method inherited">
-                        <a href="#method_update">update</a>
+                    <li class="index-item method">
+                        <a href="#method_gravitate">gravitate</a>
+    
+                    </li>
+                    <li class="index-item method">
+                        <a href="#method_spring">spring</a>
     
                     </li>
             </ul>
@@ -214,9 +188,9 @@
     
         <div class="constructor">
             <h2>Constructor</h2>
-            <a name="method_BB.LineBrush2D" class="anchor-link"></a>
+            <a name="method_BB.Particle2D" class="anchor-link"></a>
             <div class="method item">
-                <h3 class="name"><code>BB.LineBrush2D</code>
+                <h3 class="name"><code>BB.Particle2D</code>
             
                     <div class="args">
                         <span class="paren">(</span><ul class="args-list inline commas">
@@ -238,7 +212,7 @@
                 <div class="meta">
                             <p>
                             Defined in
-                    <a href="../files/src_BB.LineBrush2D.js.html#l18"><code>src&#x2F;BB.LineBrush2D.js:18</code></a>
+                    <a href="../files/src_BB.Particle2D.js.html#l13"><code>src&#x2F;BB.Particle2D.js:13</code></a>
                     </p>
             
             
@@ -262,8 +236,15 @@
             
             
                                     <div class="param-description">
-                                        <p>A optional config hash to initialize any of
-            BB.LineBrush2D&#39;s public properties.</p>
+                                        <p>An optional config object to initialize
+            Particle2D properties, including: position ( object with x and y ), mass
+            ( defaults to 1 ), radius ( defaults to 0 ) and friction ( defaults to 1
+            ).</p>
+            <p>an initial velocity or acceleration can also be set by passing a
+            BB.Vector2 to either of those properties ( ie. velocity or acceleration
+            ). Or an alternative approach is to initialize with a heading property
+            (radians) and speed property ( number ). If no velocity or acceleration
+            or heading/speed is set, the default velocity is BB.Vector2(0,0).</p>
             
                                     </div>
             
@@ -276,8 +257,25 @@
                             <h4>Example:</h4>
             
                             <div class="example-content">
-             <div><code> var lineBrush = new BB.LineBrush2D({ width: 100,
-            height: 100, variant: &quot;soft&quot; }); </code></div>
+            <p>  <code class="code prettyprint"><br>&nbsp; var star = newBB.Particle2D({ <br> 
+            &nbsp;&nbsp;&nbsp;&nbsp; position: new BB.Vector2(WIDTH/2, HEIGHT/2 ),<br> 
+            &nbsp;&nbsp;&nbsp;&nbsp; mass: 20000 <br> 
+            &nbsp;}); <br><br> 
+            &nbsp; var planet = new BB.Particle2D({ <br>
+            &nbsp;&nbsp;&nbsp;&nbsp; position: new BB.Vector2( WIDTH/2+200, HEIGHT/2),<br> 
+            &nbsp;&nbsp;&nbsp;&nbsp; heading: -Math.PI / 2, <br>
+            &nbsp;&nbsp;&nbsp;&nbsp; speed: 10 <br> 
+            &nbsp; }); <br><br>
+            &nbsp; var comet = new BB.Particle2D({<br>
+            &nbsp;&nbsp;&nbsp;&nbsp; position: new BB.Vector2( <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BB.MathUtils.randomInt(WIDTH), <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BB.MathUtils.randomInt(HEIGHT) ), <br>
+            &nbsp;&nbsp;&nbsp;&nbsp; velocity: new BB.Vector2( <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BB.MathUtils.randomInt(10),<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; BB.MathUtils.randomInt(10)) <br>
+            &nbsp; });
+            </code></p>
+            
                             </div>
                         </div>
                 </div>
@@ -289,280 +287,10 @@
             <h2>Properties</h2>
     
             <div class="prop-container clearfix">
-                <a name="property_color" class="anchor-link"></a>
-                <div class="property item inherited">
-                    <h3 class="name"><code>color</code>
-                    <span class="type"><a href="../classes/BB.Color.html" class="crosslink">BB.Color</a></span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">null</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>Inherited from
-                                <a href="../classes/BB.BaseBrush2D.html#property_color" class="type">BB.BaseBrush2D</a>:
-                        <a href="../files/src_BB.BaseBrush2D.js.html#l65"><code>src&#x2F;BB.BaseBrush2D.js:65</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The brush&#39;s color.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_height" class="anchor-link"></a>
-                <div class="property item inherited">
-                    <h3 class="name"><code>height</code>
-                    <span class="type">Number</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">10</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>Inherited from
-                                <a href="../classes/BB.BaseBrush2D.html#property_height" class="type">BB.BaseBrush2D</a>:
-                        <a href="../files/src_BB.BaseBrush2D.js.html#l49"><code>src&#x2F;BB.BaseBrush2D.js:49</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The brush&#39;s height.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_hidden" class="anchor-link"></a>
-                <div class="property item inherited">
-                    <h3 class="name"><code>hidden</code>
-                    <span class="type">Boolean</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">false</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>Inherited from
-                                <a href="../classes/BB.BaseBrush2D.html#property_hidden" class="type">BB.BaseBrush2D</a>:
-                        <a href="../files/src_BB.BaseBrush2D.js.html#l73"><code>src&#x2F;BB.BaseBrush2D.js:73</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>Wether or not to draw the brush to the screen. Toggle this variable
-                to hide and show the brush.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_prevX" class="anchor-link"></a>
+                <a name="property_acceleration" class="anchor-link"></a>
                 <div class="property item">
-                    <h3 class="name"><code>prevX</code>
-                    <span class="type">Number</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">null</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.LineBrush2D.js.html#l35"><code>src&#x2F;BB.LineBrush2D.js:35</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The brush&#39;s previous x position. This property is unique to
-                BB.LineBrush.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_prevY" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>prevY</code>
-                    <span class="type">Number</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">null</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.LineBrush2D.js.html#l44"><code>src&#x2F;BB.LineBrush2D.js:44</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The brush&#39;s previous y position. This property is unique to
-                BB.LineBrush.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_rotation" class="anchor-link"></a>
-                <div class="property item inherited">
-                    <h3 class="name"><code>rotation</code>
-                    <span class="type">Number</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">0</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>Inherited from
-                                <a href="../classes/BB.BaseBrush2D.html#property_rotation" class="type">BB.BaseBrush2D</a>:
-                        <a href="../files/src_BB.BaseBrush2D.js.html#l57"><code>src&#x2F;BB.BaseBrush2D.js:57</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The brush&#39;s rotation in degrees. This property is not always used with each brush variant.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_type" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>type</code>
-                    <span class="type">String</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">&quot;line&quot;</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                            <p>Inherited from
-                            <a href="../classes/BB.BaseBrush2D.html#property_type" class="type">
-                                BB.BaseBrush2D
-                            </a>
-                            but overwritten in
-                        <a href="../files/src_BB.LineBrush2D.js.html#l53"><code>src&#x2F;BB.LineBrush2D.js:53</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The type of brush. This property should be treated as read-only.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_variant" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>variant</code>
-                    <span class="type">String</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">solid</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.LineBrush2D.js.html#l61"><code>src&#x2F;BB.LineBrush2D.js:61</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The current brush variant.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_variants" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>variants</code>
-                    <span class="type">Array</span>
+                    <h3 class="name"><code>acceleration</code>
+                    <span class="type"><a href="../classes/BB.Vector2.html" class="crosslink">BB.Vector2</a></span>
                 
                 
                 
@@ -574,7 +302,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.LineBrush2D.js.html#l77"><code>src&#x2F;BB.LineBrush2D.js:77</code></a>
+                        <a href="../files/src_BB.Particle2D.js.html#l100"><code>src&#x2F;BB.Particle2D.js:100</code></a>
                         </p>
                 
                 
@@ -582,7 +310,7 @@
                 
                     <div class="extended-detail">
                         <div class="description">
-                            <p>An array of all supported variants.</p>
+                            <p>combines forces to be added to velocity each frame</p>
                 
                         </div>
                 
@@ -591,57 +319,23 @@
                 
                     </div>
                 </div>
-                <a name="property_variants" class="anchor-link"></a>
-                <div class="property item protected">
-                    <h3 class="name"><code>variants</code>
-                    <span class="type">Boolean</span>
-                
-                
-                        <span class="flag protected">protected</span>
-                
-                
-                
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.LineBrush2D.js.html#l89"><code>src&#x2F;BB.LineBrush2D.js:89</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>Keeps track of wether or not the controllerModule passed into update
-                was made active (for instance if it was pressed) this frame.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_w" class="anchor-link"></a>
-                <div class="property item inherited">
-                    <h3 class="name"><code>w</code>
+                <a name="property_elasticity" class="anchor-link"></a>
+                <div class="property item">
+                    <h3 class="name"><code>elasticity</code>
                     <span class="type">Number</span>
                 
                 
                 
                 
                 
-                            <span class="default">default:<span class="default-value">10</span></span>
+                            <span class="default">default:<span class="default-value">0.05</span></span>
                 
                     </h3>
                 
                     <div class="meta">
-                                <p>Inherited from
-                                <a href="../classes/BB.BaseBrush2D.html#property_w" class="type">BB.BaseBrush2D</a>:
-                        <a href="../files/src_BB.BaseBrush2D.js.html#l41"><code>src&#x2F;BB.BaseBrush2D.js:41</code></a>
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.Particle2D.js.html#l136"><code>src&#x2F;BB.Particle2D.js:136</code></a>
                         </p>
                 
                 
@@ -649,7 +343,7 @@
                 
                     <div class="extended-detail">
                         <div class="description">
-                            <p>The brush&#39;s width.</p>
+                            <p>how bouncy it is when it collides with an object</p>
                 
                         </div>
                 
@@ -658,9 +352,9 @@
                 
                     </div>
                 </div>
-                <a name="property_weight" class="anchor-link"></a>
+                <a name="property_friction" class="anchor-link"></a>
                 <div class="property item">
-                    <h3 class="name"><code>weight</code>
+                    <h3 class="name"><code>friction</code>
                     <span class="type">Number</span>
                 
                 
@@ -674,7 +368,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.LineBrush2D.js.html#l69"><code>src&#x2F;BB.LineBrush2D.js:69</code></a>
+                        <a href="../files/src_BB.Particle2D.js.html#l129"><code>src&#x2F;BB.Particle2D.js:129</code></a>
                         </p>
                 
                 
@@ -682,7 +376,7 @@
                 
                     <div class="extended-detail">
                         <div class="description">
-                            <p>The brush&#39;s line weight.</p>
+                            <p>the particle&#39;s friction ( not environment&#39;s friction ) multiplied by velocity each frame</p>
                 
                         </div>
                 
@@ -691,9 +385,74 @@
                 
                     </div>
                 </div>
-                <a name="property_x" class="anchor-link"></a>
-                <div class="property item inherited">
-                    <h3 class="name"><code>x</code>
+                <a name="property_heading" class="anchor-link"></a>
+                <div class="property item">
+                    <h3 class="name"><code>heading</code>
+                    <span class="type">Number</span>
+                
+                
+                
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.Particle2D.js.html#l153"><code>src&#x2F;BB.Particle2D.js:153</code></a>
+                        </p>
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                        <div class="description">
+                            <p>the particle&#39;s &quot;heading&quot;, essentially: Math.atan2( velocity.y,  velocity.x );</p>
+                
+                        </div>
+                
+                       
+                
+                
+                    </div>
+                </div>
+                <a name="property_mass" class="anchor-link"></a>
+                <div class="property item">
+                    <h3 class="name"><code>mass</code>
+                    <span class="type">Number</span>
+                
+                
+                
+                
+                
+                            <span class="default">default:<span class="default-value">1</span></span>
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.Particle2D.js.html#l115"><code>src&#x2F;BB.Particle2D.js:115</code></a>
+                        </p>
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                        <div class="description">
+                            <p>the particle&#39;s mass</p>
+                
+                        </div>
+                
+                       
+                
+                
+                    </div>
+                </div>
+                <a name="property_radius" class="anchor-link"></a>
+                <div class="property item">
+                    <h3 class="name"><code>radius</code>
                     <span class="type">Number</span>
                 
                 
@@ -705,9 +464,9 @@
                     </h3>
                 
                     <div class="meta">
-                                <p>Inherited from
-                                <a href="../classes/BB.BaseBrush2D.html#property_x" class="type">BB.BaseBrush2D</a>:
-                        <a href="../files/src_BB.BaseBrush2D.js.html#l25"><code>src&#x2F;BB.BaseBrush2D.js:25</code></a>
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.Particle2D.js.html#l122"><code>src&#x2F;BB.Particle2D.js:122</code></a>
                         </p>
                 
                 
@@ -715,7 +474,7 @@
                 
                     <div class="extended-detail">
                         <div class="description">
-                            <p>The brush&#39;s x position.</p>
+                            <p>the particle&#39;s radius, used for callculating collistions</p>
                 
                         </div>
                 
@@ -724,23 +483,22 @@
                 
                     </div>
                 </div>
-                <a name="property_y" class="anchor-link"></a>
-                <div class="property item inherited">
-                    <h3 class="name"><code>y</code>
+                <a name="property_speed" class="anchor-link"></a>
+                <div class="property item">
+                    <h3 class="name"><code>speed</code>
                     <span class="type">Number</span>
                 
                 
                 
                 
                 
-                            <span class="default">default:<span class="default-value">0</span></span>
                 
                     </h3>
                 
                     <div class="meta">
-                                <p>Inherited from
-                                <a href="../classes/BB.BaseBrush2D.html#property_y" class="type">BB.BaseBrush2D</a>:
-                        <a href="../files/src_BB.BaseBrush2D.js.html#l33"><code>src&#x2F;BB.BaseBrush2D.js:33</code></a>
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.Particle2D.js.html#l168"><code>src&#x2F;BB.Particle2D.js:168</code></a>
                         </p>
                 
                 
@@ -748,7 +506,39 @@
                 
                     <div class="extended-detail">
                         <div class="description">
-                            <p>The brush&#39;s y position.</p>
+                            <p>the particle&#39;s &quot;speed&quot;, essentially: the square root of velocity.x&#178; + velocity.y&#178;</p>
+                
+                        </div>
+                
+                       
+                
+                
+                    </div>
+                </div>
+                <a name="property_velocity" class="anchor-link"></a>
+                <div class="property item">
+                    <h3 class="name"><code>velocity</code>
+                    <span class="type"><a href="../classes/BB.Vector2.html" class="crosslink">BB.Vector2</a></span>
+                
+                
+                
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.Particle2D.js.html#l57"><code>src&#x2F;BB.Particle2D.js:57</code></a>
+                        </p>
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                        <div class="description">
+                            <p>the particle&#39;s velocity ( see acceleration also )</p>
                 
                         </div>
                 
@@ -769,14 +559,14 @@
         <div class="methods-detail">
             <h2>Methods</h2>
     
-                <a name="method_draw" class="anchor-link"></a>
-                <div class="method item inherited">
-                    <h3 class="name"><code>draw</code>
+                <a name="method_applyForce" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>applyForce</code>
                 
                         <div class="args">
                             <span class="paren">(</span><ul class="args-list inline commas">
                                 <li class="arg">
-                                        <code>context</code>
+                                        <code>vector</code>
                                 </li>
                             </ul><span class="paren">)</span>
                         </div>
@@ -791,12 +581,9 @@
                     </h3>
                 
                     <div class="meta">
-                            <p>Inherited from
-                            <a href="../classes/BB.BaseBrush2D.html#method_draw" class="type">
-                                BB.BaseBrush2D
-                            </a>
-                            but overwritten in
-                        <a href="../files/src_BB.LineBrush2D.js.html#l127"><code>src&#x2F;BB.LineBrush2D.js:127</code></a>
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.Particle2D.js.html#l560"><code>src&#x2F;BB.Particle2D.js:560</code></a>
                         </p>
                 
                 
@@ -806,7 +593,7 @@
                     <div class="extended-detail">
                 
                         <div class="description">
-                            <p>Draws the brush to the context. Usually called once per animation frame.</p>
+                            <p>takes a force ( divides it by particle&#39;s mass ) and applies it to acceleration ( which is added to velocity each frame )</p>
                 
                         </div>
                 
@@ -815,13 +602,12 @@
                 
                                 <ul class="params-list">
                                     <li class="param">
-                                            <code class="param-name">context</code>
-                                            <span class="type">Object</span>
+                                            <code class="param-name">vector</code>
+                                            <span class="type"><a href="../classes/BB.Vector2.html" class="crosslink">BB.Vector2</a></span>
                 
                 
                                         <div class="param-description">
-                                            <p>The HTML5 canvas context you would like to draw
-                to.</p>
+                                            <p>force to be applied</p>
                 
                                         </div>
                 
@@ -832,14 +618,14 @@
                 
                     </div>
                 </div>
-                <a name="method_scale" class="anchor-link"></a>
-                <div class="method item inherited">
-                    <h3 class="name"><code>scale</code>
+                <a name="method_collide" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>collide</code>
                 
                         <div class="args">
                             <span class="paren">(</span><ul class="args-list inline commas">
                                 <li class="arg">
-                                        <code>amount</code>
+                                        <code>config</code>
                                 </li>
                             </ul><span class="paren">)</span>
                         </div>
@@ -854,9 +640,9 @@
                     </h3>
                 
                     <div class="meta">
-                                <p>Inherited from
-                                <a href="../classes/BB.BaseBrush2D.html#method_scale" class="type">BB.BaseBrush2D</a>:
-                        <a href="../files/src_BB.BaseBrush2D.js.html#l141"><code>src&#x2F;BB.BaseBrush2D.js:141</code></a>
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.Particle2D.js.html#l374"><code>src&#x2F;BB.Particle2D.js:374</code></a>
                         </p>
                 
                 
@@ -866,7 +652,8 @@
                     <div class="extended-detail">
                 
                         <div class="description">
-                            <p>Multiplies width and height properties by amount.</p>
+                            <p>tracks objects to collide against, this can be other particles ( objects with 
+                position vectors and a radius ) and/or a perimeter ( top, left, right, bottom )</p>
                 
                         </div>
                 
@@ -875,12 +662,113 @@
                 
                                 <ul class="params-list">
                                     <li class="param">
-                                            <code class="param-name">amount</code>
+                                            <code class="param-name">config</code>
+                                            <span class="type">Object</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>object with properties for top, left, bottom, right ( all numbers ) and particles ( array of other 
+                particles or objects with position.x, positon.y and radius properties )</p>
+                
+                                        </div>
+                
+                                    </li>
+                                </ul>
+                            </div>
+                
+                
+                            <div class="example">
+                                <h4>Example:</h4>
+                
+                                <div class="example-content">
+                <p><code class="code prettyprint"> 
+                &nbsp; // assuming ball is an instance of BB.Particle2D <br>
+                &nbsp; // assuming balls is an array of BB.Particle2D objects <br>
+                &nbsp; ball.collide({ <br> 
+                &nbsp;&nbsp;&nbsp;&nbsp; top:0, <br> 
+                &nbsp;&nbsp;&nbsp;&nbsp; right: canvas.width, <br> 
+                &nbsp;&nbsp;&nbsp;&nbsp; bottom: canvas.height, <br> 
+                &nbsp;&nbsp;&nbsp;&nbsp; left: 0, <br> 
+                &nbsp;&nbsp;&nbsp;&nbsp; particles: balls <br> 
+                &nbsp; });<br>
+                </code></p>
+                
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <a name="method_gravitate" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>gravitate</code>
+                
+                        <div class="args">
+                            <span class="paren">(</span><ul class="args-list inline commas">
+                                <li class="arg">
+                                        <code>particle</code>
+                                </li>
+                                <li class="arg">
+                                        <code class="optional">[mass]</code>
+                                </li>
+                            </ul><span class="paren">)</span>
+                        </div>
+                
+                
+                
+                
+                
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.Particle2D.js.html#l186"><code>src&#x2F;BB.Particle2D.js:186</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>identifies something to gravitate towards. the object of gravitation needs to
+                have a position ( x, y ) and mass</p>
+                
+                        </div>
+                
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">particle</code>
+                                            <span class="type">Object</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>if passed as the only argument it should be an
+                Object with a position.x, position.y and mass ( ie. an instance of
+                BB.Particle2D ). Otherwise the first argument needs to be an Object with
+                an x and y ( ie. instance of BB.Vector2 or at the very least { x: ..., y:
+                ... } )</p>
+                <p>alternatively, gravitate could also be passed an <b>array</b> of objects 
+                ( with position and mass )</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name optional">[mass]</code>
                                             <span class="type">Number</span>
+                                            <span class="flag optional" title="This parameter is optional.">optional</span>
                 
                 
                                         <div class="param-description">
-                                            <p>Amount to scale width and height by</p>
+                                            <p>when particle is not an instance of BB.Particle2D
+                and is a Vector an additional argument for mass is required</p>
                 
                                         </div>
                 
@@ -889,16 +777,33 @@
                             </div>
                 
                 
+                            <div class="example">
+                                <h4>Example:</h4>
+                
+                                <div class="example-content">
+                <p><code class="code prettyprint"> 
+                &nbsp; // assuming star and planet are both instances of BB.Particle2D  <br>
+                &nbsp; planet.gravitate( star ); <br>
+                &nbsp; // or <br>
+                &nbsp; planet.gravitate( star.position, star.mass ); <br>
+                &nbsp; // or <br>
+                &nbsp; planet.gravitate( { x:WIDTH/2, y:HEIGHT/2 }, 20000 ); <br><br>
+                &nbsp; // assuming stars is an array of BB.particle2D <br>
+                &nbsp; planet.gravitate( stars );<br>
+                </code></p>
+                
+                                </div>
+                            </div>
                     </div>
                 </div>
-                <a name="method_update" class="anchor-link"></a>
-                <div class="method item inherited">
-                    <h3 class="name"><code>update</code>
+                <a name="method_spring" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>spring</code>
                 
                         <div class="args">
                             <span class="paren">(</span><ul class="args-list inline commas">
                                 <li class="arg">
-                                        <code>controllerModule</code>
+                                        <code>config</code>
                                 </li>
                             </ul><span class="paren">)</span>
                         </div>
@@ -913,12 +818,9 @@
                     </h3>
                 
                     <div class="meta">
-                            <p>Inherited from
-                            <a href="../classes/BB.BaseBrush2D.html#method_update" class="type">
-                                BB.BaseBrush2D
-                            </a>
-                            but overwritten in
-                        <a href="../files/src_BB.LineBrush2D.js.html#l108"><code>src&#x2F;BB.LineBrush2D.js:108</code></a>
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.Particle2D.js.html#l288"><code>src&#x2F;BB.Particle2D.js:288</code></a>
                         </p>
                 
                 
@@ -928,7 +830,9 @@
                     <div class="extended-detail">
                 
                         <div class="description">
-                            <p>Update method. Usually called once per animation frame.</p>
+                            <p>identifies something to spring towards. the target needs to have an x,y
+                position, a k value which is a constant factor characteristic of the spring 
+                ( ie. its stiffness, usually some decimal ), and a length.</p>
                 
                         </div>
                 
@@ -937,14 +841,14 @@
                 
                                 <ul class="params-list">
                                     <li class="param">
-                                            <code class="param-name">controllerModule</code>
+                                            <code class="param-name">config</code>
                                             <span class="type">Object</span>
                 
                 
                                         <div class="param-description">
-                                            <p>An object with x and y properties and
-                optionally an isDown boolean (used for beginning and ending
-                strokeds/marks).</p>
+                                            <p>object with properties for point ( vector with x,y ), 
+                k ( number ) and length ( number ).</p>
+                <p>alternatively, spring could also be passed an <b>array</b> of config objects</p>
                 
                                         </div>
                 
@@ -953,6 +857,25 @@
                             </div>
                 
                 
+                            <div class="example">
+                                <h4>Example:</h4>
+                
+                                <div class="example-content">
+                <p><code class="code prettyprint"> 
+                &nbsp; // assuming ball is an instance of BB.Particle2D <br>
+                &nbsp; // and center is an object with x,y positions <br>
+                &nbsp; ball.spring({ <br>
+                &nbsp;&nbsp;&nbsp;&nbsp; position: center.position,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp; k: 0.1,<br>
+                &nbsp;&nbsp;&nbsp; length: 100<br>
+                &nbsp; });<br>
+                &nbsp; <br>
+                &nbsp; // the ball will spring back and forth forever from the center position <br>
+                &nbsp; // unless ball has friction value below the default of 1.0
+                </code></p>
+                
+                                </div>
+                            </div>
                     </div>
                 </div>
     

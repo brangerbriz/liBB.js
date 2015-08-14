@@ -8,6 +8,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "BB.LineBrush2D",
         "BB.MathUtils",
         "BB.MouseInput",
+        "BB.Particle2D",
         "BB.Pointer",
         "BB.Vector2"
     ],
@@ -20,7 +21,8 @@ YUI.add("yuidoc-meta", function(Y) {
         "BB.MathUtils",
         "BB.MouseInput",
         "BB.Pointer",
-        "BB.Vector2"
+        "BB.Vector2",
+        "BB.particle2D"
     ],
     "allModules": [
         {
@@ -57,6 +59,11 @@ YUI.add("yuidoc-meta", function(Y) {
             "displayName": "BB.MouseInput",
             "name": "BB.MouseInput",
             "description": "A module for standardizing mouse events so that they may be used with\nthe event funnel suite of modules. For use with HTML5 canvas only."
+        },
+        {
+            "displayName": "BB.particle2D",
+            "name": "BB.particle2D",
+            "description": "A 2D Particle class for all your physics needs"
         },
         {
             "displayName": "BB.Pointer",

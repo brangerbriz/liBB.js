@@ -39,6 +39,7 @@
                             <li><a class="type" href="../classes/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
                             <li><a class="type" href="../classes/BB.MathUtils.html">BB.MathUtils</a></li>
                             <li><a class="type" href="../classes/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="type" href="../classes/BB.Particle2D.html">BB.Particle2D</a></li>
                             <li><a class="type" href="../classes/BB.Pointer.html">BB.Pointer</a></li>
                             <li><a class="type" href="../classes/BB.Vector2.html">BB.Vector2</a></li>
                         </ul>
@@ -51,6 +52,7 @@
                             <li><a class="module" href="../modules/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
                             <li><a class="module" href="../modules/BB.MathUtils.html">BB.MathUtils</a></li>
                             <li><a class="module" href="../modules/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="module" href="../modules/BB.particle2D.html">BB.particle2D</a></li>
                             <li><a class="module" href="../modules/BB.Pointer.html">BB.Pointer</a></li>
                             <li><a class="module" href="../modules/BB.Vector2.html">BB.Vector2</a></li>
                         </ul> -->
@@ -142,7 +144,7 @@
                 &#x27;monochromatic&#x27; : [],
                 &#x27;analogous&#x27; : [],
                 &#x27;complementary&#x27; : [],
-                &#x27;split complementary&#x27; : [],
+                &#x27;splitcomplementary&#x27; : [],
                 &#x27;triadic&#x27; : [],
                 &#x27;tetradic&#x27; : [],
                 &#x27;random&#x27; : []
@@ -781,8 +783,8 @@
          * @method createScheme
          * 
          * @param  {String} scheme name of the color scheme you want to generate.
-         * can be either &quot;monochromatic&quot;, &quot;analogous&quot;, &quot;complementary&quot;, &quot;split
-         * complementary&quot;, &quot;triadic&quot;, &quot;tetradic&quot; or &quot;random&quot;
+         * can be either &quot;monochromatic&quot;, &quot;analogous&quot;, &quot;complementary&quot;, 
+         * &quot;splitcomplementary&quot;, &quot;triadic&quot;, &quot;tetradic&quot; or &quot;random&quot;
          * 
          * @param  {Object} optional config object with properties for angle (Number) for hue
          * shift ( for schemes other than &quot;complimentary&quot; or &quot;triadic&quot; which have fixed 
@@ -863,13 +865,13 @@
                 switch( scheme ) {
                     case &quot;analogous&quot;: angles = [ config.angle, 0-config.angle ];  break;
                     case &quot;complementary&quot; : angles = [ 180 ];  break;
-                    case &quot;split complementary&quot;: angles = [ 180-config.angle, 180+config.angle];  break;
+                    case &quot;splitcomplementary&quot;: angles = [ 180-config.angle, 180+config.angle];  break;
                     case &quot;triadic&quot; : angles = [ 240, 120 ];  break;
                     case &quot;tetradic&quot;: angles = [ 180, -config.angle, -config.angle+180 ];  break;
                 }
     
-                var ones = [&quot;analogous&quot;,&quot;complementary&quot;,&quot;split complementary&quot;,&quot;triadic&quot;,&quot;tetradic&quot;];
-                var twos = [&quot;analogous&quot;,&quot;split complementary&quot;,&quot;triadic&quot;,&quot;tetradic&quot;];
+                var ones = [&quot;analogous&quot;,&quot;complementary&quot;,&quot;splitcomplementary&quot;,&quot;triadic&quot;,&quot;tetradic&quot;];
+                var twos = [&quot;analogous&quot;,&quot;splitcomplementary&quot;,&quot;triadic&quot;,&quot;tetradic&quot;];
                 var threes = [&quot;tetradic&quot;];
     
                 if( scheme == &quot;monochromatic&quot; )      this._schemeVarient( scheme, config );
@@ -888,34 +890,36 @@
         BB.Color.prototype._schemeVarient = function( scheme, config, angle ) { 
     
             var rgb, hsv;
+            var self;
     
             if( scheme == &quot;monochromatic&quot; ){
-                rgb = this;
+                rgb = {r:this.r, g:this.g, b:this.b };
             } else {
                 rgb     = { r:this.r, g:this.g, b:this.b };
                 hsv     = this.rgb2hsv(     rgb.r, rgb.g, rgb.b     );
                 hsv.h   = this.shift(   hsv.h, angle  );
-                rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );            
+                rgb     = this.hsv2rgb(     hsv.h, hsv.s, hsv.v     );       
             }
     
+            self = new BB.Color(rgb.r, rgb.g, rgb.b );
     
             if( typeof config.tint !== &quot;undefined&quot; ){
                 config.tint.sort(function(a,b){return b - a;}); // reorder largest to smallest
     
                 for (var i = 0; i &lt; config.tint.length; i++) {
-                    var col = this.tint( config.tint[i], true );
+                    var col = self.tint( config.tint[i], true );
                     this.schemes[scheme].push( col );
                 }
             }
     
-            var copy = this.clone();
+            var copy = self.clone();
             this.schemes[scheme].push( copy );
             
             if( typeof config.shade !== &quot;undefined&quot; ){
                 config.shade.sort(function(a,b){return b - a;}); // reorder largest to smallest
     
                 for (var j = 0; j &lt; config.shade.length; j++) {
-                    var col2 = this.shade( config.shade[j], true );
+                    var col2 = self.shade( config.shade[j], true );
                     this.schemes[scheme].push( col2 );
                 }
             }
