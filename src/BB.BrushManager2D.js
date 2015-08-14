@@ -127,6 +127,7 @@ function(  BB,      Pointer ){
          * @property _fboImageTemp
          * @type {Image}
          * @default null
+         * @protected
          */
         this._fboImageTemp = null;
 
