@@ -5,18 +5,22 @@
  *
  *  There are three main tasks:
  *
- *  gulp        - This is the default task, which lints, builds and minifies the code
- *                as well as builds the documentation. It then watches src/ for changes
- *                and re-lints and builds when changes occur (however it does not 
- *                regenerate the documentation each time a file is changed).
+ *  gulp            - This is the default task, which lints, builds and minifies the code
+ *                    as well as builds the documentation. It then watches src/ for changes
+ *                    and re-lints and builds when changes occur (however it does not 
+ *                    regenerate the documentation each time a file is changed).
  *  
- *  grunt build - Lint and build the code.
+ *  gulp build      - Lint and build the code.
  *
- *  grunt docs  - Build the documentation.
+ *  gulp docs       - Build the documentation.
  *
- *  grunt lint  - Lint the code.
+ *  gulp docs-watch - Builds the documentation each time a file in src/ is changed.
  *
- *  grunt watch - Lints and builds the code each time a file in src/ is changed.
+ *  gulp lint       - Lint the code.
+ *
+ *  gulp watch      - Lints and builds the code each time a file in src/ is changed.
+ *
+ *  gulp serve      - serves /docs, /build/, and /examples at port 3000
  *
  * (Note: This comment block is adapted from P5.js Gruntfile)
  */
@@ -81,6 +85,10 @@ gulp.task('scripts', function () {
 
 gulp.task('watch', function() {
     gulp.watch(srcDir + '/*.js', ['lint', 'scripts']);
+});
+
+gulp.task('docs-watch', function() {
+    gulp.watch(srcDir + '/*.js', ['docs']);
 });
 
 gulp.task('serve', function() {
