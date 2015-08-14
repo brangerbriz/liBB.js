@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/BB.BrushManager2D.js - BBMod</title>
+    <title>src/BB.BrushManager2D.js - BB.js</title>
         
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/prettify-nick.css">
@@ -71,7 +71,13 @@
      * Basic scene manager for brushes and pointers. BB.BrushManager2D allows a
      * drawing scene (that uses brushes) to persist while the rest of the canvas is
      * cleared each frame. It also provides functionality to undo/redo manager to
-     * your drawing actions.
+     * your drawing actions. &lt;br&gt;&lt;br&gt; Note: The BB.BrushManager2D class creates a new canvas
+     * that is added to the DOM on top of the canvas object that you pass to its
+     * constructor. This is acheived through some fancy CSS inside of
+     * BB.BrushManager2D.updateCanvasPosition(...). For this reason the canvas
+     * passed to the constructor must be absolutely positioned and
+     * BB.BrushManager2D.updateCanvasPosition(...) should be called each time that
+     * canvas&#x27; position or size is updated.
      * @module BB.BrushManager2D
      */
     define([&#x27;./BB&#x27;, &#x27;BB.Pointer&#x27;],
@@ -85,7 +91,13 @@
          * Basic scene manager for brushes and pointers. BB.BrushManager2D allows a
          * drawing scene (that uses brushes) to persist while the rest of the canvas is
          * cleared each frame. It also provides functionality to undo/redo manager to
-         * your drawing actions.
+         * your drawing actions. &lt;br&gt;&lt;br&gt; &lt;i&gt;Note: The BB.BrushManager2D class creates a new canvas
+         * that is added to the DOM on top of the canvas object that you pass to its
+         * constructor. This is acheived through some fancy CSS inside of
+         * BB.BrushManager2D.updateCanvasPosition(...). For this reason the canvas
+         * passed to the constructor must be absolutely positioned and
+         * BB.BrushManager2D.updateCanvasPosition(...) should be called each time that
+         * canvas&#x27; position or size is updated.&lt;/i&gt;
          * @class BB.BrushManager2D
          * @constructor
          * @param {[HTMLCanvasElement]} canvas The HTML5 canvas element for the

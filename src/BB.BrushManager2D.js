@@ -2,7 +2,13 @@
  * Basic scene manager for brushes and pointers. BB.BrushManager2D allows a
  * drawing scene (that uses brushes) to persist while the rest of the canvas is
  * cleared each frame. It also provides functionality to undo/redo manager to
- * your drawing actions.
+ * your drawing actions. <br><br> Note: The BB.BrushManager2D class creates a new canvas
+ * that is added to the DOM on top of the canvas object that you pass to its
+ * constructor. This is acheived through some fancy CSS inside of
+ * BB.BrushManager2D.updateCanvasPosition(...). For this reason the canvas
+ * passed to the constructor must be absolutely positioned and
+ * BB.BrushManager2D.updateCanvasPosition(...) should be called each time that
+ * canvas' position or size is updated.
  * @module BB.BrushManager2D
  */
 define(['./BB', 'BB.Pointer'],
@@ -16,7 +22,13 @@ function(  BB,      Pointer ){
      * Basic scene manager for brushes and pointers. BB.BrushManager2D allows a
      * drawing scene (that uses brushes) to persist while the rest of the canvas is
      * cleared each frame. It also provides functionality to undo/redo manager to
-     * your drawing actions.
+     * your drawing actions. <br><br> <i>Note: The BB.BrushManager2D class creates a new canvas
+     * that is added to the DOM on top of the canvas object that you pass to its
+     * constructor. This is acheived through some fancy CSS inside of
+     * BB.BrushManager2D.updateCanvasPosition(...). For this reason the canvas
+     * passed to the constructor must be absolutely positioned and
+     * BB.BrushManager2D.updateCanvasPosition(...) should be called each time that
+     * canvas' position or size is updated.</i>
      * @class BB.BrushManager2D
      * @constructor
      * @param {[HTMLCanvasElement]} canvas The HTML5 canvas element for the

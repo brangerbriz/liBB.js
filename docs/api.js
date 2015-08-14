@@ -33,7 +33,7 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "BB.BrushManager2D",
             "name": "BB.BrushManager2D",
-            "description": "Basic scene manager for brushes and pointers. BB.BrushManager2D allows a\ndrawing scene (that uses brushes) to persist while the rest of the canvas is\ncleared each frame. It also provides functionality to undo/redo manager to\nyour drawing actions."
+            "description": "Basic scene manager for brushes and pointers. BB.BrushManager2D allows a\ndrawing scene (that uses brushes) to persist while the rest of the canvas is\ncleared each frame. It also provides functionality to undo/redo manager to\nyour drawing actions. <br><br> Note: The BB.BrushManager2D class creates a new canvas\nthat is added to the DOM on top of the canvas object that you pass to its\nconstructor. This is acheived through some fancy CSS inside of\nBB.BrushManager2D.updateCanvasPosition(...). For this reason the canvas\npassed to the constructor must be absolutely positioned and\nBB.BrushManager2D.updateCanvasPosition(...) should be called each time that\ncanvas' position or size is updated."
         },
         {
             "displayName": "BB.Color",

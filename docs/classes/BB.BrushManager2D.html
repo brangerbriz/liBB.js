@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>BB.BrushManager2D - BBMod</title>
+    <title>BB.BrushManager2D - BB.js</title>
         
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/prettify-nick.css">
@@ -68,7 +68,7 @@
     
     
             <div class="foundat">
-                Defined in: <a href="../files/src_BB.BrushManager2D.js.html#l15"><code>src&#x2F;BB.BrushManager2D.js:15</code></a>
+                Defined in: <a href="../files/src_BB.BrushManager2D.js.html#l21"><code>src&#x2F;BB.BrushManager2D.js:21</code></a>
             </div>
     
     </div>
@@ -78,7 +78,13 @@
         <p>Basic scene manager for brushes and pointers. BB.BrushManager2D allows a
     drawing scene (that uses brushes) to persist while the rest of the canvas is
     cleared each frame. It also provides functionality to undo/redo manager to
-    your drawing actions.</p>
+    your drawing actions. <br><br> <i>Note: The BB.BrushManager2D class creates a new canvas
+    that is added to the DOM on top of the canvas object that you pass to its
+    constructor. This is acheived through some fancy CSS inside of
+    BB.BrushManager2D.updateCanvasPosition(...). For this reason the canvas
+    passed to the constructor must be absolutely positioned and
+    BB.BrushManager2D.updateCanvasPosition(...) should be called each time that
+    canvas&#39; position or size is updated.</i></p>
     
     </div>
     
@@ -283,7 +289,7 @@
                 <div class="meta">
                             <p>
                             Defined in
-                    <a href="../files/src_BB.BrushManager2D.js.html#l15"><code>src&#x2F;BB.BrushManager2D.js:15</code></a>
+                    <a href="../files/src_BB.BrushManager2D.js.html#l21"><code>src&#x2F;BB.BrushManager2D.js:21</code></a>
                     </p>
             
             
@@ -341,7 +347,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l109"><code>src&#x2F;BB.BrushManager2D.js:109</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l121"><code>src&#x2F;BB.BrushManager2D.js:121</code></a>
                         </p>
                 
                 
@@ -375,7 +381,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l221"><code>src&#x2F;BB.BrushManager2D.js:221</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l233"><code>src&#x2F;BB.BrushManager2D.js:233</code></a>
                         </p>
                 
                 
@@ -411,7 +417,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l124"><code>src&#x2F;BB.BrushManager2D.js:124</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l136"><code>src&#x2F;BB.BrushManager2D.js:136</code></a>
                         </p>
                 
                 
@@ -445,7 +451,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l93"><code>src&#x2F;BB.BrushManager2D.js:93</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l105"><code>src&#x2F;BB.BrushManager2D.js:105</code></a>
                         </p>
                 
                 
@@ -478,7 +484,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l204"><code>src&#x2F;BB.BrushManager2D.js:204</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l216"><code>src&#x2F;BB.BrushManager2D.js:216</code></a>
                         </p>
                 
                 
@@ -512,7 +518,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l195"><code>src&#x2F;BB.BrushManager2D.js:195</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l207"><code>src&#x2F;BB.BrushManager2D.js:207</code></a>
                         </p>
                 
                 
@@ -546,7 +552,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l39"><code>src&#x2F;BB.BrushManager2D.js:39</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l51"><code>src&#x2F;BB.BrushManager2D.js:51</code></a>
                         </p>
                 
                 
@@ -579,7 +585,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l47"><code>src&#x2F;BB.BrushManager2D.js:47</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l59"><code>src&#x2F;BB.BrushManager2D.js:59</code></a>
                         </p>
                 
                 
@@ -613,7 +619,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l178"><code>src&#x2F;BB.BrushManager2D.js:178</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l190"><code>src&#x2F;BB.BrushManager2D.js:190</code></a>
                         </p>
                 
                 
@@ -647,7 +653,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l187"><code>src&#x2F;BB.BrushManager2D.js:187</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l199"><code>src&#x2F;BB.BrushManager2D.js:199</code></a>
                         </p>
                 
                 
@@ -680,7 +686,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l101"><code>src&#x2F;BB.BrushManager2D.js:101</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l113"><code>src&#x2F;BB.BrushManager2D.js:113</code></a>
                         </p>
                 
                 
@@ -713,7 +719,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l138"><code>src&#x2F;BB.BrushManager2D.js:138</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l150"><code>src&#x2F;BB.BrushManager2D.js:150</code></a>
                         </p>
                 
                 
@@ -747,7 +753,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l213"><code>src&#x2F;BB.BrushManager2D.js:213</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l225"><code>src&#x2F;BB.BrushManager2D.js:225</code></a>
                         </p>
                 
                 
@@ -779,7 +785,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l56"><code>src&#x2F;BB.BrushManager2D.js:56</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l68"><code>src&#x2F;BB.BrushManager2D.js:68</code></a>
                         </p>
                 
                 
@@ -812,7 +818,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l64"><code>src&#x2F;BB.BrushManager2D.js:64</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l76"><code>src&#x2F;BB.BrushManager2D.js:76</code></a>
                         </p>
                 
                 
@@ -845,7 +851,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l235"><code>src&#x2F;BB.BrushManager2D.js:235</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l247"><code>src&#x2F;BB.BrushManager2D.js:247</code></a>
                         </p>
                 
                 
@@ -877,7 +883,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l71"><code>src&#x2F;BB.BrushManager2D.js:71</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l83"><code>src&#x2F;BB.BrushManager2D.js:83</code></a>
                         </p>
                 
                 
@@ -912,7 +918,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l81"><code>src&#x2F;BB.BrushManager2D.js:81</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l93"><code>src&#x2F;BB.BrushManager2D.js:93</code></a>
                         </p>
                 
                 
@@ -962,7 +968,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l314"><code>src&#x2F;BB.BrushManager2D.js:314</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l326"><code>src&#x2F;BB.BrushManager2D.js:326</code></a>
                         </p>
                 
                 
@@ -1011,7 +1017,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l332"><code>src&#x2F;BB.BrushManager2D.js:332</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l344"><code>src&#x2F;BB.BrushManager2D.js:344</code></a>
                         </p>
                 
                 
@@ -1060,7 +1066,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l323"><code>src&#x2F;BB.BrushManager2D.js:323</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l335"><code>src&#x2F;BB.BrushManager2D.js:335</code></a>
                         </p>
                 
                 
@@ -1112,7 +1118,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l256"><code>src&#x2F;BB.BrushManager2D.js:256</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l268"><code>src&#x2F;BB.BrushManager2D.js:268</code></a>
                         </p>
                 
                 
@@ -1168,7 +1174,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l434"><code>src&#x2F;BB.BrushManager2D.js:434</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l446"><code>src&#x2F;BB.BrushManager2D.js:446</code></a>
                         </p>
                 
                 
@@ -1204,7 +1210,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l445"><code>src&#x2F;BB.BrushManager2D.js:445</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l457"><code>src&#x2F;BB.BrushManager2D.js:457</code></a>
                         </p>
                 
                 
@@ -1246,7 +1252,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l294"><code>src&#x2F;BB.BrushManager2D.js:294</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l306"><code>src&#x2F;BB.BrushManager2D.js:306</code></a>
                         </p>
                 
                 
@@ -1303,7 +1309,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l285"><code>src&#x2F;BB.BrushManager2D.js:285</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l297"><code>src&#x2F;BB.BrushManager2D.js:297</code></a>
                         </p>
                 
                 
@@ -1339,7 +1345,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l341"><code>src&#x2F;BB.BrushManager2D.js:341</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l353"><code>src&#x2F;BB.BrushManager2D.js:353</code></a>
                         </p>
                 
                 
@@ -1381,7 +1387,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l401"><code>src&#x2F;BB.BrushManager2D.js:401</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l413"><code>src&#x2F;BB.BrushManager2D.js:413</code></a>
                         </p>
                 
                 
@@ -1437,7 +1443,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l456"><code>src&#x2F;BB.BrushManager2D.js:456</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l468"><code>src&#x2F;BB.BrushManager2D.js:468</code></a>
                         </p>
                 
                 

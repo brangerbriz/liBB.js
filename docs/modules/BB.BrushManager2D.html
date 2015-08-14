@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>BB.BrushManager2D - BBMod</title>
+    <title>BB.BrushManager2D - BB.js</title>
         
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/prettify-nick.css">
@@ -68,7 +68,7 @@
     
     
             <div class="foundat">
-                Defined in: <a href="../files/src_BB.BrushManager2D.js.html#l15"><code>src&#x2F;BB.BrushManager2D.js:15</code></a>
+                Defined in: <a href="../files/src_BB.BrushManager2D.js.html#l21"><code>src&#x2F;BB.BrushManager2D.js:21</code></a>
             </div>
     
     </div>
@@ -78,7 +78,13 @@
         <p>Basic scene manager for brushes and pointers. BB.BrushManager2D allows a
     drawing scene (that uses brushes) to persist while the rest of the canvas is
     cleared each frame. It also provides functionality to undo/redo manager to
-    your drawing actions.</p>
+    your drawing actions. <br><br> Note: The BB.BrushManager2D class creates a new canvas
+    that is added to the DOM on top of the canvas object that you pass to its
+    constructor. This is acheived through some fancy CSS inside of
+    BB.BrushManager2D.updateCanvasPosition(...). For this reason the canvas
+    passed to the constructor must be absolutely positioned and
+    BB.BrushManager2D.updateCanvasPosition(...) should be called each time that
+    canvas&#39; position or size is updated.</p>
     
     </div>
     
