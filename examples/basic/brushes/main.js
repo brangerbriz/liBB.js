@@ -42,6 +42,8 @@ function setup() {
 
 function update() {
     
+    requestAnimationFrame(update);
+   
     mouseInput.update();
     pointer.update();
     brushManager.update();
@@ -53,6 +55,7 @@ function update() {
     }
 
     updateDisplay();
+    draw();
 }
 
 function draw() {       
@@ -71,11 +74,7 @@ function draw() {
 }
 
 setup();
-
-setInterval(function(){
-    update();
-    draw();
-}, 1000/60);
+update();
 
 function updateDisplay() {
     

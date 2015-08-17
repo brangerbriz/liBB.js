@@ -28,6 +28,9 @@ function setup() {
 }
 
 function update() {
+    
+    requestAnimationFrame(update);
+
     gravity.y = 0; //gui -name gravity.y -max 0.5 -steps 0.1
 
     for (var i = 0; i < balls.length; i++) {
@@ -44,6 +47,8 @@ function update() {
 
         balls[i].update();
     };
+
+    draw();
 }
 
 function draw() {
@@ -60,8 +65,4 @@ function draw() {
 
 
 setup();
-
-setInterval(function(){
-    update();
-    draw();
-}, 1000/60);
+update();

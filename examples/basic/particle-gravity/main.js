@@ -33,6 +33,9 @@ function setup() {
 }
 
 function update() {
+
+    requestAnimationFrame(update);
+    
     // update logo
     logo.update( star )
 
@@ -46,6 +49,8 @@ function update() {
     // update comet
     comet.gravitate([ star, planet ]);
     comet.update();
+
+    draw();
 }
 
 function draw() {
@@ -69,8 +74,4 @@ function draw() {
 
 
 setup();
-
-setInterval(function(){
-    update();
-    draw();
-}, 1000/60);
+update();

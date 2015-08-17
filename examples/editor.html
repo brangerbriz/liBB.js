@@ -75,7 +75,7 @@
 		// editor/preview 	------			------				------				------
 
 		var req = new XMLHttpRequest();
-		req.open("GET", type+"/"+file+"/main.js", true);
+		req.open("GET", "../"+type+"/"+file+"/main.js", true);
 		req.addEventListener("load", function() {
 		  
 		 	createEditor( req.responseText );	// create editor

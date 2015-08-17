@@ -19,6 +19,8 @@ function setup() {
 
 function update() {
 
+    requestAnimationFrame(update);
+
     mouseInput.update();
     pointer.update();
     
@@ -56,6 +58,8 @@ function update() {
     
     prevX = pointer.x;
     prevY = pointer.y;
+
+    draw();
 }
 
 function draw() {
@@ -103,8 +107,5 @@ function checkEdges(particle, radius) {
 }
 
 setup();
+update();
 
-setInterval(function(){
-    update();
-    draw();
-}, 1000/60);

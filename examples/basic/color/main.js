@@ -58,8 +58,9 @@ function draw(){
         c++;
     }
 }
+
 setup();
-setInterval(draw,1000/60);
+draw();
 
 
 
@@ -86,6 +87,7 @@ var methods = {
 function change(){
     if( curSet===0 ) setup();
     else             setup2();
+    draw();
 }
 
 var f1 = gui.addFolder('hsv');

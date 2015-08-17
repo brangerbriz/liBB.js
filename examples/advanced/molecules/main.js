@@ -52,6 +52,7 @@ function makeMolecule( x, y ){
 function setup() {
     
     window.onresize = function() {
+        
         WIDTH = canvas.width = window.innerWidth;
         HEIGHT = canvas.height = window.innerHeight;
     }
@@ -62,13 +63,15 @@ function setup() {
         makeMolecule( e.clientX, e.clientY ); 
     });
 
-    ctx.fillStyle = "#cc3399";
 
+    ctx.fillStyle = "#cc3399";
     makeMolecule( WIDTH/2, HEIGHT/2 );
 }
 
 
 function update() {
+    
+    requestAnimationFrame(update);
 
     mouseInput.update();
     pointer.update();
@@ -101,6 +104,8 @@ function update() {
             balls[i].update();
         };
     };
+
+    draw();
 }
 
 
@@ -136,8 +141,4 @@ function draw() {
 
 
 setup();
-
-setInterval(function(){
-    update();
-    draw();
-}, 1000/60);
+update();

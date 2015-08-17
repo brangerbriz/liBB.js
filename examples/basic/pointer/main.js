@@ -28,19 +28,15 @@ pointer.on('move', function(x, y){
 });
 
 function update() {
+    
+    requestAnimationFrame(update);
+
     mouseInput.update();
     pointer.update();
     updateDisplay();
 }
 
-function draw() {
-
-}
-
-setInterval(function(){
-    update();
-    draw();
-}, 1000/60);
+update();
 
 function updateDisplay() {
     

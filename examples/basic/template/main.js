@@ -16,19 +16,18 @@ function setup() {
 
 
 function update() {
+   requestAnimationFrame(update);
 
+   // update code goes here...
+
+   draw();
 }
 
 
 function draw() {
     ctx.clearRect(0,0,WIDTH,HEIGHT);
-
+    
 }
-
 
 setup();
 
-setInterval(function(){
-    update();
-    draw();
-}, 1000/60);

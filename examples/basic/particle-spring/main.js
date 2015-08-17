@@ -26,6 +26,9 @@ function setup() {
 }
 
 function update() {
+    
+    requestAnimationFrame(update);
+
     mouseInput.update();
     pointer.update();
 
@@ -53,6 +56,7 @@ function update() {
     prevX = ball.position.x;
     prevY = ball.position.y;
 
+    draw();
 }
 
 function draw() {
@@ -72,8 +76,4 @@ function draw() {
 
 
 setup();
-
-setInterval(function(){
-    update();
-    draw();
-}, 1000/60);
+update();
