@@ -312,7 +312,7 @@ function(  BB,      Pointer ){
      * BB.BrushManager2D.trackPointers(...). Untracking a pointer removes it
      * from the internal _pointers array which changes the index of all pointers
      * after it. Keep this in mind when using this method.
-     * @method untrackPointers
+     * @method untrackPointerAtIndex
      * @param {Number} index The index of the pointer to untrack.
      */
     BB.BrushManager2D.prototype.untrackPointerAtIndex = function(index) {
@@ -458,8 +458,8 @@ function(  BB,      Pointer ){
     };
 
     /**
-     * Undo redo one drawing action if available
-     * @method undo
+     * Redo one drawing action if available
+     * @method redo
      */
     BB.BrushManager2D.prototype.redo = function() {
 
@@ -473,7 +473,7 @@ function(  BB,      Pointer ){
      * BB.BrushManager2D constructor has been moved or resized. It is
      * important to call this method whenever the positional CSS from the parent
      * canvas is changed so that BB.BrushManager2D's internal canvases may be
-     * updated upropriately.
+     * updated appropriately.
      * @method updateCanvasPosition
      * @example
      * <code class="code prettyprint">

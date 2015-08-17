@@ -120,7 +120,7 @@ function(  BB,     MouseInput){
     });
 
     /**
-     * Update the pointer using the controllerModule.
+     * Update the pointer using the controllerModule. Usually called once per animation frame.
      * @method update
      * @param  {Object} controllerModule 
      */

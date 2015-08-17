@@ -1,6 +1,8 @@
 /**
- * A module for standardizing mouse events so that they may be used with
- * the event funnel suite of modules. For use with HTML5 canvas only.
+ * A module for standardizing mouse events from an HTML5 canvas so that they may be used with
+ * the event funnel suite of modules.
+ * <br>
+ * <i>NOTE: For use with HTML5 canvas only.<i>
  * @module BB.MouseInput
  */
 define(['./BB'], 
@@ -9,8 +11,11 @@ function(  BB){
     'use strict';
     
     /**
-     * A module for standardizing mouse events so that they may be used with
+     * A module for standardizing mouse events from an HTML5 canvas so that they may be used with
      * the event funnel suite of modules.
+     * <br>
+     * <br>
+     * <i>Note: For use with HTML5 canvas only.<i>
      * @class  BB.MouseInput
      * @constructor
      * @param {HTMLCanvasElement} canvasElement The HTML5 canvas object listening for mouse input.
@@ -58,9 +63,10 @@ function(  BB){
         this.clickY     = 0;
 
         /**
-         * Time in milliseconds that the mouse has been still before considering it's movement to be finished.
+         * Time in milliseconds that the mouse has been still before its movement is considering to be finished.
          * @property moveDebounce
          * @type {Number}
+         * @default 150
          */
         this.moveDebounce = 150;
 
@@ -169,8 +175,8 @@ function(  BB){
 
     /**
      * Utility property that hold's the value of a JavaScript MouseEvent's left mouse button.
-     * @property
-     * @static
+     * @property LEFT_BUTTON
+     * @static 
      * @type {Number}
      * @default 0
      * @readOnly
@@ -179,8 +185,8 @@ function(  BB){
 
     /**
      * Utility property that hold's the value of a JavaScript MouseEvent's scroll wheel button.
-     * @property
-     * @static
+     * @property SCROLL_BUTTON
+     * @static 
      * @type {Number}
      * @default 1
      * @readOnly
@@ -189,7 +195,7 @@ function(  BB){
 
     /**
      * Utility property that hold's the value of a JavaScript MouseEvent's right mouse button.
-     * @property
+     * @property RIGHT_BUTTON
      * @static
      * @type {Number}
      * @default 2

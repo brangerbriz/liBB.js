@@ -25,8 +25,8 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
      * @extends BB.BaseBrush2D
      * @param {Object} [config] A optional config hash to initialize any of
      * BB.LineBrush2D's public properties.
-     * @example <div><code> var lineBrush = new BB.LineBrush2D({ width: 100,
-     * height: 100, variant: "soft" }); </code></div>
+     * @example <code class="code prettyprint">&nbsp; var lineBrush = new BB.LineBrush2D({ width: 100,
+     * height: 100, variant: "soft" }); </code>
      */
     BB.LineBrush2D = function(config) {
 
@@ -110,7 +110,19 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
      * @method update
      * @param {Object} controllerModule An object with x and y properties and
      * optionally an isDown boolean (used for beginning and ending
-     * strokeds/marks). 
+     * strokeds/marks).
+     * @example <code class="code prettyprint">
+     * &nbsp;var mouseInput = new BB.MouseInput(document.getElementById('canvas'));<br>
+     * &nbsp;var pointer = new BB.Pointer(mouseInput);<br>
+     * &nbsp;var brush = new BB.LineBrush2D();<br>
+     * <br>
+     * &nbsp; // called once per animation frame (from somewhere else in your app)<br>
+     * &nbsp;function update() {<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;mouseInput.update();<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;pointer.update();<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;brush.update(pointer); // update the brush using the pointer<br>
+     * &nbsp;}
+     * </code>
      */
     BB.LineBrush2D.prototype.update = function(controllerModule) {
         

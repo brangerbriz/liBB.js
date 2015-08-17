@@ -25,8 +25,9 @@ function(  BB,        Vector2){
      * (radians) and speed property ( number ). If no velocity or acceleration
      * or heading/speed is set, the default velocity is BB.Vector2(0,0).
      * 
-     * @example  <code class="code prettyprint">  
-     * &nbsp; var star = newBB.Particle2D({ <br> 
+     * @example  <code class="code prettyprint">&nbsp; var WIDTH = window.innerWidth;<br>
+     * &nbsp; var HEIGHT = window.innerHeight;<br><br>
+     * &nbsp; var star = newBB.Particle2D({ <br>
      * &nbsp;&nbsp;&nbsp;&nbsp; position: new BB.Vector2(WIDTH/2, HEIGHT/2 ),<br> 
      * &nbsp;&nbsp;&nbsp;&nbsp; mass: 20000 <br> 
      * &nbsp;}); <br><br> 
@@ -98,7 +99,7 @@ function(  BB,        Vector2){
 
 
         /**
-         * combines forces to be added to velocity each frame
+         * Usually used to accumulate forces to be added to velocity each frame
          * @property acceleration
          * @type BB.Vector2
          */  
@@ -196,7 +197,7 @@ function(  BB,        Vector2){
      * ... } )
      *
      * alternatively, gravitate could also be passed an <b>array</b> of objects 
-     * ( with position and mass )
+     * ( each with position and mass properties )
      * 
      * @param {Number} [mass] when particle is not an instance of BB.Particle2D
      * and is a Vector an additional argument for mass is required
@@ -558,7 +559,7 @@ function(  BB,        Vector2){
     };
 
     /**
-     * takes a force ( divides it by particle's mass ) and applies it to acceleration ( which is added to velocity each frame )
+     * takes a force, divides it by particle's mass, and applies it to acceleration ( which is added to velocity each frame )
      * 
      * @method applyForce
      * 
@@ -571,7 +572,6 @@ function(  BB,        Vector2){
         }
 
         return this.acceleration.add( force.clone().divideScalar(this.mass) );
-        // return this.acceleration.add( force );
 
     };
 
