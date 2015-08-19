@@ -95,6 +95,7 @@ gulp.task('serve', function() {
     app.use('/docs', express.static(path.resolve(__dirname + '/docs')));
     app.use('/build', express.static(path.resolve(__dirname + '/build')));
     app.use('/examples', express.static(path.resolve(__dirname + '/examples')));
+    app.use('/toys', express.static(path.resolve(__dirname + '/toys')));
     server.listen(serverPort, function() {
         console.log('[server] Server listening on port', serverPort);
     });
