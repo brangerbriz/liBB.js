@@ -4,13 +4,13 @@
 	<meta charset="utf-8">
 	<title> editor </title>
 
-	<link rel="stylesheet" href="editor-js/codemirror/codemirror.css">
-	<link rel="stylesheet" href="editor-css/styles.css">
+	<link rel="stylesheet" href="js/codemirror/codemirror.css">
+	<link rel="stylesheet" href="css/styles.css">
 
-	<script src="editor-js/codemirror/codemirror.js"></script>
-	<script src="editor-js/codemirror/mode/javascript.js"></script>
-	<script src="editor-js/esprima.js" id="test"></script>
-	<script src="editor-js/dat.gui.min.js"></script>
+	<script src="js/codemirror/codemirror.js"></script>
+	<script src="js/codemirror/mode/javascript.js"></script>
+	<script src="js/esprima.js" id="test"></script>
+	<script src="js/dat.gui.min.js"></script>
 
 </head>
 <body>
@@ -63,9 +63,9 @@
 
 		// editor code   	------			------				------				------
 
-		var whiteHead = '<!DOCTYPE html><html><head><title>example</title><link rel="stylesheet" href="editor-css/white.css"></head><body><canvas id="canvas"><\/canvas><script src="..\/build\/BB.min.js"><\/script><script src="..\/toys\/logo.js"><\/script><script src="assets\/js\/dat.gui.min.js"><\/script><script>';
+		var whiteHead = '<!DOCTYPE html><html><head><title>example</title><link rel="stylesheet" href="css/white.css"></head><body><canvas id="canvas"><\/canvas><script src="..\/build\/BB.min.js"><\/script><script src="..\/toys\/logo.js"><\/script><script src="assets\/js\/dat.gui.min.js"><\/script><script>';
 		
-		var blackHead = '<!DOCTYPE html><html><head><title>example</title><link rel="stylesheet" href="editor-css/black.css"></head><body><canvas id="canvas"><\/canvas><script src="..\/build\/BB.min.js"><\/script><script src="..\/toys\/logo.js"><\/script><script src="assets\/js\/dat.gui.min.js"><\/script><script>';
+		var blackHead = '<!DOCTYPE html><html><head><title>example</title><link rel="stylesheet" href="css/black.css"></head><body><canvas id="canvas"><\/canvas><script src="..\/build\/BB.min.js"><\/script><script src="..\/toys\/logo.js"><\/script><script src="assets\/js\/dat.gui.min.js"><\/script><script>';
 		
 		var head = ( Q.bg ) ? (Q.bg=="white") ? whiteHead : blackHead : whiteHead;
 
@@ -75,7 +75,7 @@
 		// editor/preview 	------			------				------				------
 
 		var req = new XMLHttpRequest();
-		req.open("GET", "../"+type+"/"+file+"/main.js", true);
+		req.open("GET", type+"/"+file+"/main.js", true);
 		req.addEventListener("load", function() {
 		  
 		 	createEditor( req.responseText );	// create editor
@@ -140,8 +140,8 @@
 				// redo gui
 				gui.destroy();
 				gui = undefined;
-				generateGUI();
 			}
+			generateGUI();
 		};
 
 		var errorLines = [], widgets = [];
@@ -252,9 +252,9 @@
 		}
 
 		// updates the editor value when changes are made in the GUI
-		function guiUpdate( obj, exp, value){
+		function guiUpdate( obj, exp, value, arg){
 			var code = editor.doc.getValue().split("\n");
-			var tabs, left, comment, idx;
+			var tabs, left, comment, idx, argNum, codestring;
 			
 			for (var i = 0; i < code.length; i++) {
 				// target specifically the line that gui changed
@@ -280,10 +280,28 @@
 					
 					}
 					else if(exp.type === "VariableDeclarator" ){ //ex: var x = val;
+
 						left = exp.id.name;
 						idx = obj.string.indexOf(left);
 						tabs = obj.string.slice(0,idx);
 						code[i] = tabs + left +" = "+ value +";"+comment;
+
+					}
+					else if(exp.type === "CallExpression" ){ //ex: function(val) or yet obj.method(val) 
+						// ( only seems to work for one at a time???)
+						argNum = eval( arg.substr(3,1) ); 
+						left = (exp.callee.name) ? exp.callee.name : exp.callee.object.name+"."+exp.callee.property.name;	
+						idx = obj.string.indexOf(left);
+						tabs = obj.string.slice(0,idx);
+						codestring = tabs + left + "(";
+						for (var j = 0; j < exp.arguments.length; j++) {
+							if( j == argNum ) codestring += value;
+							else codestring += exp.arguments[j].value;
+							if(j < exp.arguments.length-1 ) codestring += ',';
+						};
+						codestring += ");" + comment;
+						code[i] = codestring;
+
 					}
 
 				}
@@ -305,7 +323,7 @@
 		function generateGUI(){
 
 			var code = editor.doc.getValue().split("\n");
-			var parsed, exp, name, value, _gui, f;
+			var parsed, exp, name, value, _gui, _dir, f, arg, i;
 			var comma = false; // fix esprima parse bug when parsing config properties that end in comma
 
 			for (var i = 0; i < code.length; i++) {
@@ -361,7 +379,24 @@
 						exp = parsed.expression;
 
 						if(exp.type === "CallExpression"){
-							// ...
+
+							f = parseGuiFlags( code[i] );
+							_dir = gui.addFolder(f.name);
+							for (i = 0; i < exp.arguments.length; i++) {
+								arg = exp.arguments[i];
+								name = "arg"+i;
+								value = (arg.type !== "Literal") ? eval(arg.name) : arg.value;
+								obj[name] = value;
+								_gui = _dir.add(obj, name, f.min, f.max).step(f.step).name(name);
+								_gui.f = f;
+								_gui.exp = exp;
+								_gui.onFinishChange(function(value) {
+									console.log( this.f, this.exp, value, this.property  )
+									guiUpdate(this.f, this.exp, value, this.property );
+								});
+							};
+							_dir.open();
+
 						}
 						else if(exp.type === "AssignmentExpression"){							
 
