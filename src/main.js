@@ -22,6 +22,13 @@ define(function (require) {
   BB.Vector2        = require('BB.Vector2');
   BB.Particle2D     = require('BB.Particle2D');
 
+  // audio
+  BB.AudioBufferLoader = require('BB.AudioBufferLoader');
+  BB.AudioSampler      = require('BB.AudioSampler');
+  BB.AudioAnalyser     = require('BB.AudioAnalyser');
+  BB.AudioStream       = require('BB.AudioStream');
+
+
   return BB;
 
 });
