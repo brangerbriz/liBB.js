@@ -1499,12 +1499,12 @@ function(  BB,        Vector2){
  * @module BB.Color
  */
 define('BB.Color',['./BB'],
-function(  BB){
+function(  BB) {
 
     'use strict';
     
     /**
-     * A module for creating color objects, color schemes and doing color maths
+     * A module for creating color objects, color schemes and doing color maths.
      * @class BB.Color
      * @constructor
      * @param {Number} [r] optional parameter for setting the red value (0-255)
@@ -1680,7 +1680,7 @@ function(  BB){
 
     /**
      * the saturation value between 0 - 100
-     * @property s (saturatoin)
+     * @property s (saturation)
      * @type Number
      * @default 0
      */   
@@ -1848,6 +1848,8 @@ function(  BB){
      * sets color value to match another color object's value
      * @method copy
      * @param {BB.Color} color another color object to copy from
+     * @return {BB.Color} this color
+     * @chainable
      * @example
      * <code class="code prettyprint">
      * &nbsp; var x = new color(0,255,0); <br>
@@ -1857,10 +1859,13 @@ function(  BB){
      * </code>
      */
     BB.Color.prototype.copy = function( color ) { 
-        if (! color || !this.isLikeColor( color ) ) {
+        
+        if (typeof color === "undefined" || ! (color instanceof BB.Color)) {
             throw new Error("BB.Color.copy: color parameter is not an instance of BB.Color");
         }
+
         this.setRGBA( color.r, color.g, color.b, color.a );
+        return this;
     };
 
     /**
@@ -1887,6 +1892,8 @@ function(  BB){
      * @param {Number} g sets the green value from 0 - 255 
      * @param {Number} b sets the blue value from 0 - 255 
      * @param {Number} a sets the alpha value from 0 - 255 
+     * @return {BB.Color} this color
+     * @chainable
      */
     BB.Color.prototype.setRGBA = function(r, g, b, a) {
 
@@ -1916,6 +1923,7 @@ function(  BB){
         }
 
         this.rgb2hsv();
+        return this;
     };
     
     /**
@@ -1925,6 +1933,8 @@ function(  BB){
      * @param {Number} s sets the saturation value from 0 - 100
      * @param {Number} v sets the light/bright value from 0 - 100
      * @param {Number} a sets the alpha value from 0 - 255
+     * @return {BB.Color} this color
+     * @chainable
      */
     BB.Color.prototype.setHSVA = function(h, s, v, a) {
         
@@ -1953,6 +1963,7 @@ function(  BB){
         }
 
         this.hsv2rgb();
+        return this;
     };
 
 
@@ -1965,8 +1976,8 @@ function(  BB){
      * 
      * @method isEqual
      * @param {BB.Color} color another color object to compare to
-     * @param {Boolean} excludeAlpha whether or not to exlude Alpha property
-     * @return {Boolean}     true if it's equal, fals if it's not
+     * @param {Boolean} excludeAlpha Whether or not to exlude Alpha property. True by default.
+     * @return {Boolean}     true if it's equal, false if it's not
      */
     BB.Color.prototype.isEqual = function(color, excludeAlpha) {
 
@@ -1986,13 +1997,6 @@ function(  BB){
         }
     };
 
-    BB.Color.prototype.isLikeColor = function( obj) { 
-       return   typeof obj.r !== "undefined" &&
-                typeof obj.g !== "undefined" &&
-                typeof obj.b !== "undefined" &&
-                typeof obj.a !== "undefined";
-    }; 
-
     BB.Color.prototype.min3 = function( a,b,c ) { 
         return ( a<b )   ?   ( ( a<c ) ? a : c )   :   ( ( b<c ) ? b : c ); 
     }; 
@@ -2000,10 +2004,6 @@ function(  BB){
     BB.Color.prototype.max3 = function( a,b,c ) { 
         return ( a>b )   ?   ( ( a>c ) ? a : c )   :   ( ( b>c ) ? b : c );
     };
-
-
-    //
-
 
     /**
      * converts rgb values into hsv values, you can pass it an instance of
@@ -2031,8 +2031,8 @@ function(  BB){
         }
 
         var hsv = {};
-        var max = this.max3( self.r, self.g, self.b );
-        var dif = max - this.min3( self.r, self.g, self.b );
+        var max = Math.max(self.r, Math.max(self.g, self.b));
+        var dif = max - Math.min(self.r, Math.min(self.g, self.b));
 
         hsv.s = (max===0.0) ? 0 : (100*dif/max);
 
@@ -2066,7 +2066,7 @@ function(  BB){
      * functionality is used internally, for ex. by the getters && setters )
      *
      * @method hsv2rgb
-     * @param  {Number} [h] either an instance of BB.Color or a h value between 0 - 359
+     * @param  {Number} [hsv] either an instance of BB.Color or a h value between 0 - 359
      * @param  {Number} [s]   a saturation value between 0 - 100
      * @param  {Number} [v]   a brightness/lightness value value between 0 - 100
      * @return {Object}     an object with r, g, b properties
@@ -2124,21 +2124,23 @@ function(  BB){
     //
 
     /**
-     * changes the color by shifting current hue value by a number of degrees, also chainable ( see example )
+     * changes the color by shifting current hue value by a number of degrees,
+     * also chainable ( see example )
      *
-     * can also take an additional hue parameter when used as a utility ( see example ), used this way internally by <code>.createScheme</code>
-     *
+     * can also take an additional hue parameter when used as a utility ( see
+     * example ), used this way internally by <code>.createScheme</code>
      * @method shift
      * @chainable
-     * @param {Number} degrees number of degress to shift current hue by ( think rotating a color wheel )
+     * @param {Number} degrees number of degress to shift current hue by ( think
+     * rotating a color wheel )
+     * @param {Number} [hue] The hue parameter to use. Including this parameter
+     * changes the behavior of this function to act as a utility function.
      * @return {BB.Color} this color
-     * @example
-     * <code class="code prettyprint">
-     * &nbsp; color.shift( 10 ); // shifts by 10 degrees <br>
-     * &nbsp; var comp = color.clone().shift( 180 ); // new complementary color obj <br><br>
-     * &nbsp; // as a utility ( without changing the color )  <br>
-     * &nbsp; color.shift( 180, color.h ); // returns the complementary hue ( in degrees ) 
-     * </code>
+     * @example <code class="code prettyprint"> &nbsp; color.shift( 10 ); //
+     * shifts by 10 degrees <br> &nbsp; var comp = color.clone().shift( 180 );
+     * // new complementary color obj <br><br> &nbsp; // as a utility ( without
+     * changing the color ) <br> &nbsp; color.shift( 180, color.h ); // returns
+     * the complementary hue ( in degrees ) </code>
      */
     BB.Color.prototype.shift = function( degrees, hue ) { 
         var h;
@@ -2152,7 +2154,7 @@ function(  BB){
 
         if( typeof hue === "undefined" ){
             this.h = h;
-            return this; // for chainging
+            return this; // for chaining
         } 
         else {  return h; }
     };
@@ -2162,6 +2164,8 @@ function(  BB){
      *
      * @method tint
      * @param {Number} percentage float between 0 and 1
+     * @return {BB.Color} this color
+     * @chainable
      */
     BB.Color.prototype.tint = function( percentage, _schemeUse ) { 
         var col = {};
@@ -2170,10 +2174,13 @@ function(  BB){
         col.g = Math.round( this.g+(255-this.g ) * tint );
         col.b = Math.round( this.b+(255-this.b ) * tint );
         col.a = this.a;
-        if( typeof _schemeUse !== "undefined") {
+        if( typeof _schemeUse !== "undefined" && _schemeUse === true) {
             return new BB.Color( col.r, col.g, col.b, col.a );
         }
-        else { this.setRGBA( col.r, col.g, col.b, col.a ); }
+        else { 
+            this.setRGBA( col.r, col.g, col.b, col.a );
+            return this;
+        }
     };
 
 
@@ -2182,6 +2189,8 @@ function(  BB){
      *
      * @method shade
      * @param {Number} percentage float between 0 and 1
+     * @return {BB.Color} this color
+     * @chainable
      */
     BB.Color.prototype.shade = function( percentage, _schemeUse ) { 
         var col = {};
@@ -2190,10 +2199,13 @@ function(  BB){
         col.g = Math.round( this.g * shade );
         col.b = Math.round( this.b * shade );
         col.a = this.a;
-        if( typeof _schemeUse !== "undefined") {
+        if( typeof _schemeUse !== "undefined" && _schemeUse === true) {
             return new BB.Color( col.r, col.g, col.b, col.a );
         }
-        else { this.setRGBA( col.r, col.g, col.b, col.a ); }
+        else { 
+            this.setRGBA( col.r, col.g, col.b, col.a );
+            return this;
+        }
     };
 
 
@@ -2215,7 +2227,7 @@ function(  BB){
      * 
      * @param  {Object} optional config object with properties for angle (Number) for hue
      * shift ( for schemes other than "complimentary" or "triadic" which have fixed 
-     * angles ), tint (Array of Floats) and shade (Array of Flaots), which
+     * angles ), tint (Array of Floats) and shade (Array of Floats), which
      * are used to create aditional monochromatic colors ( tint for light variations of
      * the base color and shade for dark ) in relation to the base colors of each scheme
      *
@@ -2803,7 +2815,13 @@ function(  BB,     MouseInput){
  * Basic scene manager for brushes and pointers. BB.BrushManager2D allows a
  * drawing scene (that uses brushes) to persist while the rest of the canvas is
  * cleared each frame. It also provides functionality to undo/redo manager to
- * your drawing actions.
+ * your drawing actions. <br><br> Note: The BB.BrushManager2D class creates a new canvas
+ * that is added to the DOM on top of the canvas object that you pass to its
+ * constructor. This is acheived through some fancy CSS inside of
+ * BB.BrushManager2D.updateCanvasPosition(...). For this reason the canvas
+ * passed to the constructor must be absolutely positioned and
+ * BB.BrushManager2D.updateCanvasPosition(...) should be called each time that
+ * canvas' position or size is updated.
  * @module BB.BrushManager2D
  */
 define('BB.BrushManager2D',['./BB', 'BB.Pointer'],
@@ -2817,7 +2835,13 @@ function(  BB,      Pointer ){
      * Basic scene manager for brushes and pointers. BB.BrushManager2D allows a
      * drawing scene (that uses brushes) to persist while the rest of the canvas is
      * cleared each frame. It also provides functionality to undo/redo manager to
-     * your drawing actions.
+     * your drawing actions. <br><br> <i>Note: The BB.BrushManager2D class creates a new canvas
+     * that is added to the DOM on top of the canvas object that you pass to its
+     * constructor. This is acheived through some fancy CSS inside of
+     * BB.BrushManager2D.updateCanvasPosition(...). For this reason the canvas
+     * passed to the constructor must be absolutely positioned and
+     * BB.BrushManager2D.updateCanvasPosition(...) should be called each time that
+     * canvas' position or size is updated.</i>
      * @class BB.BrushManager2D
      * @constructor
      * @param {[HTMLCanvasElement]} canvas The HTML5 canvas element for the
