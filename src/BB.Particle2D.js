@@ -54,7 +54,6 @@ function(  BB,        Vector2){
         var y = (config && typeof config.y === 'number') ? config.y : 0;
         this.position = (config && typeof config.position === 'object' && config.position instanceof BB.Vector2) 
                             ? config.position : new BB.Vector2(x, y);
-                      
         /**
          * the particle's velocity ( see acceleration also )
          * @property velocity
@@ -141,6 +140,8 @@ function(  BB,        Vector2){
          * @default 0.05
          */  
         this.elasticity = (config && typeof config.elasticity === 'number') ? config.elasticity : 0.05;
+
+        this.maxSpeed = (config && typeof config.maxSpeed === 'number') ? config.maxSpeed : 100;
 
         this._springs      = []; 
         this._colliders    = []; // array of: other Particles ( x,y,r ) to collide against
@@ -539,14 +540,14 @@ function(  BB,        Vector2){
             }
         }
 
-
-
-
-
         // this.acceleration.multiplyScalar(this.friction); // NOT WORKING?
-        this.velocity.multiplyScalar( this.friction );      // APPLYING DIRECTLY TO VELOCITY INSTEAD
+        this.velocity.multiplyScalar(this.friction);      // APPLYING DIRECTLY TO VELOCITY INSTEAD
 
         this.velocity.add(this.acceleration);
+        
+        if (this.velocity.length() > this.maxSpeed) {
+            this.velocity.setLength(this.maxSpeed);
+        }
 
         this.position.add(this.velocity);
 
