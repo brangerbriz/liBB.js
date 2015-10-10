@@ -171,7 +171,7 @@
             for (var i = 0; i < sliders.length; i++) {
                 
                 sliders[i].on('change', function(data, inputType, index) {
-                    console.log('s', index);
+                    // console.log('s', index);
                     document.getElementById('s' + index).innerHTML = data.velocity;
                 });
             }
@@ -180,8 +180,9 @@
             for (var i = 0; i < knobs.length; i++) {
                 
                 knobs[i].on('change', function(data, inputType, index) {
-                    console.log('k', index);
-                    document.getElementById('k' + index).innerHTML = data.velocity;
+                    // console.log('k', index);
+                    var scaled = Math.floor(BB.MathUtils.map( data.velocity, 0,127, 0,31 ));
+                    document.getElementById('k' + index).innerHTML = scaled;
                 });
             }
         }
