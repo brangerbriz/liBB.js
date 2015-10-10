@@ -6,17 +6,18 @@
  * https://github.com/evanw/glfx.js
  */
 
-THREE.violetSystems1 = {
+THREE.violetSystems2 = {
 
 	uniforms: {
 
 		"tDiffuse": { type: "t", value: null },
-		"tSize":    { type: "v2", value: new THREE.Vector2( 256, 256 ) },
+		"tSize":    { type: "v2", value: new THREE.Vector2( 1, 1 ) },
 		"center":   { type: "v2", value: new THREE.Vector2( 0.5, 0.5 ) },
 		"angle":    { type: "f", value: 1.57 },
 		"scale":    { type: "f", value: 1.0 },
 
-		"colVar1" : { type: "f", value: 9.0 }
+		"colVar1" : { type: "f", value: 9.0 },
+		"colVar2" : { type: "f", value: 0.0 }
 
 	},
 
@@ -45,6 +46,7 @@ THREE.violetSystems1 = {
 		"varying vec2 vUv;",
 
 		"uniform float colVar1;",
+		"uniform float colVar2;",
 
 		"float pattern() {",
 
@@ -63,7 +65,7 @@ THREE.violetSystems1 = {
 
 			"float average = ( color.r + color.g + color.b ) / 3.0;",
 
-			"gl_FragColor = vec4( vec3( average * colVar1 - 5.0 + pattern() ), color.a );",
+			"gl_FragColor = vec4( vec3( average * colVar1 - 5.0 + pattern(), 0.0, average * colVar1 - 5.0 + pattern() ), color.a );",
 
 		"}"
 
