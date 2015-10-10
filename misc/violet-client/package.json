@@ -1,0 +1,29 @@
+{
+  "name": "violet-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "template.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brannon Dorsey + Nick Briz",
+  "license": "MIT",
+  "window": {
+    "title": "midi api demo",
+    "icon": "link.png",
+    "toolbar": true,
+    "frame": true,
+    "width": 800,
+    "height": 500,
+    "position": "mouse",
+    "min_width": 400,
+    "min_height": 200
+  },
+  "webkit": {
+    "plugin": true
+  },
+  "chromium-args": "--enable-web-midi",
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}
