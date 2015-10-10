@@ -26,13 +26,19 @@
     
     <script>
 
+        // global variables ( listening to different frequency bands )
+        var G = {
+            v1: { ban:0, val:0 },
+            v2: { ban:0, val:0 },
+            v3: { ban:0, val:0 },
+            v4: { ban:0, val:0 },
+            v5: { ban:0, val:0 },
+            v6: { ban:0, val:0 },
+            v7: { ban:0, val:0 },
+            v8: { ban:0, val:0 },
+            v9: { ban:0, val:0 }
+        }
 
-        // var controls = {
-        //     k1: { v:fdata[10] }
-        // }
-
-
-        var k1 = 0;
 
         // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~           ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
         // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~   AUDIO   ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
@@ -50,6 +56,12 @@
 
         socket.on('audio-data-frequency', function (data) {
             fdata = objToArray(data);
+
+            // update global variable values
+            for (var i = 0; i < 9; i++) {
+                G["v"+(1+i)].val = fdata[ G["v"+(1+i)].ban ];
+            };
+            
             socketFire();
         });
 
@@ -62,11 +74,11 @@
         }
 
         function socketFire(){
-            // mesh.rotation.y = Date.now() * 0.0002; 
-            console.log(k1);
-            var val = fdata[k1];
-            var scaled = BB.MathUtils.map( val, 0,255, 0, Math.PI*2 );
+
+            // SAMPLE ******
+            var scaled = BB.MathUtils.map( G.v1.val, 0,255, 0, Math.PI*2 );
             new TWEEN.Tween( mesh.rotation ).to( { x:0, y:scaled,z:0 }, 500 ).start();
+            // SAMPLE ******
         }
                         
 
@@ -86,16 +98,20 @@
             var knobs = device.inputs.knobs;
             var buttons = device.inputs.buttons;
 
-            knobs[0].on('change', function(data, inputType, index) {
-                k1 = Math.floor(BB.MathUtils.map( data.velocity, 0,127, 0,23 )); // max 32 
+            // update the ban that each global var should be listening to
+            for (var i = 0; i < 9; i++) { // 9 = global variable length ( G.v )
+                knobs[i].on('change', function(data, inputType, index) {
+                    G["v"+(index+1)].ban = Math.floor(BB.MathUtils.map( data.velocity, 0,127, 0,31 ));  
+                });
+            };
 
-            });
-
+            // custom scene sliders && buttons
+            // SAMPLE ******
             sliders[0].on('change', function(data, inputType, index) {
-                // data.velocity
                 var scaled_data = BB.MathUtils.map( data.velocity, 0,127, 1,4 );
                 vs1.uniforms[ 'scale' ].value = scaled_data; // MANIPULATING SHADER VALUES ( see setup3D() )
             });
+            // SAMPLE ******
 
         }
         function midiNotFound() { console.log('notfound') }
@@ -120,6 +136,7 @@
         }
 
         function draw2D(){
+            // SAMPLE ******
             if(Math.random()>0.9){
                 ctx.clearRect(0,0,WIDTH,HEIGHT);
                 var random = Math.random()*100 + 100;
@@ -128,6 +145,7 @@
                     ctx.fillRect( Math.random()*WIDTH, Math.random()*HEIGHT, Math.random()*50, Math.random()*50 );
                 };
             }
+            // SAMPLE ******
         }
 
 
@@ -165,6 +183,7 @@
             canvasTexture.magFilter = THREE.LinearFilter;
             var canvasMaterial = new THREE.MeshBasicMaterial( { map: canvasTexture, overdraw: true, side:THREE.DoubleSide } );
 
+            // SAMPLE ******// SAMPLE ******// SAMPLE ******// SAMPLE ******
             // example mesh w/ canvasMaterial
             geometry = new THREE.TorusKnotGeometry(100, 40, 64, 8, 2, 3, 1);
             mesh = new THREE.Mesh(geometry, canvasMaterial);
@@ -181,10 +200,13 @@
             // composer.addPass( additionalShader );
              
             vs1.renderToScreen = true;
+            // SAMPLE ******// SAMPLE ******// SAMPLE ******// SAMPLE ******
         }
 
         function update3D(){
+            // SAMPLE ******
             TWEEN.update();
+            // SAMPLE ******
         }
 
         function draw3D(){
