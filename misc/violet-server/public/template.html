@@ -1,0 +1,212 @@
+<html>
+<head>
+    <title>Violet Systems Set</title>
+    <style type="text/css">
+    	body,html { margin:0; padding:0; }
+    </style>
+</head>
+<body>
+    <!-- LIBRARIES -->
+    <script src="js/three.min.js"></script>
+    <script src="js/tween.min.js"></script>
+    <script src="js/Midi.js"></script>
+    <script src="js/BB.js"></script>    
+    <script src="/socket.io/socket.io.js"></script>
+
+
+    <!-- CUSTOM THREE.JS SHADERS HERE -->
+    <script src="js/VS1.js"></script>
+
+    <!-- SCENE SHADERS UTILS -->
+    <script src="js/CopyShader.js"></script>
+    <script src="js/EffectComposer.js"></script>
+    <script src="js/RenderPass.js"></script>
+    <script src="js/MaskPass.js"></script>
+    <script src="js/ShaderPass.js"></script>
+    
+    
+    <script>
+
+
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~           ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~   AUDIO   ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~  SOCKETS  ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~           ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+
+
+
+
+        function socketFire( val ){
+            // mesh.rotation.y = Date.now() * 0.0002; 
+            var scaled = BB.MathUtils.map( val, 0,255, 0,Math.PI*2 );
+            new TWEEN.Tween( mesh.rotation ).to( { x:0, y:scaled,z:0 }, 500 ).start();
+        }
+                        
+
+
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~          ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~  _MIDI_  ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~          ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+
+        var device;
+        var midiMap = {
+            sliders: [2, 3, 4, 5, 6, 8, 9, 12, 13],
+            knobs: [14, 15, 16, 17, 18, 19, 20, 21, 22],
+            buttons: [23, 33, 24, 34, 25, 35, 26, 36, 27, 37, 28, 38, 29, 39, 30, 40, 31, 41]
+        }
+        function midiFound() {
+            var sliders = device.inputs.sliders;
+            var knobs = device.inputs.knobs;
+            var buttons = device.inputs.buttons;
+
+            sliders[0].on('change', function(data, inputType, index) {
+                // data.velocity
+                var scaled_data = BB.MathUtils.map( data.velocity, 0,127, 1,4 );
+                vs1.uniforms[ 'scale' ].value = scaled_data; // MANIPULATING SHADER VALUES ( see setup3D() )
+            });
+
+        }
+        function midiNotFound() { console.log('notfound') }
+
+
+
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~           ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~ 2D CANVAS ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~           ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+        
+        var canvas = document.createElement('canvas');
+            // document.body.appendChild(canvas); // UNCOMMENT TO DISPLAY 2D CANVAS
+        var ctx        = canvas.getContext('2d');
+        var WIDTH, HEIGHT;
+
+        function setup2D(){
+            
+        }
+
+        function update2D(){
+            
+        }
+
+        function draw2D(){
+            if(Math.random()>0.9){
+                ctx.clearRect(0,0,WIDTH,HEIGHT);
+                var random = Math.random()*100 + 100;
+                for (var i = 0; i < random; i++) {
+                    ctx.fillStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+                    ctx.fillRect( Math.random()*WIDTH, Math.random()*HEIGHT, Math.random()*50, Math.random()*50 );
+                };
+            }
+        }
+
+
+
+
+
+
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~          ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~ THREE.JS ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~          ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+
+        var camera, scene, renderer, composer;
+        var mesh;
+        var vs1; // for shader control 
+
+        function setup3D(){
+            var W = window.innerWidth, H = window.innerHeight;
+            // renderer = new THREE.WebGLRenderer( { preserveDrawingBuffer: true } );
+            // renderer.autoClearColor = false;
+            renderer = new THREE.WebGLRenderer();
+            renderer.autoClear = true;
+            renderer.setClearColor( 0xffffff );
+            renderer.setPixelRatio( window.devicePixelRatio );
+            renderer.setSize( W, H );
+            document.body.appendChild( renderer.domElement );
+
+            camera = new THREE.PerspectiveCamera( 50, W/H, 1, 10000 );
+            camera.position.z = 500;
+            
+            scene = new THREE.Scene();
+            
+            // texture/material from 2d canvas
+            canvasTexture = new THREE.Texture( canvas );
+            canvasTexture.minFilter = THREE.LinearFilter;
+            canvasTexture.magFilter = THREE.LinearFilter;
+            var canvasMaterial = new THREE.MeshBasicMaterial( { map: canvasTexture, overdraw: true, side:THREE.DoubleSide } );
+
+            // example mesh w/ canvasMaterial
+            geometry = new THREE.TorusKnotGeometry(100, 40, 64, 8, 2, 3, 1);
+            mesh = new THREE.Mesh(geometry, canvasMaterial);
+            scene.add(mesh);
+
+            // postprocessing ( ie. scene shader )
+            composer = new THREE.EffectComposer( renderer );
+            composer.addPass( new THREE.RenderPass( scene, camera ) );
+
+            vs1 = new THREE.ShaderPass( THREE.violetSystems1 );
+            composer.addPass( vs1 );
+
+            // var additionalShader = new THREE.ShaderPass( THREE.AdditionalShaderName );
+            // composer.addPass( additionalShader );
+             
+            vs1.renderToScreen = true;
+        }
+
+        function update3D(){
+            TWEEN.update();
+        }
+
+        function draw3D(){
+            
+            if ( canvasTexture ) canvasTexture.needsUpdate = true;
+            
+            // renderer.render( scene, camera ); // normal renderer
+            composer.render();                   // shader renderer
+        }
+
+
+
+
+
+
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~          ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~ MAIN JAM ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+        // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~          ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+
+        function setup() {
+
+            // MIDI ----------
+            device = new MidiDevice(midiMap, midiFound, midiNotFound);
+
+            setup2D();
+            setup3D();
+
+            window.onresize = function() {
+                WIDTH = canvas.width = window.innerWidth;
+                HEIGHT = canvas.height = window.innerHeight;
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize( window.innerWidth, window.innerHeight );
+            }                
+            window.onresize();
+        }
+
+        function update() {
+            requestAnimationFrame(update);
+            update2D();
+            update3D();
+            draw();
+        }
+
+
+        function draw() {
+            draw2D();                
+            draw3D();
+        }
+
+        setup();
+        update();
+
+
+    </script>
+</body>
+</html>

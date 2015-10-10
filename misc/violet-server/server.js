@@ -1,20 +1,26 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var sendAudioData = null; // function
 var sockets = []; // THIS IS A MEMORY LEAK
 
-app.get('/', function (req, res) {
-    res.sendfile('index.html');
-});
 
-app.get('/analysis.html', function (req, res) {
-    res.sendfile('analysis.html');
-});
 
-app.get('/BB.js', function(req, res) {
-    res.sendfile('BB.js');
-});
+// app.get('/', function (req, res) {
+//     res.sendfile('index.html');
+// });
+
+app.use(express.static('public'));
+
+
+// app.get('/analysis.html', function (req, res) {
+//     res.sendfile('analysis.html');
+// });
+
+// app.get('/BB.js', function(req, res) {
+//     res.sendfile('BB.js');
+// });
 
 io.on('connection', function (socket) {
  
