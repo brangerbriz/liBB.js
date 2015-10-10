@@ -79,14 +79,15 @@
             ctx.lineTo(WIDTH,HEIGHT/2);
             ctx.stroke();
             
-            broadcastAudioData(tdata, fdata);
+            broadcastAudioData(tdata, fdata, fft.getAmplitude());
         }
 
-        function broadcastAudioData(tdata, fdata) {
+        function broadcastAudioData(tdata, fdata, amplitude) {
             
             for (var i = 0; i < sockets.length; i++) {
                 sockets[i].emit('audio-data-time', tdata);
                 sockets[i].emit('audio-data-frequency', fdata);
+                sockets[i].emit('audio-data-amplitude', amplitude);
             }
         }
 

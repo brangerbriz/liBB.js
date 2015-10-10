@@ -30,10 +30,10 @@
 
         // global variables ( listening to different frequency bands )
         var G = {
-            v1: { ban:10, val:0 },
-            v2: { ban:1, val:0 },
-            v3: { ban:3, val:0 },
-            v4: { ban:7, val:0 },
+            v1: { ban:4, val:0 },
+            v2: { ban:0, val:0 },
+            v3: { ban:0, val:0 },
+            v4: { ban:0, val:0 },
             v5: { ban:0, val:0 },
             v6: { ban:0, val:0 },
             v7: { ban:0, val:0 },
@@ -48,7 +48,8 @@
         // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~           ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 
 
-        var socket = io.connect('http://10.42.0.1:5555');
+        // COME BACK
+        var socket = io.connect('http://192.168.1.217:5555');
         var fdata = null;
         var tdata = null;
 
@@ -75,20 +76,12 @@
             return array;
         }
 
-        var threshold = 100;
         function socketFire(){
 
-            console.log(G.v1.val,threshold)
-            if(G.v1.val > threshold ){
-                spawnCube();
-            }
-
-            var S1 = BB.MathUtils.map( G.v2.val, 0,255, 0, Math.PI*2 );
-            var S2 = BB.MathUtils.map( G.v3.val, 0,255, 0, Math.PI*2 );
-            var S3 = BB.MathUtils.map( G.v4.val, 0,255, 0, Math.PI*2 );
-
-            new TWEEN.Tween( cubes.rotation ).to( { x:S2, y:S1,z:S3 }, 500 ).start();
-
+            // SAMPLE ******
+            var scaled = BB.MathUtils.map( G.v1.val, 0,255, 0, Math.PI*2 );
+            new TWEEN.Tween( mesh.rotation ).to( { x:0, y:scaled,z:0 }, 500 ).start();
+            // SAMPLE ******
         }
                         
 
@@ -118,48 +111,16 @@
             // custom scene sliders && buttons
             // SAMPLE ******
             sliders[0].on('change', function(data, inputType, index) {
-                var scaled_data = BB.MathUtils.map( data.velocity, 0,127, 0,255 );
-                threshold = scaled_data;
+                massMinFrequency = data.velocity * 2
             });
+
             sliders[1].on('change', function(data, inputType, index) {
-                var scaled_data = BB.MathUtils.map( data.velocity, 0,127, 1,4 );
-                vs1.uniforms[ 'scale' ].value = scaled_data; // MANIPULATING SHADER VALUES ( see setup3D() )
+                massMaxFrequency = data.velocity * 2;
             });
+
             sliders[2].on('change', function(data, inputType, index) {
-                var scaled_data = BB.MathUtils.map( data.velocity, 0,127, 0,500 );
-                camera.position.z = scaled_data;
+                massMax = BB.MathUtils.map(data.velocity || 50, 0, 127, 200, 500);
             });
-
-            buttons[0].on('change', function(data, inputType, index) {
-                clearCubes();
-            });
-            buttons[1].on('change', function(data, inputType, index) {
-                blowCubes();
-            });
-            buttons[2].on('change', function(data, inputType, index) {
-                explodeCubes();
-            });
-
-            sliders[3].on('change', function(data, inputType, index) {
-                var scaled_data = BB.MathUtils.map( data.velocity, 0,127, 0,50 );
-                vs1.uniforms[ 'colVar1' ].value = scaled_data;
-                console.log(scaled_data);
-            });
-
-            sliders[4].on('change', function(data, inputType, index) {
-                var scaled_data = BB.MathUtils.map( data.velocity, 0,127, 0,Math.PI*2 );
-                vs1.uniforms[ 'angle' ].value = scaled_data;
-            });
-            buttons[8].on('change', function(data, inputType, index) {
-                var newVal = vs1.uniforms[ 'angle' ].value + 0.5;
-                if(newVal>Math.PI*2) newVal = 0;
-                new TWEEN.Tween( vs1.uniforms[ 'angle' ] ).to( { value:newVal }, 500 ).start();
-            });
-            buttons[9].on('change', function(data, inputType, index) {
-                
-                new TWEEN.Tween( cubes.rotation ).to( { x:Math.random()*Math.PI*5, y:Math.random()*Math.PI*5, z:Math.random()*Math.PI*5 }, 500 ).start();
-            });
-
             // SAMPLE ******
 
         }
@@ -172,35 +133,158 @@
         // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~           ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
         
         var canvas = document.createElement('canvas');
-            // document.body.appendChild(canvas); // UNCOMMENT TO DISPLAY 2D CANVAS
+        document.body.appendChild(canvas); // UNCOMMENT TO DISPLAY 2D CANVAS
         var ctx        = canvas.getContext('2d');
         var WIDTH, HEIGHT;
+        var color = new BB.Color(192, 44, 255);
+        var origHue = color.h;
+
+        var prevX, prevY, particles = [];
+        var colorDir = 1;
+        var massMinFrequency = 0;
+        var massMaxFrequency = 255;
+        var massMin = 20;
+        var massMax = 500;
+        var theta = 0;
+        var radius = 100;
+        var spinSpeed = 1;
 
         function setup2D(){
-            
+
+            for (var i = 0; i < particles.length; i++) {
+                
+                particles[i].update();
+                if (particles[i].velocity.x == 0 &&
+                    particles[i].velocity.y == 0) {
+                    particles[i].velocity.set(BB.MathUtils.randomFloat(-1, 1),
+                                              BB.MathUtils.randomFloat(-1, 1));
+                }
+
+                if (checkEdges(particles[i], particles[i].mass/10)) {
+                    particles.splice(i, 1);
+                    if (i > 0) i--;
+                }
+
+                if( Math.abs(particles[i].velocity.x) > 2 || Math.abs(particles[i].velocity.y) > 2  ){
+                    particles[i].mass+=2;
+                } else {
+                    particles[i].mass--;
+                }
+
+                if( particles[i].mass <= 10 ){
+                    particles.splice(i, 1);
+                    if (i > 0) i--;
+                }
+            }
+
         }
 
         function update2D(){
+
+            for (var i = 0; i < 10; i++) {
+                // Convert polar to cartesian
+                var x = (radius * Math.cos(theta)) + WIDTH/2;
+                var y = (radius * Math.sin(theta)) + HEIGHT/2;
+                
+                createParticle(x, y, WIDTH/2, HEIGHT/2);
+
+                theta += BB.MathUtils.map(G.v2.val, 0, 255, 0, 2);
+
+            }
+            
+            for (var i = 0; i < particles.length; i++) {
+                
+                particles[i].update();
+                if (particles[i].velocity.x == 0 &&
+                    particles[i].velocity.y == 0) {
+                    particles[i].velocity.set(BB.MathUtils.randomFloat(-1, 1),
+                                              BB.MathUtils.randomFloat(-1, 1));
+                }
+
+                if (checkEdges(particles[i], particles[i].mass/10)) {
+                    particles.splice(i, 1);
+                    if (i > 0) i--;
+                }
+                
+                var min = BB.MathUtils.map(device.inputs.sliders[2].velocity || 50, 0, 127, 10, 100);
+                var max = BB.MathUtils.map(device.inputs.sliders[3].velocity || 100, 0, 127, 100, 1000);
+                // var min = BB.MathUtils.map(G.v3.val, 0, 127, 50, 1000);
+                // var min = G.v4.val;
+
+                particles[i].mass = BB.MathUtils.map(BB.MathUtils.clamp(G.v1.val, massMinFrequency, massMaxFrequency),
+                                                     massMinFrequency, 
+                                                     massMaxFrequency, 
+                                                     massMin,
+                                                     massMax);
+
+                if( particles[i].mass <= 10 ){
+                    particles.splice(i, 1);
+                    if (i > 0) i--;
+                }
+            }
+
+            // console.log('value: ', G.v1.val, 'massMin: ', massMin, 'massMax: ', massMax);
+        
             
         }
 
         function draw2D(){
-            // SAMPLE ******
-            if(Math.random()>0.9){
-                ctx.clearRect(0,0,WIDTH,HEIGHT);
-                var random = Math.random()*100 + 100;
-                for (var i = 0; i < random; i++) {
-                    ctx.fillStyle = '#'+Math.floor(Math.random()*16777215).toString(16);                    
-                    var size = Math.random()*WIDTH/3 + WIDTH/2;
-                    ctx.fillRect( Math.random()*WIDTH, Math.random()*HEIGHT, size, size );
-                };
+            
+            ctx.clearRect(0,0,WIDTH,HEIGHT);
+            ctx.fillStyle = "black";
+            ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+            for (var i = 0; i < particles.length; i++) {
+                ctx.fillStyle = particles[i].color;
+                ctx.beginPath();
+                ctx.arc(particles[i].position.x, 
+                        particles[i].position.y,
+                        particles[i].mass/10,
+                        0, 2 * Math.PI);
+                ctx.closePath();
+                ctx.fill();
             }
-            // SAMPLE ******
         }
 
+        function createParticle(x, y, prevX, prevY) {
+    
+            var pos = new BB.Vector2(x, y);
+            
+            var acc = (x == prevX && y == prevY) ? 
+                new BB.Vector2(BB.MathUtils.randomFloat(-1, 1),
+                               BB.MathUtils.randomFloat(-1, 1))
+                : pos.clone().sub(new BB.Vector2(prevX, prevY));
+         
+            var particle = new BB.Particle2D({
+                position: pos,
+                acceleration: acc,
+                mass: BB.MathUtils.randomInt(100, 300),
+                maxSpeed: 5
+            });
+
+            var colorSpeed = 2;
+            var numSteps = 10;
+            var hueMin = origHue - numSteps * colorSpeed;
+            var hueMax = origHue + numSteps * colorSpeed;
 
 
+            if (color.h < hueMin || color.h > hueMax) {
+                colorDir = -colorDir;
+            }
 
+            color.shift(colorSpeed * colorDir);
+            
+            particle.color = color.rgb;
+            particles.push(particle);
+        }
+
+        function checkEdges(particle, radius) {
+
+            return (particle.position.x - radius > window.innerWidth || 
+                    particle.position.x + radius < 0 ||
+                    particle.position.y - radius > window.innerHeight ||
+                    particle.position.y + radius < 0);
+        }
 
 
         // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~          ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
@@ -208,8 +292,8 @@
         // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~          ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 
         var camera, scene, renderer, composer;
-        var mesh, geometry, canvasMaterial;
-        var cubes, vs1; // for shader control 
+        var mesh;
+        var vs1; // for shader control 
 
         function setup3D(){
             var W = window.innerWidth, H = window.innerHeight;
@@ -220,7 +304,7 @@
             renderer.setClearColor( 0xffffff );
             renderer.setPixelRatio( window.devicePixelRatio );
             renderer.setSize( W, H );
-            document.body.appendChild( renderer.domElement );
+            // document.body.appendChild( renderer.domElement );
 
             camera = new THREE.PerspectiveCamera( 50, W/H, 1, 10000 );
             camera.position.z = 500;
@@ -231,12 +315,13 @@
             canvasTexture = new THREE.Texture( canvas );
             canvasTexture.minFilter = THREE.LinearFilter;
             canvasTexture.magFilter = THREE.LinearFilter;
-            canvasMaterial = new THREE.MeshBasicMaterial( { map: canvasTexture, overdraw: true, side:THREE.DoubleSide } );
+            var canvasMaterial = new THREE.MeshBasicMaterial( { map: canvasTexture, overdraw: true, side:THREE.DoubleSide } );
 
             // SAMPLE ******// SAMPLE ******// SAMPLE ******// SAMPLE ******
-
-            cubes = new THREE.Object3D();
-            scene.add( cubes );
+            // example mesh w/ canvasMaterial
+            geometry = new THREE.TorusKnotGeometry(100, 40, 64, 8, 2, 3, 1);
+            mesh = new THREE.Mesh(geometry, canvasMaterial);
+            scene.add(mesh);
 
             // postprocessing ( ie. scene shader )
             composer = new THREE.EffectComposer( renderer );
@@ -252,57 +337,19 @@
             // SAMPLE ******// SAMPLE ******// SAMPLE ******// SAMPLE ******
         }
 
-        function spawnCube(){
-            geometry = new THREE.BoxGeometry(Math.random()*10+25, Math.random()*10+25, Math.random()*10+25);
-            mesh = new THREE.Mesh(geometry, canvasMaterial);
-            mesh.position.x = Math.random() * 100 - 50;
-            mesh.position.y = Math.random() * 100 - 50;
-            mesh.position.z = Math.random() * 100 - 50;
-            mesh.rotation.x = Math.random() * 2 * Math.PI;
-            mesh.rotation.y = Math.random() * 2 * Math.PI;
-            mesh.rotation.z = Math.random() * 2 * Math.PI;
-            cubes.add( mesh );
-        }
+        // function update3D(){
+        //     // SAMPLE ******
+        //     TWEEN.update();
+        //     // SAMPLE ******
+        // }
 
-        function clearCubes(){
-            cubes.children = [];
-        }
-
-        function blowCubes(){
-            for (var i = 0; i < cubes.children.length; i++) {
-                var rx = Math.random() * 1000 - 500;
-                var ry = Math.random() * 1000 - 500;
-                var rz = Math.random() * 1000 - 500;
-                new TWEEN.Tween( cubes.children[i].position ).to( { x:rx, y:ry, z:rz }, 500 ).start();
-            };
+        // function draw3D(){
             
-        }
-
-        function explodeCubes(){
-            for (var i = 0; i < cubes.children.length; i++) {
-                var rx = Math.random() * 1000 - 500;
-                var ry = Math.random() * 1000 - 500;
-                var rz = Math.random() * 1000 - 500;
-                new TWEEN.Tween( cubes.children[i].position ).to( { x:rx, y:ry, z:rz }, 100 ).start();
-            };
-            setTimeout(function(){
-                clearCubes();
-            },100);
-        }
-
-        function update3D(){
-            // SAMPLE ******
-            TWEEN.update();
-            // SAMPLE ******
-        }
-
-        function draw3D(){
+        //     if ( canvasTexture ) canvasTexture.needsUpdate = true;
             
-            if ( canvasTexture ) canvasTexture.needsUpdate = true;
-            
-            // renderer.render( scene, camera ); // normal renderer
-            composer.render();                   // shader renderer
-        }
+        //     renderer.render( scene, camera ); // normal renderer
+        //     // composer.render();                   // shader renderer
+        // }
 
 
 
@@ -334,14 +381,14 @@
         function update() {
             requestAnimationFrame(update);
             update2D();
-            update3D();
+            // update3D();
             draw();
         }
 
 
         function draw() {
             draw2D();                
-            draw3D();
+            // draw3D();
         }
 
         setup();
