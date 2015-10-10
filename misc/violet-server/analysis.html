@@ -18,15 +18,9 @@
 </head>
 <body>
     <canvas id="canvas"></canvas>
-    <script type="text/javascript" src="../../../build/BB.min.js"></script>
+    <script type="text/javascript" src="BB.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
-
-        var context =  new (window.AudioContext || window.webkitAudioContext)();
-
-        var fft = new BB.AudioAnalyser({ context: context });
-
-        var mic = new BB.AudioStream({ context: context, connect: fft.analyser });
 
         // canvas
         var canvas     = document.getElementById('canvas');
@@ -34,7 +28,8 @@
 
         var WIDTH, HEIGHT;
 
-        var fdata, tdata;
+        var fdata = null;
+        var tdata = null;
 
         function setup() {
             
@@ -63,35 +58,36 @@
     
             ctx.clearRect(0,0,WIDTH,HEIGHT);
 
-            var fdata = fft.getByteFrequencyData();
-            ctx.fillStyle="black";
-            for (var i = 0; i < fdata.length; i++) {
-                var value = fdata[i];
-                var percent = value / 256;
-                var height = HEIGHT * percent;
-                var offset = HEIGHT - height - 1;
-                var barWidth = WIDTH/fdata.length;
-                ctx.fillRect(i * barWidth, offset, barWidth, height);
-            };
-
-
-            var tdata = fft.getByteTimeDomainData();
-            
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = "red";
-            ctx.beginPath();
-            var sliceWidth = WIDTH * 1.0 / tdata.length;
-            var x = 0;
-            for (var i = 0; i < tdata.length; i++) {
-                var v = tdata[i] / 128.0;
-                var y = v * HEIGHT/2;       
-                if(i===0) ctx.moveTo(x,y);
-                else ctx.lineTo(x,y);       
-                x+=sliceWidth;
+            if (fdata) {
+                ctx.fillStyle="black";
+                for (var i = 0; i < fdata.length; i++) {
+                    var value = fdata[i];
+                    var percent = value / 256;
+                    var height = HEIGHT * percent;
+                    var offset = HEIGHT - height - 1;
+                    var barWidth = WIDTH/fdata.length;
+                    ctx.fillRect(i * barWidth, offset, barWidth, height);
+                };
             }
-            ctx.lineTo(WIDTH,HEIGHT/2);
-            ctx.stroke();
+
             
+            
+            if (tdata) {
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "red";
+                ctx.beginPath();
+                var sliceWidth = WIDTH * 1.0 / tdata.length;
+                var x = 0;
+                for (var i = 0; i < tdata.length; i++) {
+                    var v = tdata[i] / 128.0;
+                    var y = v * HEIGHT/2;       
+                    if(i===0) ctx.moveTo(x,y);
+                    else ctx.lineTo(x,y);       
+                    x+=sliceWidth;
+                }
+                ctx.lineTo(WIDTH,HEIGHT/2);
+                ctx.stroke();
+            }   
         }
 
         setup();

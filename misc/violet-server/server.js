@@ -12,6 +12,10 @@ app.get('/analysis.html', function (req, res) {
     res.sendfile('analysis.html');
 });
 
+app.get('/BB.js', function(req, res) {
+    res.sendfile('BB.js');
+});
+
 io.on('connection', function (socket) {
  
     sockets.push(socket); // THIS WILL CAUSE A MEMORY LEAK
