@@ -45,10 +45,12 @@
         var socket = io.connect('http://' + window.location.hostname + ':5555');
             
         socket.on('audio-data-time', function (data) {
+            console.log('audio-data-time');
             tdata = data;
         });
 
         socket.on('audio-data-frequency', function (data) {
+            console.log('audio-data-frequency');
             fdata = data;
             draw();
         });
