@@ -24,7 +24,7 @@
         // audio
         var context =  new (window.AudioContext || window.webkitAudioContext)();
 
-        var fft = new BB.AudioAnalyser({ context: context });
+        var fft = new BB.AudioAnalyser({ context: context, fftSize: 64 });
 
         var mic = new BB.AudioStream({ context: context, connect: fft.analyser });
 

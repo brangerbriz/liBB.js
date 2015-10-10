@@ -19,10 +19,6 @@ app.get('/BB.js', function(req, res) {
 io.on('connection', function (socket) {
  
     sockets.push(socket); // THIS WILL CAUSE A MEMORY LEAK
-
-    socket.on('my other event', function (data) {
-        console.log(data);
-    });
 });
 
 server.listen(5555);
