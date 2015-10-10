@@ -61,6 +61,7 @@
             ctx.clearRect(0,0,WIDTH,HEIGHT);
 
             if (fdata) {
+                console.log('fdata found');
                 ctx.fillStyle="black";
                 for (var i = 0; i < fdata.length; i++) {
                     var value = fdata[i];
@@ -70,11 +71,14 @@
                     var barWidth = WIDTH/fdata.length;
                     ctx.fillRect(i * barWidth, offset, barWidth, height);
                 };
+            } else {
+                console.log('fdata NOT found');
             }
 
             
             
             if (tdata) {
+                console.log('tdata found');
                 ctx.lineWidth = 2;
                 ctx.strokeStyle = "red";
                 ctx.beginPath();
@@ -89,7 +93,9 @@
                 }
                 ctx.lineTo(WIDTH,HEIGHT/2);
                 ctx.stroke();
-            }   
+            } else {
+                console.log('tdata NOT found');
+            }
         }
 
         setup();
