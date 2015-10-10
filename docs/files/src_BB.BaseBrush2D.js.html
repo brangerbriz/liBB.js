@@ -32,6 +32,10 @@
             
                     <div id="api-tabview-panel">
                         <ul id="api-classes" class="apis classes">
+                            <li><a class="type" href="../classes/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="type" href="../classes/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="type" href="../classes/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="type" href="../classes/BB.AudioStream.html">BB.AudioStream</a></li>
                             <li><a class="type" href="../classes/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
                             <li><a class="type" href="../classes/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
                             <li><a class="type" href="../classes/BB.Color.html">BB.Color</a></li>
@@ -45,6 +49,10 @@
                         </ul>
             
                       <!--   <ul id="api-modules" class="apis modules">
+                            <li><a class="module" href="../modules/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="module" href="../modules/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="module" href="../modules/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="module" href="../modules/BB.AudioStream.html">BB.AudioStream</a></li>
                             <li><a class="module" href="../modules/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
                             <li><a class="module" href="../modules/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
                             <li><a class="module" href="../modules/BB.Color.html">BB.Color</a></li>
@@ -86,8 +94,8 @@
          * @constructor
          * @param {Object} [config] An optional config hash to initialize any of
          * BB.BaseBrush2D&#x27;s public properties
-         * @example &lt;div&gt;&lt;code&gt; var baseBrush = new BB.BaseBrush2D({ width: 100,
-         * height: 100, color: new BB.Color(255, 0, 0) }); &lt;/code&gt;&lt;/div&gt;
+         * @example &lt;code class=&quot;code prettyprint&quot;&gt;&amp;nbsp;var brush = new BB.BaseBrush2D({ width: 100,
+         * height: 100, color: new BB.Color(255, 0, 0) }); &lt;/code&gt;
          */
         BB.BaseBrush2D = function(config) {
     
@@ -109,7 +117,7 @@
     
             /**
              * The brush&#x27;s width.
-             * @property w
+             * @property width
              * @type Number
              * @default 10
              */
@@ -166,6 +174,18 @@
          * @param {Object} controllerModule An object with x and y properties and
          * optionally an isDown boolean (used for beginning and ending
          * strokeds/marks).
+         * @example &lt;code class=&quot;code prettyprint&quot;&gt;
+         * &amp;nbsp;var mouseInput = new BB.MouseInput(document.getElementById(&#x27;canvas&#x27;));&lt;br&gt;
+         * &amp;nbsp;var pointer = new BB.Pointer(mouseInput);&lt;br&gt;
+         * &amp;nbsp;var brush = new BB.BaseBrush2D();&lt;br&gt;
+         * &lt;br&gt;
+         * &amp;nbsp; // called once per animation frame (from somewhere else in your app)&lt;br&gt;
+         * &amp;nbsp;function update() {&lt;br&gt;
+         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;mouseInput.update();&lt;br&gt;
+         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;pointer.update();&lt;br&gt;
+         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;brush.update(pointer); // update the brush using the pointer&lt;br&gt;
+         * &amp;nbsp;}
+         * &lt;/code&gt;
          */
         BB.BaseBrush2D.prototype.update = function(controllerModule) {
     
@@ -211,6 +231,11 @@
          * Multiplies width and height properties by amount.
          * @method scale
          * @param {Number} amount Amount to scale width and height by
+         * @example &lt;code class=&quot;code prettyprint&quot;&gt; &amp;nbsp; var brush = new BB.BaseBrush2D({ width: 50, height: 100 });&lt;br&gt;
+         * &amp;nbsp; brush.scale(2);&lt;br&gt;
+         * &amp;nbsp; brush.width // 100&lt;br&gt;
+         * &amp;nbsp; brush.height // 200
+         * &lt;/code&gt;
          */
         BB.BaseBrush2D.prototype.scale = function(amount) {
             

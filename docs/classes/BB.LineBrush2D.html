@@ -32,6 +32,10 @@
             
                     <div id="api-tabview-panel">
                         <ul id="api-classes" class="apis classes">
+                            <li><a class="type" href="../classes/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="type" href="../classes/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="type" href="../classes/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="type" href="../classes/BB.AudioStream.html">BB.AudioStream</a></li>
                             <li><a class="type" href="../classes/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
                             <li><a class="type" href="../classes/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
                             <li><a class="type" href="../classes/BB.Color.html">BB.Color</a></li>
@@ -45,6 +49,10 @@
                         </ul>
             
                       <!--   <ul id="api-modules" class="apis modules">
+                            <li><a class="module" href="../modules/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="module" href="../modules/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="module" href="../modules/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="module" href="../modules/BB.AudioStream.html">BB.AudioStream</a></li>
                             <li><a class="module" href="../modules/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
                             <li><a class="module" href="../modules/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
                             <li><a class="module" href="../modules/BB.Color.html">BB.Color</a></li>
@@ -160,12 +168,12 @@
                         <a href="#property_variants">variants</a>
     
                     </li>
-                    <li class="index-item property inherited">
-                        <a href="#property_w">w</a>
-    
-                    </li>
                     <li class="index-item property">
                         <a href="#property_weight">weight</a>
+    
+                    </li>
+                    <li class="index-item property inherited">
+                        <a href="#property_width">width</a>
     
                     </li>
                     <li class="index-item property inherited">
@@ -276,8 +284,9 @@
                             <h4>Example:</h4>
             
                             <div class="example-content">
-             <div><code> var lineBrush = new BB.LineBrush2D({ width: 100,
-            height: 100, variant: &quot;soft&quot; }); </code></div>
+            <p> <code class="code prettyprint">&nbsp; var lineBrush = new BB.LineBrush2D({ width: 100,
+            height: 100, variant: &quot;soft&quot; }); </code></p>
+            
                             </div>
                         </div>
                 </div>
@@ -625,39 +634,6 @@
                 
                     </div>
                 </div>
-                <a name="property_w" class="anchor-link"></a>
-                <div class="property item inherited">
-                    <h3 class="name"><code>w</code>
-                    <span class="type">Number</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">10</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>Inherited from
-                                <a href="../classes/BB.BaseBrush2D.html#property_w" class="type">BB.BaseBrush2D</a>:
-                        <a href="../files/src_BB.BaseBrush2D.js.html#l41"><code>src&#x2F;BB.BaseBrush2D.js:41</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The brush&#39;s width.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
                 <a name="property_weight" class="anchor-link"></a>
                 <div class="property item">
                     <h3 class="name"><code>weight</code>
@@ -683,6 +659,39 @@
                     <div class="extended-detail">
                         <div class="description">
                             <p>The brush&#39;s line weight.</p>
+                
+                        </div>
+                
+                       
+                
+                
+                    </div>
+                </div>
+                <a name="property_width" class="anchor-link"></a>
+                <div class="property item inherited">
+                    <h3 class="name"><code>width</code>
+                    <span class="type">Number</span>
+                
+                
+                
+                
+                
+                            <span class="default">default:<span class="default-value">10</span></span>
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>Inherited from
+                                <a href="../classes/BB.BaseBrush2D.html#property_width" class="type">BB.BaseBrush2D</a>:
+                        <a href="../files/src_BB.BaseBrush2D.js.html#l41"><code>src&#x2F;BB.BaseBrush2D.js:41</code></a>
+                        </p>
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                        <div class="description">
+                            <p>The brush&#39;s width.</p>
                 
                         </div>
                 
@@ -796,7 +805,7 @@
                                 BB.BaseBrush2D
                             </a>
                             but overwritten in
-                        <a href="../files/src_BB.LineBrush2D.js.html#l127"><code>src&#x2F;BB.LineBrush2D.js:127</code></a>
+                        <a href="../files/src_BB.LineBrush2D.js.html#l139"><code>src&#x2F;BB.LineBrush2D.js:139</code></a>
                         </p>
                 
                 
@@ -856,7 +865,7 @@
                     <div class="meta">
                                 <p>Inherited from
                                 <a href="../classes/BB.BaseBrush2D.html#method_scale" class="type">BB.BaseBrush2D</a>:
-                        <a href="../files/src_BB.BaseBrush2D.js.html#l141"><code>src&#x2F;BB.BaseBrush2D.js:141</code></a>
+                        <a href="../files/src_BB.BaseBrush2D.js.html#l153"><code>src&#x2F;BB.BaseBrush2D.js:153</code></a>
                         </p>
                 
                 
@@ -889,6 +898,18 @@
                             </div>
                 
                 
+                            <div class="example">
+                                <h4>Example:</h4>
+                
+                                <div class="example-content">
+                <p> <code class="code prettyprint"> &nbsp; var brush = new BB.BaseBrush2D({ width: 50, height: 100 });<br>
+                &nbsp; brush.scale(2);<br>
+                &nbsp; brush.width // 100<br>
+                &nbsp; brush.height // 200
+                </code></p>
+                
+                                </div>
+                            </div>
                     </div>
                 </div>
                 <a name="method_update" class="anchor-link"></a>
@@ -953,6 +974,25 @@
                             </div>
                 
                 
+                            <div class="example">
+                                <h4>Example:</h4>
+                
+                                <div class="example-content">
+                <p> <code class="code prettyprint">
+                &nbsp;var mouseInput = new BB.MouseInput(document.getElementById(&#39;canvas&#39;));<br>
+                &nbsp;var pointer = new BB.Pointer(mouseInput);<br>
+                &nbsp;var brush = new BB.LineBrush2D();<br>
+                <br>
+                &nbsp; // called once per animation frame (from somewhere else in your app)<br>
+                &nbsp;function update() {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;mouseInput.update();<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;pointer.update();<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;brush.update(pointer); // update the brush using the pointer<br>
+                &nbsp;}
+                </code></p>
+                
+                                </div>
+                            </div>
                     </div>
                 </div>
     

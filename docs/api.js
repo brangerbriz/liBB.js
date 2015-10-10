@@ -1,6 +1,10 @@
 YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
+        "BB.AudioAnalyser",
+        "BB.AudioBufferLoader",
+        "BB.AudioSampler",
+        "BB.AudioStream",
         "BB.BaseBrush2D",
         "BB.BrushManager2D",
         "BB.Color",
@@ -13,6 +17,10 @@ YUI.add("yuidoc-meta", function(Y) {
         "BB.Vector2"
     ],
     "modules": [
+        "BB.AudioAnalyser",
+        "BB.AudioBufferLoader",
+        "BB.AudioSampler",
+        "BB.AudioStream",
         "BB.BaseBrush2D",
         "BB.BrushManager2D",
         "BB.Color",
@@ -25,6 +33,26 @@ YUI.add("yuidoc-meta", function(Y) {
         "BB.particle2D"
     ],
     "allModules": [
+        {
+            "displayName": "BB.AudioAnalyser",
+            "name": "BB.AudioAnalyser",
+            "description": "A module for doing FFT ( Fast Fourier Transform ) analysis on audio"
+        },
+        {
+            "displayName": "BB.AudioBufferLoader",
+            "name": "BB.AudioBufferLoader",
+            "description": "A module for creating audio buffers from audio files"
+        },
+        {
+            "displayName": "BB.AudioSampler",
+            "name": "BB.AudioSampler",
+            "description": "A module for creating an audio sampler, an object that can load, sample and play back sound files"
+        },
+        {
+            "displayName": "BB.AudioStream",
+            "name": "BB.AudioStream",
+            "description": "A module for streaming user audio ( getUserMedia )"
+        },
         {
             "displayName": "BB.BaseBrush2D",
             "name": "BB.BaseBrush2D",
@@ -58,7 +86,7 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "BB.MouseInput",
             "name": "BB.MouseInput",
-            "description": "A module for standardizing mouse events so that they may be used with\nthe event funnel suite of modules. For use with HTML5 canvas only."
+            "description": "A module for standardizing mouse events from an HTML5 canvas so that they may be used with\nthe event funnel suite of modules.\n<br>\n<i>NOTE: For use with HTML5 canvas only.<i>"
         },
         {
             "displayName": "BB.particle2D",

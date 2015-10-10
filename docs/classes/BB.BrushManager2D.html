@@ -32,6 +32,10 @@
             
                     <div id="api-tabview-panel">
                         <ul id="api-classes" class="apis classes">
+                            <li><a class="type" href="../classes/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="type" href="../classes/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="type" href="../classes/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="type" href="../classes/BB.AudioStream.html">BB.AudioStream</a></li>
                             <li><a class="type" href="../classes/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
                             <li><a class="type" href="../classes/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
                             <li><a class="type" href="../classes/BB.Color.html">BB.Color</a></li>
@@ -45,6 +49,10 @@
                         </ul>
             
                       <!--   <ul id="api-modules" class="apis modules">
+                            <li><a class="module" href="../modules/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="module" href="../modules/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="module" href="../modules/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="module" href="../modules/BB.AudioStream.html">BB.AudioStream</a></li>
                             <li><a class="module" href="../modules/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
                             <li><a class="module" href="../modules/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
                             <li><a class="module" href="../modules/BB.Color.html">BB.Color</a></li>
@@ -224,6 +232,10 @@
     
                     </li>
                     <li class="index-item method">
+                        <a href="#method_redo">redo</a>
+    
+                    </li>
+                    <li class="index-item method">
                         <a href="#method_trackPointers">trackPointers</a>
     
                     </li>
@@ -232,11 +244,7 @@
     
                     </li>
                     <li class="index-item method">
-                        <a href="#method_undo">undo</a>
-    
-                    </li>
-                    <li class="index-item method">
-                        <a href="#method_untrackPointers">untrackPointers</a>
+                        <a href="#method_untrackPointerAtIndex">untrackPointerAtIndex</a>
     
                     </li>
                     <li class="index-item method">
@@ -322,6 +330,15 @@
                         </div>
             
             
+                        <div class="example">
+                            <h4>Example:</h4>
+            
+                            <div class="example-content">
+            <p><code class="code prettyprint">&nbsp;var brushManager = new BB.BrushManager2D(document.getElementById(&#39;canvas&#39;));
+            </code></p>
+            
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
@@ -347,7 +364,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l121"><code>src&#x2F;BB.BrushManager2D.js:121</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l124"><code>src&#x2F;BB.BrushManager2D.js:124</code></a>
                         </p>
                 
                 
@@ -381,7 +398,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l233"><code>src&#x2F;BB.BrushManager2D.js:233</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l236"><code>src&#x2F;BB.BrushManager2D.js:236</code></a>
                         </p>
                 
                 
@@ -417,7 +434,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l136"><code>src&#x2F;BB.BrushManager2D.js:136</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l139"><code>src&#x2F;BB.BrushManager2D.js:139</code></a>
                         </p>
                 
                 
@@ -451,7 +468,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l105"><code>src&#x2F;BB.BrushManager2D.js:105</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l108"><code>src&#x2F;BB.BrushManager2D.js:108</code></a>
                         </p>
                 
                 
@@ -484,7 +501,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l216"><code>src&#x2F;BB.BrushManager2D.js:216</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l219"><code>src&#x2F;BB.BrushManager2D.js:219</code></a>
                         </p>
                 
                 
@@ -492,7 +509,7 @@
                 
                     <div class="extended-detail">
                         <div class="description">
-                            <p>Internal flag to determin if BB.BrushManager2D.redo() was called
+                            <p>Internal flag to determine if BB.BrushManager2D.redo() was called
                 since the BB.BrushManager2D.update()</p>
                 
                         </div>
@@ -518,7 +535,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l207"><code>src&#x2F;BB.BrushManager2D.js:207</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l210"><code>src&#x2F;BB.BrushManager2D.js:210</code></a>
                         </p>
                 
                 
@@ -526,7 +543,7 @@
                 
                     <div class="extended-detail">
                         <div class="description">
-                            <p>Internal flag to determin if BB.BrushManager2D.undo() was called
+                            <p>Internal flag to determine if BB.BrushManager2D.undo() was called
                 since the BB.BrushManager2D.update()</p>
                 
                         </div>
@@ -552,7 +569,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l51"><code>src&#x2F;BB.BrushManager2D.js:51</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l54"><code>src&#x2F;BB.BrushManager2D.js:54</code></a>
                         </p>
                 
                 
@@ -585,7 +602,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l59"><code>src&#x2F;BB.BrushManager2D.js:59</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l62"><code>src&#x2F;BB.BrushManager2D.js:62</code></a>
                         </p>
                 
                 
@@ -619,7 +636,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l190"><code>src&#x2F;BB.BrushManager2D.js:190</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l193"><code>src&#x2F;BB.BrushManager2D.js:193</code></a>
                         </p>
                 
                 
@@ -653,7 +670,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l199"><code>src&#x2F;BB.BrushManager2D.js:199</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l202"><code>src&#x2F;BB.BrushManager2D.js:202</code></a>
                         </p>
                 
                 
@@ -686,7 +703,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l113"><code>src&#x2F;BB.BrushManager2D.js:113</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l116"><code>src&#x2F;BB.BrushManager2D.js:116</code></a>
                         </p>
                 
                 
@@ -719,7 +736,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l150"><code>src&#x2F;BB.BrushManager2D.js:150</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l153"><code>src&#x2F;BB.BrushManager2D.js:153</code></a>
                         </p>
                 
                 
@@ -753,7 +770,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l225"><code>src&#x2F;BB.BrushManager2D.js:225</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l228"><code>src&#x2F;BB.BrushManager2D.js:228</code></a>
                         </p>
                 
                 
@@ -785,7 +802,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l68"><code>src&#x2F;BB.BrushManager2D.js:68</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l71"><code>src&#x2F;BB.BrushManager2D.js:71</code></a>
                         </p>
                 
                 
@@ -818,7 +835,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l76"><code>src&#x2F;BB.BrushManager2D.js:76</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l79"><code>src&#x2F;BB.BrushManager2D.js:79</code></a>
                         </p>
                 
                 
@@ -851,7 +868,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l247"><code>src&#x2F;BB.BrushManager2D.js:247</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l250"><code>src&#x2F;BB.BrushManager2D.js:250</code></a>
                         </p>
                 
                 
@@ -883,7 +900,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l83"><code>src&#x2F;BB.BrushManager2D.js:83</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l86"><code>src&#x2F;BB.BrushManager2D.js:86</code></a>
                         </p>
                 
                 
@@ -918,7 +935,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l93"><code>src&#x2F;BB.BrushManager2D.js:93</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l96"><code>src&#x2F;BB.BrushManager2D.js:96</code></a>
                         </p>
                 
                 
@@ -968,7 +985,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l326"><code>src&#x2F;BB.BrushManager2D.js:326</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l329"><code>src&#x2F;BB.BrushManager2D.js:329</code></a>
                         </p>
                 
                 
@@ -978,7 +995,7 @@
                     <div class="extended-detail">
                 
                         <div class="description">
-                            <p>A method to determin if the brush manager is currently tracking pointers</p>
+                            <p>A method to determine if the brush manager is currently tracking pointers.</p>
                 
                         </div>
                 
@@ -990,7 +1007,9 @@
                                 </h4> 
                 
                                 <div class="returns-description">
-                                            <span class="type">Boolean</span>:
+                                       
+                                        <p>True if brush manager is tracking pointers.</p>
+                
                                 </div>
                             </div>
                 
@@ -1017,7 +1036,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l344"><code>src&#x2F;BB.BrushManager2D.js:344</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l347"><code>src&#x2F;BB.BrushManager2D.js:347</code></a>
                         </p>
                 
                 
@@ -1027,7 +1046,7 @@
                     <div class="extended-detail">
                 
                         <div class="description">
-                            <p>A method to determin if the brush manager currently has an redo state.</p>
+                            <p>A method to determine if the brush manager currently has an redo state.</p>
                 
                         </div>
                 
@@ -1039,7 +1058,9 @@
                                 </h4> 
                 
                                 <div class="returns-description">
-                                            <span class="type">Boolean</span>:
+                                       
+                                        <p>True if brush manager has an redo state in its queue.</p>
+                
                                 </div>
                             </div>
                 
@@ -1066,7 +1087,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l335"><code>src&#x2F;BB.BrushManager2D.js:335</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l338"><code>src&#x2F;BB.BrushManager2D.js:338</code></a>
                         </p>
                 
                 
@@ -1076,7 +1097,7 @@
                     <div class="extended-detail">
                 
                         <div class="description">
-                            <p>A method to determin if the brush manager currently has an undo state.</p>
+                            <p>A method to determine if the brush manager currently has an undo state.</p>
                 
                         </div>
                 
@@ -1088,9 +1109,47 @@
                                 </h4> 
                 
                                 <div class="returns-description">
-                                            <span class="type">Boolean</span>:
+                                       
+                                        <p>True if brush manager has an undo state in its queue.</p>
+                
                                 </div>
                             </div>
+                
+                    </div>
+                </div>
+                <a name="method_redo" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>redo</code>
+                
+                        <span class="paren">()</span>
+                
+                
+                
+                
+                
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.BrushManager2D.js.html#l460"><code>src&#x2F;BB.BrushManager2D.js:460</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>Redo one drawing action if available</p>
+                
+                        </div>
+                
+                
                 
                     </div>
                 </div>
@@ -1118,7 +1177,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l268"><code>src&#x2F;BB.BrushManager2D.js:268</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l271"><code>src&#x2F;BB.BrushManager2D.js:271</code></a>
                         </p>
                 
                 
@@ -1174,7 +1233,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l446"><code>src&#x2F;BB.BrushManager2D.js:446</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l449"><code>src&#x2F;BB.BrushManager2D.js:449</code></a>
                         </p>
                 
                 
@@ -1192,45 +1251,9 @@
                 
                     </div>
                 </div>
-                <a name="method_undo" class="anchor-link"></a>
+                <a name="method_untrackPointerAtIndex" class="anchor-link"></a>
                 <div class="method item">
-                    <h3 class="name"><code>undo</code>
-                
-                        <span class="paren">()</span>
-                
-                
-                
-                
-                
-                
-                
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l457"><code>src&#x2F;BB.BrushManager2D.js:457</code></a>
-                        </p>
-                
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                
-                        <div class="description">
-                            <p>Undo redo one drawing action if available</p>
-                
-                        </div>
-                
-                
-                
-                    </div>
-                </div>
-                <a name="method_untrackPointers" class="anchor-link"></a>
-                <div class="method item">
-                    <h3 class="name"><code>untrackPointers</code>
+                    <h3 class="name"><code>untrackPointerAtIndex</code>
                 
                         <div class="args">
                             <span class="paren">(</span><ul class="args-list inline commas">
@@ -1252,7 +1275,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l306"><code>src&#x2F;BB.BrushManager2D.js:306</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l309"><code>src&#x2F;BB.BrushManager2D.js:309</code></a>
                         </p>
                 
                 
@@ -1309,7 +1332,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l297"><code>src&#x2F;BB.BrushManager2D.js:297</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l300"><code>src&#x2F;BB.BrushManager2D.js:300</code></a>
                         </p>
                 
                 
@@ -1345,7 +1368,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l353"><code>src&#x2F;BB.BrushManager2D.js:353</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l356"><code>src&#x2F;BB.BrushManager2D.js:356</code></a>
                         </p>
                 
                 
@@ -1387,7 +1410,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l413"><code>src&#x2F;BB.BrushManager2D.js:413</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l416"><code>src&#x2F;BB.BrushManager2D.js:416</code></a>
                         </p>
                 
                 
@@ -1443,7 +1466,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.BrushManager2D.js.html#l468"><code>src&#x2F;BB.BrushManager2D.js:468</code></a>
+                        <a href="../files/src_BB.BrushManager2D.js.html#l471"><code>src&#x2F;BB.BrushManager2D.js:471</code></a>
                         </p>
                 
                 
@@ -1457,12 +1480,29 @@
                 BB.BrushManager2D constructor has been moved or resized. It is
                 important to call this method whenever the positional CSS from the parent
                 canvas is changed so that BB.BrushManager2D&#39;s internal canvases may be
-                updated upropriately.</p>
+                updated appropriately.</p>
                 
                         </div>
                 
                 
                 
+                            <div class="example">
+                                <h4>Example:</h4>
+                
+                                <div class="example-content">
+                <p><code class="code prettyprint">
+                &nbsp;var canvas = document.getElementById(&#39;canvas&#39;);<br>
+                &nbsp;var brushManager = new BB.BrushManager(canvas);<br>
+                <br>
+                &nbsp;window.onresize = function() {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;canvas.width  = window.innerWidth;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;canvas.height = window.innerHeight;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;brushManager.updateCanvasPosition();<br>
+                &nbsp;}
+                </code></p>
+                
+                                </div>
+                            </div>
                     </div>
                 </div>
     

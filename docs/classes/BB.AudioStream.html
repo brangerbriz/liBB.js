@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>BB.BaseBrush2D - BB.js</title>
+    <title>BB.AudioStream - BB.js</title>
         
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/prettify-nick.css">
@@ -71,39 +71,148 @@
 
         <div id="docs-main" class="apidocs">
             <div class="content container">
-    <h1>BB.BaseBrush2D Module</h1>
-    <div class="box clearfix meta">
+    <h1>BB.AudioStream </h1>
+    <div class="box meta">
     
     
             <div class="foundat">
-                Defined in: <a href="../files/src_BB.BaseBrush2D.js.html#l13"><code>src&#x2F;BB.BaseBrush2D.js:13</code></a>
+                Defined in: <a href="../files/src_BB.AudioStream.js.html#l10"><code>src&#x2F;BB.AudioStream.js:10</code></a>
             </div>
     
     </div>
     
     
     <div class="box intro">
-        <p>Base 2D brush class extended by BB.ImageBrush2D, BB.LineBrush2D, etc...</p>
+        <p>A module for streaming user audio ( getUserMedia )</p>
+    
+    </div>
+    
+    <!-- Class member index -->
+    
+    <a name="index" class="anchor-link"></a>
+    <div class="index">
+    <h2>Index</h2>
+    
+    <!--     <div id="api-options">
+            Show:
+            <label for="api-show-inherited">
+                <input type="checkbox" id="api-show-inherited" checked>
+                Inherited
+            </label>
+    
+            <label for="api-show-protected">
+                <input type="checkbox" id="api-show-protected">
+                Protected
+            </label>
+    
+            <label for="api-show-private">
+                <input type="checkbox" id="api-show-private">
+                Private
+            </label>
+            <label for="api-show-deprecated">
+                <input type="checkbox" id="api-show-deprecated">
+                Deprecated
+            </label>
+    
+        </div>
+    
+     -->
+    
+    
+    
     
     </div>
     
     
-    <div class="yui3-g">
-        <div class="yui3-u-1-2">
-                <p>This module provides the following classes:</p>
+    <div class="class-detail">
     
-                <ul class="module-classes">
-                    <li class="module-class">
-                        <a href="../classes/BB.BaseBrush2D.html">
-                            BB.BaseBrush2D
-                        </a>
-                    </li>
-                </ul>
+        <div class="constructor">
+            <h2>Constructor</h2>
+            <a name="method_BB.AudioStream" class="anchor-link"></a>
+            <div class="method item">
+                <h3 class="name"><code>BB.AudioStream</code>
+            
+                    <div class="args">
+                        <span class="paren">(</span><ul class="args-list inline commas">
+                            <li class="arg">
+                                    <code>config</code>
+                            </li>
+                        </ul><span class="paren">)</span>
+                    </div>
+            
+            
+            
+            
+            
+            
+            
+            
+                </h3>
+            
+                <div class="meta">
+                            <p>
+                            Defined in
+                    <a href="../files/src_BB.AudioStream.js.html#l10"><code>src&#x2F;BB.AudioStream.js:10</code></a>
+                    </p>
+            
+            
+            
+                </div>
+            
+                <div class="extended-detail">
+            
+                    <div class="description">
+                        
+                    </div>
+            
+                        <div class="params">
+                            <h4>Parameters:</h4>
+            
+                            <ul class="params-list">
+                                <li class="param">
+                                        <code class="param-name">config</code>
+                                        <span class="type">Object</span>
+            
+            
+                                    <div class="param-description">
+                                        <p>A config object to initialize the Stream, must contain a &quot;context: AudioContext&quot; 
+             property and can contain properties for destination ( connect: destinationNode )</p>
+            
+                                    </div>
+            
+                                </li>
+                            </ul>
+                        </div>
+            
+            
+                        <div class="example">
+                            <h4>Example:</h4>
+            
+                            <div class="example-content">
+            <p> <code class="code prettyprint"><br>&nbsp;var context = new (window.AudioContext || window.webkitAudioContext)();<br><br>
+            &nbsp;var fft = new BB.AudioAnalyser({ <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;context: context,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;fftSize: 1024<br>
+            &nbsp;});<br><br>
+             &nbsp;var mic = new BB.AudioStream({<br>
+             &nbsp;&nbsp;&nbsp;&nbsp;context:context,<br>
+             &nbsp;&nbsp;&nbsp;&nbsp;connect:fft.analyser<br>
+             &nbsp;});<br>
+             </code></p>
+            
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
     
-        <div class="yui3-u-1-2">
-        </div>
+    
+    
+    
+    
+    
     </div>
+    
             </div>
         </div>
 

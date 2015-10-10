@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/BB.AudioAnalyser.js - BB.js</title>
+        
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/prettify-nick.css">
+
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    
+    <script src="../assets/vendor/yui-min.js"></script>
+</head>
+<body>
+
+<div id="doc">
+    <div id="bd" class="main-body">
+
+        <div id="docs-sidebar" class="sidebar apidocs">
+            <div id="api-list">
+                <div id="api-tabview" class="tabview">
+                    <ul class="tabs">
+                        <li><a href="#api-classes">Classes</a></li>
+                        <!-- <li><a href="#api-modules">Modules</a></li> -->
+                    </ul>
+            
+                    <div id="api-tabview-filter">
+                        <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                    </div>
+            
+                    <div id="api-tabview-panel">
+                        <ul id="api-classes" class="apis classes">
+                            <li><a class="type" href="../classes/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="type" href="../classes/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="type" href="../classes/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="type" href="../classes/BB.AudioStream.html">BB.AudioStream</a></li>
+                            <li><a class="type" href="../classes/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
+                            <li><a class="type" href="../classes/BB.Color.html">BB.Color</a></li>
+                            <li><a class="type" href="../classes/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.MathUtils.html">BB.MathUtils</a></li>
+                            <li><a class="type" href="../classes/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="type" href="../classes/BB.Particle2D.html">BB.Particle2D</a></li>
+                            <li><a class="type" href="../classes/BB.Pointer.html">BB.Pointer</a></li>
+                            <li><a class="type" href="../classes/BB.Vector2.html">BB.Vector2</a></li>
+                        </ul>
+            
+                      <!--   <ul id="api-modules" class="apis modules">
+                            <li><a class="module" href="../modules/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="module" href="../modules/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="module" href="../modules/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="module" href="../modules/BB.AudioStream.html">BB.AudioStream</a></li>
+                            <li><a class="module" href="../modules/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
+                            <li><a class="module" href="../modules/BB.Color.html">BB.Color</a></li>
+                            <li><a class="module" href="../modules/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.MathUtils.html">BB.MathUtils</a></li>
+                            <li><a class="module" href="../modules/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="module" href="../modules/BB.particle2D.html">BB.particle2D</a></li>
+                            <li><a class="module" href="../modules/BB.Pointer.html">BB.Pointer</a></li>
+                            <li><a class="module" href="../modules/BB.Vector2.html">BB.Vector2</a></li>
+                        </ul> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="docs-main" class="apidocs">
+            <div class="content container">
+    <h1 class="file-heading">File: src/BB.AudioAnalyser.js</h1>
+    
+    <div class="file">
+    <pre class="code prettyprint overflow linenums">
+    /**
+     * A module for doing FFT ( Fast Fourier Transform ) analysis on audio 
+     * @module BB.AudioAnalyser
+     */
+    define([&#x27;./BB&#x27;],
+    function(  BB ){
+    
+    	&#x27;use strict&#x27;;
+    
+    	 /**
+    	 *  A module for doing FFT ( Fast Fourier Transform ) analysis on audio 
+    	 * @class BB.AudioAnalyser
+    	 * @constructor
+    	 * 
+    	 * @param {Object} config A config object to initialize the Sampler, must contain a &quot;context: AudioContext&quot; 
+    	 * property and can contain properties for fftSize, smoothing, maxDecibels and minDecibels
+    	 * ( see &lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode&quot; target=&quot;_blank&quot;&gt;AnalyserNode&lt;/a&gt; for details )
+    	 * 
+    	 * @example  
+    	 * &lt;code class=&quot;code prettyprint&quot;&gt;  
+    	 *  &amp;nbsp;var context = new (window.AudioContext || window.webkitAudioContext)();&lt;br&gt;
+    	 *	&lt;br&gt;
+    	 *	&amp;nbsp;var fft = new BB.AudioAnalyser({ context: context }); &lt;br&gt;
+    	 *	&amp;nbsp;// assuming samp is an instanceof BB.AudioSampler &lt;br&gt;
+    	 *	&amp;nbsp;samp.connect( fft.analyser ); &lt;br&gt;
+    	 *	&amp;nbsp;// fft will then connect to the context.destination by default &lt;br&gt;
+    	 *	&amp;nbsp;// ...unless otherwise connected to somthing else
+    	 * &lt;/code&gt;
+    	 */
+        
+    
+    	BB.AudioAnalyser = function( config ){
+    		
+    		this.ctx 			= config.context;
+    		/**
+    		 * the AnalyserNode itself ( used by other nodes when connecting to this )
+    		 * @type {AnalyserNode}
+    		 * @property analyser
+    		 */
+    		this.analyser 		= this.ctx.createAnalyser();
+    		this.dest 			= this.ctx.destination;
+    		this.fftSize 		= ( typeof config.fftSize !== &#x27;undefined&#x27; ) ? config.fftSize : 2048;
+    		this.smoothing 		= ( typeof config.smoothing !== &#x27;undefined&#x27; ) ? config.smoothing : 0.8;
+    		this.maxDecibels	= ( typeof config.maxDecibels !== &#x27;undefined&#x27; ) ? config.maxDecibels : -30;
+    		this.minDecibels	= ( typeof config.minDecibels !== &#x27;undefined&#x27; ) ? config.minDecibels : -90;
+    
+    		this.analyser.fftSize 					= this.fftSize;
+    		this.analyser.smoothingTimeConstant 	= this.smoothing;
+    		this.analyser.maxDecibels 				= this.maxDecibels;
+    		this.analyser.minDecibels 				= this.minDecibels;
+    
+    		this.freqByteData 	= new Uint8Array( this.analyser.frequencyBinCount );
+    		this.freqFloatData 	= new Float32Array(this.analyser.frequencyBinCount);
+    		this.timeByteData 	= new Uint8Array( this.analyser.frequencyBinCount );
+    		this.timeFloatData 	= new Float32Array(this.analyser.frequencyBinCount);
+    
+    		if( !config ) throw new Error(&#x27;Analyser: requires a config object&#x27;);
+    		if( !(this.ctx instanceof AudioContext) ) 
+    			throw new Error(&#x27;Analyser: context should be an instance of AudioContext&#x27;);
+    		if( this.fftSize%2 !== 0 || this.fftSize &lt; 32 || this.fftSize &gt; 2048)
+    			throw new Error(&#x27;Analyser: fftSize must be a multiple of 2 between 32 and 2048&#x27;);
+    
+    		this.analyser.connect( this.dest );		
+    		
+    	};
+    
+        /**
+         * method for connecting to other nodes ( overrides the default connection to context.destination )
+         * @method connect
+         * @param {Object} destination either an AudioDestinationNode or AudioNode to connect to 
+         * @param {Number} [output] this analyser&#x27;s output, 0 for left channel, 1 for right channel ( default 0 )
+         * @param {Number} [input] input of the node you&#x27;re connecting this to, 0 for left channel, 1 for right channel ( default 0 )
+         */
+    	BB.AudioAnalyser.prototype.connect = function(destination, output, input ){
+    		if( !(destination instanceof AudioDestinationNode) || !(destination instanceof AudioNode) )
+    			throw new Error(&#x27;Analyser: destination should be an instanceof AudioDestinationNode or AudioNode&#x27;);
+    		this.dest = destination;
+    		this.analyser.connect( this.dest, output, input );
+    	};
+    
+        /**
+         * returns an array with frequency byte data
+         * @method getByteFrequencyData
+         */
+    	BB.AudioAnalyser.prototype.getByteFrequencyData = function(){
+    		this.analyser.getByteFrequencyData( this.freqByteData );
+    		return this.freqByteData;
+    	};
+    
+        /**
+         * returns an array with frequency float data
+         * @method getFloatFrequencyData
+         */
+    	BB.AudioAnalyser.prototype.getFloatFrequencyData = function(){
+    		this.analyser.getFloatFrequencyData( this.freqFloatData );
+    		return this.freqFloatData;
+    	};
+    
+        /**
+         * returns an array with time domain byte data
+         * @method getByteTimeDomainData
+         */
+    	BB.AudioAnalyser.prototype.getByteTimeDomainData = function(){
+    		// https://en.wikipedia.org/wiki/Time_domain
+    		this.analyser.getByteTimeDomainData( this.timeByteData );
+    		return this.timeByteData;
+    	};
+    
+        /**
+         * returns an array with time domain float data
+         * @method getFloatTimeDomainData
+         */
+    	BB.AudioAnalyser.prototype.getFloatTimeDomainData = function(){
+    		this.analyser.getFloatTimeDomainData( this.timeFloatData );
+    		return this.timeFloatData;
+    	};
+    
+    	BB.AudioAnalyser.prototype.averageAmp = function( array ){
+    		var v = 0;
+    		var averageAmp;
+    		var l = array.length;
+    		for (var i = 0; i &lt; l; i++) {
+    			v += array[i];
+    		}
+    		averageAmp = v / l;
+    		return averageAmp;
+    	};
+    
+        /**
+         * returns the averaged amplitude between both channels
+         * @method getAmplitude
+         */
+    	BB.AudioAnalyser.prototype.getAmplitude = function(){
+    		return this.averageAmp( this.getByteFrequencyData() );
+    	};
+    
+    
+    	return BB.AudioAnalyser;
+    });
+    </pre>
+    </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

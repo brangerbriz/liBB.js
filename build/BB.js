@@ -2393,8 +2393,10 @@ function(  BB) {
     return BB.Color;
 });
 /**
- * A module for standardizing mouse events so that they may be used with
- * the event funnel suite of modules. For use with HTML5 canvas only.
+ * A module for standardizing mouse events from an HTML5 canvas so that they may be used with
+ * the event funnel suite of modules.
+ * <br>
+ * <i>NOTE: For use with HTML5 canvas only.<i>
  * @module BB.MouseInput
  */
 define('BB.MouseInput',['./BB'], 
@@ -2403,8 +2405,11 @@ function(  BB){
     'use strict';
     
     /**
-     * A module for standardizing mouse events so that they may be used with
+     * A module for standardizing mouse events from an HTML5 canvas so that they may be used with
      * the event funnel suite of modules.
+     * <br>
+     * <br>
+     * <i>Note: For use with HTML5 canvas only.<i>
      * @class  BB.MouseInput
      * @constructor
      * @param {HTMLCanvasElement} canvasElement The HTML5 canvas object listening for mouse input.
@@ -2452,9 +2457,10 @@ function(  BB){
         this.clickY     = 0;
 
         /**
-         * Time in milliseconds that the mouse has been still before considering it's movement to be finished.
+         * Time in milliseconds that the mouse has been still before its movement is considering to be finished.
          * @property moveDebounce
          * @type {Number}
+         * @default 150
          */
         this.moveDebounce = 150;
 
@@ -2563,8 +2569,8 @@ function(  BB){
 
     /**
      * Utility property that hold's the value of a JavaScript MouseEvent's left mouse button.
-     * @property
-     * @static
+     * @property LEFT_BUTTON
+     * @static 
      * @type {Number}
      * @default 0
      * @readOnly
@@ -2573,8 +2579,8 @@ function(  BB){
 
     /**
      * Utility property that hold's the value of a JavaScript MouseEvent's scroll wheel button.
-     * @property
-     * @static
+     * @property SCROLL_BUTTON
+     * @static 
      * @type {Number}
      * @default 1
      * @readOnly
@@ -2583,7 +2589,7 @@ function(  BB){
 
     /**
      * Utility property that hold's the value of a JavaScript MouseEvent's right mouse button.
-     * @property
+     * @property RIGHT_BUTTON
      * @static
      * @type {Number}
      * @default 2
@@ -2758,7 +2764,7 @@ function(  BB,     MouseInput){
     });
 
     /**
-     * Update the pointer using the controllerModule.
+     * Update the pointer using the controllerModule. Usually called once per animation frame.
      * @method update
      * @param  {Object} controllerModule 
      */
@@ -2846,6 +2852,9 @@ function(  BB,      Pointer ){
      * @constructor
      * @param {[HTMLCanvasElement]} canvas The HTML5 canvas element for the
      * brush manager to use.
+     * @example
+     * <code class="code prettyprint">&nbsp;var brushManager = new BB.BrushManager2D(document.getElementById('canvas'));
+     * </code>
      */    
     BB.BrushManager2D = function(canvas) {
 
@@ -3018,7 +3027,7 @@ function(  BB,      Pointer ){
         this._pointerStates = [];
 
         /**
-         * Internal flag to determin if BB.BrushManager2D.undo() was called
+         * Internal flag to determine if BB.BrushManager2D.undo() was called
          * since the BB.BrushManager2D.update()
          * @property _needsUndo
          * @type {Boolean}
@@ -3027,7 +3036,7 @@ function(  BB,      Pointer ){
         this._needsUndo = false;
 
         /**
-         * Internal flag to determin if BB.BrushManager2D.redo() was called
+         * Internal flag to determine if BB.BrushManager2D.redo() was called
          * since the BB.BrushManager2D.update()
          * @property _needsRedo
          * @type {Boolean}
@@ -3122,7 +3131,7 @@ function(  BB,      Pointer ){
      * BB.BrushManager2D.trackPointers(...). Untracking a pointer removes it
      * from the internal _pointers array which changes the index of all pointers
      * after it. Keep this in mind when using this method.
-     * @method untrackPointers
+     * @method untrackPointerAtIndex
      * @param {Number} index The index of the pointer to untrack.
      */
     BB.BrushManager2D.prototype.untrackPointerAtIndex = function(index) {
@@ -3137,27 +3146,27 @@ function(  BB,      Pointer ){
     };
 
     /**
-     * A method to determin if the brush manager is currently tracking pointers
+     * A method to determine if the brush manager is currently tracking pointers.
      * @method hasPointers
-     * @return {Boolean}
+     * @return {Boolean} True if brush manager is tracking pointers.
      */
     BB.BrushManager2D.prototype.hasPointers = function() {
         return this._pointers.length > 0;
     };
 
     /**
-     * A method to determin if the brush manager currently has an undo state.
+     * A method to determine if the brush manager currently has an undo state.
      * @method hasUndo
-     * @return {Boolean}
+     * @return {Boolean} True if brush manager has an undo state in its queue.
      */
     BB.BrushManager2D.prototype.hasUndo = function() {
         return this._history.length > 1;
     };
 
     /**
-     * A method to determin if the brush manager currently has an redo state.
+     * A method to determine if the brush manager currently has an redo state.
      * @method hasRedo
-     * @return {Boolean}
+     * @return {Boolean} True if brush manager has an redo state in its queue.
      */
     BB.BrushManager2D.prototype.hasRedo = function() {
         return this._purgatory.length > 0;
@@ -3268,8 +3277,8 @@ function(  BB,      Pointer ){
     };
 
     /**
-     * Undo redo one drawing action if available
-     * @method undo
+     * Redo one drawing action if available
+     * @method redo
      */
     BB.BrushManager2D.prototype.redo = function() {
 
@@ -3283,8 +3292,19 @@ function(  BB,      Pointer ){
      * BB.BrushManager2D constructor has been moved or resized. It is
      * important to call this method whenever the positional CSS from the parent
      * canvas is changed so that BB.BrushManager2D's internal canvases may be
-     * updated upropriately.
+     * updated appropriately.
      * @method updateCanvasPosition
+     * @example
+     * <code class="code prettyprint">
+     * &nbsp;var canvas = document.getElementById('canvas');<br>
+     * &nbsp;var brushManager = new BB.BrushManager(canvas);<br>
+     * <br>
+     * &nbsp;window.onresize = function() {<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;canvas.width  = window.innerWidth;<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;canvas.height = window.innerHeight;<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;brushManager.updateCanvasPosition();<br>
+     * &nbsp;}
+     * </code>
      */
     BB.BrushManager2D.prototype.updateCanvasPosition = function() {
 
@@ -3345,8 +3365,8 @@ function(  BB,        BrushManager2D,        Color){
      * @constructor
      * @param {Object} [config] An optional config hash to initialize any of
      * BB.BaseBrush2D's public properties
-     * @example <div><code> var baseBrush = new BB.BaseBrush2D({ width: 100,
-     * height: 100, color: new BB.Color(255, 0, 0) }); </code></div>
+     * @example <code class="code prettyprint">&nbsp;var brush = new BB.BaseBrush2D({ width: 100,
+     * height: 100, color: new BB.Color(255, 0, 0) }); </code>
      */
     BB.BaseBrush2D = function(config) {
 
@@ -3368,7 +3388,7 @@ function(  BB,        BrushManager2D,        Color){
 
         /**
          * The brush's width.
-         * @property w
+         * @property width
          * @type Number
          * @default 10
          */
@@ -3425,6 +3445,18 @@ function(  BB,        BrushManager2D,        Color){
      * @param {Object} controllerModule An object with x and y properties and
      * optionally an isDown boolean (used for beginning and ending
      * strokeds/marks).
+     * @example <code class="code prettyprint">
+     * &nbsp;var mouseInput = new BB.MouseInput(document.getElementById('canvas'));<br>
+     * &nbsp;var pointer = new BB.Pointer(mouseInput);<br>
+     * &nbsp;var brush = new BB.BaseBrush2D();<br>
+     * <br>
+     * &nbsp; // called once per animation frame (from somewhere else in your app)<br>
+     * &nbsp;function update() {<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;mouseInput.update();<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;pointer.update();<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;brush.update(pointer); // update the brush using the pointer<br>
+     * &nbsp;}
+     * </code>
      */
     BB.BaseBrush2D.prototype.update = function(controllerModule) {
 
@@ -3470,6 +3502,11 @@ function(  BB,        BrushManager2D,        Color){
      * Multiplies width and height properties by amount.
      * @method scale
      * @param {Number} amount Amount to scale width and height by
+     * @example <code class="code prettyprint"> &nbsp; var brush = new BB.BaseBrush2D({ width: 50, height: 100 });<br>
+     * &nbsp; brush.scale(2);<br>
+     * &nbsp; brush.width // 100<br>
+     * &nbsp; brush.height // 200
+     * </code>
      */
     BB.BaseBrush2D.prototype.scale = function(amount) {
         
@@ -3510,8 +3547,8 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
      * @extends BB.BaseBrush2D
      * @param {Object} [config] A optional config hash to initialize any of
      * BB.ImageBrush2D's public properties.
-     * @example <div><code> var imageBrush = new BB.ImageBrush2D({ width: 100,
-     * height: 100, src: "http://some/image.png" }); </code></div>
+     * @example <code class="code prettyprint">&nbsp;var imageBrush = new BB.ImageBrush2D({ width: 100,
+     * height: 100, src: "some/image.png" }); </code>
      */
     BB.ImageBrush2D = function(config) {
 
@@ -3650,6 +3687,18 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
      * @param {Object} controllerModule An object with x and y properties and
      * optionally an isDown boolean (used for beginning and ending
      * strokeds/marks).
+     * @example <code class="code prettyprint">
+     * &nbsp;var mouseInput = new BB.MouseInput(document.getElementById('canvas'));<br>
+     * &nbsp;var pointer = new BB.Pointer(mouseInput);<br>
+     * &nbsp;var brush = new BB.ImageBrush2D();<br>
+     * <br>
+     * &nbsp; // called once per animation frame (from somewhere else in your app)<br>
+     * &nbsp;function update() {<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;mouseInput.update();<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;pointer.update();<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;brush.update(pointer); // update the brush using the pointer<br>
+     * &nbsp;}
+     * </code>
      */
     BB.ImageBrush2D.prototype.update = function(controllerModule) {
         
@@ -3779,8 +3828,8 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
      * @extends BB.BaseBrush2D
      * @param {Object} [config] A optional config hash to initialize any of
      * BB.LineBrush2D's public properties.
-     * @example <div><code> var lineBrush = new BB.LineBrush2D({ width: 100,
-     * height: 100, variant: "soft" }); </code></div>
+     * @example <code class="code prettyprint">&nbsp; var lineBrush = new BB.LineBrush2D({ width: 100,
+     * height: 100, variant: "soft" }); </code>
      */
     BB.LineBrush2D = function(config) {
 
@@ -3864,7 +3913,19 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
      * @method update
      * @param {Object} controllerModule An object with x and y properties and
      * optionally an isDown boolean (used for beginning and ending
-     * strokeds/marks). 
+     * strokeds/marks).
+     * @example <code class="code prettyprint">
+     * &nbsp;var mouseInput = new BB.MouseInput(document.getElementById('canvas'));<br>
+     * &nbsp;var pointer = new BB.Pointer(mouseInput);<br>
+     * &nbsp;var brush = new BB.LineBrush2D();<br>
+     * <br>
+     * &nbsp; // called once per animation frame (from somewhere else in your app)<br>
+     * &nbsp;function update() {<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;mouseInput.update();<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;pointer.update();<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;brush.update(pointer); // update the brush using the pointer<br>
+     * &nbsp;}
+     * </code>
      */
     BB.LineBrush2D.prototype.update = function(controllerModule) {
         
@@ -4025,8 +4086,9 @@ function(  BB,        Vector2){
      * (radians) and speed property ( number ). If no velocity or acceleration
      * or heading/speed is set, the default velocity is BB.Vector2(0,0).
      * 
-     * @example  <code class="code prettyprint">  
-     * &nbsp; var star = newBB.Particle2D({ <br> 
+     * @example  <code class="code prettyprint">&nbsp; var WIDTH = window.innerWidth;<br>
+     * &nbsp; var HEIGHT = window.innerHeight;<br><br>
+     * &nbsp; var star = newBB.Particle2D({ <br>
      * &nbsp;&nbsp;&nbsp;&nbsp; position: new BB.Vector2(WIDTH/2, HEIGHT/2 ),<br> 
      * &nbsp;&nbsp;&nbsp;&nbsp; mass: 20000 <br> 
      * &nbsp;}); <br><br> 
@@ -4053,7 +4115,6 @@ function(  BB,        Vector2){
         var y = (config && typeof config.y === 'number') ? config.y : 0;
         this.position = (config && typeof config.position === 'object' && config.position instanceof BB.Vector2) 
                             ? config.position : new BB.Vector2(x, y);
-                      
         /**
          * the particle's velocity ( see acceleration also )
          * @property velocity
@@ -4098,7 +4159,7 @@ function(  BB,        Vector2){
 
 
         /**
-         * combines forces to be added to velocity each frame
+         * Usually used to accumulate forces to be added to velocity each frame
          * @property acceleration
          * @type BB.Vector2
          */  
@@ -4140,6 +4201,8 @@ function(  BB,        Vector2){
          * @default 0.05
          */  
         this.elasticity = (config && typeof config.elasticity === 'number') ? config.elasticity : 0.05;
+
+        this.maxSpeed = (config && typeof config.maxSpeed === 'number') ? config.maxSpeed : 100;
 
         this._springs      = []; 
         this._colliders    = []; // array of: other Particles ( x,y,r ) to collide against
@@ -4196,7 +4259,7 @@ function(  BB,        Vector2){
      * ... } )
      *
      * alternatively, gravitate could also be passed an <b>array</b> of objects 
-     * ( with position and mass )
+     * ( each with position and mass properties )
      * 
      * @param {Number} [mass] when particle is not an instance of BB.Particle2D
      * and is a Vector an additional argument for mass is required
@@ -4538,14 +4601,14 @@ function(  BB,        Vector2){
             }
         }
 
-
-
-
-
         // this.acceleration.multiplyScalar(this.friction); // NOT WORKING?
-        this.velocity.multiplyScalar( this.friction );      // APPLYING DIRECTLY TO VELOCITY INSTEAD
+        this.velocity.multiplyScalar(this.friction);      // APPLYING DIRECTLY TO VELOCITY INSTEAD
 
         this.velocity.add(this.acceleration);
+        
+        if (this.velocity.length() > this.maxSpeed) {
+            this.velocity.setLength(this.maxSpeed);
+        }
 
         this.position.add(this.velocity);
 
@@ -4558,7 +4621,7 @@ function(  BB,        Vector2){
     };
 
     /**
-     * takes a force ( divides it by particle's mass ) and applies it to acceleration ( which is added to velocity each frame )
+     * takes a force, divides it by particle's mass, and applies it to acceleration ( which is added to velocity each frame )
      * 
      * @method applyForce
      * 
@@ -4571,13 +4634,537 @@ function(  BB,        Vector2){
         }
 
         return this.acceleration.add( force.clone().divideScalar(this.mass) );
-        // return this.acceleration.add( force );
 
     };
 
     return BB.Particle2D;
 });
-define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.ImageBrush2D','BB.LineBrush2D','BB.BrushManager2D','BB.MouseInput','BB.Pointer','BB.Vector2','BB.Particle2D'],function (require) {
+/**
+ * A module for creating audio buffers from audio files
+ * @module BB.AudioBufferLoader
+ */
+define('BB.AudioBufferLoader',['./BB'],
+function(  BB){
+
+    'use strict';
+    
+    /**
+     * A module for creating audio buffers from audio files
+     * @class BB.AudioBufferLoader
+     * @constructor
+     * @param {Object} config A config object to initialize the buffer ( context:AudioContext, paths: Array of file paths, autoload:boolean)
+     * @param {Function} [callback] A callback, with a buffer Object
+     * @example  
+     * <code class="code prettyprint">  
+     * &nbsp;var context =  new (window.AudioContext || window.webkitAudioContext)();<br>
+     * <br>
+     * &nbsp;// one way to do it<br>
+     * &nbsp;var loader = new BufferLoader({<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;context: context,<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;paths: ['audio/katy.ogg','audio/entro.ogg']<br>
+     * &nbsp;}, function(buffers){<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;console.log('loaded:', buffers )<br>
+     * &nbsp;});<br>
+     * <br>
+     * &nbsp;// another way to do it<br>
+     * &nbsp;loader = new BufferLoader({ <br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;context:context, <br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;paths:['katy.ogg','entro.ogg'], <br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;autoload:false <br>
+     * &nbsp;});<br>
+     * &nbsp;loader.load(); // call load later, ex under some other condition<br>
+     * </code>
+     */
+
+
+    BB.AudioBufferLoader = function( config, callback ){
+        
+        /**
+         * corresponding Audio Context
+         * @type {AudioContext}
+         * @property ctx
+         */
+        this.ctx        = config.context;
+
+        /**
+         * array of paths to audio files to load 
+         * @type {Array}
+         * @property urls
+         */
+        this.urls       = config.paths;
+
+        /**
+         * whether or not to autoload the files
+         * @type {Boolean}
+         * @property auto
+         */
+        this.auto       = ( typeof config.autoload !== 'undefined' ) ? config.autoload : true;
+
+        /**
+         * callback to run after loading
+         * @type {Function}
+         * @property onload
+         */
+        this.onload     = callback;
+        
+        this._cnt       = 0; // to know when to callback
+
+        /**
+         * audio buffers array, accessible in callback
+         * @type {Array}
+         * @property buffers
+         */
+        this.buffers    = [];
+
+        if( !config ) throw new Error('BB.AudioBufferLoader: requires a config object');
+
+        if( !(this.ctx instanceof AudioContext) ) 
+            throw new Error('BB.AudioBufferLoader: context should be an instance of AudioContext');
+        
+        if( !(this.urls instanceof Array) ) 
+            throw new Error('BB.AudioBufferLoader: paths should be an Array of paths');
+        
+        if( typeof this.auto !== 'boolean' ) 
+            throw new Error('BB.AudioBufferLoader: autoload should be either true or false');
+
+        if( this.auto===true ) this.load();
+    };
+
+    /**
+     * private function used by load() to load a buffer
+     * @method loadbuffer
+     * @param {String} path to audio file 
+     * @param {Number} index of buffer 
+     */
+    BB.AudioBufferLoader.prototype.loadbuffer = function(url, index){
+        var self = this;
+
+        // create rootpath to get around bug ( which seems to have gone away? )
+        // var fullpath = window.location.pathname;
+        // var filename = fullpath.replace(/^.*[\\\/]/, '');
+        // var rootpath = fullpath.substring(0,fullpath.length-filename.length);
+        
+        // http://www.html5rocks.com/en/tutorials/webaudio/intro/#toc-load  
+        var req = new XMLHttpRequest();
+            req.open('GET', url, true);
+            req.responseType = 'arraybuffer';
+            req.onload = function(){
+
+                self.ctx.decodeAudioData( req.response, function(decodedData){ 
+                    // https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/decodeAudioData
+                    if(!decodedData) throw new Error('BB.AudioBufferLoader: decodeAudioData: could not decode: ' + url );
+                    
+                    self.buffers[index] = decodedData;
+                    
+                    if( ++self._cnt == self.urls.length && typeof self.onload !=='undefined') 
+                        self.onload( self.buffers ); // if callback do callback 
+                
+                },function(err){ throw new Error('BB.AudioBufferLoader: decodeAudioData:'+err);});
+            };
+            req.onerror = function(){ throw new Error('BB.AudioBufferLoader: XHMHttpRequest'); };
+            req.send();
+    };
+
+    /**
+     * creates buffers from url paths set in the constructor, automatically runs in constructor unless autoload is set to false
+     * @method load
+     */
+    BB.AudioBufferLoader.prototype.load = function(){
+        for (var i = 0; i < this.urls.length; i++) this.loadbuffer( this.urls[i], i );
+    };   
+
+    return BB.AudioBufferLoader;
+});
+/**
+ * A module for creating an audio sampler, an object that can load, sample and play back sound files
+ * @module BB.AudioSampler
+ */
+define('BB.AudioSampler',['./BB','./BB.AudioBufferLoader'],
+function(  BB, 		 AudioBufferLoader){
+
+	'use strict';
+
+	BB.AudioBufferLoader = AudioBufferLoader;
+
+	 /**
+	 *  A module for creating an audio sampler, an object that can load, sample and play back sound files
+	 * @class BB.AudioSampler
+	 * @constructor
+	 * 
+	 * @param {Object} config A config object to initialize the Sampler, must contain a "context: AudioContext" 
+	 * property and can contain as many additional properties as there are sound files
+	 * @param {Function} [callback] A callback, with a buffer Object Array
+	 * 
+	 * @example  
+	 * <code class="code prettyprint">  
+	 *  &nbsp;var context = new (window.AudioContext || window.webkitAudioContext)();<br>
+	 *	<br>
+	 *	&nbsp;var drum = new BB.AudioSampler({<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;context: context,<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;kick: 'audio/808/kick.ogg',<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;snare: 'audio/808/snare.ogg',<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;hat: 'audio/808/hat.ogg'<br>
+	 *	&nbsp;}, function( bufferObj ){<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;console.log( bufferObj )<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;run();<br>
+	 *	&nbsp;});<br>
+	 *	<br>
+	 *	&nbsp;function run(){<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.play('kick');<br>
+	 *	&nbsp;}<br>
+	 * </code>
+	 */
+    
+
+	BB.AudioSampler = function( config, callback ){
+		
+		/**
+		 * corresponding Audio Context
+		 * @type {AudioContext}
+		 * @property ctx
+		 */
+		this.ctx 		= config.context;
+
+		this.dest 		= this.ctx.destination;
+
+
+		/**
+		 * whether or not to autoload the files
+		 * @type {Boolean}
+		 * @property auto
+		 */
+		this.auto 		= ( typeof config.autoload !== 'undefined' ) ? config.autoload : true;
+
+		/**
+		 * whether or not the file(s) have loaded
+		 * @type {Boolean}
+		 * @property loaded
+		 */
+		this.loaded		= false;
+
+		/**
+		 * callback to run after loading
+		 * @type {Function}
+		 * @property onload
+		 */
+		this.onload 	= callback;
+
+		/**
+		 * array of sample names
+		 * @type {Array}
+		 * @property keys
+		 */
+		this.keys 		= []; 
+		/**
+		 * array of paths to sample audio files
+		 * @type {Array}
+		 * @property paths
+		 */
+		this.paths  	= []; 
+		/**
+		 * collection of sample buffers
+		 * @type {Object}
+		 * @property buffers
+		 */
+		this.buffers	= {}; 
+		this.loader 	= undefined;
+
+
+		if( !config ) throw new Error('BB.AudioSampler: requires a config object');
+
+		if( !(this.ctx instanceof AudioContext) ) 
+			throw new Error('BB.AudioSampler: context should be an instance of AudioContext');
+		
+		if( typeof this.auto !== 'boolean' ) 
+			throw new Error('BB.AudioSampler: autoload should be either true or false');
+
+
+
+		for (var key in config ) {
+			if( key!=='context' && key!=='autoload'){
+				this.keys.push( key );
+				this.paths.push( config[key] );
+			}
+		}
+
+		if( this.auto===true ) this.load();
+	};
+
+
+    /**
+     * creates buffers from url paths using BB.AudioBufferLoader, automatically runs in constructor unless autoload is set to false
+     * @method load
+     */
+	BB.AudioSampler.prototype.load = function(){
+
+		var self = this;
+
+		this.loader = new BB.AudioBufferLoader({
+
+			context: this.ctx,
+			autoload: this.auto,
+			paths: this.paths
+
+		}, function(buffers){
+
+			for (var i = 0; i < buffers.length; i++) {
+				self.buffers[self.keys[i]] = buffers[i];
+			}
+
+			self.loaded = true;
+			
+			if(typeof self.onload !== 'undefined' ) self.onload( self.buffers ); // callback
+
+		});
+
+	};
+
+	BB.AudioSampler.prototype.connect = function( destination){
+		// WARNING: keep in mind this connect is a little different from webaudio api connect
+		// it has no optional output/input arguments
+		this.dest = destination;
+	};
+
+    /**
+     * schedules an audio buffer to be played
+     * @method play
+     * @param {String} key name of particular sample ( declared in constructor ) 
+     * @param {Number} [when] scheduled time in the AudioContext's timeline/clock (ie. currentTime) to play the file ( default 0, ie. automatically )
+     * @param {Number} [offset] default is 0 (ie. beggining of the sample ) but can be offset (seconds) to start at another point in the sample
+     * @param {Number} [duration] default is the duration of the entire sample (seconds) can be shortened to a lesser amount
+	 * @example  
+	 * <code class="code prettyprint">  
+	 * &nbsp;// plays the sample "fireworks" <br>
+	 * &nbsp;// starts playing it when AudioContext.currentTime == 10<br>
+	 * &nbsp;// starts the sample 30 seconds into the track<br>
+	 * &nbsp;// plays for half a second, then stops<br>
+	 * &nbsp;sampler.play('fireworks', 10, 30, 0.5);
+	 * </code>
+     */
+	BB.AudioSampler.prototype.play = function( key, when, offset, duration ) {
+
+		if( !key || this.keys.indexOf(key)<0 ) throw new Error('BB.AudioSampler: '+key+' was not defined in constructor');
+
+		var source = this.ctx.createBufferSource(); 
+			source.buffer = this.buffers[ key ];            
+			source.connect( this.dest );   
+
+		var w = ( typeof when !== 'undefined' ) ? when : 0;
+		var o = ( typeof offset !== 'undefined' ) ? offset : 0;
+		var d = ( typeof duration !== 'undefined' ) ? duration : source.buffer.duration;
+
+	    source.start( w, o, d ); 
+    };
+
+	return BB.AudioSampler;
+});
+/**
+ * A module for doing FFT ( Fast Fourier Transform ) analysis on audio 
+ * @module BB.AudioAnalyser
+ */
+define('BB.AudioAnalyser',['./BB'],
+function(  BB ){
+
+	'use strict';
+
+	 /**
+	 *  A module for doing FFT ( Fast Fourier Transform ) analysis on audio 
+	 * @class BB.AudioAnalyser
+	 * @constructor
+	 * 
+	 * @param {Object} config A config object to initialize the Sampler, must contain a "context: AudioContext" 
+	 * property and can contain properties for fftSize, smoothing, maxDecibels and minDecibels
+	 * ( see <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode" target="_blank">AnalyserNode</a> for details )
+	 * 
+	 * @example  
+	 * <code class="code prettyprint">  
+	 *  &nbsp;var context = new (window.AudioContext || window.webkitAudioContext)();<br>
+	 *	<br>
+	 *	&nbsp;var fft = new BB.AudioAnalyser({ context: context }); <br>
+	 *	&nbsp;// assuming samp is an instanceof BB.AudioSampler <br>
+	 *	&nbsp;samp.connect( fft.analyser ); <br>
+	 *	&nbsp;// fft will then connect to the context.destination by default <br>
+	 *	&nbsp;// ...unless otherwise connected to somthing else
+	 * </code>
+	 */
+    
+
+	BB.AudioAnalyser = function( config ){
+		
+		this.ctx 			= config.context;
+		/**
+		 * the AnalyserNode itself ( used by other nodes when connecting to this )
+		 * @type {AnalyserNode}
+		 * @property analyser
+		 */
+		this.analyser 		= this.ctx.createAnalyser();
+		this.dest 			= this.ctx.destination;
+		this.fftSize 		= ( typeof config.fftSize !== 'undefined' ) ? config.fftSize : 2048;
+		this.smoothing 		= ( typeof config.smoothing !== 'undefined' ) ? config.smoothing : 0.8;
+		this.maxDecibels	= ( typeof config.maxDecibels !== 'undefined' ) ? config.maxDecibels : -30;
+		this.minDecibels	= ( typeof config.minDecibels !== 'undefined' ) ? config.minDecibels : -90;
+
+		this.analyser.fftSize 					= this.fftSize;
+		this.analyser.smoothingTimeConstant 	= this.smoothing;
+		this.analyser.maxDecibels 				= this.maxDecibels;
+		this.analyser.minDecibels 				= this.minDecibels;
+
+		this.freqByteData 	= new Uint8Array( this.analyser.frequencyBinCount );
+		this.freqFloatData 	= new Float32Array(this.analyser.frequencyBinCount);
+		this.timeByteData 	= new Uint8Array( this.analyser.frequencyBinCount );
+		this.timeFloatData 	= new Float32Array(this.analyser.frequencyBinCount);
+
+		if( !config ) throw new Error('Analyser: requires a config object');
+		if( !(this.ctx instanceof AudioContext) ) 
+			throw new Error('Analyser: context should be an instance of AudioContext');
+		if( this.fftSize%2 !== 0 || this.fftSize < 32 || this.fftSize > 2048)
+			throw new Error('Analyser: fftSize must be a multiple of 2 between 32 and 2048');
+
+		this.analyser.connect( this.dest );		
+		
+	};
+
+    /**
+     * method for connecting to other nodes ( overrides the default connection to context.destination )
+     * @method connect
+     * @param {Object} destination either an AudioDestinationNode or AudioNode to connect to 
+     * @param {Number} [output] this analyser's output, 0 for left channel, 1 for right channel ( default 0 )
+     * @param {Number} [input] input of the node you're connecting this to, 0 for left channel, 1 for right channel ( default 0 )
+     */
+	BB.AudioAnalyser.prototype.connect = function(destination, output, input ){
+		if( !(destination instanceof AudioDestinationNode) || !(destination instanceof AudioNode) )
+			throw new Error('Analyser: destination should be an instanceof AudioDestinationNode or AudioNode');
+		this.dest = destination;
+		this.analyser.connect( this.dest, output, input );
+	};
+
+    /**
+     * returns an array with frequency byte data
+     * @method getByteFrequencyData
+     */
+	BB.AudioAnalyser.prototype.getByteFrequencyData = function(){
+		this.analyser.getByteFrequencyData( this.freqByteData );
+		return this.freqByteData;
+	};
+
+    /**
+     * returns an array with frequency float data
+     * @method getFloatFrequencyData
+     */
+	BB.AudioAnalyser.prototype.getFloatFrequencyData = function(){
+		this.analyser.getFloatFrequencyData( this.freqFloatData );
+		return this.freqFloatData;
+	};
+
+    /**
+     * returns an array with time domain byte data
+     * @method getByteTimeDomainData
+     */
+	BB.AudioAnalyser.prototype.getByteTimeDomainData = function(){
+		// https://en.wikipedia.org/wiki/Time_domain
+		this.analyser.getByteTimeDomainData( this.timeByteData );
+		return this.timeByteData;
+	};
+
+    /**
+     * returns an array with time domain float data
+     * @method getFloatTimeDomainData
+     */
+	BB.AudioAnalyser.prototype.getFloatTimeDomainData = function(){
+		this.analyser.getFloatTimeDomainData( this.timeFloatData );
+		return this.timeFloatData;
+	};
+
+	BB.AudioAnalyser.prototype.averageAmp = function( array ){
+		var v = 0;
+		var averageAmp;
+		var l = array.length;
+		for (var i = 0; i < l; i++) {
+			v += array[i];
+		}
+		averageAmp = v / l;
+		return averageAmp;
+	};
+
+    /**
+     * returns the averaged amplitude between both channels
+     * @method getAmplitude
+     */
+	BB.AudioAnalyser.prototype.getAmplitude = function(){
+		return this.averageAmp( this.getByteFrequencyData() );
+	};
+
+
+	return BB.AudioAnalyser;
+});
+/**
+ * A module for streaming user audio ( getUserMedia )
+ * @module BB.AudioStream
+ */
+define('BB.AudioStream',['./BB'],
+function(  BB ){
+
+	'use strict';
+
+	 /**
+	 *  A module for streaming user audio ( getUserMedia )
+	 * @class BB.AudioStream
+	 * @constructor
+	 * 
+	 * @param {Object} config A config object to initialize the Stream, must contain a "context: AudioContext" 
+	 * property and can contain properties for destination ( connect: destinationNode )
+	 * 
+	 * @example  
+	 * <code class="code prettyprint">  
+	 *  &nbsp;var context = new (window.AudioContext || window.webkitAudioContext)();<br><br>
+	 *  &nbsp;var fft = new BB.AudioAnalyser({ <br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;context: context,<br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;fftSize: 1024<br>
+	 *  &nbsp;});<br><br>
+	 * &nbsp;var mic = new BB.AudioStream({<br>
+	 * &nbsp;&nbsp;&nbsp;&nbsp;context:context,<br>
+	 * &nbsp;&nbsp;&nbsp;&nbsp;connect:fft.analyser<br>
+	 * &nbsp;});<br>
+	 * </code>
+	 */
+	
+
+
+	BB.AudioStream = function( config ){
+		
+		this.ctx 		= config.context;
+		this.dest 		= ( typeof config.connect !== 'undefined' ) ? config.connect : this.ctx.destination;
+
+		navigator.getUserMedia = 	navigator.getUserMedia ||
+									navigator.webkitGetUserMedia ||
+									navigator.mozGetUserMedia;
+
+		var self = this;
+
+		if(navigator.getUserMedia){
+			navigator.getUserMedia({audio:true}, 
+				function(stream){
+					var input = self.ctx.createMediaStreamSource(stream);
+					input.connect( self.dest );
+				}, 
+				function(e){
+					throw new Error("Stream: "+ e );
+				}
+			);
+		} else {
+			console.log('getUserMedia not supported');
+		}
+
+		if( !config ) throw new Error('BufferLoader: requires a config object');
+
+		if( !(this.ctx instanceof AudioContext) ) 
+			throw new Error('BufferLoader: context should be an instance of AudioContext');
+		
+	};
+
+	return BB.AudioStream;
+});
+define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.ImageBrush2D','BB.LineBrush2D','BB.BrushManager2D','BB.MouseInput','BB.Pointer','BB.Vector2','BB.Particle2D','BB.AudioBufferLoader','BB.AudioSampler','BB.AudioAnalyser','BB.AudioStream'],function (require) {
 
   'use strict';
 
@@ -4600,6 +5187,13 @@ define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.Ima
   // physics
   BB.Vector2        = require('BB.Vector2');
   BB.Particle2D     = require('BB.Particle2D');
+
+  // audio
+  BB.AudioBufferLoader = require('BB.AudioBufferLoader');
+  BB.AudioSampler      = require('BB.AudioSampler');
+  BB.AudioAnalyser     = require('BB.AudioAnalyser');
+  BB.AudioStream       = require('BB.AudioStream');
+
 
   return BB;
 

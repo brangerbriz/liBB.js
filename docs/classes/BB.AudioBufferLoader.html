@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>BB.MouseInput - BB.js</title>
+    <title>BB.AudioBufferLoader - BB.js</title>
         
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/prettify-nick.css">
@@ -71,23 +71,19 @@
 
         <div id="docs-main" class="apidocs">
             <div class="content container">
-    <h1>BB.MouseInput </h1>
+    <h1>BB.AudioBufferLoader </h1>
     <div class="box meta">
     
     
             <div class="foundat">
-                Defined in: <a href="../files/src_BB.MouseInput.js.html#l13"><code>src&#x2F;BB.MouseInput.js:13</code></a>
+                Defined in: <a href="../files/src_BB.AudioBufferLoader.js.html#l10"><code>src&#x2F;BB.AudioBufferLoader.js:10</code></a>
             </div>
     
     </div>
     
     
     <div class="box intro">
-        <p>A module for standardizing mouse events from an HTML5 canvas so that they may be used with
-    the event funnel suite of modules.
-    <br>
-    <br>
-    <i>Note: For use with HTML5 canvas only.<i></p>
+        <p>A module for creating audio buffers from audio files</p>
     
     </div>
     
@@ -127,56 +123,51 @@
     
             <ul class="index-list properties">
                     <li class="index-item property">
-                        <a href="#property_canvasElem">canvasElem</a>
+                        <a href="#property_auto">auto</a>
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_clickX">clickX</a>
+                        <a href="#property_buffers">buffers</a>
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_clickY">clickY</a>
+                        <a href="#property_ctx">ctx</a>
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_isDown">isDown</a>
+                        <a href="#property_onload">onload</a>
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_isMoving">isMoving</a>
-    
-                    </li>
-                    <li class="index-item property">
-                        <a href="#property_LEFT_BUTTON">LEFT_BUTTON</a>
-    
-                            <span class="flag static">static</span>
-                    </li>
-                    <li class="index-item property">
-                        <a href="#property_moveDebounce">moveDebounce</a>
-    
-                    </li>
-                    <li class="index-item property">
-                        <a href="#property_RIGHT_BUTTON">RIGHT_BUTTON</a>
-    
-                            <span class="flag static">static</span>
-                    </li>
-                    <li class="index-item property">
-                        <a href="#property_SCROLL_BUTTON">SCROLL_BUTTON</a>
-    
-                            <span class="flag static">static</span>
-                    </li>
-                    <li class="index-item property">
-                        <a href="#property_x">x</a>
-    
-                    </li>
-                    <li class="index-item property">
-                        <a href="#property_y">y</a>
+                        <a href="#property_urls">urls</a>
     
                     </li>
             </ul>
         </div>
     
     
+        <div class="index-section methods">
+            <h3>Methods</h3>
+    
+            <ul class="index-list methods">
+    
+                    <li class="index-item method constructor">
+                        <a href="#method_BB.AudioBufferLoader">BB.AudioBufferLoader</a>
+    
+                        <span class="flag constructor">constructor</span>
+    
+                    </li>
+    
+                    <li class="index-item method">
+                        <a href="#method_load">load</a>
+    
+                    </li>
+                    <li class="index-item method">
+                        <a href="#method_loadbuffer">loadbuffer</a>
+    
+                    </li>
+            </ul>
+        </div>
     
     </div>
     
@@ -185,14 +176,17 @@
     
         <div class="constructor">
             <h2>Constructor</h2>
-            <a name="method_BB.MouseInput" class="anchor-link"></a>
+            <a name="method_BB.AudioBufferLoader" class="anchor-link"></a>
             <div class="method item">
-                <h3 class="name"><code>BB.MouseInput</code>
+                <h3 class="name"><code>BB.AudioBufferLoader</code>
             
                     <div class="args">
                         <span class="paren">(</span><ul class="args-list inline commas">
                             <li class="arg">
-                                    <code>canvasElement</code>
+                                    <code>config</code>
+                            </li>
+                            <li class="arg">
+                                    <code class="optional">[callback]</code>
                             </li>
                         </ul><span class="paren">)</span>
                     </div>
@@ -209,7 +203,7 @@
                 <div class="meta">
                             <p>
                             Defined in
-                    <a href="../files/src_BB.MouseInput.js.html#l13"><code>src&#x2F;BB.MouseInput.js:13</code></a>
+                    <a href="../files/src_BB.AudioBufferLoader.js.html#l10"><code>src&#x2F;BB.AudioBufferLoader.js:10</code></a>
                     </p>
             
             
@@ -227,12 +221,24 @@
             
                             <ul class="params-list">
                                 <li class="param">
-                                        <code class="param-name">canvasElement</code>
-                                        <span class="type">HTMLCanvasElement</span>
+                                        <code class="param-name">config</code>
+                                        <span class="type">Object</span>
             
             
                                     <div class="param-description">
-                                        <p>The HTML5 canvas object listening for mouse input.</p>
+                                        <p>A config object to initialize the buffer ( context:AudioContext, paths: Array of file paths, autoload:boolean)</p>
+            
+                                    </div>
+            
+                                </li>
+                                <li class="param">
+                                        <code class="param-name optional">[callback]</code>
+                                        <span class="type">Function</span>
+                                        <span class="flag optional" title="This parameter is optional.">optional</span>
+            
+            
+                                    <div class="param-description">
+                                        <p>A callback, with a buffer Object</p>
             
                                     </div>
             
@@ -241,6 +247,31 @@
                         </div>
             
             
+                        <div class="example">
+                            <h4>Example:</h4>
+            
+                            <div class="example-content">
+            <p><code class="code prettyprint"><br>&nbsp;var context =  new (window.AudioContext || window.webkitAudioContext)();<br>
+            <br>
+            &nbsp;// one way to do it<br>
+            &nbsp;var loader = new BufferLoader({<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;context: context,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;paths: [&#39;audio/katy.ogg&#39;,&#39;audio/entro.ogg&#39;]<br>
+            &nbsp;}, function(buffers){<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;console.log(&#39;loaded:&#39;, buffers )<br>
+            &nbsp;});<br>
+            <br>
+            &nbsp;// another way to do it<br>
+            &nbsp;loader = new BufferLoader({ <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;context:context, <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;paths:[&#39;katy.ogg&#39;,&#39;entro.ogg&#39;], <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;autoload:false <br>
+            &nbsp;});<br>
+            &nbsp;loader.load(); // call load later, ex under some other condition<br>
+            </code></p>
+            
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
@@ -250,122 +281,22 @@
             <h2>Properties</h2>
     
             <div class="prop-container clearfix">
-                <a name="property_canvasElem" class="anchor-link"></a>
+                <a name="property_auto" class="anchor-link"></a>
                 <div class="property item">
-                    <h3 class="name"><code>canvasElem</code>
-                    <span class="type">Object</span>
-                
-                
-                
-                
-                
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.MouseInput.js.html#l76"><code>src&#x2F;BB.MouseInput.js:76</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The HTML5 canvas element passed into BB.MouseInput during
-                construction.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_clickX" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>clickX</code>
-                    <span class="type">Number</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">0</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.MouseInput.js.html#l49"><code>src&#x2F;BB.MouseInput.js:49</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The last clicked x position.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_clickY" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>clickY</code>
-                    <span class="type">Number</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">0</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.MouseInput.js.html#l57"><code>src&#x2F;BB.MouseInput.js:57</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The last clicked y position.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_isDown" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>isDown</code>
+                    <h3 class="name"><code>auto</code>
                     <span class="type">Boolean</span>
                 
                 
                 
                 
                 
-                            <span class="default">default:<span class="default-value">false</span></span>
                 
                     </h3>
                 
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.MouseInput.js.html#l222"><code>src&#x2F;BB.MouseInput.js:222</code></a>
+                        <a href="../files/src_BB.AudioBufferLoader.js.html#l55"><code>src&#x2F;BB.AudioBufferLoader.js:55</code></a>
                         </p>
                 
                 
@@ -373,7 +304,7 @@
                 
                     <div class="extended-detail">
                         <div class="description">
-                            <p>Holds wether or not the left mouse button is currently depressed. This property is read-only.</p>
+                            <p>whether or not to autoload the files</p>
                 
                         </div>
                 
@@ -382,23 +313,22 @@
                 
                     </div>
                 </div>
-                <a name="property_isMoving" class="anchor-link"></a>
+                <a name="property_buffers" class="anchor-link"></a>
                 <div class="property item">
-                    <h3 class="name"><code>isMoving</code>
-                    <span class="type">Boolean</span>
+                    <h3 class="name"><code>buffers</code>
+                    <span class="type">Array</span>
                 
                 
                 
                 
                 
-                            <span class="default">default:<span class="default-value">false</span></span>
                 
                     </h3>
                 
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.MouseInput.js.html#l206"><code>src&#x2F;BB.MouseInput.js:206</code></a>
+                        <a href="../files/src_BB.AudioBufferLoader.js.html#l71"><code>src&#x2F;BB.AudioBufferLoader.js:71</code></a>
                         </p>
                 
                 
@@ -406,7 +336,7 @@
                 
                     <div class="extended-detail">
                         <div class="description">
-                            <p>Holds wether or not the mouse is currently moving. This property is read-only.</p>
+                            <p>audio buffers array, accessible in callback</p>
                 
                         </div>
                 
@@ -415,24 +345,22 @@
                 
                     </div>
                 </div>
-                <a name="property_LEFT_BUTTON" class="anchor-link"></a>
+                <a name="property_ctx" class="anchor-link"></a>
                 <div class="property item">
-                    <h3 class="name"><code>LEFT_BUTTON</code>
-                    <span class="type">Number</span>
+                    <h3 class="name"><code>ctx</code>
+                    <span class="type">AudioContext</span>
                 
                 
                 
                 
-                        <span class="flag static">static</span>
                 
-                            <span class="default">default:<span class="default-value">0</span></span>
                 
                     </h3>
                 
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.MouseInput.js.html#l176"><code>src&#x2F;BB.MouseInput.js:176</code></a>
+                        <a href="../files/src_BB.AudioBufferLoader.js.html#l41"><code>src&#x2F;BB.AudioBufferLoader.js:41</code></a>
                         </p>
                 
                 
@@ -440,7 +368,7 @@
                 
                     <div class="extended-detail">
                         <div class="description">
-                            <p>Utility property that hold&#39;s the value of a JavaScript MouseEvent&#39;s left mouse button.</p>
+                            <p>corresponding Audio Context</p>
                 
                         </div>
                 
@@ -449,23 +377,22 @@
                 
                     </div>
                 </div>
-                <a name="property_moveDebounce" class="anchor-link"></a>
+                <a name="property_onload" class="anchor-link"></a>
                 <div class="property item">
-                    <h3 class="name"><code>moveDebounce</code>
-                    <span class="type">Number</span>
+                    <h3 class="name"><code>onload</code>
+                    <span class="type">Function</span>
                 
                 
                 
                 
                 
-                            <span class="default">default:<span class="default-value">150</span></span>
                 
                     </h3>
                 
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.MouseInput.js.html#l65"><code>src&#x2F;BB.MouseInput.js:65</code></a>
+                        <a href="../files/src_BB.AudioBufferLoader.js.html#l62"><code>src&#x2F;BB.AudioBufferLoader.js:62</code></a>
                         </p>
                 
                 
@@ -473,7 +400,7 @@
                 
                     <div class="extended-detail">
                         <div class="description">
-                            <p>Time in milliseconds that the mouse has been still before its movement is considering to be finished.</p>
+                            <p>callback to run after loading</p>
                 
                         </div>
                 
@@ -482,24 +409,22 @@
                 
                     </div>
                 </div>
-                <a name="property_RIGHT_BUTTON" class="anchor-link"></a>
+                <a name="property_urls" class="anchor-link"></a>
                 <div class="property item">
-                    <h3 class="name"><code>RIGHT_BUTTON</code>
-                    <span class="type">Number</span>
+                    <h3 class="name"><code>urls</code>
+                    <span class="type">Array</span>
                 
                 
                 
                 
-                        <span class="flag static">static</span>
                 
-                            <span class="default">default:<span class="default-value">2</span></span>
                 
                     </h3>
                 
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.MouseInput.js.html#l196"><code>src&#x2F;BB.MouseInput.js:196</code></a>
+                        <a href="../files/src_BB.AudioBufferLoader.js.html#l48"><code>src&#x2F;BB.AudioBufferLoader.js:48</code></a>
                         </p>
                 
                 
@@ -507,107 +432,7 @@
                 
                     <div class="extended-detail">
                         <div class="description">
-                            <p>Utility property that hold&#39;s the value of a JavaScript MouseEvent&#39;s right mouse button.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_SCROLL_BUTTON" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>SCROLL_BUTTON</code>
-                    <span class="type">Number</span>
-                
-                
-                
-                
-                        <span class="flag static">static</span>
-                
-                            <span class="default">default:<span class="default-value">1</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.MouseInput.js.html#l186"><code>src&#x2F;BB.MouseInput.js:186</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>Utility property that hold&#39;s the value of a JavaScript MouseEvent&#39;s scroll wheel button.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_x" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>x</code>
-                    <span class="type">Number</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">0</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.MouseInput.js.html#l33"><code>src&#x2F;BB.MouseInput.js:33</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The current x position.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_y" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>y</code>
-                    <span class="type">Number</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">0</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.MouseInput.js.html#l41"><code>src&#x2F;BB.MouseInput.js:41</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The current y position.</p>
+                            <p>array of paths to audio files to load</p>
                 
                         </div>
                 
@@ -625,6 +450,124 @@
         </div>
     
     
+        <div class="methods-detail">
+            <h2>Methods</h2>
+    
+                <a name="method_load" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>load</code>
+                
+                        <span class="paren">()</span>
+                
+                
+                
+                
+                
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.AudioBufferLoader.js.html#l127"><code>src&#x2F;BB.AudioBufferLoader.js:127</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>creates buffers from url paths set in the constructor, automatically runs in constructor unless autoload is set to false</p>
+                
+                        </div>
+                
+                
+                
+                    </div>
+                </div>
+                <a name="method_loadbuffer" class="anchor-link"></a>
+                <div class="method item">
+                    <h3 class="name"><code>loadbuffer</code>
+                
+                        <div class="args">
+                            <span class="paren">(</span><ul class="args-list inline commas">
+                                <li class="arg">
+                                        <code>path</code>
+                                </li>
+                                <li class="arg">
+                                        <code>index</code>
+                                </li>
+                            </ul><span class="paren">)</span>
+                        </div>
+                
+                
+                
+                
+                
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.AudioBufferLoader.js.html#l92"><code>src&#x2F;BB.AudioBufferLoader.js:92</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>private function used by load() to load a buffer</p>
+                
+                        </div>
+                
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">path</code>
+                                            <span class="type">String</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>to audio file</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">index</code>
+                                            <span class="type">Number</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>of buffer</p>
+                
+                                        </div>
+                
+                                    </li>
+                                </ul>
+                            </div>
+                
+                
+                    </div>
+                </div>
+    
+            <div class="no-visible-items-message">
+                <p>There are no methods that match your current filter settings. You can change your filter settings in the index section on this page. <a href="#index">index</a></p>
+            </div>
+    
+        </div>
     
     
     </div>

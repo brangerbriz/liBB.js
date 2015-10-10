@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>BB.BaseBrush2D - BB.js</title>
+    <title>src/BB.AudioStream.js - BB.js</title>
         
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/prettify-nick.css">
@@ -71,38 +71,78 @@
 
         <div id="docs-main" class="apidocs">
             <div class="content container">
-    <h1>BB.BaseBrush2D Module</h1>
-    <div class="box clearfix meta">
+    <h1 class="file-heading">File: src/BB.AudioStream.js</h1>
+    
+    <div class="file">
+    <pre class="code prettyprint overflow linenums">
+    /**
+     * A module for streaming user audio ( getUserMedia )
+     * @module BB.AudioStream
+     */
+    define([&#x27;./BB&#x27;],
+    function(  BB ){
+    
+    	&#x27;use strict&#x27;;
+    
+    	 /**
+    	 *  A module for streaming user audio ( getUserMedia )
+    	 * @class BB.AudioStream
+    	 * @constructor
+    	 * 
+    	 * @param {Object} config A config object to initialize the Stream, must contain a &quot;context: AudioContext&quot; 
+    	 * property and can contain properties for destination ( connect: destinationNode )
+    	 * 
+    	 * @example  
+    	 * &lt;code class=&quot;code prettyprint&quot;&gt;  
+    	 *  &amp;nbsp;var context = new (window.AudioContext || window.webkitAudioContext)();&lt;br&gt;&lt;br&gt;
+    	 *  &amp;nbsp;var fft = new BB.AudioAnalyser({ &lt;br&gt;
+    	 *  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;context: context,&lt;br&gt;
+    	 *  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;fftSize: 1024&lt;br&gt;
+    	 *  &amp;nbsp;});&lt;br&gt;&lt;br&gt;
+    	 * &amp;nbsp;var mic = new BB.AudioStream({&lt;br&gt;
+    	 * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;context:context,&lt;br&gt;
+    	 * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;connect:fft.analyser&lt;br&gt;
+    	 * &amp;nbsp;});&lt;br&gt;
+    	 * &lt;/code&gt;
+    	 */
+    	
     
     
-            <div class="foundat">
-                Defined in: <a href="../files/src_BB.BaseBrush2D.js.html#l13"><code>src&#x2F;BB.BaseBrush2D.js:13</code></a>
-            </div>
+    	BB.AudioStream = function( config ){
+    		
+    		this.ctx 		= config.context;
+    		this.dest 		= ( typeof config.connect !== &#x27;undefined&#x27; ) ? config.connect : this.ctx.destination;
     
-    </div>
+    		navigator.getUserMedia = 	navigator.getUserMedia ||
+    									navigator.webkitGetUserMedia ||
+    									navigator.mozGetUserMedia;
     
+    		var self = this;
     
-    <div class="box intro">
-        <p>Base 2D brush class extended by BB.ImageBrush2D, BB.LineBrush2D, etc...</p>
+    		if(navigator.getUserMedia){
+    			navigator.getUserMedia({audio:true}, 
+    				function(stream){
+    					var input = self.ctx.createMediaStreamSource(stream);
+    					input.connect( self.dest );
+    				}, 
+    				function(e){
+    					throw new Error(&quot;Stream: &quot;+ e );
+    				}
+    			);
+    		} else {
+    			console.log(&#x27;getUserMedia not supported&#x27;);
+    		}
     
-    </div>
+    		if( !config ) throw new Error(&#x27;BufferLoader: requires a config object&#x27;);
     
+    		if( !(this.ctx instanceof AudioContext) ) 
+    			throw new Error(&#x27;BufferLoader: context should be an instance of AudioContext&#x27;);
+    		
+    	};
     
-    <div class="yui3-g">
-        <div class="yui3-u-1-2">
-                <p>This module provides the following classes:</p>
-    
-                <ul class="module-classes">
-                    <li class="module-class">
-                        <a href="../classes/BB.BaseBrush2D.html">
-                            BB.BaseBrush2D
-                        </a>
-                    </li>
-                </ul>
-        </div>
-    
-        <div class="yui3-u-1-2">
-        </div>
+    	return BB.AudioStream;
+    });
+    </pre>
     </div>
             </div>
         </div>

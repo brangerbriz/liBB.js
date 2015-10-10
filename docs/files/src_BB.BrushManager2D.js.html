@@ -32,6 +32,10 @@
             
                     <div id="api-tabview-panel">
                         <ul id="api-classes" class="apis classes">
+                            <li><a class="type" href="../classes/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="type" href="../classes/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="type" href="../classes/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="type" href="../classes/BB.AudioStream.html">BB.AudioStream</a></li>
                             <li><a class="type" href="../classes/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
                             <li><a class="type" href="../classes/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
                             <li><a class="type" href="../classes/BB.Color.html">BB.Color</a></li>
@@ -45,6 +49,10 @@
                         </ul>
             
                       <!--   <ul id="api-modules" class="apis modules">
+                            <li><a class="module" href="../modules/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="module" href="../modules/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="module" href="../modules/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="module" href="../modules/BB.AudioStream.html">BB.AudioStream</a></li>
                             <li><a class="module" href="../modules/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
                             <li><a class="module" href="../modules/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
                             <li><a class="module" href="../modules/BB.Color.html">BB.Color</a></li>
@@ -102,6 +110,9 @@
          * @constructor
          * @param {[HTMLCanvasElement]} canvas The HTML5 canvas element for the
          * brush manager to use.
+         * @example
+         * &lt;code class=&quot;code prettyprint&quot;&gt;&amp;nbsp;var brushManager = new BB.BrushManager2D(document.getElementById(&#x27;canvas&#x27;));
+         * &lt;/code&gt;
          */    
         BB.BrushManager2D = function(canvas) {
     
@@ -274,7 +285,7 @@
             this._pointerStates = [];
     
             /**
-             * Internal flag to determin if BB.BrushManager2D.undo() was called
+             * Internal flag to determine if BB.BrushManager2D.undo() was called
              * since the BB.BrushManager2D.update()
              * @property _needsUndo
              * @type {Boolean}
@@ -283,7 +294,7 @@
             this._needsUndo = false;
     
             /**
-             * Internal flag to determin if BB.BrushManager2D.redo() was called
+             * Internal flag to determine if BB.BrushManager2D.redo() was called
              * since the BB.BrushManager2D.update()
              * @property _needsRedo
              * @type {Boolean}
@@ -378,7 +389,7 @@
          * BB.BrushManager2D.trackPointers(...). Untracking a pointer removes it
          * from the internal _pointers array which changes the index of all pointers
          * after it. Keep this in mind when using this method.
-         * @method untrackPointers
+         * @method untrackPointerAtIndex
          * @param {Number} index The index of the pointer to untrack.
          */
         BB.BrushManager2D.prototype.untrackPointerAtIndex = function(index) {
@@ -393,27 +404,27 @@
         };
     
         /**
-         * A method to determin if the brush manager is currently tracking pointers
+         * A method to determine if the brush manager is currently tracking pointers.
          * @method hasPointers
-         * @return {Boolean}
+         * @return {Boolean} True if brush manager is tracking pointers.
          */
         BB.BrushManager2D.prototype.hasPointers = function() {
             return this._pointers.length &gt; 0;
         };
     
         /**
-         * A method to determin if the brush manager currently has an undo state.
+         * A method to determine if the brush manager currently has an undo state.
          * @method hasUndo
-         * @return {Boolean}
+         * @return {Boolean} True if brush manager has an undo state in its queue.
          */
         BB.BrushManager2D.prototype.hasUndo = function() {
             return this._history.length &gt; 1;
         };
     
         /**
-         * A method to determin if the brush manager currently has an redo state.
+         * A method to determine if the brush manager currently has an redo state.
          * @method hasRedo
-         * @return {Boolean}
+         * @return {Boolean} True if brush manager has an redo state in its queue.
          */
         BB.BrushManager2D.prototype.hasRedo = function() {
             return this._purgatory.length &gt; 0;
@@ -524,8 +535,8 @@
         };
     
         /**
-         * Undo redo one drawing action if available
-         * @method undo
+         * Redo one drawing action if available
+         * @method redo
          */
         BB.BrushManager2D.prototype.redo = function() {
     
@@ -539,8 +550,19 @@
          * BB.BrushManager2D constructor has been moved or resized. It is
          * important to call this method whenever the positional CSS from the parent
          * canvas is changed so that BB.BrushManager2D&#x27;s internal canvases may be
-         * updated upropriately.
+         * updated appropriately.
          * @method updateCanvasPosition
+         * @example
+         * &lt;code class=&quot;code prettyprint&quot;&gt;
+         * &amp;nbsp;var canvas = document.getElementById(&#x27;canvas&#x27;);&lt;br&gt;
+         * &amp;nbsp;var brushManager = new BB.BrushManager(canvas);&lt;br&gt;
+         * &lt;br&gt;
+         * &amp;nbsp;window.onresize = function() {&lt;br&gt;
+         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;canvas.width  = window.innerWidth;&lt;br&gt;
+         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;canvas.height = window.innerHeight;&lt;br&gt;
+         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;brushManager.updateCanvasPosition();&lt;br&gt;
+         * &amp;nbsp;}
+         * &lt;/code&gt;
          */
         BB.BrushManager2D.prototype.updateCanvasPosition = function() {
     

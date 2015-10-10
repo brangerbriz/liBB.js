@@ -32,6 +32,10 @@
             
                     <div id="api-tabview-panel">
                         <ul id="api-classes" class="apis classes">
+                            <li><a class="type" href="../classes/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="type" href="../classes/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="type" href="../classes/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="type" href="../classes/BB.AudioStream.html">BB.AudioStream</a></li>
                             <li><a class="type" href="../classes/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
                             <li><a class="type" href="../classes/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
                             <li><a class="type" href="../classes/BB.Color.html">BB.Color</a></li>
@@ -45,6 +49,10 @@
                         </ul>
             
                       <!--   <ul id="api-modules" class="apis modules">
+                            <li><a class="module" href="../modules/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="module" href="../modules/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="module" href="../modules/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="module" href="../modules/BB.AudioStream.html">BB.AudioStream</a></li>
                             <li><a class="module" href="../modules/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
                             <li><a class="module" href="../modules/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
                             <li><a class="module" href="../modules/BB.Color.html">BB.Color</a></li>
@@ -94,8 +102,9 @@
          * (radians) and speed property ( number ). If no velocity or acceleration
          * or heading/speed is set, the default velocity is BB.Vector2(0,0).
          * 
-         * @example  &lt;code class=&quot;code prettyprint&quot;&gt;  
-         * &amp;nbsp; var star = newBB.Particle2D({ &lt;br&gt; 
+         * @example  &lt;code class=&quot;code prettyprint&quot;&gt;&amp;nbsp; var WIDTH = window.innerWidth;&lt;br&gt;
+         * &amp;nbsp; var HEIGHT = window.innerHeight;&lt;br&gt;&lt;br&gt;
+         * &amp;nbsp; var star = newBB.Particle2D({ &lt;br&gt;
          * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; position: new BB.Vector2(WIDTH/2, HEIGHT/2 ),&lt;br&gt; 
          * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; mass: 20000 &lt;br&gt; 
          * &amp;nbsp;}); &lt;br&gt;&lt;br&gt; 
@@ -122,7 +131,6 @@
             var y = (config &amp;&amp; typeof config.y === &#x27;number&#x27;) ? config.y : 0;
             this.position = (config &amp;&amp; typeof config.position === &#x27;object&#x27; &amp;&amp; config.position instanceof BB.Vector2) 
                                 ? config.position : new BB.Vector2(x, y);
-                          
             /**
              * the particle&#x27;s velocity ( see acceleration also )
              * @property velocity
@@ -167,7 +175,7 @@
     
     
             /**
-             * combines forces to be added to velocity each frame
+             * Usually used to accumulate forces to be added to velocity each frame
              * @property acceleration
              * @type BB.Vector2
              */  
@@ -209,6 +217,8 @@
              * @default 0.05
              */  
             this.elasticity = (config &amp;&amp; typeof config.elasticity === &#x27;number&#x27;) ? config.elasticity : 0.05;
+    
+            this.maxSpeed = (config &amp;&amp; typeof config.maxSpeed === &#x27;number&#x27;) ? config.maxSpeed : 100;
     
             this._springs      = []; 
             this._colliders    = []; // array of: other Particles ( x,y,r ) to collide against
@@ -265,7 +275,7 @@
          * ... } )
          *
          * alternatively, gravitate could also be passed an &lt;b&gt;array&lt;/b&gt; of objects 
-         * ( with position and mass )
+         * ( each with position and mass properties )
          * 
          * @param {Number} [mass] when particle is not an instance of BB.Particle2D
          * and is a Vector an additional argument for mass is required
@@ -607,14 +617,14 @@
                 }
             }
     
-    
-    
-    
-    
             // this.acceleration.multiplyScalar(this.friction); // NOT WORKING?
-            this.velocity.multiplyScalar( this.friction );      // APPLYING DIRECTLY TO VELOCITY INSTEAD
+            this.velocity.multiplyScalar(this.friction);      // APPLYING DIRECTLY TO VELOCITY INSTEAD
     
             this.velocity.add(this.acceleration);
+            
+            if (this.velocity.length() &gt; this.maxSpeed) {
+                this.velocity.setLength(this.maxSpeed);
+            }
     
             this.position.add(this.velocity);
     
@@ -627,7 +637,7 @@
         };
     
         /**
-         * takes a force ( divides it by particle&#x27;s mass ) and applies it to acceleration ( which is added to velocity each frame )
+         * takes a force, divides it by particle&#x27;s mass, and applies it to acceleration ( which is added to velocity each frame )
          * 
          * @method applyForce
          * 
@@ -640,7 +650,6 @@
             }
     
             return this.acceleration.add( force.clone().divideScalar(this.mass) );
-            // return this.acceleration.add( force );
     
         };
     
