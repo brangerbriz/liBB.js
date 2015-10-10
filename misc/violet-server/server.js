@@ -8,6 +8,10 @@ app.get('/', function (req, res) {
     res.sendfile('index.html');
 });
 
+app.get('/analysis.html', function (req, res) {
+    res.sendfile('analysis.html');
+});
+
 io.on('connection', function (socket) {
  
     sockets.push(socket); // THIS WILL CAUSE A MEMORY LEAK

@@ -1,0 +1,101 @@
+<html>
+<head>
+    <title>BBModule Particle Collide Example</title>
+    <style type="text/css">
+    	body,html { 
+    		margin:0; padding:0;
+    		background: #ffffff;
+    		
+			background: -moz-radial-gradient(center, ellipse cover, #ffffff 0%, #d5d5d5 100%);
+			background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#ffffff), color-stop(100%,#d5d5d5));
+			background: -webkit-radial-gradient(center, ellipse cover, #ffffff 0%,#d5d5d5 100%);
+			background: -o-radial-gradient(center, ellipse cover, #ffffff 0%,#d5d5d5 100%);
+			background: -ms-radial-gradient(center, ellipse cover, #ffffff 0%,#d5d5d5 100%);
+			background: radial-gradient(ellipse at center, #ffffff 0%,#d5d5d5 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#d5d5d5',GradientType=1 );
+    	}
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script type="text/javascript" src="../../../build/BB.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+
+        var context =  new (window.AudioContext || window.webkitAudioContext)();
+
+        var fft = new BB.AudioAnalyser({ context: context });
+
+        var mic = new BB.AudioStream({ context: context, connect: fft.analyser });
+
+        // canvas
+        var canvas     = document.getElementById('canvas');
+        var ctx        = canvas.getContext('2d');
+
+        var WIDTH, HEIGHT;
+
+        var fdata, tdata;
+
+        function setup() {
+            
+            window.onresize = function() {
+                WIDTH = canvas.width = window.innerWidth;
+                HEIGHT = canvas.height = window.innerHeight;
+            }
+            
+            window.onresize();
+
+        }
+
+        var socket = io.connect('http://' + window.location.hostname + ':5555');
+            
+        socket.on('audio-data-time', function (data) {
+            tdata = data;
+        });
+
+        socket.on('audio-data-frequency', function (data) {
+            fdata = data;
+            draw();
+        });
+
+
+        function draw() {
+    
+            ctx.clearRect(0,0,WIDTH,HEIGHT);
+
+            var fdata = fft.getByteFrequencyData();
+            ctx.fillStyle="black";
+            for (var i = 0; i < fdata.length; i++) {
+                var value = fdata[i];
+                var percent = value / 256;
+                var height = HEIGHT * percent;
+                var offset = HEIGHT - height - 1;
+                var barWidth = WIDTH/fdata.length;
+                ctx.fillRect(i * barWidth, offset, barWidth, height);
+            };
+
+
+            var tdata = fft.getByteTimeDomainData();
+            
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "red";
+            ctx.beginPath();
+            var sliceWidth = WIDTH * 1.0 / tdata.length;
+            var x = 0;
+            for (var i = 0; i < tdata.length; i++) {
+                var v = tdata[i] / 128.0;
+                var y = v * HEIGHT/2;       
+                if(i===0) ctx.moveTo(x,y);
+                else ctx.lineTo(x,y);       
+                x+=sliceWidth;
+            }
+            ctx.lineTo(WIDTH,HEIGHT/2);
+            ctx.stroke();
+            
+        }
+
+        setup();
+
+    </script>
+</body>
+</html>
