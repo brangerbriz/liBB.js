@@ -13,8 +13,6 @@
     <script src="js/libs/BB.js"></script>    
     <script src="js/libs/socket.io-1.3.7.js"></script>
 
-    <script type="text/javascript" src="js/sceneswitch.js"></script>
-
     <!-- CUSTOM THREE.JS SHADERS HERE -->
     <script src="js/shaders/VS1.js"></script>
 
@@ -30,7 +28,7 @@
 
         // global variables ( listening to different frequency bands )
         var G = {
-            v1: { ban:4, val:0 },
+            v1: { ban:0, val:0 },
             v2: { ban:0, val:0 },
             v3: { ban:0, val:0 },
             v4: { ban:0, val:0 },
@@ -48,7 +46,6 @@
         // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~           ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
 
 
-        // COME BACK
         var socket = io.connect('http://10.42.0.1:5555');
         var fdata = null;
         var tdata = null;
@@ -75,12 +72,27 @@
             }
             return array;
         }
-
+    
+        function getAmp( array ){
+            var v = 0;
+            var averageAmp;
+            var l = array.length;
+            for (var i = 0; i < l; i++) {
+                v += array[i];
+            }
+            averageAmp = v / l;
+            return averageAmp;
+        }
+        
         function socketFire(){
 
+            var amp = getAmp( fdata );
+
+            glitchMonk( amp );
+
             // SAMPLE ******
-            var scaled = BB.MathUtils.map( G.v1.val, 0,255, 0, Math.PI*2 );
-            new TWEEN.Tween( mesh.rotation ).to( { x:0, y:scaled,z:0 }, 500 ).start();
+            // var scaled = BB.MathUtils.map( G.v1.val, 0,255, 0, Math.PI*2 );
+            // new TWEEN.Tween( mesh.rotation ).to( { x:0, y:scaled,z:0 }, 500 ).start();
             // SAMPLE ******
         }
                         
@@ -110,16 +122,13 @@
 
             // custom scene sliders && buttons
             // SAMPLE ******
+            // sliders[0].on('change', function(data, inputType, index) {
+            //     var scaled_data = BB.MathUtils.map( data.velocity, 0,127, 1,4 );
+            //     vs1.uniforms[ 'scale' ].value = scaled_data; // MANIPULATING SHADER VALUES ( see setup3D() )
+            // });
             sliders[0].on('change', function(data, inputType, index) {
-                massMinFrequency = data.velocity * 2
-            });
-
-            sliders[1].on('change', function(data, inputType, index) {
-                massMaxFrequency = data.velocity * 2;
-            });
-
-            sliders[2].on('change', function(data, inputType, index) {
-                massMax = BB.MathUtils.map(data.velocity || 50, 0, 127, 200, 500);
+                var val = BB.MathUtils.map(data.velocity, 0,127, 0,255 );
+                thresh = val;
             });
             // SAMPLE ******
 
@@ -133,158 +142,34 @@
         // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~           ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
         
         var canvas = document.createElement('canvas');
-        document.body.appendChild(canvas); // UNCOMMENT TO DISPLAY 2D CANVAS
+            // document.body.appendChild(canvas); // UNCOMMENT TO DISPLAY 2D CANVAS
         var ctx        = canvas.getContext('2d');
         var WIDTH, HEIGHT;
-        var color = new BB.Color(192, 44, 255);
-        var origHue = color.h;
-
-        var prevX, prevY, particles = [];
-        var colorDir = 1;
-        var massMinFrequency = 0;
-        var massMaxFrequency = 255;
-        var massMin = 20;
-        var massMax = 500;
-        var theta = 0;
-        var radius = 100;
-        var spinSpeed = 1;
 
         function setup2D(){
-
-            for (var i = 0; i < particles.length; i++) {
-                
-                particles[i].update();
-                if (particles[i].velocity.x == 0 &&
-                    particles[i].velocity.y == 0) {
-                    particles[i].velocity.set(BB.MathUtils.randomFloat(-1, 1),
-                                              BB.MathUtils.randomFloat(-1, 1));
-                }
-
-                if (checkEdges(particles[i], particles[i].mass/10)) {
-                    particles.splice(i, 1);
-                    if (i > 0) i--;
-                }
-
-                if( Math.abs(particles[i].velocity.x) > 2 || Math.abs(particles[i].velocity.y) > 2  ){
-                    particles[i].mass+=2;
-                } else {
-                    particles[i].mass--;
-                }
-
-                if( particles[i].mass <= 10 ){
-                    particles.splice(i, 1);
-                    if (i > 0) i--;
-                }
-            }
-
+            
         }
 
         function update2D(){
-
-            for (var i = 0; i < 10; i++) {
-                // Convert polar to cartesian
-                var x = (radius * Math.cos(theta)) + WIDTH/2;
-                var y = (radius * Math.sin(theta)) + HEIGHT/2;
-                
-                createParticle(x, y, WIDTH/2, HEIGHT/2);
-
-                theta += BB.MathUtils.map(G.v2.val, 0, 255, 0, 2);
-
-            }
-            
-            for (var i = 0; i < particles.length; i++) {
-                
-                particles[i].update();
-                if (particles[i].velocity.x == 0 &&
-                    particles[i].velocity.y == 0) {
-                    particles[i].velocity.set(BB.MathUtils.randomFloat(-1, 1),
-                                              BB.MathUtils.randomFloat(-1, 1));
-                }
-
-                if (checkEdges(particles[i], particles[i].mass/10)) {
-                    particles.splice(i, 1);
-                    if (i > 0) i--;
-                }
-                
-                var min = BB.MathUtils.map(device.inputs.sliders[2].velocity || 50, 0, 127, 10, 100);
-                var max = BB.MathUtils.map(device.inputs.sliders[3].velocity || 100, 0, 127, 100, 1000);
-                // var min = BB.MathUtils.map(G.v3.val, 0, 127, 50, 1000);
-                // var min = G.v4.val;
-
-                particles[i].mass = BB.MathUtils.map(BB.MathUtils.clamp(G.v1.val, massMinFrequency, massMaxFrequency),
-                                                     massMinFrequency, 
-                                                     massMaxFrequency, 
-                                                     massMin,
-                                                     massMax);
-
-                if( particles[i].mass <= 10 ){
-                    particles.splice(i, 1);
-                    if (i > 0) i--;
-                }
-            }
-
-            // console.log('value: ', G.v1.val, 'massMin: ', massMin, 'massMax: ', massMax);
-        
             
         }
 
         function draw2D(){
-            
-            ctx.clearRect(0,0,WIDTH,HEIGHT);
-            ctx.fillStyle = "black";
-            ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-            for (var i = 0; i < particles.length; i++) {
-                ctx.fillStyle = particles[i].color;
-                ctx.beginPath();
-                ctx.arc(particles[i].position.x, 
-                        particles[i].position.y,
-                        particles[i].mass/10,
-                        0, 2 * Math.PI);
-                ctx.closePath();
-                ctx.fill();
+            // SAMPLE ******
+            if(Math.random()>0.9){
+                ctx.clearRect(0,0,WIDTH,HEIGHT);
+                var random = Math.random()*100 + 100;
+                for (var i = 0; i < random; i++) {
+                    ctx.fillStyle = '#'+Math.floor(Math.random()*16777215).toString(16);
+                    ctx.fillRect( Math.random()*WIDTH, Math.random()*HEIGHT, Math.random()*50, Math.random()*50 );
+                };
             }
+            // SAMPLE ******
         }
 
-        function createParticle(x, y, prevX, prevY) {
-    
-            var pos = new BB.Vector2(x, y);
-            
-            var acc = (x == prevX && y == prevY) ? 
-                new BB.Vector2(BB.MathUtils.randomFloat(-1, 1),
-                               BB.MathUtils.randomFloat(-1, 1))
-                : pos.clone().sub(new BB.Vector2(prevX, prevY));
-         
-            var particle = new BB.Particle2D({
-                position: pos,
-                acceleration: acc,
-                mass: BB.MathUtils.randomInt(100, 300),
-                maxSpeed: 5
-            });
-
-            var colorSpeed = 2;
-            var numSteps = 10;
-            var hueMin = origHue - numSteps * colorSpeed;
-            var hueMax = origHue + numSteps * colorSpeed;
 
 
-            if (color.h < hueMin || color.h > hueMax) {
-                colorDir = -colorDir;
-            }
 
-            color.shift(colorSpeed * colorDir);
-            
-            particle.color = color.rgb;
-            particles.push(particle);
-        }
-
-        function checkEdges(particle, radius) {
-
-            return (particle.position.x - radius > window.innerWidth || 
-                    particle.position.x + radius < 0 ||
-                    particle.position.y - radius > window.innerHeight ||
-                    particle.position.y + radius < 0);
-        }
 
 
         // ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~          ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
@@ -295,6 +180,27 @@
         var mesh;
         var vs1; // for shader control 
 
+        var monkvertz = [];        
+        var thresh = 127;        
+
+        function glitchMonk( val ){
+            console.log(val)
+            monk.geometry.dynamic = true;
+            monk.geometry.verticesNeedUpdate = true;
+            monk.geometry.normalsNeedUpdate = true;
+            for (var i = 0; i < monk.geometry.vertices.length; i++) {
+                // ran = Math.round(Math.random());
+                if(val>thresh){ ran = Math.random();  }
+                else{ ran = 1; }
+                // else if(val > 25 && val<127) { ran = Math.random(); }
+                // else if(val>=127){ ran = Math.random(); }
+                monk.geometry.vertices[i].x = monkvertz[ i ][ 0 ] * ran;
+                monk.geometry.vertices[i].y = monkvertz[ i ][ 1 ] * ran;
+                monk.geometry.vertices[i].z = monkvertz[ i ][ 2 ] * ran;        
+            };      
+        }
+
+
         function setup3D(){
             var W = window.innerWidth, H = window.innerHeight;
             // renderer = new THREE.WebGLRenderer( { preserveDrawingBuffer: true } );
@@ -304,12 +210,14 @@
             renderer.setClearColor( 0xffffff );
             renderer.setPixelRatio( window.devicePixelRatio );
             renderer.setSize( W, H );
-            // document.body.appendChild( renderer.domElement );
+            document.body.appendChild( renderer.domElement );
 
             camera = new THREE.PerspectiveCamera( 50, W/H, 1, 10000 );
             camera.position.z = 500;
             
             scene = new THREE.Scene();
+
+           
             
             // texture/material from 2d canvas
             canvasTexture = new THREE.Texture( canvas );
@@ -317,11 +225,31 @@
             canvasTexture.magFilter = THREE.LinearFilter;
             var canvasMaterial = new THREE.MeshBasicMaterial( { map: canvasTexture, overdraw: true, side:THREE.DoubleSide } );
 
+
+            // MONK
+            // 
+            loader = new THREE.JSONLoader();
+            loader.load( 'js/objs/monk.js', function ( geometry ) {
+                material = new THREE.MeshLambertMaterial( { color: 0x584620, shading: THREE.FlatShading,  } );
+                monk = new THREE.Mesh( geometry, canvasMaterial);
+                monk.scale.x = monk.scale.y = monk.scale.z = 2;
+                // monk.position.y = -15;
+                monk.position.z = 490;
+                for (var i = 0; i < monk.geometry.vertices.length; i++) {
+                        var vertSet = [];
+                        vertSet.push( monk.geometry.vertices[i].x );
+                        vertSet.push( monk.geometry.vertices[i].y );
+                        vertSet.push( monk.geometry.vertices[i].z );
+                        monkvertz.push( vertSet );
+                };
+                scene.add( monk );
+            });
+
             // SAMPLE ******// SAMPLE ******// SAMPLE ******// SAMPLE ******
             // example mesh w/ canvasMaterial
-            geometry = new THREE.TorusKnotGeometry(100, 40, 64, 8, 2, 3, 1);
-            mesh = new THREE.Mesh(geometry, canvasMaterial);
-            scene.add(mesh);
+            // geometry = new THREE.TorusKnotGeometry(100, 40, 64, 8, 2, 3, 1);
+            // mesh = new THREE.Mesh(geometry, canvasMaterial);
+            // scene.add(mesh);
 
             // postprocessing ( ie. scene shader )
             composer = new THREE.EffectComposer( renderer );
@@ -337,19 +265,25 @@
             // SAMPLE ******// SAMPLE ******// SAMPLE ******// SAMPLE ******
         }
 
-        // function update3D(){
-        //     // SAMPLE ******
-        //     TWEEN.update();
-        //     // SAMPLE ******
-        // }
+        function update3D(){
+            // SAMPLE ******
+            TWEEN.update();
+            // SAMPLE ******
+        }
 
-        // function draw3D(){
+        function draw3D(){
             
-        //     if ( canvasTexture ) canvasTexture.needsUpdate = true;
+            monk.rotation.x = Date.now() * 0.001;
+            monk.rotation.y = Date.now() * 0.001;
+            monk.rotation.z = Date.now() * 0.001;
+
             
-        //     renderer.render( scene, camera ); // normal renderer
-        //     // composer.render();                   // shader renderer
-        // }
+
+            if ( canvasTexture ) canvasTexture.needsUpdate = true;
+            
+            // renderer.render( scene, camera ); // normal renderer
+            composer.render();                   // shader renderer
+        }
 
 
 
@@ -381,14 +315,14 @@
         function update() {
             requestAnimationFrame(update);
             update2D();
-            // update3D();
+            update3D();
             draw();
         }
 
 
         function draw() {
             draw2D();                
-            // draw3D();
+            draw3D();
         }
 
         setup();

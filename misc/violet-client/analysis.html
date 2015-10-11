@@ -103,7 +103,7 @@
             window.onresize();
         }
 
-        var socket = io.connect('http://192.168.1.217:5555');
+        var socket = io.connect('http://10.42.0.1:5555');
         
         socket.on('audio-data-time', function (data) {
             tdata = objToArray(data);
