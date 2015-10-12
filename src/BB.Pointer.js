@@ -11,7 +11,7 @@
  * @module BB.Pointer
  */
 define(['./BB', './BB.MouseInput'],
-function(  BB,     MouseInput){
+function(  BB,        MouseInput){
 
     'use strict';
 

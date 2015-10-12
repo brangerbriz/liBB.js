@@ -346,8 +346,6 @@ function(  BB) {
         }
     });
 
-
-
     /**
      * sets color value to match another color object's value
      * @method copy

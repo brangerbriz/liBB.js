@@ -28,6 +28,14 @@ define(function (require) {
   BB.AudioAnalyser     = require('BB.AudioAnalyser');
   BB.AudioStream       = require('BB.AudioStream');
 
+  // midi
+  BB.MidiDevice      = require('BB.MidiDevice');
+  BB.BaseMidiInput   = require('BB.BaseMidiInput');
+  BB.MidiInputKnob   = require('BB.MidiInputKnob');
+  BB.MidiInputSlider = require('BB.MidiInputSlider');
+  BB.MidiInputButton = require('BB.MidiInputButton');
+  BB.MidiInputKey    = require('BB.MidiInputKey');
+  BB.MidiInputPad    = require('BB.MidiInputPad');
 
   return BB;
 
