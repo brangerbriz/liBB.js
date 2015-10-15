@@ -123,7 +123,7 @@ function(  BB,
         // pads
         if (typeof midiMap.pads !== 'undefined' && midiMap.pads instanceof Array) {
             for (i = 0; i < midiMap.pads.length; i++) {
-                input = new BB.MidiInputButton(midiMap.pads[i]);
+                input = new BB.MidiInputPad(midiMap.pads[i]);
                 noteLUT['key' + midiMap.pads[i]] = [ input, i ];
                 self.inputs.pads.push(input);
             }
@@ -132,7 +132,7 @@ function(  BB,
         // keys
         if (typeof midiMap.keys !== 'undefined' && midiMap.keys instanceof Array) {
             for (i = 0; i < midiMap.keys.length; i++) {
-                input = new BB.MidiInputButton(midiMap.keys[i]);
+                input = new BB.MidiInputKey(midiMap.keys[i]);
                 noteLUT['key' + midiMap.keys[i]] = [ input, i ];
                 self.inputs.keys.push(input);
             }
@@ -158,7 +158,6 @@ function(  BB,
                 // listen for midi messages
                 input.value.onmidimessage = onMIDIMessage;
                 // this just lists our inputs in the console
-                listInputs(input);
             }
             // listen for connect/disconnect message
             self.midiAccess.onstatechange = onStateChange;
@@ -177,8 +176,6 @@ function(  BB,
             } else if (state === 'disconnected' && self._disconnectEvent) {
                 self._disconnectEvent(name, type, port);
             }
-
-            // console.log("name", name, "port", port, "state", state);
         }
 
         function onMIDIMessage(event) {
@@ -195,9 +192,6 @@ function(  BB,
             // pressure / tilt on
             // pressure: 176, cmd 11: 
             // bend: 224, cmd: 14
-            
-            // TODO: remove
-            // logger(keyData, 'key data', data);
 
             if (self._messageEvent) {
                 self._messageEvent({
@@ -217,8 +211,6 @@ function(  BB,
                 var input = noteLUT['key' + note][0];
                 var index = noteLUT['key' + note][1];
 
-                // console.log(input.eventStack);
-
                 input.command      = command;
                 input.channel      = channel;
                 input.type         = type;
@@ -227,7 +219,7 @@ function(  BB,
                 var changeEventArr = input.eventStack.change;
 
                 var midiData = {}; // reset data
-                
+
                 // all
                 for (i = 0; i < changeEventArr.length; i++) {
                     
@@ -321,7 +313,7 @@ function(  BB,
                     }
                 }
             }
-        }
+        } 
     };
 
     /**
