@@ -108,9 +108,10 @@ gulp.task('serve', function() {
     app.use('/build', express.static(path.resolve(__dirname + '/build')));
     app.use('/examples', function(req, res, next){
 
+        console.log(req.path);
         if (req.path == '/' ||
             req.path == '/index.html') {
-
+            res.send(exampleHTML);
         } else {
             next();
         }
