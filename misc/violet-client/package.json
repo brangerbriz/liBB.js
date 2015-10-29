@@ -2,7 +2,7 @@
   "name": "violet-server",
   "version": "1.0.0",
   "description": "",
-  "main": "analysis.html",
+  "main": "scene_gencubes.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,7 +17,8 @@
     "height": 500,
     "position": "mouse",
     "min_width": 400,
-    "min_height": 200
+    "min_height": 200,
+    "fullscreen": true
   },
   "webkit": {
     "plugin": true

@@ -12,16 +12,30 @@ var midiMap = {
 
 window.onload = function() {
 
-    device = new MidiDevice(midiMap, midiFound, midiNotFound);
+    device = new MidiDevice(midiMap, midiSuccess, midiFailure);
+
+    device.on('connect', function(name, type, port) {
+        console.log(name + ' connected as ' + type);
+    });
+
+    device.on('disconnect', function(name, type, port) {
+        console.log(name + ' disconnected as ' + type);
+    });
+
+    device.on('message', function(data, event) {
+        console.log('midi message received: ', data);
+    });
     
     if (!device) {
         alert('Your browser does not support the MIDI API');
     }
 }
 
-function midiFound() {
+function midiSuccess() {
 
+    console.log('midiFound');
     var sliders = device.inputs.sliders;
+    console.log(sliders);
     for (var i = 0; i < sliders.length; i++) {
         
         sliders[i].on('change', function(data, inputType, index) {
@@ -70,7 +84,7 @@ function midiFound() {
     }
 }
 
-function midiNotFound() {
+function midiFailure() {
 
 }
 
@@ -82,6 +96,13 @@ function listInputs(inputs) {
 }
 
 function logger(container, label, data) {
+    
+    var command = data[0] >> 4;
+    var channel = data[0] & 0xf;
+    var type = data[0] & 0xf0; // channel agnostic message type. Thanks, Phil Burk.
+    var note = data[1];
+    var velocity = data[2];
+
     messages = label + " [channel: " + (data[0] & 0xf) + ", cmd: " + (data[0] >> 4) + ", type: " + (data[0] & 0xf0) + " , note: " + data[1] + " , velocity: " + data[2] + "]";
     container.textContent = messages;
 }
