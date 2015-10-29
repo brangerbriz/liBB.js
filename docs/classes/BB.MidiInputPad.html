@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>BB.AudioStream - BB.js</title>
+    <title>BB.MidiInputPad - BB.js</title>
         
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/prettify-nick.css">
@@ -80,19 +80,22 @@
 
         <div id="docs-main" class="apidocs">
             <div class="content container">
-    <h1>BB.AudioStream </h1>
+    <h1>BB.MidiInputPad </h1>
     <div class="box meta">
     
+            <div class="extends">
+                Extends <a href="../classes/BB.BaseMidiInput.html" class="crosslink">BB.BaseMidiInput</a>
+            </div>
     
             <div class="foundat">
-                Defined in: <a href="../files/src_BB.AudioStream.js.html#l10"><code>src&#x2F;BB.AudioStream.js:10</code></a>
+                Defined in: <a href="../files/src_BB.MidiInputPad.js.html#l13"><code>src&#x2F;BB.MidiInputPad.js:13</code></a>
             </div>
     
     </div>
     
     
     <div class="box intro">
-        <p>A module for streaming user audio ( getUserMedia )</p>
+        <p>A module for representing individual pad inputs on a midi device. Behaves like BB.MidiInputKey.</p>
     
     </div>
     
@@ -129,6 +132,24 @@
     
     
     
+        <div class="index-section methods">
+            <h3>Methods</h3>
+    
+            <ul class="index-list methods extends">
+    
+                    <li class="index-item method constructor">
+                        <a href="#method_BB.MidiInputPad">BB.MidiInputPad</a>
+    
+                        <span class="flag constructor">constructor</span>
+    
+                    </li>
+    
+                    <li class="index-item method inherited">
+                        <a href="#method_on">on</a>
+    
+                    </li>
+            </ul>
+        </div>
     
     </div>
     
@@ -137,14 +158,14 @@
     
         <div class="constructor">
             <h2>Constructor</h2>
-            <a name="method_BB.AudioStream" class="anchor-link"></a>
+            <a name="method_BB.MidiInputPad" class="anchor-link"></a>
             <div class="method item">
-                <h3 class="name"><code>BB.AudioStream</code>
+                <h3 class="name"><code>BB.MidiInputPad</code>
             
                     <div class="args">
                         <span class="paren">(</span><ul class="args-list inline commas">
                             <li class="arg">
-                                    <code>config</code>
+                                    <code class="optional">[note]</code>
                             </li>
                         </ul><span class="paren">)</span>
                     </div>
@@ -161,7 +182,7 @@
                 <div class="meta">
                             <p>
                             Defined in
-                    <a href="../files/src_BB.AudioStream.js.html#l10"><code>src&#x2F;BB.AudioStream.js:10</code></a>
+                    <a href="../files/src_BB.MidiInputPad.js.html#l13"><code>src&#x2F;BB.MidiInputPad.js:13</code></a>
                     </p>
             
             
@@ -179,13 +200,13 @@
             
                             <ul class="params-list">
                                 <li class="param">
-                                        <code class="param-name">config</code>
-                                        <span class="type">Object</span>
+                                        <code class="param-name optional">[note]</code>
+                                        <span class="type">Number</span>
+                                        <span class="flag optional" title="This parameter is optional.">optional</span>
             
             
                                     <div class="param-description">
-                                        <p>A config object to initialize the Stream, must contain a &quot;context: AudioContext&quot; 
-             property and can contain properties for destination ( connect: destinationNode )</p>
+                                        <p>The midi note to assign this input to.</p>
             
                                     </div>
             
@@ -194,23 +215,6 @@
                         </div>
             
             
-                        <div class="example">
-                            <h4>Example:</h4>
-            
-                            <div class="example-content">
-            <p> <code class="code prettyprint"><br>&nbsp;var context = new (window.AudioContext || window.webkitAudioContext)();<br><br>
-            &nbsp;var fft = new BB.AudioAnalyser({ <br>
-            &nbsp;&nbsp;&nbsp;&nbsp;context: context,<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;fftSize: 1024<br>
-            &nbsp;});<br><br>
-             &nbsp;var mic = new BB.AudioStream({<br>
-             &nbsp;&nbsp;&nbsp;&nbsp;context:context,<br>
-             &nbsp;&nbsp;&nbsp;&nbsp;connect:fft.analyser<br>
-             &nbsp;});<br>
-             </code></p>
-            
-                            </div>
-                        </div>
                 </div>
             </div>
         </div>
@@ -218,6 +222,89 @@
     
     
     
+        <div class="methods-detail">
+            <h2>Methods</h2>
+    
+                <a name="method_on" class="anchor-link"></a>
+                <div class="method item inherited">
+                    <h3 class="name"><code>on</code>
+                
+                        <div class="args">
+                            <span class="paren">(</span><ul class="args-list inline commas">
+                                <li class="arg">
+                                        <code>name</code>
+                                </li>
+                                <li class="arg">
+                                        <code>callback</code>
+                                </li>
+                            </ul><span class="paren">)</span>
+                        </div>
+                
+                
+                
+                
+                
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>Inherited from
+                                <a href="../classes/BB.BaseMidiInput.html#method_on" class="type">BB.BaseMidiInput</a>:
+                        <a href="../files/src_BB.BaseMidiInput.js.html#l47"><code>src&#x2F;BB.BaseMidiInput.js:47</code></a>
+                        </p>
+                
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                
+                        <div class="description">
+                            <p>Register an event for this midi input. Available events include: change.</p>
+                
+                        </div>
+                
+                            <div class="params">
+                                <h4>Parameters:</h4>
+                
+                                <ul class="params-list">
+                                    <li class="param">
+                                            <code class="param-name">name</code>
+                                            <span class="type">String</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>The name of the event. Currently only supports
+                the &quot;change&quot; event.</p>
+                
+                                        </div>
+                
+                                    </li>
+                                    <li class="param">
+                                            <code class="param-name">callback</code>
+                                            <span class="type">Function</span>
+                
+                
+                                        <div class="param-description">
+                                            <p>Callback to run when the event has fired</p>
+                
+                                        </div>
+                
+                                    </li>
+                                </ul>
+                            </div>
+                
+                
+                    </div>
+                </div>
+    
+            <div class="no-visible-items-message">
+                <p>There are no methods that match your current filter settings. You can change your filter settings in the index section on this page. <a href="#index">index</a></p>
+            </div>
+    
+        </div>
     
     
     </div>

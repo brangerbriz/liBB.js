@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>BB.Pointer - BB.js</title>
+    <title>BB.BaseMidiInput - BB.js</title>
         
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/prettify-nick.css">
@@ -80,20 +80,20 @@
 
         <div id="docs-main" class="apidocs">
             <div class="content container">
-    <h1>BB.Pointer </h1>
+    <h1>BB.BaseMidiInput </h1>
     <div class="box meta">
     
     
             <div class="foundat">
-                Defined in: <a href="../files/src_BB.Pointer.js.html#l37"><code>src&#x2F;BB.Pointer.js:37</code></a>
+                Defined in: <a href="../files/src_BB.BaseMidiInput.js.html#l11"><code>src&#x2F;BB.BaseMidiInput.js:11</code></a>
             </div>
     
     </div>
     
     
     <div class="box intro">
-        <p>A module for funneling in and standardizing basic pointer-like interfaces
-    like mouse and touch.</p>
+        <p>A base module for representing individual inputs on a midi device.
+    MidiInputSlider, MidiInputButton, etc derive from this base class.</p>
     
     </div>
     
@@ -128,32 +128,6 @@
     
      -->
     
-        <div class="index-section properties">
-            <h3>Properties</h3>
-    
-            <ul class="index-list properties">
-                    <li class="index-item property">
-                        <a href="#property_hasSelectionInterface">hasSelectionInterface</a>
-    
-                    </li>
-                    <li class="index-item property">
-                        <a href="#property_isDown">isDown</a>
-    
-                    </li>
-                    <li class="index-item property">
-                        <a href="#property_isMoving">isMoving</a>
-    
-                    </li>
-                    <li class="index-item property">
-                        <a href="#property_x">x</a>
-    
-                    </li>
-                    <li class="index-item property">
-                        <a href="#property_y">y</a>
-    
-                    </li>
-            </ul>
-        </div>
     
     
         <div class="index-section methods">
@@ -162,7 +136,7 @@
             <ul class="index-list methods">
     
                     <li class="index-item method constructor">
-                        <a href="#method_BB.Pointer">BB.Pointer</a>
+                        <a href="#method_BB.BaseMidiInput">BB.BaseMidiInput</a>
     
                         <span class="flag constructor">constructor</span>
     
@@ -170,10 +144,6 @@
     
                     <li class="index-item method">
                         <a href="#method_on">on</a>
-    
-                    </li>
-                    <li class="index-item method">
-                        <a href="#method_update">update</a>
     
                     </li>
             </ul>
@@ -186,14 +156,14 @@
     
         <div class="constructor">
             <h2>Constructor</h2>
-            <a name="method_BB.Pointer" class="anchor-link"></a>
+            <a name="method_BB.BaseMidiInput" class="anchor-link"></a>
             <div class="method item">
-                <h3 class="name"><code>BB.Pointer</code>
+                <h3 class="name"><code>BB.BaseMidiInput</code>
             
                     <div class="args">
                         <span class="paren">(</span><ul class="args-list inline commas">
                             <li class="arg">
-                                    <code>controllerModule</code>
+                                    <code class="optional">[note]</code>
                             </li>
                         </ul><span class="paren">)</span>
                     </div>
@@ -210,7 +180,7 @@
                 <div class="meta">
                             <p>
                             Defined in
-                    <a href="../files/src_BB.Pointer.js.html#l37"><code>src&#x2F;BB.Pointer.js:37</code></a>
+                    <a href="../files/src_BB.BaseMidiInput.js.html#l11"><code>src&#x2F;BB.BaseMidiInput.js:11</code></a>
                     </p>
             
             
@@ -228,13 +198,13 @@
             
                             <ul class="params-list">
                                 <li class="param">
-                                        <code class="param-name">controllerModule</code>
-                                        <span class="type">Object</span>
+                                        <code class="param-name optional">[note]</code>
+                                        <span class="type">Number</span>
+                                        <span class="flag optional" title="This parameter is optional.">optional</span>
             
             
                                     <div class="param-description">
-                                        <p>The input module you would like to control
-            this pointer with.</p>
+                                        <p>The midi note to assign this input to.</p>
             
                                     </div>
             
@@ -248,186 +218,6 @@
         </div>
     
     
-        <div class="properties-detail">
-            <h2>Properties</h2>
-    
-            <div class="prop-container clearfix">
-                <a name="property_hasSelectionInterface" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>hasSelectionInterface</code>
-                    <span class="type">Boolean</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">false</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.Pointer.js.html#l92"><code>src&#x2F;BB.Pointer.js:92</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>Does the selection interface controlling this pointer have a
-                selection interface (like a button)?</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_isDown" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>isDown</code>
-                    <span class="type">Boolean</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">false</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.Pointer.js.html#l82"><code>src&#x2F;BB.Pointer.js:82</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>A variable holding wether or not the selection interface (i.e. mouse
-                button, etc...) controlling this pointer object (via
-                BB.Pointer.update(...)) is active.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_isMoving" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>isMoving</code>
-                    <span class="type">Boolean</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">false</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.Pointer.js.html#l73"><code>src&#x2F;BB.Pointer.js:73</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>A variable holding wether or not the event module controlling this
-                pointer object (via BB.Pointer.update(...)) is moving</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_x" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>x</code>
-                    <span class="type">Number</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">undefined</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.Pointer.js.html#l57"><code>src&#x2F;BB.Pointer.js:57</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The pointer&#39;s current x position as supplied by the eventModule in BB.Pointer.update(...).</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_y" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>y</code>
-                    <span class="type">Number</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">undefined</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.Pointer.js.html#l65"><code>src&#x2F;BB.Pointer.js:65</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The pointer&#39;s current y position as supplied by the eventModule in BB.Pointer.update(...).</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-            </div>
-    
-            <div class="no-visible-items-message">
-                <p>There are no properties that match your current filter settings. You can change your filter settings in the index section on this page. <a href="#index">index</a></p>
-            </div>
-    
-        </div>
     
     
         <div class="methods-detail">
@@ -440,7 +230,7 @@
                         <div class="args">
                             <span class="paren">(</span><ul class="args-list inline commas">
                                 <li class="arg">
-                                        <code>eventName</code>
+                                        <code>name</code>
                                 </li>
                                 <li class="arg">
                                         <code>callback</code>
@@ -460,7 +250,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.Pointer.js.html#l144"><code>src&#x2F;BB.Pointer.js:144</code></a>
+                        <a href="../files/src_BB.BaseMidiInput.js.html#l47"><code>src&#x2F;BB.BaseMidiInput.js:47</code></a>
                         </p>
                 
                 
@@ -470,7 +260,7 @@
                     <div class="extended-detail">
                 
                         <div class="description">
-                            <p>A method used to register &quot;activestart&quot;, &quot;activestop&quot;, &quot;movestart&quot;, &quot;movestop&quot;, and &quot;move&quot; events.</p>
+                            <p>Register an event for this midi input. Available events include: change.</p>
                 
                         </div>
                 
@@ -479,14 +269,13 @@
                 
                                 <ul class="params-list">
                                     <li class="param">
-                                            <code class="param-name">eventName</code>
+                                            <code class="param-name">name</code>
                                             <span class="type">String</span>
                 
                 
                                         <div class="param-description">
-                                            <p>The event to register callback to.
-                &quot;activestart&quot;, &quot;activestop&quot;, &quot;movestart&quot;, and &quot;movestop&quot; are all valid
-                events.</p>
+                                            <p>The name of the event. Currently only supports
+                the &quot;change&quot; event.</p>
                 
                                         </div>
                 
@@ -497,67 +286,8 @@
                 
                 
                                         <div class="param-description">
-                                            <p>The callback to execute once the
-                registered event has fired.</p>
+                                            <p>Callback to run when the event has fired</p>
                 
-                                        </div>
-                
-                                    </li>
-                                </ul>
-                            </div>
-                
-                
-                    </div>
-                </div>
-                <a name="method_update" class="anchor-link"></a>
-                <div class="method item">
-                    <h3 class="name"><code>update</code>
-                
-                        <div class="args">
-                            <span class="paren">(</span><ul class="args-list inline commas">
-                                <li class="arg">
-                                        <code>controllerModule</code>
-                                </li>
-                            </ul><span class="paren">)</span>
-                        </div>
-                
-                
-                
-                
-                
-                
-                
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.Pointer.js.html#l122"><code>src&#x2F;BB.Pointer.js:122</code></a>
-                        </p>
-                
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                
-                        <div class="description">
-                            <p>Update the pointer using the controllerModule. Usually called once per animation frame.</p>
-                
-                        </div>
-                
-                            <div class="params">
-                                <h4>Parameters:</h4>
-                
-                                <ul class="params-list">
-                                    <li class="param">
-                                            <code class="param-name">controllerModule</code>
-                                            <span class="type">Object</span>
-                
-                
-                                        <div class="param-description">
-                                             
                                         </div>
                 
                                     </li>

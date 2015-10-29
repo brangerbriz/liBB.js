@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>BB.AudioBufferLoader - BB.js</title>
+    <title>src/BB.MidiInputKey.js - BB.js</title>
         
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/prettify-nick.css">
@@ -80,38 +80,42 @@
 
         <div id="docs-main" class="apidocs">
             <div class="content container">
-    <h1>BB.AudioBufferLoader Module</h1>
-    <div class="box clearfix meta">
+    <h1 class="file-heading">File: src/BB.MidiInputKey.js</h1>
     
+    <div class="file">
+    <pre class="code prettyprint overflow linenums">
+    /**
+     * A module representing individual piano-like key inputs on a midi device.
+     * MidiInputSlider, MidiInputButton, etc derive from this base class.
+     * @module BB.BaseMidiInput
+     */
+    define([&#x27;./BB&#x27;, &#x27;./BB.BaseMidiInput&#x27;], 
+    function(  BB,        BaseMidiInput){
     
-            <div class="foundat">
-                Defined in: <a href="../files/src_BB.AudioBufferLoader.js.html#l10"><code>src&#x2F;BB.AudioBufferLoader.js:10</code></a>
-            </div>
+        &#x27;use strict&#x27;;
     
-    </div>
+        BB.BaseMidiInput = BaseMidiInput;
     
+        /**
+         * A module for representing individual Key inputs on a midi device. Behaves like BB.MidiInputPad.
+         * @class BB.MidiInputKey
+         * @constructor
+         * @extends BB.BaseMidiInput
+         * @param {Number} [note] The midi note to assign this input to.
+         */
+        BB.MidiInputKey = function(note) {
     
-    <div class="box intro">
-        <p>A module for creating audio buffers from audio files</p>
+            BaseMidiInput.call(this, note);
+            this.inputType = &#x27;key&#x27;;
+        };
     
-    </div>
+        BB.MidiInputKey.prototype = Object.create(BaseMidiInput.prototype);
+        BB.MidiInputKey.prototype.constructor = BaseMidiInput;
     
+        return BB.MidiInputKey;
+    });
     
-    <div class="yui3-g">
-        <div class="yui3-u-1-2">
-                <p>This module provides the following classes:</p>
-    
-                <ul class="module-classes">
-                    <li class="module-class">
-                        <a href="../classes/BB.AudioBufferLoader.html">
-                            BB.AudioBufferLoader
-                        </a>
-                    </li>
-                </ul>
-        </div>
-    
-        <div class="yui3-u-1-2">
-        </div>
+    </pre>
     </div>
             </div>
         </div>

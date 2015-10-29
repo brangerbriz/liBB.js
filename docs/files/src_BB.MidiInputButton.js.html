@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>BB.AudioBufferLoader - BB.js</title>
+    <title>src/BB.MidiInputButton.js - BB.js</title>
         
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/prettify-nick.css">
@@ -80,38 +80,67 @@
 
         <div id="docs-main" class="apidocs">
             <div class="content container">
-    <h1>BB.AudioBufferLoader Module</h1>
-    <div class="box clearfix meta">
+    <h1 class="file-heading">File: src/BB.MidiInputButton.js</h1>
     
+    <div class="file">
+    <pre class="code prettyprint overflow linenums">
+    /**
+     * A module representing individual button inputs on a midi device.
+     * MidiInputSlider, MidiInputButton, etc derive from this base class.
+     * @module BB.BaseMidiInput
+     */
+    define([&#x27;./BB&#x27;, &#x27;./BB.BaseMidiInput&#x27;], 
+    function(  BB,        BaseMidiInput){
     
-            <div class="foundat">
-                Defined in: <a href="../files/src_BB.AudioBufferLoader.js.html#l10"><code>src&#x2F;BB.AudioBufferLoader.js:10</code></a>
-            </div>
+        &#x27;use strict&#x27;;
     
-    </div>
+        BB.BaseMidiInput = BaseMidiInput;
     
+       /**
+         * A module for representing individual button inputs on a midi device. A button
+         * is defined as a midi input that only has two values (velocity): 0 and 127.
+         * NOTE: Don&#x27;t use this class for an input unless it only outpus velocity values
+         * 0 and 127 exclusively even if it looks like a button, as it will cause the
+         * &quot;up&quot; and &quot;down&quot; events to work improperly.
+         * @class BB.MidiInputButton
+         * @constructor
+         * @extends BB.BaseMidiInput
+         * @param {Number} [note] The midi note to assign this input to.
+         */
+        BB.MidiInputButton = function(note) {
     
-    <div class="box intro">
-        <p>A module for creating audio buffers from audio files</p>
+            BaseMidiInput.call(this, note);
+            this.inputType = &#x27;button&#x27;;
+            this.eventStack.down = [];
+            this.eventStack.up   = [];
+        };
     
-    </div>
+        BB.MidiInputButton.prototype = Object.create(BaseMidiInput.prototype);
+        BB.MidiInputButton.prototype.constructor = BaseMidiInput;
     
+        /**
+         * Register an event for this midi input. Available events include: change, up,
+         * and down.
+         * @method on
+         * @param  {string}   name     The name of the event. Supports &quot;change&quot;, &quot;up&quot; (button up),
+         * and &quot;down&quot; (button down) events.
+         * @param  {Function} callback Callback to run when the event has fired
+         */
+        BB.MidiInputButton.prototype.on = function(name, callback) {
     
-    <div class="yui3-g">
-        <div class="yui3-u-1-2">
-                <p>This module provides the following classes:</p>
+            BaseMidiInput.prototype.on.call(this, name, callback);
+            
+            if (name === &#x27;down&#x27;) {
+                this.eventStack.down.push(callback);
+            } else if (name === &#x27;up&#x27;) {
+                this.eventStack.up.push(callback);
+            }
+        };
     
-                <ul class="module-classes">
-                    <li class="module-class">
-                        <a href="../classes/BB.AudioBufferLoader.html">
-                            BB.AudioBufferLoader
-                        </a>
-                    </li>
-                </ul>
-        </div>
+        return BB.MidiInputButton;
+    });
     
-        <div class="yui3-u-1-2">
-        </div>
+    </pre>
     </div>
             </div>
         </div>

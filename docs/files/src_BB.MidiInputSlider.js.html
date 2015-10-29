@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>BB.AudioBufferLoader - BB.js</title>
+    <title>src/BB.MidiInputSlider.js - BB.js</title>
         
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/prettify-nick.css">
@@ -80,38 +80,62 @@
 
         <div id="docs-main" class="apidocs">
             <div class="content container">
-    <h1>BB.AudioBufferLoader Module</h1>
-    <div class="box clearfix meta">
+    <h1 class="file-heading">File: src/BB.MidiInputSlider.js</h1>
     
+    <div class="file">
+    <pre class="code prettyprint overflow linenums">
+    /**
+     * A base module for representing individual slider inputs on a midi device.
+     * MidiInputSlider, MidiInputButton, etc derive from this base class.
+     * @module BB.BaseMidiInput
+     */
+    define([&#x27;./BB&#x27;, &#x27;./BB.BaseMidiInput&#x27;], 
+    function(  BB,        BaseMidiInput){
     
-            <div class="foundat">
-                Defined in: <a href="../files/src_BB.AudioBufferLoader.js.html#l10"><code>src&#x2F;BB.AudioBufferLoader.js:10</code></a>
-            </div>
+        &#x27;use strict&#x27;;
     
-    </div>
+        BB.BaseMidiInput = BaseMidiInput;
     
+        /**
+         * A module for representing individual slider inputs on a midi device. Behaves
+         * like MidiInputKnob.
+         * @class BB.MidiInputSlider
+         * @constructor
+         * @extends BB.BaseMidiInput
+         * @param {Number} [note] The midi note to assign this input to.
+         */
+        BB.MidiInputSlider = function (note) {
     
-    <div class="box intro">
-        <p>A module for creating audio buffers from audio files</p>
+            BaseMidiInput.call(this, note);
+            this.inputType = &#x27;slider&#x27;;
+            this.eventStack.max = [];
+            this.eventStack.min = [];
+        };
     
-    </div>
+        BB.MidiInputSlider.prototype = Object.create(BaseMidiInput.prototype);
+        BB.MidiInputSlider.prototype.constructor = BaseMidiInput;
     
+        /**
+         * Register an event for this midi input. Available events include: change, min,
+         * and max.
+         * @method on
+         * @param  {string}   name     The name of the event. Supports &quot;change&quot;, &quot;min&quot;,
+         * and &quot;max&quot; events.
+         * @param  {Function} callback Callback to run when the event has fired
+         */
+        BB.MidiInputSlider.prototype.on = function(name, callback) {
     
-    <div class="yui3-g">
-        <div class="yui3-u-1-2">
-                <p>This module provides the following classes:</p>
+            BaseMidiInput.prototype.on.call(this, name, callback);
+            if (name === &#x27;min&#x27;) {
+                this.eventStack.min.push(callback);
+            } else if (name === &#x27;max&#x27;) {
+                this.eventStack.max.push(callback);
+            } 
+        };
     
-                <ul class="module-classes">
-                    <li class="module-class">
-                        <a href="../classes/BB.AudioBufferLoader.html">
-                            BB.AudioBufferLoader
-                        </a>
-                    </li>
-                </ul>
-        </div>
-    
-        <div class="yui3-u-1-2">
-        </div>
+        return BB.MidiInputSlider;
+    });
+    </pre>
     </div>
             </div>
         </div>

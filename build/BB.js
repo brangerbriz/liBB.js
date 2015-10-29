@@ -1842,8 +1842,6 @@ function(  BB) {
         }
     });
 
-
-
     /**
      * sets color value to match another color object's value
      * @method copy
@@ -2655,7 +2653,7 @@ function(  BB){
  * @module BB.Pointer
  */
 define('BB.Pointer',['./BB', './BB.MouseInput'],
-function(  BB,     MouseInput){
+function(  BB,        MouseInput){
 
     'use strict';
 
@@ -5164,7 +5162,680 @@ function(  BB ){
 
 	return BB.AudioStream;
 });
-define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.ImageBrush2D','BB.LineBrush2D','BB.BrushManager2D','BB.MouseInput','BB.Pointer','BB.Vector2','BB.Particle2D','BB.AudioBufferLoader','BB.AudioSampler','BB.AudioAnalyser','BB.AudioStream'],function (require) {
+/**
+ * A base module for representing individual inputs on a midi device.
+ * MidiInputSlider, MidiInputButton, etc derive from this base class.
+ * @module BB.BaseMidiInput
+ */
+define('BB.BaseMidiInput',['./BB'], 
+function(  BB){
+
+    'use strict';
+
+    /**
+     * A base module for representing individual inputs on a midi device.
+     * MidiInputSlider, MidiInputButton, etc derive from this base class.
+     * @class BB.BaseMidiInput
+     * @constructor
+     * @param {Number} [note] The midi note to assign this input to.
+     */
+    BB.BaseMidiInput = function(config) {
+        
+        this.channel      = null;
+        this.command      = null;
+        this.type         = null;
+        this.velocity     = null;
+
+        if (typeof config === 'number') {
+            
+            this.note  = config;
+            
+        } else if (typeof config === 'object') {
+
+            if (typeof config.channel === 'number')  this.channel = config.channel;
+            if (typeof config.command === 'number')  this.command = config.command;
+            if (typeof config.type === 'number')     this.type = config.type;
+            if (typeof config.velocity === 'number') this.velocity = config.velocity;
+
+        } else {
+            throw new Error('BB.BaseMidiInput: config parameter must be a number or object type');
+        }
+        
+        this.inputType = 'base';
+
+        this.eventStack = {
+            change: []
+        };
+    };
+
+    /**
+     * Register an event for this midi input. Available events include: change.
+     * @method on
+     * @param  {string}   name     The name of the event. Currently only supports
+     * the "change" event.
+     * @param  {Function} callback Callback to run when the event has fired
+     */
+    BB.BaseMidiInput.prototype.on = function(name, callback) {
+
+        if (name === 'change') {
+            this.eventStack.change.push(callback);
+        }
+    };
+
+    return BB.BaseMidiInput;
+});
+/**
+ * A module representing individual button inputs on a midi device.
+ * MidiInputSlider, MidiInputButton, etc derive from this base class.
+ * @module BB.BaseMidiInput
+ */
+define('BB.MidiInputButton',['./BB', './BB.BaseMidiInput'], 
+function(  BB,        BaseMidiInput){
+
+    'use strict';
+
+    BB.BaseMidiInput = BaseMidiInput;
+
+   /**
+     * A module for representing individual button inputs on a midi device. A button
+     * is defined as a midi input that only has two values (velocity): 0 and 127.
+     * NOTE: Don't use this class for an input unless it only outpus velocity values
+     * 0 and 127 exclusively even if it looks like a button, as it will cause the
+     * "up" and "down" events to work improperly.
+     * @class BB.MidiInputButton
+     * @constructor
+     * @extends BB.BaseMidiInput
+     * @param {Number} [note] The midi note to assign this input to.
+     */
+    BB.MidiInputButton = function(note) {
+
+        BaseMidiInput.call(this, note);
+        this.inputType = 'button';
+        this.eventStack.down = [];
+        this.eventStack.up   = [];
+    };
+
+    BB.MidiInputButton.prototype = Object.create(BaseMidiInput.prototype);
+    BB.MidiInputButton.prototype.constructor = BaseMidiInput;
+
+    /**
+     * Register an event for this midi input. Available events include: change, up,
+     * and down.
+     * @method on
+     * @param  {string}   name     The name of the event. Supports "change", "up" (button up),
+     * and "down" (button down) events.
+     * @param  {Function} callback Callback to run when the event has fired
+     */
+    BB.MidiInputButton.prototype.on = function(name, callback) {
+
+        BaseMidiInput.prototype.on.call(this, name, callback);
+        
+        if (name === 'down') {
+            this.eventStack.down.push(callback);
+        } else if (name === 'up') {
+            this.eventStack.up.push(callback);
+        }
+    };
+
+    return BB.MidiInputButton;
+});
+
+/**
+ * A module representing individual piano-like key inputs on a midi device.
+ * MidiInputSlider, MidiInputButton, etc derive from this base class.
+ * @module BB.BaseMidiInput
+ */
+define('BB.MidiInputKey',['./BB', './BB.BaseMidiInput'], 
+function(  BB,        BaseMidiInput){
+
+    'use strict';
+
+    BB.BaseMidiInput = BaseMidiInput;
+
+    /**
+     * A module for representing individual Key inputs on a midi device. Behaves like BB.MidiInputPad.
+     * @class BB.MidiInputKey
+     * @constructor
+     * @extends BB.BaseMidiInput
+     * @param {Number} [note] The midi note to assign this input to.
+     */
+    BB.MidiInputKey = function(note) {
+
+        BaseMidiInput.call(this, note);
+        this.inputType = 'key';
+    };
+
+    BB.MidiInputKey.prototype = Object.create(BaseMidiInput.prototype);
+    BB.MidiInputKey.prototype.constructor = BaseMidiInput;
+
+    return BB.MidiInputKey;
+});
+
+/**
+ * A module representing individual knob inputs on a midi device.
+ * MidiInputSlider, MidiInputButton, etc derive from this base class.
+ * @module BB.BaseMidiInput
+ */
+define('BB.MidiInputKnob',['./BB', './BB.BaseMidiInput'], 
+function(  BB,        BaseMidiInput){
+
+    'use strict';
+
+    BB.BaseMidiInput = BaseMidiInput;
+
+    /**
+     * A module for representing individual knob inputs on a midi device. Behaves
+     * like MidiInputSlider.
+     * @class BB.MidiInputKnob
+     * @constructor
+     * @extends BB.BaseMidiInput
+     * @param {Number} [note] The midi note to assign this input to.
+     */
+    BB.MidiInputKnob = function(note) {
+
+        BaseMidiInput.call(this, note);
+        this.inputType = 'knob';
+        this.eventStack.max = [];
+        this.eventStack.min = [];
+    };
+
+    BB.MidiInputKnob.prototype = Object.create(BaseMidiInput.prototype);
+    BB.MidiInputKnob.prototype.constructor = BaseMidiInput;
+
+    /*
+     * Register an event for this midi input. Available events include: change, min,
+     * and max.
+     * @method on
+     * @param  {string}   name     The name of the event. Supports "change", "min",
+     * and "max" events.
+     * @param  {Function} callback Callback to run when the event has fired
+     */
+    BB.MidiInputKnob.prototype.on = function(name, callback) {
+
+        BaseMidiInput.prototype.on.call(this, name, callback);
+        if (name === 'min') {
+            this.eventStack.min.push(callback);
+        } else if (name === 'max') {
+            this.eventStack.max.push(callback);
+        } 
+    };
+
+    return BB.MidiInputKnob;
+});
+/**
+ * A module representing individual pad inputs on a midi device.
+ * MidiInputSlider, MidiInputButton, etc derive from this base class.
+ * @module BB.BaseMidiInput
+ */
+define('BB.MidiInputPad',['./BB', './BB.BaseMidiInput'], 
+function(  BB,        BaseMidiInput){
+
+    'use strict';
+
+    BB.BaseMidiInput = BaseMidiInput;
+
+    /**
+     * A module for representing individual pad inputs on a midi device. Behaves like BB.MidiInputKey.
+     * @class BB.MidiInputPad
+     * @constructor
+     * @extends BB.BaseMidiInput
+     * @param {Number} [note] The midi note to assign this input to.
+     */
+    BB.MidiInputPad = function(note) {
+
+        BaseMidiInput.call(this, note);
+        this.inputType = 'pad';
+    };
+
+    BB.MidiInputPad.prototype = Object.create(BaseMidiInput.prototype);
+    BB.MidiInputPad.prototype.constructor = BaseMidiInput;
+
+    return BB.MidiInputPad;
+});
+
+/**
+ * A base module for representing individual slider inputs on a midi device.
+ * MidiInputSlider, MidiInputButton, etc derive from this base class.
+ * @module BB.BaseMidiInput
+ */
+define('BB.MidiInputSlider',['./BB', './BB.BaseMidiInput'], 
+function(  BB,        BaseMidiInput){
+
+    'use strict';
+
+    BB.BaseMidiInput = BaseMidiInput;
+
+    /**
+     * A module for representing individual slider inputs on a midi device. Behaves
+     * like MidiInputKnob.
+     * @class BB.MidiInputSlider
+     * @constructor
+     * @extends BB.BaseMidiInput
+     * @param {Number} [note] The midi note to assign this input to.
+     */
+    BB.MidiInputSlider = function (note) {
+
+        BaseMidiInput.call(this, note);
+        this.inputType = 'slider';
+        this.eventStack.max = [];
+        this.eventStack.min = [];
+    };
+
+    BB.MidiInputSlider.prototype = Object.create(BaseMidiInput.prototype);
+    BB.MidiInputSlider.prototype.constructor = BaseMidiInput;
+
+    /**
+     * Register an event for this midi input. Available events include: change, min,
+     * and max.
+     * @method on
+     * @param  {string}   name     The name of the event. Supports "change", "min",
+     * and "max" events.
+     * @param  {Function} callback Callback to run when the event has fired
+     */
+    BB.MidiInputSlider.prototype.on = function(name, callback) {
+
+        BaseMidiInput.prototype.on.call(this, name, callback);
+        if (name === 'min') {
+            this.eventStack.min.push(callback);
+        } else if (name === 'max') {
+            this.eventStack.max.push(callback);
+        } 
+    };
+
+    return BB.MidiInputSlider;
+});
+/**
+ * A module for receiving midi messages via USB in the browser. Google Chrome
+ * support only at the moment. See support for the Web MIDI API
+ * (https://webaudio.github.io/web-midi-api/).
+ * @module BB.Midi
+ */
+define('BB.MidiDevice',['./BB',
+        './BB.BaseMidiInput', 
+        './BB.MidiInputButton', 
+        './BB.MidiInputKey', 
+        './BB.MidiInputKnob', 
+        './BB.MidiInputPad', 
+        './BB.MidiInputSlider'], 
+function(  BB,
+           BaseMidiInput,
+           MidiInputButton,
+           MidiInputKey,
+           MidiInputKnob,
+           MidiInputPad,
+           MidiInputSlider){
+
+    'use strict';
+
+    BB.BaseMidiInput   = BaseMidiInput;
+    BB.MidiInputButton = MidiInputButton;
+    BB.MidiInputKey    = MidiInputKey;
+    BB.MidiInputKnob   = MidiInputKnob;
+    BB.MidiInputPad    = MidiInputPad;
+    BB.MidiInputSlider = MidiInputSlider;
+
+    /**
+     * A class for recieving input from Midi controllers in the browser using
+     * the experimental Web MIDI API. This constructor returns true if browser
+     * supports Midi and false if not.
+     * 
+     * <em>NOTE: This implementation of
+     * BB.MidiDevice currently only supports using one MIDI device connected to
+     * the browser at a time. More than one may work but you may run into note
+     * clashing and other oddities.</em>
+     * <br><br>
+     * <img src="../../examples/assets/images/midi.png"/>
+     * 
+     * @class  BB.MidiDevice
+     * @constructor
+     * @param {Object} midiMap An object with array properties for knobs, sliders, buttons, keys, and pads.
+     * @param {Function} success Function to return once MIDIAccess has been received successfully.
+     * @param {Function} failure Function to return if MIDIAccess is not received successfully.
+     * @return {Boolean} True if browser supports Midi, false if not.
+     */
+    BB.MidiDevice = function(midiMap, success, failure) {
+        
+        if (typeof midiMap !== 'object') {
+            throw new Error("BB.MidiDevice: midiMap parameter must be an object");
+        } else if (typeof success !== 'function') {
+            throw new Error("BB.MidiDevice: success parameter must be a function");
+        } else if (typeof failure !== 'function') {
+            throw new Error("BB.MidiDevice: failure parameter must be a function");
+        }
+
+        var self = this;
+
+        /**
+         * Dictionary of Midi input object arrays. Includes sliders, knobs,
+         * buttons, pads, and keys (only if they are added in the midiMap passed
+         * into the constructor).
+         * @property inputs
+         * @type {Object}
+         */
+        this.inputs = {
+            sliders: [],
+            knobs: [],
+            buttons: [],
+            pads: [],
+            keys: []
+        };
+
+        /**
+         * The Web MIDI API midiAccess object returned from navigator.requestMIDIAccess(...)
+         * @property midiAccess
+         * @type {MIDIAccess}
+         * @default null
+         */
+        this.midiAccess = null;
+
+        this._connectEvent = null;
+        this._disconnectEvent = null;
+        this._messageEvent = null;
+
+        // note COME BACK
+        var noteLUT = {}; // lookup table
+
+        var input = null;
+
+        var i = 0;
+        var key = null;
+        
+        // sliders
+        if (typeof midiMap.sliders !== 'undefined' && midiMap.sliders instanceof Array) {
+            for (i = 0; i < midiMap.sliders.length; i++) {
+                input = new BB.MidiInputSlider(midiMap.sliders[i]);
+                var note = (typeof midiMap.sliders[i] === 'number') ? midiMap.sliders[i] : midiMap.sliders[i].note;
+                key = 'key' + note;
+                if (typeof noteLUT[key] === 'undefined') {
+                    noteLUT[key] = [];
+                }
+                noteLUT[key].push([ input, i ]);
+                self.inputs.sliders.push(input);
+            }
+        }
+
+        // knobs
+        if (typeof midiMap.knobs !== 'undefined' && midiMap.knobs instanceof Array) {
+            for (i = 0; i < midiMap.knobs.length; i++) {
+                input = new BB.MidiInputKnob(midiMap.knobs[i]);
+                var note = (typeof midiMap.knobs[i] === 'number') ? midiMap.knobs[i] : midiMap.knobs[i].note;
+                key = 'key' + note;
+                if (typeof noteLUT[key] === 'undefined') {
+                    noteLUT[key] = [];
+                }
+                noteLUT[key].push([ input, i ]);
+                self.inputs.knobs.push(input);
+            }
+        }
+
+        // buttons
+        if (typeof midiMap.buttons !== 'undefined' && midiMap.buttons instanceof Array) {
+            for (i = 0; i < midiMap.buttons.length; i++) {
+                input = new BB.MidiInputButton(midiMap.buttons[i]);
+                var note = (typeof midiMap.buttons[i] === 'number') ? midiMap.buttons[i] : midiMap.buttons[i].note;
+                key = 'key' + note;
+                if (typeof noteLUT[key] === 'undefined') {
+                    noteLUT[key] = [];
+                }
+                noteLUT[key].push([ input, i ]);
+                self.inputs.buttons.push(input);
+            }
+        }
+
+        // pads
+        if (typeof midiMap.pads !== 'undefined' && midiMap.pads instanceof Array) {
+            for (i = 0; i < midiMap.pads.length; i++) {
+                input = new BB.MidiInputPad(midiMap.pads[i]);
+                var note = (typeof midiMap.pads[i] === 'number') ? midiMap.pads[i] : midiMap.pads[i].note;
+                key = 'key' + note;
+                if (typeof noteLUT[key] === 'undefined') {
+                    noteLUT[key] = [];
+                }
+                noteLUT[key].push([ input, i ]);
+                self.inputs.pads.push(input);
+            }
+        }
+
+        // keys
+        if (typeof midiMap.keys !== 'undefined' && midiMap.keys instanceof Array) {
+            for (i = 0; i < midiMap.keys.length; i++) {
+                input = new BB.MidiInputKey(midiMap.keys[i]);
+                var note = (typeof midiMap.keys[i] === 'number') ? midiMap.keys[i] : midiMap.keys[i].note;
+                console.log(note);
+                key = 'key' + note;
+                if (typeof noteLUT[key] === 'undefined') {
+                    noteLUT[key] = [];
+                }
+                noteLUT[key].push([ input, i ]);
+                self.inputs.keys.push(input);
+            }
+        }
+
+        // request MIDI access
+        if (navigator.requestMIDIAccess) {
+            navigator.requestMIDIAccess({
+                sysex: false
+            }).then(onMIDISuccess, failure);
+            return true; // support
+        } else {
+            return false; // no support
+        }
+
+        // midi functions
+        function onMIDISuccess(midiAccess) {
+
+            self.midiAccess = midiAccess;
+            var inputs = self.midiAccess.inputs.values();
+            // loop through all inputs
+            for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
+                // listen for midi messages
+                input.value.onmidimessage = onMIDIMessage;
+                // this just lists our inputs in the console
+            }
+            // listen for connect/disconnect message
+            self.midiAccess.onstatechange = onStateChange;
+            success(midiAccess);
+        }
+
+        function onStateChange(event) {
+            
+            var port = event.port,
+                state = port.state,
+                name = port.name,
+                type = port.type;
+
+            if (state === 'connected' && self._connectEvent) {
+                self._connectEvent(name, type, port);
+            } else if (state === 'disconnected' && self._disconnectEvent) {
+                self._disconnectEvent(name, type, port);
+            }
+        }
+
+        function onMIDIMessage(event) {
+
+            var data = event.data;
+            var command = data[0] >> 4;
+            var channel = data[0] & 0xf;
+            var type = data[0] & 0xf0; // channel agnostic message type. Thanks, Phil Burk.
+            var note = data[1];
+            var velocity = data[2];
+            // with pressure and tilt off
+            // note off: 128, cmd: 8 
+            // note on: 144, cmd: 9
+            // pressure / tilt on
+            // pressure: 176, cmd 11: 
+            // bend: 224, cmd: 14
+
+            if (self._messageEvent) {
+                self._messageEvent({
+                    command: command,
+                    channel: channel,
+                    type: type,
+                    note: note,
+                    velocity: velocity
+                }, event);
+            }
+
+            var i = 0;
+            var key = 'key' + note;
+
+            // if note is in noteLUT
+            if (key in noteLUT) {
+                
+                var input = null;
+                var index = null;
+
+                for (i = 0; i < noteLUT[key].length; i++) {
+                    
+                    if (noteLUT[key][i][0].command === command && 
+                        noteLUT[key][i][0].channel === channel) {
+                        input = noteLUT[key][i][0];
+                        index = noteLUT[key][i][1];
+                    } 
+                }
+
+                // if no command comparison match was found
+                // use the first value in LUT
+                if (input === null) {
+                    input = noteLUT[key][0][0];
+                    index = noteLUT[key][0][1];
+                }
+
+                // update input's values
+                input.command      = command;
+                input.channel      = channel;
+                input.type         = type;
+                input.velocity     = velocity;
+
+                var changeEventArr = input.eventStack.change;
+
+                var midiData = {}; // reset data
+
+                // all
+                for (i = 0; i < changeEventArr.length; i++) {
+                    
+                    midiData = {
+                        velocity: velocity,
+                        channel: channel,
+                        command: command,
+                        type: type,
+                        note: note
+                    };
+
+                    changeEventArr[i](midiData, input.inputType, index); // fire change event
+                }
+
+                // slider and knob
+                if (input.inputType == 'slider' || input.inputType == 'knob') {
+
+                    // max
+                    if (velocity == 127) {
+
+                        var maxEventArr = input.eventStack.max;
+                        for (i = 0; i < maxEventArr.length; i++) {
+
+                            midiData = {
+                                velocity: velocity,
+                                channel: channel,
+                                command: command,
+                                type: type,
+                                note: note
+                            };
+
+                            maxEventArr[i](midiData, input.inputType, index); // fire max event
+                        }
+
+                    // min
+                    } else if (velocity === 0) { 
+
+                        var minEventArr = input.eventStack.min;
+                        for (i = 0; i < minEventArr.length; i++) {
+
+                            midiData = {
+                                velocity: velocity,
+                                channel: channel,
+                                command: command,
+                                type: type,
+                                note: note
+                            };
+
+                            minEventArr[i](midiData, input.inputType, index); // fire min event
+                        }
+                    }
+                }
+
+                // button
+                if (input.inputType == 'button') {
+
+
+                    // down
+                    if (velocity == 127) {
+
+                        var downEventArr = input.eventStack.down;
+                        for (i = 0; i < downEventArr.length; i++) {
+
+                            midiData = {
+                                velocity: velocity,
+                                channel: channel,
+                                command: command,
+                                type: type,
+                                note: note
+                            };
+
+                            downEventArr[i](midiData, input.inputType, index); // fire down event
+                        }
+
+                    // up
+                    } else if (velocity === 0) { 
+
+                        var upEventArr = input.eventStack.up;
+                        for (i = 0; i < upEventArr.length; i++) {
+
+                            midiData = {
+                                velocity: velocity,
+                                channel: channel,
+                                command: command,
+                                type: type,
+                                note: note
+                            };
+
+                            upEventArr[i](midiData, input.inputType, index); // fire up event
+                        }
+                    }
+                }
+            }
+        } 
+    };
+
+    /**
+     * Assigns event handler functions. Valid events include: connect, disconnect, message.
+     * @method on
+     * @param  {String}   name     Event name. Supports "connect", "disconnect", and "message".
+     * @param  {Function} callback Function to run when event occurs.
+     */
+    BB.MidiDevice.prototype.on = function(name, callback) {
+        
+        if (typeof name !== 'string') {
+            throw new Error("BB.MidiDevice.on: name parameter must be a string type");
+        } else if (typeof callback !== 'function') {
+            throw new Error("BB.MidiDevice.on: callback parameter must be a function type");
+        }
+
+        if (name === 'connect') {
+            this._connectEvent = callback;
+        } else if (name === 'disconnect') {
+            this._disconnectEvent = callback;
+        } else if (name === 'message') {
+            this._messageEvent = callback;
+        } else {
+            throw new Error('BB.MidiDevice.on: ' + name + ' is not a valid event name');
+        }
+    };
+
+    return BB.MidiDevice;
+});
+
+define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.ImageBrush2D','BB.LineBrush2D','BB.BrushManager2D','BB.MouseInput','BB.Pointer','BB.Vector2','BB.Particle2D','BB.AudioBufferLoader','BB.AudioSampler','BB.AudioAnalyser','BB.AudioStream','BB.MidiDevice','BB.BaseMidiInput','BB.MidiInputKnob','BB.MidiInputSlider','BB.MidiInputButton','BB.MidiInputKey','BB.MidiInputPad'],function (require) {
 
   'use strict';
 
@@ -5194,6 +5865,14 @@ define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.Ima
   BB.AudioAnalyser     = require('BB.AudioAnalyser');
   BB.AudioStream       = require('BB.AudioStream');
 
+  // midi
+  BB.MidiDevice      = require('BB.MidiDevice');
+  BB.BaseMidiInput   = require('BB.BaseMidiInput');
+  BB.MidiInputKnob   = require('BB.MidiInputKnob');
+  BB.MidiInputSlider = require('BB.MidiInputSlider');
+  BB.MidiInputButton = require('BB.MidiInputButton');
+  BB.MidiInputKey    = require('BB.MidiInputKey');
+  BB.MidiInputPad    = require('BB.MidiInputPad');
 
   return BB;
 

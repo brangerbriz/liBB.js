@@ -6,11 +6,18 @@ YUI.add("yuidoc-meta", function(Y) {
         "BB.AudioSampler",
         "BB.AudioStream",
         "BB.BaseBrush2D",
+        "BB.BaseMidiInput",
         "BB.BrushManager2D",
         "BB.Color",
         "BB.ImageBrush2D",
         "BB.LineBrush2D",
         "BB.MathUtils",
+        "BB.MidiDevice",
+        "BB.MidiInputButton",
+        "BB.MidiInputKey",
+        "BB.MidiInputKnob",
+        "BB.MidiInputPad",
+        "BB.MidiInputSlider",
         "BB.MouseInput",
         "BB.Particle2D",
         "BB.Pointer",
@@ -22,11 +29,13 @@ YUI.add("yuidoc-meta", function(Y) {
         "BB.AudioSampler",
         "BB.AudioStream",
         "BB.BaseBrush2D",
+        "BB.BaseMidiInput",
         "BB.BrushManager2D",
         "BB.Color",
         "BB.ImageBrush2D",
         "BB.LineBrush2D",
         "BB.MathUtils",
+        "BB.Midi",
         "BB.MouseInput",
         "BB.Pointer",
         "BB.Vector2",
@@ -59,6 +68,11 @@ YUI.add("yuidoc-meta", function(Y) {
             "description": "Base 2D brush class extended by BB.ImageBrush2D, BB.LineBrush2D, etc..."
         },
         {
+            "displayName": "BB.BaseMidiInput",
+            "name": "BB.BaseMidiInput",
+            "description": "A module representing individual button inputs on a midi device.\nMidiInputSlider, MidiInputButton, etc derive from this base class."
+        },
+        {
             "displayName": "BB.BrushManager2D",
             "name": "BB.BrushManager2D",
             "description": "Basic scene manager for brushes and pointers. BB.BrushManager2D allows a\ndrawing scene (that uses brushes) to persist while the rest of the canvas is\ncleared each frame. It also provides functionality to undo/redo manager to\nyour drawing actions. <br><br> Note: The BB.BrushManager2D class creates a new canvas\nthat is added to the DOM on top of the canvas object that you pass to its\nconstructor. This is acheived through some fancy CSS inside of\nBB.BrushManager2D.updateCanvasPosition(...). For this reason the canvas\npassed to the constructor must be absolutely positioned and\nBB.BrushManager2D.updateCanvasPosition(...) should be called each time that\ncanvas' position or size is updated."
@@ -82,6 +96,11 @@ YUI.add("yuidoc-meta", function(Y) {
             "displayName": "BB.MathUtils",
             "name": "BB.MathUtils",
             "description": "A static utilitites class for all things math."
+        },
+        {
+            "displayName": "BB.Midi",
+            "name": "BB.Midi",
+            "description": "A module for receiving midi messages via USB in the browser. Google Chrome\nsupport only at the moment. See support for the Web MIDI API\n(https://webaudio.github.io/web-midi-api/)."
         },
         {
             "displayName": "BB.MouseInput",
