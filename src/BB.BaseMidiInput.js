@@ -15,15 +15,29 @@ function(  BB){
      * @constructor
      * @param {Number} [note] The midi note to assign this input to.
      */
-    BB.BaseMidiInput = function(note) {
+    BB.BaseMidiInput = function(config) {
         
-        this.note = note;
-        this.inputType = 'base';
-
         this.channel      = null;
         this.command      = null;
         this.type         = null;
         this.velocity     = null;
+
+        if (typeof config === 'number') {
+            
+            this.note  = config;
+            
+        } else if (typeof config === 'object') {
+
+            if (typeof config.channel === 'number')  this.channel = config.channel;
+            if (typeof config.command === 'number')  this.command = config.command;
+            if (typeof config.type === 'number')     this.type = config.type;
+            if (typeof config.velocity === 'number') this.velocity = config.velocity;
+
+        } else {
+            throw new Error('BB.BaseMidiInput: config parameter must be a number or object type');
+        }
+        
+        this.inputType = 'base';
 
         this.eventStack = {
             change: []

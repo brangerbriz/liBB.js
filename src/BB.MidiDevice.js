@@ -92,12 +92,18 @@ function(  BB,
         var input = null;
 
         var i = 0;
+        var key = null;
         
         // sliders
         if (typeof midiMap.sliders !== 'undefined' && midiMap.sliders instanceof Array) {
             for (i = 0; i < midiMap.sliders.length; i++) {
                 input = new BB.MidiInputSlider(midiMap.sliders[i]);
-                noteLUT['key' + midiMap.sliders[i]] = [ input, i ];
+                var note = (typeof midiMap.sliders[i] === 'number') ? midiMap.sliders[i] : midiMap.sliders[i].note;
+                key = 'key' + note;
+                if (typeof noteLUT[key] === 'undefined') {
+                    noteLUT[key] = [];
+                }
+                noteLUT[key].push([ input, i ]);
                 self.inputs.sliders.push(input);
             }
         }
@@ -106,7 +112,12 @@ function(  BB,
         if (typeof midiMap.knobs !== 'undefined' && midiMap.knobs instanceof Array) {
             for (i = 0; i < midiMap.knobs.length; i++) {
                 input = new BB.MidiInputKnob(midiMap.knobs[i]);
-                noteLUT['key' + midiMap.knobs[i]] = [ input, i ];
+                var note = (typeof midiMap.knobs[i] === 'number') ? midiMap.knobs[i] : midiMap.knobs[i].note;
+                key = 'key' + note;
+                if (typeof noteLUT[key] === 'undefined') {
+                    noteLUT[key] = [];
+                }
+                noteLUT[key].push([ input, i ]);
                 self.inputs.knobs.push(input);
             }
         }
@@ -115,7 +126,12 @@ function(  BB,
         if (typeof midiMap.buttons !== 'undefined' && midiMap.buttons instanceof Array) {
             for (i = 0; i < midiMap.buttons.length; i++) {
                 input = new BB.MidiInputButton(midiMap.buttons[i]);
-                noteLUT['key' + midiMap.buttons[i]] = [ input, i ];
+                var note = (typeof midiMap.buttons[i] === 'number') ? midiMap.buttons[i] : midiMap.buttons[i].note;
+                key = 'key' + note;
+                if (typeof noteLUT[key] === 'undefined') {
+                    noteLUT[key] = [];
+                }
+                noteLUT[key].push([ input, i ]);
                 self.inputs.buttons.push(input);
             }
         }
@@ -124,7 +140,12 @@ function(  BB,
         if (typeof midiMap.pads !== 'undefined' && midiMap.pads instanceof Array) {
             for (i = 0; i < midiMap.pads.length; i++) {
                 input = new BB.MidiInputPad(midiMap.pads[i]);
-                noteLUT['key' + midiMap.pads[i]] = [ input, i ];
+                var note = (typeof midiMap.pads[i] === 'number') ? midiMap.pads[i] : midiMap.pads[i].note;
+                key = 'key' + note;
+                if (typeof noteLUT[key] === 'undefined') {
+                    noteLUT[key] = [];
+                }
+                noteLUT[key].push([ input, i ]);
                 self.inputs.pads.push(input);
             }
         }
@@ -133,7 +154,13 @@ function(  BB,
         if (typeof midiMap.keys !== 'undefined' && midiMap.keys instanceof Array) {
             for (i = 0; i < midiMap.keys.length; i++) {
                 input = new BB.MidiInputKey(midiMap.keys[i]);
-                noteLUT['key' + midiMap.keys[i]] = [ input, i ];
+                var note = (typeof midiMap.keys[i] === 'number') ? midiMap.keys[i] : midiMap.keys[i].note;
+                console.log(note);
+                key = 'key' + note;
+                if (typeof noteLUT[key] === 'undefined') {
+                    noteLUT[key] = [];
+                }
+                noteLUT[key].push([ input, i ]);
                 self.inputs.keys.push(input);
             }
         }
@@ -204,13 +231,31 @@ function(  BB,
             }
 
             var i = 0;
-            
-            // if note is in noteLUT
-            if ('key' + note in noteLUT) {
-                
-                var input = noteLUT['key' + note][0];
-                var index = noteLUT['key' + note][1];
+            var key = 'key' + note;
 
+            // if note is in noteLUT
+            if (key in noteLUT) {
+                
+                var input = null;
+                var index = null;
+
+                for (i = 0; i < noteLUT[key].length; i++) {
+                    
+                    if (noteLUT[key][i][0].command === command && 
+                        noteLUT[key][i][0].channel === channel) {
+                        input = noteLUT[key][i][0];
+                        index = noteLUT[key][i][1];
+                    } 
+                }
+
+                // if no command comparison match was found
+                // use the first value in LUT
+                if (input === null) {
+                    input = noteLUT[key][0][0];
+                    index = noteLUT[key][0][1];
+                }
+
+                // update input's values
                 input.command      = command;
                 input.channel      = channel;
                 input.type         = type;
