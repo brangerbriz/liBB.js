@@ -1,5 +1,8 @@
-var canvas     = document.getElementById('canvas');
+var canvas     = document.createElement('canvas');
 var ctx        = canvas.getContext('2d');
+document.body.appendChild(canvas);
+document.body.className = "radial-black";
+
 var mouseInput = new BB.MouseInput(canvas);
 var pointer    = new BB.Pointer(mouseInput);
 

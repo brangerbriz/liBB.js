@@ -1,5 +1,8 @@
-var canvas     = document.getElementById('canvas');
+var canvas     = document.createElement('canvas');
 var ctx        = canvas.getContext('2d');
+document.body.appendChild(canvas);
+document.body.className = "radial-grey";
+
 var gravity    = new BB.Vector2();
 
 var WIDTH, HEIGHT, balls = [];

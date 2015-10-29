@@ -63,19 +63,15 @@
 
 		// editor code   	------			------				------				------
 
-		var whiteHead = '<!DOCTYPE html><html><head><title>example</title><link rel="stylesheet" href="css/white.css"></head><body><canvas id="canvas"><\/canvas><script src="..\/build\/BB.min.js"><\/script><script src="..\/toys\/logo.js"><\/script><script src="assets\/js\/dat.gui.min.js"><\/script><script>';
+		var head = '<!DOCTYPE html><html><head><title>BBModule Example Editor</title><link rel="stylesheet" href="..\/assets\/css\/styles.css"></head><body><script src="..\/..\/build\/BB.min.js"><\/script><script src="..\/..\/toys\/logo.js"><\/script><script src="..\/assets\/js\/dat.gui.min.js"><\/script><script>';
 		
-		var blackHead = '<!DOCTYPE html><html><head><title>example</title><link rel="stylesheet" href="css/black.css"></head><body><canvas id="canvas"><\/canvas><script src="..\/build\/BB.min.js"><\/script><script src="..\/toys\/logo.js"><\/script><script src="assets\/js\/dat.gui.min.js"><\/script><script>';
-		
-		var head = ( Q.bg ) ? (Q.bg=="white") ? whiteHead : blackHead : whiteHead;
-
 		var tail = '<\/script></body></html>';
 
 
 		// editor/preview 	------			------				------				------
 
 		var req = new XMLHttpRequest();
-		req.open("GET", type+"/"+file+"/main.js", true);
+		req.open("GET", "../"+type+"/"+file+"/main.js", true);
 		req.addEventListener("load", function() {
 		  
 		 	createEditor( req.responseText );	// create editor

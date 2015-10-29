@@ -1,9 +1,13 @@
-var canvas     = document.getElementById('canvas');
+var canvas     = document.createElement('canvas');
 var ctx        = canvas.getContext('2d');
+document.body.appendChild(canvas);
+document.body.className = "radial-grey";
+
 var mouseInput = new BB.MouseInput(canvas);
 var pointer    = new BB.Pointer(mouseInput);
 
 var WIDTH, HEIGHT;
+var mouseDown = false;
 var molecules = [];
 var particles = [];
 
@@ -59,8 +63,12 @@ function setup() {
     
     window.onresize();
 
-    document.body.addEventListener("click", function(e) {
-        makeMolecule( e.clientX, e.clientY ); 
+    document.body.addEventListener("mousedown", function(e) {
+        mouseDown=true; 
+    });
+    document.body.addEventListener("mouseup", function(e) {
+        mouseDown=false; 
+        makeMolecule( e.clientX, e.clientY );
     });
 
 
@@ -97,8 +105,8 @@ function update() {
             });
 
             // gravitate
-            if( BB.MathUtils.dist(balls[i].position.x, balls[i].position.y, pointer.x, pointer.y) > 200 )
-                balls[i].gravitate({ x:pointer.x, y:pointer.y }, 3000 );
+            if( mouseDown && BB.MathUtils.dist(balls[i].position.x, balls[i].position.y, pointer.x, pointer.y) > 200 )
+                balls[i].gravitate({ x:pointer.x, y:pointer.y }, 10000 );
 
             // update
             balls[i].update();

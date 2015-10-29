@@ -21,8 +21,10 @@ function play(){
 
 
 // canvas
-var canvas     = document.getElementById('canvas');
+var canvas     = document.createElement('canvas');
 var ctx        = canvas.getContext('2d');
+document.body.appendChild(canvas);
+document.body.className = "radial-grey";
 
 var WIDTH, HEIGHT;
 
