@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>Web Midi</title>
+        <style type="text/css">
+            body {
+                font-family: "Courier New", Courier, monospace;
+                color: #cc3399;
+                background-color: #ffb6e6;
+            }
+
+            #device-event-info {
+                z-index: 2;
+                position: absolute;
+                top: 0;
+            }
+
+            #input-event-info {
+                z-index: 2;
+                position: absolute;
+                bottom: 0;
+                height: 70%;
+                overflow: hidden;
+            }
+
+            h4 {
+                margin-bottom: 2px;
+            }
+        </style>
+    </head>
+    <body>
+    
+        <div id="device-event-info"></div>
+        <div id="input-event-info"></div>
+        <canvas id="canvas"></canvas>    
+
+        <script type="text/javascript" src="../../../build/BB.js"></script>
+        <script type="text/javascript" src="main.js"></script>
+    </body>
+</html>
