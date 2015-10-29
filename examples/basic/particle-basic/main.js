@@ -42,8 +42,6 @@ function update() {
             if (i > 0) i--;
         }
 
-
-
         if( Math.abs(particles[i].velocity.x) > 2 || Math.abs(particles[i].velocity.y) > 2  ){
             particles[i].mass+=2;
         } else {
@@ -90,7 +88,7 @@ function createParticle(x, y, prevX, prevY) {
         position: pos,
         acceleration: acc,
         mass: BB.MathUtils.randomInt(100, 300),
-        maxSpeed: 2
+        maxSpeed: 5
     });
 
     color.shift(2);
