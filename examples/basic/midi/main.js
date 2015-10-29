@@ -183,6 +183,7 @@ function midiSuccess() {
     }
 
     draw();
+    console.log(draw);
 }
 
 function midiFailure() {

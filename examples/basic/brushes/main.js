@@ -28,10 +28,12 @@ function setup() {
     });
 
     lineBrush = new BB.LineBrush2D({
-        color: new BB.Color(0, 0, 255),
+        color: new BB.Color(204, 51, 153),
         weight: 20,
         variant: "solid",
-        manager: brushManager
+        manager: brushManager,
+        width: 50,
+        height: 50
     });
 
     currentBrush = lineBrush;

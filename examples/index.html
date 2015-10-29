@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Examples</title>
+	<link rel="stylesheet" type="text/css" href="index.css">
+</head>
+<body>
+	<section class="container">
+    	<div class="example-content">
+    		<div>
+	    		<h2>Basic</h2>
+				{{#each basic}}
+				<a href="editor/?file={{basename}}" class="example">
+			    	<img class="thumbnail" src="{{path}}/thumbnail.png">
+			    	<span>{{name}}</span>
+			    </a>
+			    {{/each}}
+		    </div>
+		    <div>
+			    <h2>Advanced</h2>
+			    {{#each advanced}}
+			    <a href="#" class="example">
+			    	<img class="thumbnail" src="{{path}}/thumbnail.png">
+			    	<span>{{name}}</span>
+			    </a>
+			    {{/each}}
+		    </div>
+		</div>
+	</section>
+</body>
+</html>

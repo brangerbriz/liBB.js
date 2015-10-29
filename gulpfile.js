@@ -35,6 +35,8 @@ var yuidoc            = require('gulp-yuidoc-relative');
 var requireJSOptimize = require('gulp-requirejs-optimize');
 var express           = require('express');
 var path              = require('path');
+var handlebars        = require('handlebars');
+var fs                = require('fs');
 
 var packageName = 'BB';
 var srcDir      = 'src';
@@ -92,8 +94,27 @@ gulp.task('docs-watch', function() {
 });
 
 gulp.task('serve', function() {
+
+    var data = {}
+
+    data.basic    = templateObjFromDirname(__dirname + '/examples/basic');
+    data.advanced = templateObjFromDirname(__dirname + '/examples/advanced');
+
+    // cache handlebars rendering of examples/index.html
+    var exampleTemplate = fs.readFileSync(__dirname + '/examples/index.html', { encoding: 'utf8'});
+    var exampleHTML = handlebars.compile(exampleTemplate)(data);
+
     app.use('/docs', express.static(path.resolve(__dirname + '/docs')));
     app.use('/build', express.static(path.resolve(__dirname + '/build')));
+    app.use('/examples', function(req, res, next){
+
+        if (req.path == '/' ||
+            req.path == '/index.html') {
+
+        } else {
+            next();
+        }
+    });
     app.use('/examples', express.static(path.resolve(__dirname + '/examples')));
     app.use('/toys', express.static(path.resolve(__dirname + '/toys')));
     app.use('/src', express.static(path.resolve(__dirname + '/src')));
@@ -105,3 +126,36 @@ gulp.task('serve', function() {
 gulp.task('build', ['lint', 'scripts', 'docs']);
 
 gulp.task('default', ['build', 'watch']);
+
+function templateObjFromDirname(dirPath) {
+
+    var dirs = [];
+
+    fs.readdirSync(dirPath).forEach(function(name) {
+
+        var filePath = path.join(dirPath, name);
+        var stat = fs.statSync(filePath);
+        var origName = name;
+
+        if (stat.isDirectory() && name !== 'template') {
+
+            if (name.indexOf('-') > -1) {
+                name = name.split('-');
+                for (var i = 0; i < name.length; i++) {
+                    name[i] = name[i].charAt(0).toUpperCase() + name[i].slice(1);
+                }                      
+                name = name.join(' ')
+            } else {
+                name = name.charAt(0).toUpperCase() + name.slice(1);
+            }
+
+            dirs.push({
+                name: name,
+                path: path.basename(dirPath) + '/' + origName,
+                basename: origName
+            });
+        }
+    });
+
+    return dirs;
+}

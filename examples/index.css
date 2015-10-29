@@ -1,0 +1,63 @@
+*, *:before, *:after { -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box; }
+
+html {
+    font: 100%/1.5 "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+@media (min-width:640px)  { html { font-size:112%; } }
+@media (min-width:1024px) { html { font-size:120%; } }
+
+body { background-color:#fff; color:#555; }
+
+section { text-align:center; padding:32px 0; }
+@media (min-width:640px) { section { padding:64px 0; } }
+
+.container { margin:0 auto; max-width:848px; width:90%; }
+
+.rwd { max-width: 100% } /* << ---- for imgs u want to make responsive inside one of those divs */
+
+p { border: 1px solid #ccc } /* just so rwd is more easy to see */
+
+/* ~~~~~~~~~~~~ responsive table/grid CSS blow ~~~~~~~~~~~~ */
+
+.column { margin-bottom: 1.5rem; }
+@media (min-width: 640px) {
+.column {
+    float: left;
+    margin: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.column.full { width: 100%; }
+.column.two-thirds { width: 66.7%; }
+.column.half { width: 50%; }
+.column.third { width: 33.3%; }
+.column.fourth { width: 24.95%; }
+.column.flow-opposite { float: right; }
+}
+
+/* ------------- Clearfix by Nicolas Gallagher ------------- */
+.clearfix:before,
+.clearfix:after { content: " "; display: table;}
+.clearfix:after { clear: both; }
+.clearfix { *zoom: 1; }	 
+
+/* ------------- Custom ------------- */
+
+.thumbnail{
+	width: 100%;
+}
+
+.example {
+	margin: 10px;
+	width: 250px;
+	display: inline-block;
+}
+
+a.example {
+	text-decoration: none;
+	color: #555
+}
