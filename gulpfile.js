@@ -43,7 +43,7 @@ var srcDir      = 'src';
 var buildDir    = 'build';
 var docsDir     = 'docs';
 var mainFile    = 'main.js';
-var serverPort  = 3000;
+var serverPort  = 3002;
 
 var app = express();
 var server = require('http').Server(app);
