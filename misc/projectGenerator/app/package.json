@@ -1,0 +1,19 @@
+{
+  "name": "projectGenerator",
+  "version": "0.1.0",
+  "description": "generate projects for liBB",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nick Briz",
+  "license": "ISC",
+  "dependencies": {
+    "nw": "^0.12.3"
+  },
+  "window": {
+    "toolbar": false,
+    "frame": true,
+    "icon": "icon.png"
+  }
+}

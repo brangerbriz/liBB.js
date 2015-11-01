@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>libb project generator</title>
+		<style>
+
+			html {
+			  font: 100%/1.5 "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+			  font-weight: 400;
+			  text-rendering: optimizeLegibility;
+			  -webkit-font-smoothing: antialiased;
+			}
+
+			body { background-color:#fff; color:#555; }
+
+			section { text-align:center; padding:32px 0; }
+			@media (min-width:640px) { section { padding:64px 0; } }
+
+			.container { margin:0 auto; max-width:500px; width:70%; }
+
+			a { color:#e43f8c; text-decoration:none; }
+			a:hover { text-decoration:underline; }
+
+			::-moz-selection { background:#e43f8c; color:#fff; text-shadow:none; }
+    		::selection { background:#e43f8c; color:#fff; text-shadow:none; }
+
+    		input {
+    			padding: 10px;
+    			width:100%;
+    			margin-bottom: 10px;
+    		}
+    		#create{
+				width:100%;
+				background-color: #e43f8c;
+				color:white;
+				text-align: center;
+				padding: 10px;
+				border-radius: 5px;
+				font-weight: bold;
+				cursor: pointer;
+    		}
+
+    		#deetz {
+				background-color: #e43f8c;
+				color:white;
+				text-align: center;
+				padding: 10px;
+				border-radius: 5px;
+				font-weight: bold;
+				cursor: pointer;
+				display: none;
+				width: 100px;
+				margin: 0 auto;
+				opacity: 0.5;
+    		}
+    		#deetz:hover{ opacity: 1.0;}
+    		#details { display: none; }
+
+		</style>
+	</head>
+	<body>
+
+		<section>
+			<div class="container" id="wrap">
+				<input type="text" placeholder="project name" id="name">
+				<br>
+				<input type="text" placeholder="/path/to/create/project/in" id="path">
+				<br>
+				<div id="create"> create project </div>
+				<br><br>
+				<div id="nfo"></div>
+				<br><br>
+				<span id="deetz">see details</span>
+				<br>
+				<div id="details"></div>
+			</div>
+		</section>
+
+		
+		
+		<script>
+			var fs = require('fs');
+			var exec = require('child_process').exec;
+			var os = require('os');
+			var nw = require('nw.gui');
+			var win = nw.Window.get();
+
+			if( os.platform() !== "linux" ){
+				document.getElementById('wrap').innerHTML = "sorry, this is only working on linux at the moment :(";
+			}
+
+			var projName, path, consoleOut = '';
+			var toolsJSON, buildScript; // Tools Folder
+			var packagejson, icon, indexHTML, appJS, sublimeProj, stylesCSS;	// App Folder
+
+
+			function makeProjectDir(){
+				fs.mkdir(path+"/"+projName,function(err){
+					if(err) { 
+						alert('something errored in root mkdir');
+						return;
+					} else { toolsDir(); appDir(); }
+				});
+			}
+
+			// toolls
+			
+			function toolsDir(){
+				fs.mkdir(path+"/"+projName+"/tools",function(err){
+					if(err) { 
+						alert('something errored in tools mkdir');
+						return;
+					} else { makeToolsJSON(); makeBuildScript(); }
+				});
+			}
+
+			function makeToolsJSON(){
+				fs.writeFile(path+"/"+projName+'/tools/package.json', toolsJSON, function(err){
+					if(err) { 							
+						alert('something errored w/ tools/package.json');
+						return;
+					} else { 
+						processing();
+						exec('cd '+path+'/'+projName+'/tools/ ; npm install',
+						  function (error, stdout, stderr) {
+						    
+						    loading = false;
+						    success(stdout);
+						    
+						    if (error !== null) { console.log('exec error: ' + error); }
+						});
+					}
+				});
+			}
+
+			function makeBuildScript(){
+				fs.writeFile(path+"/"+projName+'/tools/build.sh', buildScript, function(err){
+					if(err) { 							
+						alert('something errored w/ build.sh');
+						return;
+					} else {  }
+				});
+			}
+
+			// app
+			// 
+			function appDir(){
+				fs.mkdir(path+"/"+projName+"/app",function(err){
+					if(err) { 
+						alert('something errored in app mkdir');
+						return;
+					} else { 
+						makePackageJSON(); 
+						makeIcon(); 
+						makeCSS();
+						makeJS();
+						makeIndex();
+						makeApp();
+						makeSublimeProj();
+					}
+				});
+			}
+
+			function makePackageJSON(){
+				fs.writeFile(path+"/"+projName+'/app/package.json', packagejson, function(err){
+					if(err) { 							
+						alert('something errored in app package.json');
+						return;
+					} else {  }
+				});
+			}
+
+			function makeIcon(){
+				var newFile = fs.createWriteStream(path+"/"+projName+'/app/icon.png'); 
+				var oldFile = fs.createReadStream('./icon.png'); 
+				oldFile.pipe(newFile);
+			}
+
+			function makeCSS(){
+				fs.mkdir(path+"/"+projName+"/app/css",function(err){
+					if(err) { 
+						alert('something errored in css mkdir');
+						return;
+					} else { 
+						fs.writeFile(path+"/"+projName+'/app/css/styles.css', stylesCSS, function(err){
+							if(err) { 							
+								alert('something errored in app/css/styles.css');
+								return;
+							}
+						});
+						var newFile = fs.createWriteStream(path+"/"+projName+'/app/css/styles.css'); 
+						var oldFile = fs.createReadStream('./files/styles.css'); 
+						oldFile.pipe(newFile);
+					}
+				});
+			}
+
+			function makeJS(){
+				fs.mkdir(path+"/"+projName+"/app/js",function(err){
+					if(err) { 
+						alert('something errored in js mkdir');
+						return;
+					} else { 
+						var newFile = fs.createWriteStream(path+"/"+projName+'/app/js/BB.min.js'); // DO THIS BETTER 
+						var oldFile = fs.createReadStream('./files/BB.min.js'); 
+						oldFile.pipe(newFile);
+					}
+				});
+			}
+
+			function makeIndex(){
+				fs.writeFile(path+"/"+projName+'/app/index.html', indexHTML, function(err){
+					if(err) { 							
+						alert('something errored in app/index.html');
+						return;
+					}
+				});
+			}
+
+			function makeApp(){
+				var newFile = fs.createWriteStream(path+"/"+projName+'/app/app.js'); 
+				var oldFile = fs.createReadStream('./files/app.js'); 
+				oldFile.pipe(newFile);
+			}
+
+			function makeSublimeProj(){
+				fs.writeFile(path+"/"+projName+'/app/'+projName+'.sublime-project', sublimeProj, function(err){
+					if(err) { 							
+						alert('something errored in creating sublime-project file');
+						return;
+					}
+				});
+			}
+
+			//
+			//
+			//
+
+			var elip = ['|','/','-','\\'];
+			var eCnt = 0;
+			var loading = true;
+			function processing(){
+				document.getElementById('nfo').innerHTML = elip[eCnt]+' processing '+elip[eCnt];
+				eCnt++; if(eCnt>=elip.length){ eCnt = 0 }
+				if(loading) setTimeout(processing, 200);
+				else document.getElementById('nfo').innerHTML = "finished!";
+			}
+
+			function success(out){
+				document.getElementById('name').value  = "";
+				document.getElementById('path').value  = "";
+				document.getElementById('nfo').innerHTML = "finished!";
+				document.getElementById('details').innerHTML = out;
+				document.getElementById('deetz').style.display = "block";
+				document.getElementById('deetz').onclick = function(){ 
+					document.getElementById('details').style.display = "block";
+				};
+			}
+
+			//
+			//
+			//
+			//
+			//
+
+			document.getElementById('create').onclick = function(){
+				
+				projName = document.getElementById('name').value;
+				
+				path = document.getElementById('path').value;
+				if( path.substr(path.length-1,1)=="/"){
+					path = path.substr(0,path.length-1);
+				}
+
+				packagejson = '{\n\t"name": "'+projName+'",\n\t"version": "1.0.0",\n\t"description": "",\n\t"main": "index.html",\n\t"scripts": {\n\t\t"test": "echo \\"Error: no test specified\\" && exit 1"\n\t},\n\t"author": "",\n\t"license": "ISC",\n\t"window": {\n\t\t"toolbar": false,\n\t\t"frame": true,\n\t\t"icon": "icon.png",\n\t\t"show_in_taskbar": false\n\t}\n}';
+
+				toolsJSON = '{\n\t"name": "tools",\n\t"version": "1.0.0",\n\t"description": "",\n\t"main": "index.js",\n\t"scripts": {\n\t\t"test": "echo \\"Error: no test specified\\" && exit 1"\n\t},\n\t"author": "",\n\t"license": "ISC",\n\t"dependencies": {\n\t\t"nw": "^0.12.3",\n\t\t"nw-builder": "^2.0.2"\n\t}\n}';
+
+				buildScript = '#!/bin/bash  \nif [ -d ../app/build ] ; then \n\trm -rf build/\nfi\n../tools/node_modules/nw-builder/bin/nwbuild -v 0.12.3 -p "osx64,linux64" .\n';
+
+				indexHTML = '<!DOCTYPE html>\n<html>\n<head>\n\t<title>'+projName+'</title>\n\t<link rel="stylesheet" href="css/styles.css">\n</head>\n<body>\n\t<script src="js/BB.min.js"><\/script>\n\t<script src="app.js"><\/script>\n</body>\n</html>';
+
+				sublimeProj = '{\n\t"folders":\n\t[\n\t\t{\n\t\t\t"path": "'+path+"/"+projName+'"\n\t\t}\n\t],\n\t"settings":\n\t{\n\t\t"tab_size": 4\n\t},\n\t"build_systems":\n\t[\n\t\t{\n\t\t\t"name": "Branger_Briz",\n\t\t\t"cmd": ["../tools/node_modules/nw/bin/nw"],\n\t\t\t\t"variants":\n\t\t\t\t[\n\t\t\t\t\t{\n\t\t\t\t\t\t"name": "Run",\n\t\t\t\t\t\t"cmd":["bash","../tools/build.sh"]\n\t\t\t\t\t}\n\t\t\t\t]\n\t\t}\n\t]\n}';
+				
+				if( projName==undefined || projName==null || projName=="" ){
+					alert('u gotta name ur project');
+				} else if( projName==undefined || projName==null || projName=="" ){
+					alert('don\'t forget ur path');
+				} else {
+					makeProjectDir();
+				}
+			}
+
+
+			document.onkeypress = function(e){
+				var e = window.event || e;
+				if(e.keyCode == 17) win.close();
+			}
+
+
+
+		</script>
+	</body>
+</html>
