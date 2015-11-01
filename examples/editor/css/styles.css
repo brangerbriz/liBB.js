@@ -59,15 +59,33 @@
 		top: 0px;
 		width: 50%;
 		height: 100%;
+		transition: all 500ms ease;
 
 	}
+
+	#toggle {
+		position: absolute;
+		top: 10px;
+		left: 51%;
+		background-color: rgb(204, 51, 153);
+		padding: 10px;
+		text-align: center;
+		color: rgb(255, 255, 255);
+		font-weight: bold;
+		text-transform: uppercase;
+		font-size: 10px;
+		cursor: pointer;
+		opacity: 0.5;
+		transition: all 500ms ease;
+	}
+	#toggle:hover { opacity: 1.0 }
 
 	#editor {
 
 		position: absolute;
 		width: 50%;
 		height: 100%;
-
+		transition: all 500ms ease;
 	}
 
 	#editor .CodeMirror {

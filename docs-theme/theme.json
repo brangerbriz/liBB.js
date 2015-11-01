@@ -1,9 +1,9 @@
 {
-	"projectName" : "BB.js",
+	"projectName" : "liBB.js",
 	
 	"projectVersion" : "0.0.1",
 	
-	"projectDescription" : "A set of JavaScript modules for creating interactive && generative apps + installations.",
+	"projectDescription" : "A JavaScript library/framework for creating interactive && generative apps + installations.",
 	
 	"cred" : "lots of coyp+paste from >> https://github.com/Krxtopher/yuidoc-themes"
 }

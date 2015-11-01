@@ -104,6 +104,7 @@ gulp.task('serve', function() {
     var exampleTemplate = fs.readFileSync(__dirname + '/examples/index.html', { encoding: 'utf8'});
     var exampleHTML = handlebars.compile(exampleTemplate)(data);
 
+    app.use('/', express.static(path.resolve(__dirname + '/docs')));
     app.use('/docs', express.static(path.resolve(__dirname + '/docs')));
     app.use('/build', express.static(path.resolve(__dirname + '/build')));
     app.use('/examples', function(req, res, next){

@@ -16,7 +16,6 @@ function setup() {
 
 }
 
-
 function update() {
    requestAnimationFrame(update);
 

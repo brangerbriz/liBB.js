@@ -12,11 +12,13 @@
 	<script src="js/esprima.js" id="test"></script>
 	<script src="js/dat.gui.min.js"></script>
 
+
 </head>
 <body>
 
 	<div id="preview"></div>
 	<div id="editor"></div>
+	<div id="toggle"> hide code </div>
 
 	<script>
 
@@ -61,6 +63,8 @@
 
 		var file = ( Q.file ) ? Q.file : "template";
 
+		var showingEditor = ( Q.editor ) ? (Q.editor=="true")?true:false : false;
+
 		// editor code   	------			------				------				------
 
 		var head = '<!DOCTYPE html><html><head><title>BBModule Example Editor</title><link rel="stylesheet" href="..\/assets\/css\/styles.css"></head><body><script src="..\/..\/build\/BB.min.js"><\/script><script src="..\/..\/toys\/logo.js"><\/script><script src="..\/assets\/js\/dat.gui.min.js"><\/script><script>';
@@ -101,7 +105,35 @@
 		}
 
 
+		// show / hide editor	------			------				------				------
+		// 
 
+		function noCode(){
+			document.getElementById('editor').style.left = -(window.innerWidth/2)+"px";
+			document.getElementById('preview').style.left = "0%";
+			document.getElementById('preview').style.width = "100%";
+			document.getElementById('toggle').style.left = 10+"px";	
+			document.getElementById('toggle').innerHTML = "show code";
+		}
+
+		function yesCode(){
+			document.getElementById('editor').style.left ="0px";
+			document.getElementById('preview').style.left = "50%";
+			document.getElementById('preview').style.width = "50%";	
+			document.getElementById('toggle').style.left = (window.innerWidth/2)+10+"px";
+			document.getElementById('toggle').innerHTML = "hide code";		
+		}
+
+		function toggleEditor(){
+			if(showingEditor){
+				noCode(); showingEditor = false;			
+			} else {
+				yesCode(); showingEditor = true;						
+			}
+		}
+		if(showingEditor) yesCode();
+		else noCode();
+		document.getElementById('toggle').onclick = function(){ toggleEditor() }
 
 		// =^..^=   =^..^=   =^..^=    =^..^=    =^..^=    =^..^=    =^..^=
 		// =^..^=   =^..^=   =^..^=    =^..^=    =^..^=    =^..^=    =^..^=
@@ -438,7 +470,6 @@
 		// 	setupHelper();
 		
 		// }
-
 
 
 

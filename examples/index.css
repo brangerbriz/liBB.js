@@ -14,7 +14,7 @@ body { background-color:#fff; color:#555; }
 section { text-align:center; padding:32px 0; }
 @media (min-width:640px) { section { padding:64px 0; } }
 
-.container { margin:0 auto; max-width:848px; width:90%; }
+.container { margin:0 auto; width:100%; /*max-width:848px; width:90%;*/ }
 
 .rwd { max-width: 100% } /* << ---- for imgs u want to make responsive inside one of those divs */
 
