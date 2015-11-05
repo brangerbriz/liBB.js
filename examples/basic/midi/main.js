@@ -1,6 +1,31 @@
-var device = null;
+// custom DOM
+var div = document.createElement('div');
+div.id = "device-event-info";
+div.innerHTML = "<h4>Connect a MIDI device</h4>";
+document.body.appendChild(div);
 
-var canvas = document.getElementById('canvas');
+div = document.createElement('div');
+div.id = "input-event-info";
+document.body.appendChild(div);
+
+var canvas = document.createElement('canvas');
+canvas.id = "canvas";
+document.body.appendChild(canvas);
+
+// custom CSS
+document.body.style.fontFamily = "\"Courier New\", Courier, monospace";
+document.body.style.color = "#cc3399";
+document.body.style.backgroundColor = "#ffb6e6";
+document.getElementById('device-event-info').style.zIndex = 2;
+document.getElementById('device-event-info').style.position = "absolute";
+document.getElementById('device-event-info').style.top = 0;
+document.getElementById('input-event-info').style.zIndex = 2;
+document.getElementById('input-event-info').style.position = "absolute";
+document.getElementById('input-event-info').style.bottom = 0;
+document.getElementById('input-event-info').style.height = "70%";
+document.getElementById('input-event-info').style.overflow = "hidden";
+
+var device = null;
 var ctx = canvas.getContext('2d');
 
 // this map is meant for the KORG nanoKONTROL midi controller
@@ -83,6 +108,7 @@ var activeInputs = generateActiveInputs(midiMap);
 window.onload = function() {
 
     device = new BB.MidiDevice(midiMap, midiSuccess, midiFailure);
+    console.log('device', device);
 
     device.on('connect', function(name, type, port) {
         document.getElementById('device-event-info').innerHTML = 
@@ -105,9 +131,7 @@ window.onload = function() {
         + "<span>velocity: " + data.velocity + "</span><br>"
     });
     
-    if (!device) {
-        alert('Your browser does not support the MIDI API');
-    }
+   draw();
 }
 
 function midiSuccess() {
@@ -181,14 +205,10 @@ function midiSuccess() {
             notifyActive(activeInputs.keys, index, 100);
         });
     }
-
-    draw();
-    console.log(draw);
 }
 
 function midiFailure() {
-    console.log('failure');
-    alert('Plug in a midi device');
+    alert('Your browser does not support the MIDI API\nTry using Google Chrome.');
 }
 
 function draw() {
@@ -267,16 +287,16 @@ function draw() {
         ctx.closePath(); 
     }
 
-    startHeight += yPadding + barHeight;
+    if (sliders.length > 0) startHeight += yPadding + barHeight;
 
     var buttons = device.inputs.buttons;
-    for (var i = 0; i < 20; i++) { // buttons.length
+    for (var i = 0; i < buttons.length; i++) { // buttons.length
 
-        // if (activeInputs.buttons[i][0] === true) {
-        //     ctx.fillStyle = "#cc3399";
-        // } else {
-        //     ctx.fillStyle = "#ffb6e6";
-        // }
+        if (activeInputs.buttons[i][0] === true) {
+            ctx.fillStyle = "#cc3399";
+        } else {
+            ctx.fillStyle = "#ffb6e6";
+        }
 
         var size = 25;
         
@@ -292,7 +312,7 @@ function draw() {
         ctx.closePath();
     }
 
-    startHeight += yPadding;
+    if (buttons.length > 0) startHeight += yPadding;
 
     var pads = device.inputs.pads;
     for (var i = 0; i < pads.length; i++) {
@@ -318,7 +338,7 @@ function draw() {
 
     }
 
-    startHeight += yPadding + 50;
+    if (pads.length > 0) startHeight += yPadding + 50;
 
     var keys = device.inputs.keys;
     for (var i = 0; i < keys.length; i++) {
@@ -332,7 +352,7 @@ function draw() {
         var width = (stopX - startX)/keys.length;
 
         var x = startX + width * (i + 1);
-        var y = 480;
+        y = startHeight + yPadding / 2;
 
         ctx.beginPath();
         ctx.rect(x + width/2, y, width, size);
@@ -357,13 +377,13 @@ function generateActiveInputs(midiMap) {
 }
 
 function notifyActive(activeArr, index, timeout) {
-    // console.log(index);
+    
     activeArr[index][0] = true;
-    // console.log('started');
+    
     clearTimeout(activeArr[index][1]);
     activeArr[index][1] = setTimeout(function(){
         activeArr[index][0] = false;
-        // console.log('finished');
+        
     }, timeout);
 }
 
@@ -378,5 +398,4 @@ function logInputEvent(inputType, index, eventName) {
         container.insertBefore(span, container.childNodes[0]);
     }
     
-    // container.appendChild(document.createElement('br'));
 }
