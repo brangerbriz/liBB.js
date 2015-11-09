@@ -1,9 +1,12 @@
-var canvas     = document.getElementById('canvas');
+var canvas     = document.createElement('canvas');
+canvas.id = 'canvas';
+document.body.appendChild(canvas);
+
 var ctx        = canvas.getContext('2d');
 var gravity    = new BB.Vector2();
 var mouseInput = new BB.MouseInput(canvas);
 
-var WIDTH, HEIGHT, balls = [];
+var WIDTH, HEIGHT, agents = [];
 
 function setup() {
     
@@ -17,14 +20,21 @@ function setup() {
     var amount = 50; //gui -name amount
     for (var i = 0; i < amount; i++) {
         
-        var ball = new BB.Agent2D({
+        var agent = new BB.Agent2D({
             position: new BB.Vector2( Math.random()*WIDTH, Math.random()*HEIGHT ),
             velocity: new BB.Vector2( BB.MathUtils.randomFloat(-1,1), BB.MathUtils.randomFloat(-5,5) ),
             radius: BB.MathUtils.randomInt(15, 30),
             elasticity: 0.1 //gui -name elasticity -min 0.0 -max 0.5 -steps 0.01
         });
 
-        balls.push( ball );
+        agent.collide({
+            top: 0,
+            right: canvas.width,
+            bottom: canvas.height,
+            left: 0
+        });
+
+        agents.push(agent);
     };
 }
 
@@ -38,28 +48,42 @@ function update() {
 
     var mouse = new BB.Vector2(mouseInput.x, mouseInput.y);
 
-    for (var i = 0; i < balls.length; i++) {
+    for (var i = 0; i < agents.length; i++) {
 
-        balls[i].seek(mouse, 0.1, 100);
+        agents[i].seek(mouse, 0.1, 100);
 
-        balls[i].applyForce(gravity);
+        agents[i].applyForce(gravity);
 
-        balls[i].update();
+        agents[i].update();
     };
 
     draw();
 }
 
 function draw() {
+    
     ctx.clearRect(0,0,WIDTH,HEIGHT);
 
-    for (var i = 0; i < balls.length; i++) {
+    var width = 30;
+    var height = 50;
+
+    for (var i = 0; i < agents.length; i++) {
+       
         ctx.fillStyle = "#cc3399";
+        ctx.save();
+        ctx.translate(agents[i].position.x, agents[i].position.y);
+    
+        // add 90 degrees to rotate triangle (which is drawn pointy side up)
+        ctx.rotate(agents[i].heading + BB.MathUtils.degToRad(90));
         ctx.beginPath();
-        ctx.arc( balls[i].position.x, balls[i].position.y, balls[i].radius, 0, Math.PI*2 );
+        ctx.moveTo(-width/2, height/2);
+        ctx.lineTo(0, - height/2);
+        ctx.lineTo(width/2, height/2);
         ctx.closePath();
         ctx.fill();
+        ctx.restore();
     };
+
 }
 
 
