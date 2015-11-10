@@ -58,7 +58,7 @@ function draw() {
     ctx.clearRect(0,0,WIDTH,HEIGHT);
 
     for (var i = 0; i < balls.length; i++) {
-        ctx.fillStyle = "#cc3399";
+        ctx.fillStyle = "#e40477";
         ctx.beginPath();
         ctx.arc( balls[i].position.x, balls[i].position.y, balls[i].radius, 0, Math.PI*2 );
         ctx.closePath();

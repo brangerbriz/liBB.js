@@ -72,7 +72,7 @@ function setup() {
     });
 
 
-    ctx.fillStyle = "#cc3399";
+    ctx.fillStyle = "#e40477";
     makeMolecule( WIDTH/2, HEIGHT/2 );
 }
 

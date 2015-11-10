@@ -23,7 +23,7 @@ function(  BB) {
 
         // see getter/setter below
         if( typeof r == "undefined" ){
-            this._r = 204; 
+            this._r = 228; 
         }
         else if( typeof r !== 'number' || r<0 || r>255 ){
             throw new Error("BB.Color: red parameter neeeds to be a NUMBER between 0 - 255");
@@ -33,7 +33,7 @@ function(  BB) {
 
         // see getter/setter below
         if( typeof g == "undefined" ){
-            this._g = 51; 
+            this._g = 4; 
         }
         else if( typeof g !== 'number' || g<0 || g>255 ){
             throw new Error("BB.Color: green parameter neeeds to be a NUMBER between 0 - 255");
@@ -43,7 +43,7 @@ function(  BB) {
 
         // see getter/setter below
         if( typeof b == "undefined" ){
-            this._b = 153; 
+            this._b = 119; 
         }
         else if( typeof b !== 'number' || b<0 || b>255 ){
             throw new Error("BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255");
