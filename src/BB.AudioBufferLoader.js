@@ -18,7 +18,7 @@ function(  BB){
      * &nbsp;var context =  new (window.AudioContext || window.webkitAudioContext)();<br>
      * <br>
      * &nbsp;// one way to do it<br>
-     * &nbsp;var loader = new BufferLoader({<br>
+     * &nbsp;var loader = new BB.AudioBufferLoader({<br>
      * &nbsp;&nbsp;&nbsp;&nbsp;context: context,<br>
      * &nbsp;&nbsp;&nbsp;&nbsp;paths: ['audio/katy.ogg','audio/entro.ogg']<br>
      * &nbsp;}, function(buffers){<br>
@@ -26,7 +26,7 @@ function(  BB){
      * &nbsp;});<br>
      * <br>
      * &nbsp;// another way to do it<br>
-     * &nbsp;loader = new BufferLoader({ <br>
+     * &nbsp;loader = new BB.AudioBufferLoader({ <br>
      * &nbsp;&nbsp;&nbsp;&nbsp;context:context, <br>
      * &nbsp;&nbsp;&nbsp;&nbsp;paths:['katy.ogg','entro.ogg'], <br>
      * &nbsp;&nbsp;&nbsp;&nbsp;autoload:false <br>
@@ -52,21 +52,14 @@ function(  BB){
          */
         this.urls       = config.paths;
 
-        /**
-         * whether or not to autoload the files
-         * @type {Boolean}
-         * @property auto
-         */
+        // whether or not to autoload the files
         this.auto       = ( typeof config.autoload !== 'undefined' ) ? config.autoload : true;
 
-        /**
-         * callback to run after loading
-         * @type {Function}
-         * @property onload
-         */
+        //callback to run after loading
         this.onload     = callback;
         
-        this._cnt       = 0; // to know when to callback
+        // to know when to callback
+        this._cnt       = 0; 
 
         /**
          * audio buffers array, accessible in callback
@@ -94,6 +87,7 @@ function(  BB){
      * @method loadbuffer
      * @param {String} path to audio file 
      * @param {Number} index of buffer 
+     * @protected
      */
     BB.AudioBufferLoader.prototype.loadbuffer = function(url, index){
         var self = this;
@@ -125,8 +119,9 @@ function(  BB){
     };
 
     /**
-     * creates buffers from url paths set in the constructor, automatically runs in constructor unless autoload is set to false
-     * @method load
+     * creates buffers from url paths set in the constructor, automatically runs
+     * in constructor unless autoload is set to false ( in the config )
+     * @method load 
      */
     BB.AudioBufferLoader.prototype.load = function(){
         for (var i = 0; i < this.urls.length; i++) this.loadbuffer( this.urls[i], i );

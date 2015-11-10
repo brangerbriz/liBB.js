@@ -72,7 +72,7 @@ function(  BB ){
      * @param {Number} [input] input of the node you're connecting this to, 0 for left channel, 1 for right channel ( default 0 )
      */
 	BB.AudioAnalyser.prototype.connect = function(destination, output, input ){
-		if( !(destination instanceof AudioDestinationNode) || !(destination instanceof AudioNode) )
+		if( !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
 			throw new Error('Analyser: destination should be an instanceof AudioDestinationNode or AudioNode');
 		this.dest = destination;
 		this.analyser.connect( this.dest, output, input );

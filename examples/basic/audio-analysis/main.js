@@ -14,6 +14,7 @@ katy = new BB.AudioSampler({
 function play(){
 	if(katy.loaded){
 		katy.connect( fft.analyser );
+		console.log( )
 		// play fireworks immediately for a few seconds ( from 0.5 to 7.4 )
 		katy.play('fireworks', 0, 0.5, 7.4);
 	}

@@ -1519,7 +1519,7 @@ function(  BB) {
 
         // see getter/setter below
         if( typeof r == "undefined" ){
-            this._r = 204; 
+            this._r = 228; 
         }
         else if( typeof r !== 'number' || r<0 || r>255 ){
             throw new Error("BB.Color: red parameter neeeds to be a NUMBER between 0 - 255");
@@ -1529,7 +1529,7 @@ function(  BB) {
 
         // see getter/setter below
         if( typeof g == "undefined" ){
-            this._g = 51; 
+            this._g = 4; 
         }
         else if( typeof g !== 'number' || g<0 || g>255 ){
             throw new Error("BB.Color: green parameter neeeds to be a NUMBER between 0 - 255");
@@ -1539,7 +1539,7 @@ function(  BB) {
 
         // see getter/setter below
         if( typeof b == "undefined" ){
-            this._b = 153; 
+            this._b = 119; 
         }
         else if( typeof b !== 'number' || b<0 || b>255 ){
             throw new Error("BB.Color: blue parameter neeeds to be a NUMBER between 0 - 255");
@@ -4657,7 +4657,7 @@ function(  BB){
      * &nbsp;var context =  new (window.AudioContext || window.webkitAudioContext)();<br>
      * <br>
      * &nbsp;// one way to do it<br>
-     * &nbsp;var loader = new BufferLoader({<br>
+     * &nbsp;var loader = new BB.AudioBufferLoader({<br>
      * &nbsp;&nbsp;&nbsp;&nbsp;context: context,<br>
      * &nbsp;&nbsp;&nbsp;&nbsp;paths: ['audio/katy.ogg','audio/entro.ogg']<br>
      * &nbsp;}, function(buffers){<br>
@@ -4665,7 +4665,7 @@ function(  BB){
      * &nbsp;});<br>
      * <br>
      * &nbsp;// another way to do it<br>
-     * &nbsp;loader = new BufferLoader({ <br>
+     * &nbsp;loader = new BB.AudioBufferLoader({ <br>
      * &nbsp;&nbsp;&nbsp;&nbsp;context:context, <br>
      * &nbsp;&nbsp;&nbsp;&nbsp;paths:['katy.ogg','entro.ogg'], <br>
      * &nbsp;&nbsp;&nbsp;&nbsp;autoload:false <br>
@@ -4691,21 +4691,14 @@ function(  BB){
          */
         this.urls       = config.paths;
 
-        /**
-         * whether or not to autoload the files
-         * @type {Boolean}
-         * @property auto
-         */
+        // whether or not to autoload the files
         this.auto       = ( typeof config.autoload !== 'undefined' ) ? config.autoload : true;
 
-        /**
-         * callback to run after loading
-         * @type {Function}
-         * @property onload
-         */
+        //callback to run after loading
         this.onload     = callback;
         
-        this._cnt       = 0; // to know when to callback
+        // to know when to callback
+        this._cnt       = 0; 
 
         /**
          * audio buffers array, accessible in callback
@@ -4733,6 +4726,7 @@ function(  BB){
      * @method loadbuffer
      * @param {String} path to audio file 
      * @param {Number} index of buffer 
+     * @protected
      */
     BB.AudioBufferLoader.prototype.loadbuffer = function(url, index){
         var self = this;
@@ -4764,8 +4758,9 @@ function(  BB){
     };
 
     /**
-     * creates buffers from url paths set in the constructor, automatically runs in constructor unless autoload is set to false
-     * @method load
+     * creates buffers from url paths set in the constructor, automatically runs
+     * in constructor unless autoload is set to false ( in the config )
+     * @method load 
      */
     BB.AudioBufferLoader.prototype.load = function(){
         for (var i = 0; i < this.urls.length; i++) this.loadbuffer( this.urls[i], i );
@@ -4789,8 +4784,9 @@ function(  BB, 		 AudioBufferLoader){
 	 * @class BB.AudioSampler
 	 * @constructor
 	 * 
-	 * @param {Object} config A config object to initialize the Sampler, must contain a "context: AudioContext" 
-	 * property and can contain as many additional properties as there are sound files
+	 * @param {Object} config A config object to initialize the Sampler, must contain a 
+	 * "context: AudioContext" property and can contain as many additional properties as 
+	 * there are sound files ( also, config can include "audoload" boolean, true by default )
 	 * @param {Function} [callback] A callback, with a buffer Object Array
 	 * 
 	 * @example  
@@ -4803,7 +4799,7 @@ function(  BB, 		 AudioBufferLoader){
 	 *	&nbsp;&nbsp;&nbsp;&nbsp;snare: 'audio/808/snare.ogg',<br>
 	 *	&nbsp;&nbsp;&nbsp;&nbsp;hat: 'audio/808/hat.ogg'<br>
 	 *	&nbsp;}, function( bufferObj ){<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;console.log( bufferObj )<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;console.log( "loaded: " + bufferObj )<br>
 	 *	&nbsp;&nbsp;&nbsp;&nbsp;run();<br>
 	 *	&nbsp;});<br>
 	 *	<br>
@@ -4823,16 +4819,6 @@ function(  BB, 		 AudioBufferLoader){
 		 */
 		this.ctx 		= config.context;
 
-		this.dest 		= this.ctx.destination;
-
-
-		/**
-		 * whether or not to autoload the files
-		 * @type {Boolean}
-		 * @property auto
-		 */
-		this.auto 		= ( typeof config.autoload !== 'undefined' ) ? config.autoload : true;
-
 		/**
 		 * whether or not the file(s) have loaded
 		 * @type {Boolean}
@@ -4840,15 +4826,11 @@ function(  BB, 		 AudioBufferLoader){
 		 */
 		this.loaded		= false;
 
-		/**
-		 * callback to run after loading
-		 * @type {Function}
-		 * @property onload
-		 */
+		// callback to run after loading
 		this.onload 	= callback;
 
 		/**
-		 * array of sample names
+		 * sample names, ex:['kick','snare']
 		 * @type {Array}
 		 * @property keys
 		 */
@@ -4865,6 +4847,23 @@ function(  BB, 		 AudioBufferLoader){
 		 * @property buffers
 		 */
 		this.buffers	= {}; 
+		/**
+		 * changes the pitch (<a href="https://en.wikipedia.org/wiki/Cent_%28music%29" target="_blank">-1200 to 1200</a> )
+		 * @type {Number}
+		 * @property detune
+		 * @default 0
+		 */
+		this.detune 	= ( typeof config.detune !== 'undefined' ) ? config.detune : 0;
+
+		// default destination is context destination
+		// unless otherwise specified in this.connect()
+		this.gain		= this.ctx.createGain();	
+		this.gain.connect( this.ctx.destination );
+
+		// whether or not to autoload the files
+		this.auto 		= ( typeof config.autoload !== 'undefined' ) ? config.autoload : true;
+
+		// will be instance of BB.AudioBufferLoader
 		this.loader 	= undefined;
 
 
@@ -4877,7 +4876,7 @@ function(  BB, 		 AudioBufferLoader){
 			throw new Error('BB.AudioSampler: autoload should be either true or false');
 
 
-
+		// setup keys && paths
 		for (var key in config ) {
 			if( key!=='context' && key!=='autoload'){
 				this.keys.push( key );
@@ -4917,11 +4916,68 @@ function(  BB, 		 AudioBufferLoader){
 
 	};
 
-	BB.AudioSampler.prototype.connect = function( destination){
-		// WARNING: keep in mind this connect is a little different from webaudio api connect
-		// it has no optional output/input arguments
-		this.dest = destination;
+	/**
+	 * connects the Sampler to a particular AudioNode or AudioDestinationNode
+	 * @method connect
+	 * @param  {AudioNode} destination the AudioNode or AudioDestinationNode to connect to
+	 * @param  {Number} output      which output of the the Sampler do you want to connect to the destination
+	 * @param  {Number} input       which input of the destinatino you want to connect the Sampler to
+	 */
+	BB.AudioSampler.prototype.connect = function( destination, output, input ){
+		if( !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
+			throw new Error('AudioSampler.connect: destination should be an instanceof AudioDestinationNode or AudioNode');
+		if( typeof output !== "undefined" && typeof output !== "number" )
+			throw new Error('AudioSampler.connect: output should be a number');
+		if( typeof intput !== "undefined" && typeof input !== "number" )
+			throw new Error('AudioSampler.connect: input should be a number');
+
+		if( typeof intput !== "undefined" ) this.gain.connect( destination, output, input );
+		else if( typeof output !== "undefined" ) this.gain.connect( destination, output );
+		else this.gain.connect( destination );
+
 	};
+
+	/**
+	 * diconnects the Sampler from the node it's connected to
+	 * @method disconnect
+	 * @param  {AudioNode} destination what it's connected to
+	 * @param  {Number} output      the particular output number
+	 * @param  {Number} input       the particular input number
+	 */
+	BB.AudioSampler.prototype.disconnect = function(destination, output, input ){
+		if( typeof destination !== "undefined" &&
+			!(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
+			throw new Error('AudioSampler.disconnect: destination should be an instanceof AudioDestinationNode or AudioNode');
+		if( typeof output !== "undefined" && typeof output !== "number" )
+			throw new Error('AudioSampler.disconnect: output should be a number');
+		if( typeof input !== "undefined" && typeof input !== "number" )
+			throw new Error('AudioSampler.disconnect: input should be a number');
+
+		if( typeof input !== "undefined" ) this.gain.disconnect( destination, output, input );
+		else if( typeof output !== "undefined" ) this.gain.disconnect( destination, output );
+		else if( typeof destination !== "undefined" ) this.gain.disconnect( destination );
+		else  this.gain.disconnect();
+	};
+
+	// ^ ^ ^ ^ ^ 
+	// Maybe add an "output" or "modulate" function that usese the AudioNode.connect(AudioParam)
+	// https://developer.mozilla.org/en-US/docs/Web/API/AudioNode/connect%28AudioParam%29
+	// so we can manipulate parameters w/ the audio signal from AudioSampler
+	// ^ ^ ^ ^ ^
+
+	/**
+	 * sets the gain level of the AudioSamppler ( in a sense, volume control ) 
+	 * @method setGain
+	 * @param {Number} num a float value, 1 being the default volume, below 1 decreses the volume, above one pushes the gain
+	 */
+	BB.AudioSampler.prototype.setGain = function( num ){
+		if( typeof num !== "number" )
+			throw new Error('AudioSampler.setGain: expecting a number');
+
+		this.gain.gain.value = num;
+	};
+
+
 
     /**
      * schedules an audio buffer to be played
@@ -4945,13 +5001,16 @@ function(  BB, 		 AudioBufferLoader){
 
 		var source = this.ctx.createBufferSource(); 
 			source.buffer = this.buffers[ key ];            
-			source.connect( this.dest );   
+			source.detune.value = this.detune;
+			source.connect( this.gain );   
+
 
 		var w = ( typeof when !== 'undefined' ) ? when : 0;
 		var o = ( typeof offset !== 'undefined' ) ? offset : 0;
 		var d = ( typeof duration !== 'undefined' ) ? duration : source.buffer.duration;
 
 	    source.start( w, o, d ); 
+
     };
 
 	return BB.AudioSampler;
@@ -5030,7 +5089,7 @@ function(  BB ){
      * @param {Number} [input] input of the node you're connecting this to, 0 for left channel, 1 for right channel ( default 0 )
      */
 	BB.AudioAnalyser.prototype.connect = function(destination, output, input ){
-		if( !(destination instanceof AudioDestinationNode) || !(destination instanceof AudioNode) )
+		if( !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
 			throw new Error('Analyser: destination should be an instanceof AudioDestinationNode or AudioNode');
 		this.dest = destination;
 		this.analyser.connect( this.dest, output, input );
@@ -5491,7 +5550,6 @@ function(  BB,
      * @param {Object} midiMap An object with array properties for knobs, sliders, buttons, keys, and pads.
      * @param {Function} success Function to return once MIDIAccess has been received successfully.
      * @param {Function} failure Function to return if MIDIAccess is not received successfully.
-     * @return {Boolean} True if browser supports Midi, false if not.
      */
     BB.MidiDevice = function(midiMap, success, failure) {
         
@@ -5539,12 +5597,13 @@ function(  BB,
 
         var i = 0;
         var key = null;
+        var note = null;
         
         // sliders
         if (typeof midiMap.sliders !== 'undefined' && midiMap.sliders instanceof Array) {
             for (i = 0; i < midiMap.sliders.length; i++) {
                 input = new BB.MidiInputSlider(midiMap.sliders[i]);
-                var note = (typeof midiMap.sliders[i] === 'number') ? midiMap.sliders[i] : midiMap.sliders[i].note;
+                note = (typeof midiMap.sliders[i] === 'number') ? midiMap.sliders[i] : midiMap.sliders[i].note;
                 key = 'key' + note;
                 if (typeof noteLUT[key] === 'undefined') {
                     noteLUT[key] = [];
@@ -5558,7 +5617,7 @@ function(  BB,
         if (typeof midiMap.knobs !== 'undefined' && midiMap.knobs instanceof Array) {
             for (i = 0; i < midiMap.knobs.length; i++) {
                 input = new BB.MidiInputKnob(midiMap.knobs[i]);
-                var note = (typeof midiMap.knobs[i] === 'number') ? midiMap.knobs[i] : midiMap.knobs[i].note;
+                note = (typeof midiMap.knobs[i] === 'number') ? midiMap.knobs[i] : midiMap.knobs[i].note;
                 key = 'key' + note;
                 if (typeof noteLUT[key] === 'undefined') {
                     noteLUT[key] = [];
@@ -5572,7 +5631,7 @@ function(  BB,
         if (typeof midiMap.buttons !== 'undefined' && midiMap.buttons instanceof Array) {
             for (i = 0; i < midiMap.buttons.length; i++) {
                 input = new BB.MidiInputButton(midiMap.buttons[i]);
-                var note = (typeof midiMap.buttons[i] === 'number') ? midiMap.buttons[i] : midiMap.buttons[i].note;
+                note = (typeof midiMap.buttons[i] === 'number') ? midiMap.buttons[i] : midiMap.buttons[i].note;
                 key = 'key' + note;
                 if (typeof noteLUT[key] === 'undefined') {
                     noteLUT[key] = [];
@@ -5586,7 +5645,7 @@ function(  BB,
         if (typeof midiMap.pads !== 'undefined' && midiMap.pads instanceof Array) {
             for (i = 0; i < midiMap.pads.length; i++) {
                 input = new BB.MidiInputPad(midiMap.pads[i]);
-                var note = (typeof midiMap.pads[i] === 'number') ? midiMap.pads[i] : midiMap.pads[i].note;
+                note = (typeof midiMap.pads[i] === 'number') ? midiMap.pads[i] : midiMap.pads[i].note;
                 key = 'key' + note;
                 if (typeof noteLUT[key] === 'undefined') {
                     noteLUT[key] = [];
@@ -5600,8 +5659,7 @@ function(  BB,
         if (typeof midiMap.keys !== 'undefined' && midiMap.keys instanceof Array) {
             for (i = 0; i < midiMap.keys.length; i++) {
                 input = new BB.MidiInputKey(midiMap.keys[i]);
-                var note = (typeof midiMap.keys[i] === 'number') ? midiMap.keys[i] : midiMap.keys[i].note;
-                console.log(note);
+                note = (typeof midiMap.keys[i] === 'number') ? midiMap.keys[i] : midiMap.keys[i].note;
                 key = 'key' + note;
                 if (typeof noteLUT[key] === 'undefined') {
                     noteLUT[key] = [];
@@ -5616,9 +5674,8 @@ function(  BB,
             navigator.requestMIDIAccess({
                 sysex: false
             }).then(onMIDISuccess, failure);
-            return true; // support
         } else {
-            return false; // no support
+            failure();
         }
 
         // midi functions
