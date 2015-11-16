@@ -17,6 +17,16 @@ function(  BB,        Particle2D){
      * @extends BB.Particle2D
      * @param {Object} config Agent2D configuration object. Exactly the same
      * configuration object expected in BB.Particle2D.
+     * @example  <code class="code prettyprint">
+     * &nbsp;var WIDTH = window.innerWidth;<br>
+     * &nbsp;var HEIGH = window.innerHeight;<br>
+     * &nbsp;var agent = new BB.Agent2D({<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;maxSpeed: 6,<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;position: new BB.Vector2( Math.random() \* WIDTH, Math.random() \* HEIGHT ),<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;velocity: new BB.Vector2(1, 2),<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;radius: 50<br>
+     * &nbsp;});
+     * </code>
      */
     BB.Agent2D = function(config) {
 
@@ -43,8 +53,12 @@ function(  BB,        Particle2D){
     * @param  {Number} [multiplier=1]   An optional parameter (usually between 0-1.0) used to scale the
     * seek force. This multiplier operation is run right before the seek
     * force is applied, after the force may have already been limited by
-    * maxForce. 
-     */
+    * maxForce.
+    * @example <code class="code prettyprint">&nbsp;// assuming agent is an instance of BB.Agent2D<br>
+    * &nbsp;// assuming targets is an array of BB.Vector2s<br>
+    * &nbsp;agent.seek(targets, 0.1, 200);<br>
+    * </code>
+    */
     BB.Agent2D.prototype.seek = function(targets, maxForce, arriveDistance, multiplier, flee) {
 
         if (!(targets instanceof Array)) {
@@ -107,7 +121,13 @@ function(  BB,        Particle2D){
     * flee force. This multiplier operation is run right before the flee
     * force is applied, after the force may have already been limited by
     * maxForce. 
-     */
+    * @example <code class="code prettyprint">&nbsp;// assuming agent is an instance of BB.Agent2D<br>
+    * &nbsp;// assuming targets is an array of BB.Vector2s<br>
+    * &nbsp;agent.flee(targets, 0.1);<br>
+    * &nbsp;// or to half the flee force, use a multiplier<br>
+    * &nbsp;agent.flee(targets, 0.1, 0.5);<br>
+    * </code>
+    */
     BB.Agent2D.prototype.flee = function(targets, maxForce, multiplier) {
         this.seek(targets, maxForce, null, multiplier, true);
     };
@@ -125,7 +145,13 @@ function(  BB,        Particle2D){
     * avoid force. This multiplier operation is run right before the avoid
     * force is applied, after the force may have already been limited by
     * maxForce. 
-     */
+    * @example <code class="code prettyprint">&nbsp;// assuming agent is an instance of BB.Agent2D<br>
+    * &nbsp;// assuming particles is an array of BB.Particle2Ds<br>
+    * &nbsp;agent.avoid(particles, 0.1, 100);<br>
+    * &nbsp;// or to half the avoid force, use a multiplier<br>
+    * &nbsp;agent.avoid(particles, 0.1, 100, 0.5);<br>
+    * </code>
+    */
     BB.Agent2D.prototype.avoid = function(particles, maxForce, seperationDistance, multiplier) {
 
         if (!(particles instanceof Array)) {
@@ -196,7 +222,7 @@ function(  BB,        Particle2D){
     * @param  {Number} [multiplier=1]   An optional parameter (usually between 0-1.0) used to scale the
     * avoid force. This multiplier operation is run right before the avoid
     * force is applied, after the force may have already been limited by
-    * maxForce. 
+    * maxForce.
      */
     BB.Agent2D.prototype.seperate = BB.Agent2D.prototype.avoid;
 
@@ -213,7 +239,13 @@ function(  BB,        Particle2D){
     * align force. This multiplier operation is run right before the align
     * force is applied, after the force may have already been limited by
     * maxForce. 
-     */
+    * @example <code class="code prettyprint">&nbsp;// assuming agent is an instance of BB.Agent2D<br>
+    * &nbsp;// assuming particles is an array of BB.Vector2s<br>
+    * &nbsp;agent.align(particles, 0.1, 50);<br>
+    * &nbsp;// or to half the align force, use a multiplier<br>
+    * &nbsp;agent.align(particles, 0.1, 50, 0.5);
+    * </code>
+    */
     BB.Agent2D.prototype.align = function(particles, maxForce, neighborDistance, multiplier) {
 
         if (!(particles instanceof Array)) {
@@ -282,7 +314,14 @@ function(  BB,        Particle2D){
     * @param  {Number} [multiplier=1]   An optional parameter (usually between 0-1.0) used to scale the
     * cohesion force. This multiplier operation is run right before the cohesion
     * force is applied, after the force may have already been limited by
-    * maxForce. 
+    * maxForce.
+    * @example <code class="code prettyprint">&nbsp;// assuming agent is an instance of BB.Agent2D<br>
+    * &nbsp;// assuming particles is an array of BB.Vector2s<br>
+    * &nbsp;agent.cohesion(particles, 0.1, 50);<br>
+    * &nbsp;// or to half the cohesion force, use a multiplier<br>
+    * &nbsp;agent.cohesion(particles, 0.1, 50, 0.5);
+    * </code>
+    */ 
      */   
     BB.Agent2D.prototype.cohesion = function(particles, maxForce, neighborDistance, multiplier) {
 
@@ -335,10 +374,20 @@ function(  BB,        Particle2D){
      * @param {Number} config.bottom The bottom of the bounding box.
      * @param {Number} config.left The left of the bounding box.
      * @param {Number} config.right The right of the bounding box.
-     * @param {Number} distance The threshold distance inside of which the
+     * @param {Number} config.distance The threshold distance inside of which the
      * avoidWalls force will be applied to the agent.
-     * @param {Number} [maxForce=0.1] The maximum force used to limit the
+     * @param {Number} [config.maxForce=0.1] The maximum force used to limit the
      * avoidWalls behavior. Defaults to 0.1 if parameter is null or undefined.
+     * @example <code class="code prettyprint">&nbsp;// assuming agent is an instance of BB.Agent2D<br>
+     * &nbsp;agent.avoidWalls({<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;top: 0,<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;bottom: window.innerHeight,<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;left: 0,<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;right: window.innerWidth,<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;distance: 100,<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;maxForce: 0.1<br>
+     * &nbsp;});<br>
+     * </code>
      */
     BB.Agent2D.prototype.avoidWalls = function(config) {
 
