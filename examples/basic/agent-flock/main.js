@@ -10,6 +10,7 @@ var mouseInput = new BB.MouseInput(canvas);
 var WIDTH, HEIGHT, agents = [];
 var seperateForce, alignForce, cohesionForce;
 var seperateMult, alignMult, cohesionMult;
+var color = new BB.Color();
 
 function setup() {
     
@@ -83,7 +84,7 @@ function draw() {
 
     for (var i = 0; i < agents.length; i++) {
        
-        ctx.fillStyle = "#cc3399";
+        ctx.fillStyle = color.hex;
         ctx.save();
         ctx.translate(agents[i].position.x, agents[i].position.y);
     

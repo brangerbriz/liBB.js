@@ -2,11 +2,13 @@ var canvas = document.createElement('canvas');
 canvas.id = 'canvas';
 document.body.appendChild(canvas);
 
-document.body.style.backgroundColor = "#FFB6E6";
+document.body.className = "radial-grey";
 
 var ctx        = canvas.getContext('2d');
 var gravity    = new BB.Vector2();
 var mouseInput = new BB.MouseInput(canvas);
+var color      = new BB.Color();
+var maxForce = 0.1 //gui -name maxForce -min 0.1 -max 1.0 -step 0.1
 
 var WIDTH, HEIGHT, agent;
 
@@ -20,11 +22,11 @@ function setup() {
     window.onresize();
     
     agent = new BB.Agent2D({
-        maxSpeed: 5, // setting the speed too high can cause the 'arrive' behavior not to work
+        // NOTE: setting the maxSpeed too high can cause the 'arrive' behavior not to work
+        maxSpeed: 5, //gui -name maxSpeed -min 1 -max 5 -step 1 
         position: new BB.Vector2( Math.random()*WIDTH, Math.random()*HEIGHT ),
         velocity: new BB.Vector2( BB.MathUtils.randomFloat(-1,1), BB.MathUtils.randomFloat(-5,5) ),
-        radius: BB.MathUtils.randomInt(15, 30),
-        elasticity: 0.1 //gui -name elasticity -min 0.0 -max 0.5 -steps 0.01
+        radius: BB.MathUtils.randomInt(15, 30)
     });
 }
 
@@ -32,13 +34,11 @@ function update() {
     
     requestAnimationFrame(update);
 
-    gravity.y = 0; //gui -name gravity.y -max 0.5 -steps 0.1
-
     mouseInput.update();
 
     var mouse = new BB.Vector2(mouseInput.x, mouseInput.y);
 
-    agent.seek(mouse, 0.1, 150);
+    agent.seek(mouse, maxForce, 150);
     agent.applyForce(gravity);
     agent.update();
 
@@ -52,7 +52,7 @@ function draw() {
     var width = 30;
     var height = 50;
        
-    ctx.fillStyle = "#cc3399";
+    ctx.fillStyle = color.hex;
     ctx.save();
     ctx.translate(agent.position.x, agent.position.y);
 

@@ -435,8 +435,6 @@ function(  BB,        Vector2){
                 }
             }
         }
-        
-
     };
 
 
