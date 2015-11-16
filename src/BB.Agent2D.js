@@ -322,7 +322,7 @@ function(  BB,        Particle2D){
     * &nbsp;agent.cohesion(particles, 0.1, 50, 0.5);
     * </code>
     */ 
-     */   
+   
     BB.Agent2D.prototype.cohesion = function(particles, maxForce, neighborDistance, multiplier) {
 
         if (!(particles instanceof Array)) {
