@@ -35,3 +35,30 @@
 	position: absolute;
 	top:0px; left:0px;
 }
+
+/* more stylish <button> tags */
+.btn {
+	border: 1px solid rgb(228, 4, 119);
+	padding: 10px;
+	border-radius: 5px;
+	background: #fff;
+}
+.btn:hover{
+	background:#e40477;
+	color:#fff;
+	cursor: pointer;
+}
+
+.center {
+	display: block;
+	width:200px;
+	margin: 1% auto;
+}
+.abs {
+	position: absolute;
+	display: block;
+	width: 200px;
+	top:10px;
+	left:50%;
+	margin-left:-100px;
+}
