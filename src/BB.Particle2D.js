@@ -440,7 +440,11 @@ function(  BB,        Vector2){
     };
 
 
-
+    /**
+     * Update the particle's internals and apply acceleration to veloicty.
+     * Called once per animation frame.
+     * @method  update
+     */
     BB.Particle2D.prototype.update = function() {
 
         var i = 0;
