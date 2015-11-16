@@ -15,11 +15,10 @@ function(  BB){
      * @param {Function} [callback] A callback, with a buffer Object
      * @example  
      * <code class="code prettyprint">  
-     * &nbsp;var context =  new (window.AudioContext || window.webkitAudioContext)();<br>
+     * &nbsp;BB.Audio.init();<br>
      * <br>
      * &nbsp;// one way to do it<br>
      * &nbsp;var loader = new BB.AudioBufferLoader({<br>
-     * &nbsp;&nbsp;&nbsp;&nbsp;context: context,<br>
      * &nbsp;&nbsp;&nbsp;&nbsp;paths: ['audio/katy.ogg','audio/entro.ogg']<br>
      * &nbsp;}, function(buffers){<br>
      * &nbsp;&nbsp;&nbsp;&nbsp;console.log('loaded:', buffers )<br>
@@ -27,23 +26,33 @@ function(  BB){
      * <br>
      * &nbsp;// another way to do it<br>
      * &nbsp;loader = new BB.AudioBufferLoader({ <br>
-     * &nbsp;&nbsp;&nbsp;&nbsp;context:context, <br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;context:BB.Audio.context, <br>
      * &nbsp;&nbsp;&nbsp;&nbsp;paths:['katy.ogg','entro.ogg'], <br>
      * &nbsp;&nbsp;&nbsp;&nbsp;autoload:false <br>
      * &nbsp;});<br>
      * &nbsp;loader.load(); // call load later, ex under some other condition<br>
      * </code>
+     *
+     * view basic <a href="../../examples/editor/?file=audio-buffer" target="_blank">BB.AudioBufferLoader</a> example
      */
 
 
     BB.AudioBufferLoader = function( config, callback ){
         
-        /**
-         * corresponding Audio Context
-         * @type {AudioContext}
-         * @property ctx
-         */
-        this.ctx        = config.context;
+
+        // the AudioContext to be used by this module 
+        if( typeof BB.Audio.context === "undefined" )
+            throw new Error('BB Audio Modules require that you first create an AudioContext: BB.Audio.init()');
+        
+        if( BB.Audio.context instanceof Array ){
+            if( typeof config === "undefined" || typeof config.context === "undefined" )
+                throw new Error('BB.AudioBufferLoader: BB.Audio.context is an Array, specify which { context:BB.Audio.context[?] }');
+            else {
+                this.ctx = config.context;
+            }
+        } else {
+            this.ctx = BB.Audio.context;
+        }
 
         /**
          * array of paths to audio files to load 

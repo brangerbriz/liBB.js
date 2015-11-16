@@ -4638,6 +4638,84 @@ function(  BB,        Vector2){
     return BB.Particle2D;
 });
 /**
+ * A module for creating an internal BB Web Audio API AudioContext
+ * @module BB.Audio
+ */
+define('BB.Audio',['./BB'],
+function(  BB){
+
+    'use strict';
+    
+    /**
+     * A module for creating an internal BB Web Audio API <a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext" target="_blank">AudioContext</a>
+     * @class BB.Audio
+     * @constructor
+     * @example  
+     * <code class="code prettyprint">  
+     * &nbsp;BB.Audio.init();<br>
+     * &nbsp;// then ( if you need direct access ) call...<br>
+     * &nbsp;BB.Audio.context;<br>
+     * <br>
+     * &nbsp;// or...<br>
+     * &nbsp;BB.Audio.init(3)<br>
+     * &nbsp;// then call...<br>
+     * &nbsp;BB.Audio.context[0];<br>
+     * &nbsp;BB.Audio.context[1];<br>
+     * &nbsp;BB.Audio.context[2];<br>
+     * </code>
+     */
+
+    BB.Audio = function(){
+
+        /**
+         * returns an <a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext" target="_blank">AudioContext</a> ( or an array of AudioContexts ) for use in BB.Audio modules
+         * @type {AudioContext}
+         * @property context
+         */
+        this.context = undefined;
+    };
+    
+
+    /**
+     * initializes BB AudioContext(s)
+     * @param  {Number} num number of contexts you want to create ( if more than 1 )
+     * @method init
+     */
+    BB.Audio.init = function( num ){
+        if(typeof num !== "undefined"){
+
+            this.context = [];
+            for (var i = 0; i < num; i++) {
+                window.AudioContext = window.AudioContext||window.webkitAudioContext;
+                this.context.push( new AudioContext() );
+            }
+
+        } else {
+
+            window.AudioContext = window.AudioContext||window.webkitAudioContext;
+            this.context = new AudioContext();
+        
+        }
+    };
+
+    /**
+     * returns AudioContext's currentTime
+     * @param  {Number} num index of context ( if more than one was initiated )
+     * @method init
+     */
+    BB.Audio.getTime = function(num){
+        if(this.context instanceof Array){
+            if(typeof num === "undefined")
+                throw new Error('BB.Audio: there is more than one context, specify the index of desired context: .getTime( 0 )');
+            return this.context[num].currentTime;
+        } else {
+            return this.context.currentTime;
+        }
+    };
+
+    return BB.Audio;
+});
+/**
  * A module for creating audio buffers from audio files
  * @module BB.AudioBufferLoader
  */
@@ -4654,11 +4732,10 @@ function(  BB){
      * @param {Function} [callback] A callback, with a buffer Object
      * @example  
      * <code class="code prettyprint">  
-     * &nbsp;var context =  new (window.AudioContext || window.webkitAudioContext)();<br>
+     * &nbsp;BB.Audio.init();<br>
      * <br>
      * &nbsp;// one way to do it<br>
      * &nbsp;var loader = new BB.AudioBufferLoader({<br>
-     * &nbsp;&nbsp;&nbsp;&nbsp;context: context,<br>
      * &nbsp;&nbsp;&nbsp;&nbsp;paths: ['audio/katy.ogg','audio/entro.ogg']<br>
      * &nbsp;}, function(buffers){<br>
      * &nbsp;&nbsp;&nbsp;&nbsp;console.log('loaded:', buffers )<br>
@@ -4666,23 +4743,33 @@ function(  BB){
      * <br>
      * &nbsp;// another way to do it<br>
      * &nbsp;loader = new BB.AudioBufferLoader({ <br>
-     * &nbsp;&nbsp;&nbsp;&nbsp;context:context, <br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;context:BB.Audio.context, <br>
      * &nbsp;&nbsp;&nbsp;&nbsp;paths:['katy.ogg','entro.ogg'], <br>
      * &nbsp;&nbsp;&nbsp;&nbsp;autoload:false <br>
      * &nbsp;});<br>
      * &nbsp;loader.load(); // call load later, ex under some other condition<br>
      * </code>
+     *
+     * view basic <a href="../../examples/editor/?file=audio-buffer" target="_blank">BB.AudioBufferLoader</a> example
      */
 
 
     BB.AudioBufferLoader = function( config, callback ){
         
-        /**
-         * corresponding Audio Context
-         * @type {AudioContext}
-         * @property ctx
-         */
-        this.ctx        = config.context;
+
+        // the AudioContext to be used by this module 
+        if( typeof BB.Audio.context === "undefined" )
+            throw new Error('BB Audio Modules require that you first create an AudioContext: BB.Audio.init()');
+        
+        if( BB.Audio.context instanceof Array ){
+            if( typeof config === "undefined" || typeof config.context === "undefined" )
+                throw new Error('BB.AudioBufferLoader: BB.Audio.context is an Array, specify which { context:BB.Audio.context[?] }');
+            else {
+                this.ctx = config.context;
+            }
+        } else {
+            this.ctx = BB.Audio.context;
+        }
 
         /**
          * array of paths to audio files to load 
@@ -4772,8 +4859,8 @@ function(  BB){
  * A module for creating an audio sampler, an object that can load, sample and play back sound files
  * @module BB.AudioSampler
  */
-define('BB.AudioSampler',['./BB','./BB.AudioBufferLoader'],
-function(  BB, 		 AudioBufferLoader){
+define('BB.AudioSampler',['./BB','./BB.AudioBufferLoader','./BB.Audio'],
+function(  BB, 		 AudioBufferLoader,       Audio){
 
 	'use strict';
 
@@ -4784,17 +4871,17 @@ function(  BB, 		 AudioBufferLoader){
 	 * @class BB.AudioSampler
 	 * @constructor
 	 * 
-	 * @param {Object} config A config object to initialize the Sampler, must contain a 
-	 * "context: AudioContext" property and can contain as many additional properties as 
-	 * there are sound files ( also, config can include "audoload" boolean, true by default )
+	 * @param {Object} config A config object to initialize the Sampler
+	 * ... xplain config properties...
+	 * ... new example code ...
+	 * 
 	 * @param {Function} [callback] A callback, with a buffer Object Array
 	 * 
 	 * @example  
 	 * <code class="code prettyprint">  
-	 *  &nbsp;var context = new (window.AudioContext || window.webkitAudioContext)();<br>
+	 *  &nbsp;BB.Audio.init();<br>
 	 *	<br>
 	 *	&nbsp;var drum = new BB.AudioSampler({<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;context: context,<br>
 	 *	&nbsp;&nbsp;&nbsp;&nbsp;kick: 'audio/808/kick.ogg',<br>
 	 *	&nbsp;&nbsp;&nbsp;&nbsp;snare: 'audio/808/snare.ogg',<br>
 	 *	&nbsp;&nbsp;&nbsp;&nbsp;hat: 'audio/808/hat.ogg'<br>
@@ -4806,19 +4893,43 @@ function(  BB, 		 AudioBufferLoader){
 	 *	&nbsp;function run(){<br>
 	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.play('kick');<br>
 	 *	&nbsp;}<br>
+	 *	<br>
+	 *	&nbsp;// a more complex config example...<Br>
+	 *	&nbsp;// overrides default context ( BB.Audio.context )<br>
+	 *	&nbsp;// overrides default connect ( BB.Audio.context.destination )<br>
+	 *	&nbsp;BB.Audio.init(3);<br>
+	 *	<br>
+ 	 *	&nbsp;var drum = new BB.AudioSampler({<br>
+ 	 *	&nbsp;&nbsp;&nbsp;&nbsp;context: BB.Audio.context[2],<br>
+ 	 *	&nbsp;&nbsp;&nbsp;&nbsp;connect: ExampleNode,<br>
+ 	 *	&nbsp;&nbsp;&nbsp;&nbsp;autoload: false,<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;kick: 'audio/808/kick.ogg',<br>
+	 *	&nbsp;});<br>
+	 *	<br>
+	 *	&nbsp;drum.load();
 	 * </code>
+	 *
+     * view basic <a href="../../examples/editor/?file=audio-sampler" target="_blank">BB.AudioSampler</a> example
 	 */
     
-
 	BB.AudioSampler = function( config, callback ){
 		
-		/**
-		 * corresponding Audio Context
-		 * @type {AudioContext}
-		 * @property ctx
-		 */
-		this.ctx 		= config.context;
+		// the AudioContext to be used by this module 
+		if( typeof BB.Audio.context === "undefined" )
+			throw new Error('BB Audio Modules require that you first create an AudioContext: BB.Audio.init()');
+		
+		if( BB.Audio.context instanceof Array ){
+			if( typeof config === "undefined" || typeof config.context === "undefined" )
+				throw new Error('BB.AudioSampler: BB.Audio.context is an Array, specify which { context:BB.Audio.context[?] }');
+			else {
+				this.ctx = config.context;
+			}
+		} else {
+			this.ctx = BB.Audio.context;
+		}
 
+		this.test = config.test;
+		
 		/**
 		 * whether or not the file(s) have loaded
 		 * @type {Boolean}
@@ -4852,13 +4963,17 @@ function(  BB, 		 AudioBufferLoader){
 		 * @type {Number}
 		 * @property detune
 		 * @default 0
+		 * @protected
+		 *  --- webkit doesn't seem to support detune :-/ so replacing this with 
 		 */
 		this.detune 	= ( typeof config.detune !== 'undefined' ) ? config.detune : 0;
-
-		// default destination is context destination
-		// unless otherwise specified in this.connect()
-		this.gain		= this.ctx.createGain();	
-		this.gain.connect( this.ctx.destination );
+		/**
+		 * changes the playback rate ( pitch and speed ), (<a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioBufferSourceNode/playbackRate" target="_blank">reference</a> )
+		 * @type {Number}
+		 * @property rate
+		 */
+		this.rate 	= ( typeof config.rate !== 'undefined' ) ? config.rate : 1;
+	
 
 		// whether or not to autoload the files
 		this.auto 		= ( typeof config.autoload !== 'undefined' ) ? config.autoload : true;
@@ -4866,19 +4981,29 @@ function(  BB, 		 AudioBufferLoader){
 		// will be instance of BB.AudioBufferLoader
 		this.loader 	= undefined;
 
+		// default destination is context destination
+		// unless otherwise specified in { connect:AudioNode }
+		this.gain		= this.ctx.createGain();	
+		if( typeof config.connect !== 'undefined' ){
+			if( config.connect instanceof AudioDestinationNode ||
+				config.connect instanceof AudioNode ) 
+				this.gain.connect( config.connect );
+			else {
+				throw new Error('BB.AudioSampler: connect property expecting an AudioNode');
+			}
+		} else {
+			this.gain.connect( this.ctx.destination );
+		}
 
 		if( !config ) throw new Error('BB.AudioSampler: requires a config object');
 
-		if( !(this.ctx instanceof AudioContext) ) 
-			throw new Error('BB.AudioSampler: context should be an instance of AudioContext');
-		
 		if( typeof this.auto !== 'boolean' ) 
 			throw new Error('BB.AudioSampler: autoload should be either true or false');
 
 
 		// setup keys && paths
 		for (var key in config ) {
-			if( key!=='context' && key!=='autoload'){
+			if( key!=='context' && key!=='autoload' && key!=="connect"){
 				this.keys.push( key );
 				this.paths.push( config[key] );
 			}
@@ -4889,7 +5014,9 @@ function(  BB, 		 AudioBufferLoader){
 
 
     /**
-     * creates buffers from url paths using BB.AudioBufferLoader, automatically runs in constructor unless autoload is set to false
+     * creates buffers from url paths using BB.AudioBufferLoader, this
+     * automatically runs in constructor ( and thus no need to ever call it )
+     * unless autoload is set to false in the config in the constructor
      * @method load
      */
 	BB.AudioSampler.prototype.load = function(){
@@ -4922,6 +5049,22 @@ function(  BB, 		 AudioBufferLoader){
 	 * @param  {AudioNode} destination the AudioNode or AudioDestinationNode to connect to
 	 * @param  {Number} output      which output of the the Sampler do you want to connect to the destination
 	 * @param  {Number} input       which input of the destinatino you want to connect the Sampler to
+	 * @example  
+	 * <code class="code prettyprint">  
+	 *  &nbsp;BB.Audio.init();<br>
+	 *	<br>
+	 *	&nbsp;var drum = new BB.AudioSampler({<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;kick: 'audio/808/kick.ogg',<br>
+	 *	&nbsp;}, run );<br>
+	 *	<br>
+	 *	&nbsp;function run(){<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.connect( exampleNode );<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// connected to both default BB.Audio.context && exampleNode<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// so if exampleNode is also connected to BB.Audio.context by default,<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// ...then you've got drum connected to BB.Audio.context twice<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.play('kick');<br>
+	 *	&nbsp;}<br>
+	 * </code>
 	 */
 	BB.AudioSampler.prototype.connect = function( destination, output, input ){
 		if( !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
@@ -4943,6 +5086,19 @@ function(  BB, 		 AudioBufferLoader){
 	 * @param  {AudioNode} destination what it's connected to
 	 * @param  {Number} output      the particular output number
 	 * @param  {Number} input       the particular input number
+	 * <code class="code prettyprint">  
+	 *  &nbsp;BB.Audio.init();<br>
+	 *	<br>
+	 *	&nbsp;var drum = new BB.AudioSampler({<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;kick: 'audio/808/kick.ogg',<br>
+	 *	&nbsp;}, run );<br>
+	 *	<br>
+	 *	&nbsp;function run(){<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.disconnect(); // disconnected from default BB.Audio.context<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.connect( exampleNode ); // connected to exampleNode only<br>
+	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.play('kick');<br>
+	 *	&nbsp;}<br>
+	 * </code>
 	 */
 	BB.AudioSampler.prototype.disconnect = function(destination, output, input ){
 		if( typeof destination !== "undefined" &&
@@ -5001,7 +5157,8 @@ function(  BB, 		 AudioBufferLoader){
 
 		var source = this.ctx.createBufferSource(); 
 			source.buffer = this.buffers[ key ];            
-			source.detune.value = this.detune;
+			// source.detune.value = this.detune;
+			source.playbackRate.value = this.rate;
 			source.connect( this.gain );   
 
 
@@ -5014,6 +5171,247 @@ function(  BB, 		 AudioBufferLoader){
     };
 
 	return BB.AudioSampler;
+});
+/**
+ * A module for scheduling sounds ( in a more musical way ) 
+ * @module BB.AudioSequencer
+ */
+define('BB.AudioSequencer',['./BB'],
+function(  BB ){
+
+	'use strict';
+
+	 /**
+	  * The Web Audio API exposes access to the audio subsystem’s hardware clock
+	  * ( the “audio clock” via .currentTime ). This is used for precisely
+	  * scheduling parameters and events, much more precise than the JavaScript
+	  * clock ( ie. Date.now(), setTimeout() ). However, once scheduled audio
+	  * parameters and events can not be modified ( ex. you can’t change the
+	  * tempo or pitch when something has already been scheduled... even if it hasn't started playing ). the
+	  * BB.AudioSequencer is a collaboration between the audio clock and
+	  * JavaScript clock based on Chris Wilson’s article, <a href="http://www.html5rocks.com/en/tutorials/audio/scheduling/" target="_blank">A Tale of Two Clocks - Scheduling Web Audio with Precision</a>
+	  * which solves this problem.
+	  * 
+	  * @class BB.AudioSequencer
+	  * @constructor
+	  * @param {Object} config A config object to initialize the Sequencer, use keys "whole", "quarter", "sixth", "eighth" and "sixteenth" to schedule events at those times in a measure 
+	  * 
+	  * @example    
+	  * <code class="code prettyprint"> 
+	  * &nbsp;BB.Audio.init();<br>
+	  * <br>
+	  * &nbsp;// create AudioSequencer ( with optional parameters ) <br>
+	  * &nbsp;// assuming drum is an instanceof BB.AudioSampler<br>
+	  * &nbsp;var track = new BB.AudioSequencer({<br>
+	  * &nbsp;&nbsp;&nbsp;tempo: 140, // in bpm <br><br>
+	  * &nbsp;&nbsp;&nbsp;whole: function( time ){ <br>
+	  * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.play('kick', time );<br>
+	  * &nbsp;&nbsp;&nbsp;},<br>
+	  * &nbsp;&nbsp;&nbsp;quarter: function( time ){ <br>
+	  * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.play('snare', time );<br>
+	  * &nbsp;&nbsp;&nbsp;},<br>
+	  * &nbsp;&nbsp;&nbsp;sixteenth: function( time ){<br>
+	  * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.play('hat', time );<br>
+	  * &nbsp;&nbsp;&nbsp;}<br>
+	  * &nbsp;});<br>
+	  * </code>
+	  *
+      * view basic <a href="../../examples/editor/?file=audio-sequencer" target="_blank">BB.AudioSequencer</a> example
+	 */
+   
+	BB.AudioSequencer = function( config ){
+    	// based on this tutorial: http://www.html5rocks.com/en/tutorials/audio/scheduling/
+		
+		if( !config ) throw new Error('BB.AudioSequencer: requires a config object');
+
+
+		// the AudioContext to be used by this module 
+		if( typeof BB.Audio.context === "undefined" )
+			throw new Error('BB Audio Modules require that you first create an AudioContext: BB.Audio.init()');
+		
+		if( BB.Audio.context instanceof Array ){
+			if( typeof config === "undefined" || typeof config.context === "undefined" )
+				throw new Error('BB.AudioSequencer: BB.Audio.context is an Array, specify which { context:BB.Audio.context[?] }');
+			else {
+				this.ctx = config.context;
+			}
+		} else {
+			this.ctx = BB.Audio.context;
+		}
+
+
+		/**
+		 * tempo in beats per minute	
+		 * @type {Number}
+		 * @property tempo
+		 * @default 120
+		 */
+		this.tempo 				= ( typeof config.tempo !== 'undefined' ) ? config.tempo : 120;
+		
+		/**
+		 * whether or not sequencer is playing	
+		 * @type {Boolean}
+		 * @property isPlaying
+		 * @default false
+		 */
+		this.isPlaying 			= false;	
+
+		/**
+		 * returns the current note	
+		 * @type {Number}
+		 * @property current16thNote
+		 */	
+		this.note = -1; // ie. current16thNote - 1		
+		// What note is currently last scheduled?	
+		this.current16thNote	= 0;	
+
+		/**
+		 * how far ahead to schedule the audio (seconds), adjust for sweet spot ( smaller the better/tighter, but the buggier/more demanding)	
+		 * @type {Number}
+		 * @property scheduleAheadTime
+		 * @default 0.1
+		 */		
+		this.scheduleAheadTime 	= 0.1;		
+		this.nextNoteTime		= 0.0;		// when the next note is due ( in the AudioContext timeline )
+		/**
+		 * 0: play al 16th notes, 1: play only 8th notes, 2: play only quarter notes	
+		 * @type {Number}
+		 * @property noteResolution
+		 * @default 0
+		 */
+		this.noteResolution 	= 0;		// 0 == 16th, 1 == 8th, 2 == quarter note
+		
+		// this can probably just be defined by the user...
+		// this.noteLength 		= 0.25;		// length of sample/note (seconds)
+
+		/**
+		 * whether or not to play more than one sample at a given beat
+		 * @type {Boolean}
+		 * @property multitrack
+		 * @default true
+		 */
+		this.multitrack			= ( typeof config.multitrack !== 'undefined' ) ? config.multitrack : true;
+
+		if(typeof config.whole !== "undefined"){
+			if( typeof config.whole !== "function" )
+				throw new ERROR('BB.AudioSequencer: "whole" should be a function -> whole: function(time){ ... }');
+			else this.whole = config.whole;
+		} else { this.whole = undefined; }
+
+		if(typeof config.quarter !== "undefined"){
+			if( typeof config.quarter !== "function" )
+				throw new ERROR('BB.AudioSequencer: "quarter" should be a function -> quarter: function(time){ ... }');
+			else this.quarter = config.quarter;
+		} else { this.quarter = undefined; }
+
+		if(typeof config.eighth !== "undefined"){
+			if( typeof config.eighth !== "function" )
+				throw new ERROR('BB.AudioSequencer: "eighth" should be a function -> eighth: function(time){ ... }');
+			else this.eighth = config.eighth;
+		} else { this.eighth = undefined; }
+
+		if(typeof config.sixth !== "undefined"){
+			if( typeof config.sixth !== "function" )
+				throw new ERROR('BB.AudioSequencer: "sixth" should be a function -> sixth: function(time){ ... }');
+			else this.sixth = config.sixth;
+		} else { this.sixth = undefined; }
+
+		if(typeof config.sixteenth !== "undefined"){
+			if( typeof config.sixteenth !== "function" )
+				throw new ERROR('BB.AudioSequencer: "sixteenth" should be a function -> sixteenth: function(time){ ... }');
+			else this.sixteenth = config.sixteenth;
+		} else { this.sixteenth = undefined; }
+
+	};
+
+
+    /**
+     * toggles play/stop or play/pause
+     * @method toggle
+     * @param {String} type toggles play/pause instead of default play/stop
+     */
+	BB.AudioSequencer.prototype.toggle = function( type ){
+		this.isPlaying = !this.isPlaying;
+
+		if (this.isPlaying) { // start playing
+			
+			if(type!=="pause")
+				this.current16thNote = 0; // reset to beggining of sequence when toggled bax on
+									  	
+			this.nextNoteTime = this.ctx.currentTime;
+
+			this.update();	// kick off scheduling
+		} 
+	};
+
+    /**
+     * advances to the next note ( when it's time )
+     * @method update
+     *
+     * @example
+     * <code class="code prettyprint">
+     * &nbsp;// in update loop<br>
+     * &nbsp;if(track.isPlaying) track.update();
+     * </code>
+     */
+	BB.AudioSequencer.prototype.update = function(){
+		/*
+			"This function just gets the current audio hardware time, and compares it against 
+			the time for the next note in the sequence - most of the time in this precise scenario 
+			this will do nothing (as there are no metronome “notes” waiting to be scheduled, but when 
+			it succeeds it will schedule that note using the Web Audio API, and advance to the next note."
+			--http://www.html5rocks.com/en/tutorials/audio/scheduling/
+		*/
+		while (this.nextNoteTime < this.ctx.currentTime + this.scheduleAheadTime ) {
+			this.scheduleNote( this.current16thNote, this.nextNoteTime );
+			this.nextNote();
+		}
+	};
+
+    /**
+     * schedules appropriate note based on noteResolution && beatNumber ( ie current16thNote )
+     * @method scheduleNote
+     * @protected
+     */
+	BB.AudioSequencer.prototype.scheduleNote = function(beatNumber, time){
+		if ( (this.noteResolution==1) && (beatNumber%2) ) return;	// don't play non-8th 16th notes
+		if ( (this.noteResolution==2) && (beatNumber%4) ) return;	// don't play non-quarter 8th notes
+
+		// linting !(beatNumber % 16) throws: Confusing use of '!'
+		// ...so === 0 instead
+
+		if(this.multitrack){
+			if (beatNumber === 0 && typeof this.whole!=="undefined") this.whole( time );	// beat 0 == kick			
+			if (beatNumber % 4 === 0 && typeof this.quarter!=="undefined") this.quarter( time );	// quarter notes, ex:snare			
+			if (beatNumber % 6 === 0 && typeof this.sixth!=="undefined") this.sixth( time );			
+			if (beatNumber % 8 === 0 && typeof this.eighth!=="undefined") this.eighth( time );	// eigth notes, ex:hat			
+			if (typeof this.sixteenth!=="undefined") this.sixteenth( time );				
+		} else {
+			if (beatNumber === 0 && typeof this.whole!=="undefined" ) this.whole( time );	
+			else if (beatNumber % 4 === 0 && typeof this.quarter!=="undefined") this.quarter( time );
+			else if (beatNumber % 6 === 0 && typeof this.sixth!=="undefined") this.sixth( time );	
+			else if (beatNumber % 8 === 0 && typeof this.eighth!=="undefined") this.eighth( time );	
+			else if (typeof this.sixteenth!=="undefined") this.sixteenth( time );		
+		}
+
+	};
+
+    /**
+     * advance current note and time by a 16th note
+     * @method nextNote
+     * @protected
+     */
+	BB.AudioSequencer.prototype.nextNote = function(){
+	    
+	    var secondsPerBeat = 60.0 / this.tempo;		    									
+	    this.nextNoteTime += 0.25 * secondsPerBeat;	// Add beat length to last beat time 
+
+	    this.current16thNote++;	// Advance the beat number, wrap to zero
+	    this.note = this.current16thNote-1;
+	    if (this.current16thNote == 16) this.current16thNote = 0;
+	};
+
+	return BB.AudioSequencer;
 });
 /**
  * A module for doing FFT ( Fast Fourier Transform ) analysis on audio 
@@ -5035,69 +5433,165 @@ function(  BB ){
 	 * 
 	 * @example  
 	 * <code class="code prettyprint">  
-	 *  &nbsp;var context = new (window.AudioContext || window.webkitAudioContext)();<br>
+	 *  &nbsp;BB.Audio.init();<br>
 	 *	<br>
-	 *	&nbsp;var fft = new BB.AudioAnalyser({ context: context }); <br>
+	 *	&nbsp;var fft = new BB.AudioAnalyser(); <br>
 	 *	&nbsp;// assuming samp is an instanceof BB.AudioSampler <br>
-	 *	&nbsp;samp.connect( fft.analyser ); <br>
-	 *	&nbsp;// fft will then connect to the context.destination by default <br>
-	 *	&nbsp;// ...unless otherwise connected to somthing else
+	 *	&nbsp;samp.connect( fft.analyser ); <br><br><br>
+	 *	&nbsp;// you can override fft's defaults by passing a config <br>
+	 *	&nbsp;var fft = new BB.AudioAnalyser({<br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;context: BB.Audio.context[3],<br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;connect: BB.Audio.context[3].destination<br>
+	 *  &nbsp;}); <br>
 	 * </code>
+	 *
+     * view basic <a href="../../examples/editor/?file=audio-analyser" target="_blank">BB.AudioAnalyser</a> example
 	 */
     
 
 	BB.AudioAnalyser = function( config ){
 		
-		this.ctx 			= config.context;
+		// the AudioContext to be used by this module 
+		if( typeof BB.Audio.context === "undefined" )
+			throw new Error('BB Audio Modules require that you first create an AudioContext: BB.Audio.init()');
+		
+		if( BB.Audio.context instanceof Array ){
+			if( typeof config === "undefined" || typeof config.context === "undefined" )
+				throw new Error('BB.AudioAnalyser: BB.Audio.context is an Array, specify which { context:BB.Audio.context[?] }');
+			else {
+				this.ctx = config.context;
+			}
+		} else {
+			this.ctx = BB.Audio.context;
+		}
+
 		/**
-		 * the AnalyserNode itself ( used by other nodes when connecting to this )
+		 * the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode" target="_blank">AnalyserNode</a> itself
 		 * @type {AnalyserNode}
 		 * @property analyser
 		 */
 		this.analyser 		= this.ctx.createAnalyser();
-		this.dest 			= this.ctx.destination;
-		this.fftSize 		= ( typeof config.fftSize !== 'undefined' ) ? config.fftSize : 2048;
-		this.smoothing 		= ( typeof config.smoothing !== 'undefined' ) ? config.smoothing : 0.8;
-		this.maxDecibels	= ( typeof config.maxDecibels !== 'undefined' ) ? config.maxDecibels : -30;
-		this.minDecibels	= ( typeof config.minDecibels !== 'undefined' ) ? config.minDecibels : -90;
+		
+		this.fftSize 		= ( typeof config!=="undefined" && typeof config.fftSize !== 'undefined' ) ? config.fftSize : 2048;
+		this.smoothing 		= ( typeof config!=="undefined" && typeof config.smoothing !== 'undefined' ) ? config.smoothing : 0.8;
+		this.maxDecibels	= ( typeof config!=="undefined" && typeof config.maxDecibels !== 'undefined' ) ? config.maxDecibels : -30;
+		this.minDecibels	= ( typeof config!=="undefined" && typeof config.minDecibels !== 'undefined' ) ? config.minDecibels : -90;
 
 		this.analyser.fftSize 					= this.fftSize;
 		this.analyser.smoothingTimeConstant 	= this.smoothing;
 		this.analyser.maxDecibels 				= this.maxDecibels;
-		this.analyser.minDecibels 				= this.minDecibels;
+		this.analyser.minDecibels 				= this.minDecibels;			
+
 
 		this.freqByteData 	= new Uint8Array( this.analyser.frequencyBinCount );
 		this.freqFloatData 	= new Float32Array(this.analyser.frequencyBinCount);
 		this.timeByteData 	= new Uint8Array( this.analyser.frequencyBinCount );
 		this.timeFloatData 	= new Float32Array(this.analyser.frequencyBinCount);
 
-		if( !config ) throw new Error('Analyser: requires a config object');
-		if( !(this.ctx instanceof AudioContext) ) 
-			throw new Error('Analyser: context should be an instance of AudioContext');
 		if( this.fftSize%2 !== 0 || this.fftSize < 32 || this.fftSize > 2048)
 			throw new Error('Analyser: fftSize must be a multiple of 2 between 32 and 2048');
 
-		this.analyser.connect( this.dest );		
-		
+		// default destination is undefined
+		// unless otherwise specified in { connect:AudioNode }
+		if( typeof config !== "undefined" && typeof config.connect !== 'undefined' ){
+			if( config.connect instanceof AudioDestinationNode ||
+				config.connect instanceof AudioNode ) 
+				this.analyser.connect( config.connect );
+			else {
+				throw new Error('BB.AudioAnalyser: connect property expecting an AudioNode');
+			}
+		} else {
+			this.analyser.connect( this.ctx.destination );
+		}
+
 	};
 
-    /**
-     * method for connecting to other nodes ( overrides the default connection to context.destination )
-     * @method connect
-     * @param {Object} destination either an AudioDestinationNode or AudioNode to connect to 
-     * @param {Number} [output] this analyser's output, 0 for left channel, 1 for right channel ( default 0 )
-     * @param {Number} [input] input of the node you're connecting this to, 0 for left channel, 1 for right channel ( default 0 )
-     */
-	BB.AudioAnalyser.prototype.connect = function(destination, output, input ){
+
+	/**
+	 * connects the Analyser to a particular AudioNode or AudioDestinationNode
+	 * @method connect
+	 * @param  {AudioNode} destination the AudioNode or AudioDestinationNode to connect to
+	 * @param  {Number} output      which output of the the Sampler do you want to connect to the destination
+	 * @param  {Number} input       which input of the destinatino you want to connect the Sampler to
+	 * @example  
+	 * <code class="code prettyprint">  
+	 *  &nbsp;BB.Audio.init();<br>
+	 *	<br>
+	 *	&nbsp;var fft = new BB.AudioAnalyser();<br>
+	 *	&nbsp;// connects AudioAnalyser to exampleNode <br>
+	 *	&nbsp;//in additon to the default destination it's already connected to by default<br>
+	 *	&nbsp;fft.connect( exampleNode ); 
+	 *	<br>
+	 * </code>
+	 */
+	BB.AudioAnalyser.prototype.connect = function( destination, output, input ){
 		if( !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
-			throw new Error('Analyser: destination should be an instanceof AudioDestinationNode or AudioNode');
-		this.dest = destination;
-		this.analyser.connect( this.dest, output, input );
+			throw new Error('AudioAnalyser.connect: destination should be an instanceof AudioDestinationNode or AudioNode');
+		if( typeof output !== "undefined" && typeof output !== "number" )
+			throw new Error('AudioAnalyser.connect: output should be a number');
+		if( typeof intput !== "undefined" && typeof input !== "number" )
+			throw new Error('AudioAnalyser.connect: input should be a number');
+
+		if( typeof intput !== "undefined" ) this.analyser.connect( destination, output, input );
+		else if( typeof output !== "undefined" ) this.analyser.connect( destination, output );
+		else this.analyser.connect( destination );
 	};
+
+	/**
+	 * diconnects the Analyser from the node it's connected to
+	 * @method disconnect
+	 * @param  {AudioNode} destination what it's connected to
+	 * @param  {Number} output      the particular output number
+	 * @param  {Number} input       the particular input number
+	 * <code class="code prettyprint">  
+	 *  &nbsp;BB.Audio.init();<br>
+	 *	<br>
+	 *	&nbsp;var fft = new BB.AudioAnalyser();<br>
+	 *	&nbsp;// disconnects Analyser from default destination<br>
+	 *	&nbsp;fft.disconnect();<br>
+	 *	&nbsp;// connects AudioAnalyser to exampleNode <br>
+	 *	&nbsp;fft.connect( exampleNode ); 
+	 *	<br>
+	 * </code>
+	 */
+	BB.AudioAnalyser.prototype.disconnect = function(destination, output, input ){
+		if( typeof destination !== "undefined" &&
+			!(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
+			throw new Error('AudioAnalyser.disconnect: destination should be an instanceof AudioDestinationNode or AudioNode');
+		if( typeof output !== "undefined" && typeof output !== "number" )
+			throw new Error('AudioAnalyser.disconnect: output should be a number');
+		if( typeof input !== "undefined" && typeof input !== "number" )
+			throw new Error('AudioAnalyser.disconnect: input should be a number');
+
+		if( typeof input !== "undefined" ) this.analyser.disconnect( destination, output, input );
+		else if( typeof output !== "undefined" ) this.analyser.disconnect( destination, output );
+		else if( typeof destination !== "undefined" ) this.analyser.disconnect( destination );
+		else  this.analyser.disconnect();
+	};
+
 
     /**
      * returns an array with frequency byte data
      * @method getByteFrequencyData
+     *
+	 * @example  
+	 * <code class="code prettyprint">  
+	 *  &nbsp;BB.Audio.init();<br>
+	 *	<br>
+	 *	&nbsp;var fft = new BB.AudioAnalyser();<br>
+	 *	<br>
+	 *	&nbsp;// then in a canvas draw loop...<br>
+	 *	&nbsp;var fdata = fft.getByteFrequencyData();<br>
+     *	&nbsp;for (var i = 0; i < fdata.length; i++) {<br>
+     *	&nbsp;&nbsp;&nbsp;var value = fdata[i];<br>
+ 	 *	&nbsp;&nbsp;&nbsp;var percent = value / 256;<br>
+	 *	&nbsp;&nbsp;&nbsp;var height = HEIGHT * percent;<br>
+	 *	&nbsp;&nbsp;&nbsp;var offset = HEIGHT - height - 1;<br>
+	 *	&nbsp;&nbsp;&nbsp;var barWidth = WIDTH/fdata.length;<br>
+	 *	&nbsp;&nbsp;&nbsp;ctx.fillRect(i * barWidth, offset, barWidth, height);<br>
+     *	&nbsp;};<br>
+	 *	<br>
+	 * </code>
      */
 	BB.AudioAnalyser.prototype.getByteFrequencyData = function(){
 		this.analyser.getByteFrequencyData( this.freqByteData );
@@ -5116,6 +5610,29 @@ function(  BB ){
     /**
      * returns an array with time domain byte data
      * @method getByteTimeDomainData
+     * 
+	 * @example  
+	 * <code class="code prettyprint">  
+	 *  &nbsp;BB.Audio.init();<br>
+	 *	<br>
+	 *	&nbsp;var fft = new BB.AudioAnalyser();<br>
+	 *	<br>
+	 *	&nbsp;// then in a canvas draw loop...<br>
+     *	&nbsp;var tdata = fft.getByteTimeDomainData();<br>
+	 *	&nbsp;ctx.beginPath();<br>
+	 *	&nbsp;var sliceWidth = WIDTH / tdata.length;<br>
+	 *	&nbsp;var x = 0;<br>
+     *	&nbsp;for (var i = 0; i < tdata.length; i++) {<br>
+     *	&nbsp;&nbsp;&nbsp;var v = tdata[i] / 128.0;<br>
+     *	&nbsp;&nbsp;&nbsp;var y = v * HEIGHT/2;		<br>
+	 *	&nbsp;&nbsp;&nbsp;if(i===0) ctx.moveTo(x,y);<br>
+	 *	&nbsp;&nbsp;&nbsp;else ctx.lineTo(x,y);		<br>
+	 *	&nbsp;&nbsp;&nbsp;x+=sliceWidth;<br>
+     *	&nbsp;}<br>
+	 *	&nbsp;ctx.lineTo(WIDTH,HEIGHT/2);<br>
+	 *	&nbsp;ctx.stroke();<br>
+	 *	<br>
+	 * </code>
      */
 	BB.AudioAnalyser.prototype.getByteTimeDomainData = function(){
 		// https://en.wikipedia.org/wiki/Time_domain
@@ -5132,7 +5649,13 @@ function(  BB ){
 		return this.timeFloatData;
 	};
 
-	BB.AudioAnalyser.prototype.averageAmp = function( array ){
+
+    /**
+     * returns the averaged amplitude between both channels
+     * @method getAmplitude
+     */
+	BB.AudioAnalyser.prototype.getAmplitude = function(){
+		var array = this.getByteFrequencyData();
 		var v = 0;
 		var averageAmp;
 		var l = array.length;
@@ -5143,12 +5666,67 @@ function(  BB ){
 		return averageAmp;
 	};
 
-    /**
-     * returns the averaged amplitude between both channels
-     * @method getAmplitude
-     */
-	BB.AudioAnalyser.prototype.getAmplitude = function(){
-		return this.averageAmp( this.getByteFrequencyData() );
+	/**
+	 * returns pitch frequence, based on <a href="https://github.com/cwilso/PitchDetect" target="_blank">Chris Wilson</a>
+	 * @return {Number} pitch
+     * @method detectPitch
+	 * 
+	 */
+	BB.AudioAnalyser.prototype.detectPitch = function() {
+
+		var SIZE = this.timeFloatData.length;
+		var MAX_SAMPLES = Math.floor(SIZE/2);
+		var MIN_SAMPLES = 0;  
+		var best_offset = -1;
+		var best_correlation = 0;
+		var rms = 0;
+		var foundGoodCorrelation = false;
+		var correlations = new Array(MAX_SAMPLES);
+
+		this.analyser.getFloatTimeDomainData( this.timeFloatData );
+
+		for (var i=0;i<SIZE;i++) {
+			var val = this.timeFloatData[i];
+			rms += val*val;
+		}
+		rms = Math.sqrt(rms/SIZE);
+		if (rms<0.01) // not enough signal
+			return -1;
+
+		var lastCorrelation=1;
+		for (var offset = MIN_SAMPLES; offset < MAX_SAMPLES; offset++) {
+			var correlation = 0;
+
+			for (var j=0; j<MAX_SAMPLES; j++) {
+				correlation += Math.abs((this.timeFloatData[j])-(this.timeFloatData[j+offset]));
+			}
+			correlation = 1 - (correlation/MAX_SAMPLES);
+			correlations[offset] = correlation; // store it, for the tweaking we need to do below.
+			if ((correlation>0.9) && (correlation > lastCorrelation)) {
+				foundGoodCorrelation = true;
+				if (correlation > best_correlation) {
+					best_correlation = correlation;
+					best_offset = offset;
+				}
+			} else if (foundGoodCorrelation) {
+				// short-circuit - we found a good correlation, then a bad one, so we'd just be seeing copies from here.
+				// Now we need to tweak the offset - by interpolating between the values to the left and right of the
+				// best offset, and shifting it a bit.  This is complex, and HACKY in this code (happy to take PRs!) -
+				// we need to do a curve fit on correlations[] around best_offset in order to better determine precise
+				// (anti-aliased) offset.
+
+				// we know best_offset >=1, 
+				// since foundGoodCorrelation cannot go to true until the second pass (offset=1), and 
+				// we can't drop into this clause until the following pass (else if).
+				var shift = (correlations[best_offset+1] - correlations[best_offset-1])/correlations[best_offset];  
+				return this.ctx.sampleRate/(best_offset+(8*shift));
+			}
+			lastCorrelation = correlation;
+		}
+		if (best_correlation > 0.01) {
+			return this.ctx.sampleRate/best_offset;
+		}
+		return -1;
 	};
 
 
@@ -5892,7 +6470,7 @@ function(  BB,
     return BB.MidiDevice;
 });
 
-define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.ImageBrush2D','BB.LineBrush2D','BB.BrushManager2D','BB.MouseInput','BB.Pointer','BB.Vector2','BB.Particle2D','BB.AudioBufferLoader','BB.AudioSampler','BB.AudioAnalyser','BB.AudioStream','BB.MidiDevice','BB.BaseMidiInput','BB.MidiInputKnob','BB.MidiInputSlider','BB.MidiInputButton','BB.MidiInputKey','BB.MidiInputPad'],function (require) {
+define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.ImageBrush2D','BB.LineBrush2D','BB.BrushManager2D','BB.MouseInput','BB.Pointer','BB.Vector2','BB.Particle2D','BB.Audio','BB.AudioBufferLoader','BB.AudioSampler','BB.AudioSequencer','BB.AudioAnalyser','BB.AudioStream','BB.MidiDevice','BB.BaseMidiInput','BB.MidiInputKnob','BB.MidiInputSlider','BB.MidiInputButton','BB.MidiInputKey','BB.MidiInputPad'],function (require) {
 
   'use strict';
 
@@ -5917,8 +6495,10 @@ define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.Ima
   BB.Particle2D     = require('BB.Particle2D');
 
   // audio
+  BB.Audio             = require('BB.Audio');
   BB.AudioBufferLoader = require('BB.AudioBufferLoader');
   BB.AudioSampler      = require('BB.AudioSampler');
+  BB.AudioSequencer    = require('BB.AudioSequencer');
   BB.AudioAnalyser     = require('BB.AudioAnalyser');
   BB.AudioStream       = require('BB.AudioStream');
 

@@ -23,8 +23,10 @@ define(function (require) {
   BB.Particle2D     = require('BB.Particle2D');
 
   // audio
+  BB.Audio             = require('BB.Audio');
   BB.AudioBufferLoader = require('BB.AudioBufferLoader');
   BB.AudioSampler      = require('BB.AudioSampler');
+  BB.AudioSequencer    = require('BB.AudioSequencer');
   BB.AudioAnalyser     = require('BB.AudioAnalyser');
   BB.AudioStream       = require('BB.AudioStream');
 

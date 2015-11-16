@@ -1,27 +1,18 @@
-// audio
-var context =  new (window.AudioContext || window.webkitAudioContext)();
+BB.Audio.init();
 
-var fft = new BB.AudioAnalyser({ context: context });
+var fft = new BB.AudioAnalyser();
 
-katy = new BB.AudioSampler({
-	context: context,
+var katy = new BB.AudioSampler({
+	connect: fft.analyser,
 	fireworks: '../../assets/audio/katy.ogg'
 }, function( bufferObj ){
 	draw();
-	play();
+	katy.play('fireworks', 0, 0.5, 7.4);
 });
-
-function play(){
-	if(katy.loaded){
-		katy.connect( fft.analyser );
-		console.log( )
-		// play fireworks immediately for a few seconds ( from 0.5 to 7.4 )
-		katy.play('fireworks', 0, 0.5, 7.4);
-	}
-}
 
 
 // canvas
+
 var canvas     = document.createElement('canvas');
 var ctx        = canvas.getContext('2d');
 document.body.appendChild(canvas);
@@ -30,23 +21,20 @@ document.body.className = "radial-grey";
 var WIDTH, HEIGHT;
 
 function setup() {
-    
     window.onresize = function() {
         WIDTH = canvas.width = window.innerWidth;
         HEIGHT = canvas.height = window.innerHeight;
     }
-    
     window.onresize();
-
 }
 
 function draw() {
 	requestAnimationFrame(draw);
     ctx.clearRect(0,0,WIDTH,HEIGHT);
 
-
+    // frequency spectrum
     var fdata = fft.getByteFrequencyData();
-	ctx.fillStyle="black";
+	ctx.fillStyle="#e40477";
     for (var i = 0; i < fdata.length; i++) {
     	var value = fdata[i];
  		var percent = value / 256;
@@ -56,11 +44,10 @@ function draw() {
 		ctx.fillRect(i * barWidth, offset, barWidth, height);
     };
 
-
+    // waveform 
     var tdata = fft.getByteTimeDomainData();
-	
-	ctx.lineWidth = 2;
-	ctx.strokeStyle = "red";
+	ctx.lineWidth = BB.MathUtils.map(fft.getAmplitude(), 0,45, 0,10);
+	ctx.strokeStyle = "#000000";
 	ctx.beginPath();
 	var sliceWidth = WIDTH * 1.0 / tdata.length;
 	var x = 0;
@@ -77,13 +64,3 @@ function draw() {
 }
 
 setup();
-
-
-
-
-// var play = document.createElement('button');
-// 	play.innerHTML = "play";
-// 	play.onclick = function(){
-// 		if(isLoaded) drum.play('kick');
-// 	}
-// document.body.appendChild(play);
