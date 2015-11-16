@@ -24,8 +24,10 @@ define(function (require) {
   BB.Agent2D        = require('BB.Agent2D');
 
   // audio
+  BB.Audio             = require('BB.Audio');
   BB.AudioBufferLoader = require('BB.AudioBufferLoader');
   BB.AudioSampler      = require('BB.AudioSampler');
+  BB.AudioSequencer    = require('BB.AudioSequencer');
   BB.AudioAnalyser     = require('BB.AudioAnalyser');
   BB.AudioStream       = require('BB.AudioStream');
 

@@ -15,35 +15,44 @@ function(  BB){
      * @param {Function} [callback] A callback, with a buffer Object
      * @example  
      * <code class="code prettyprint">  
-     * &nbsp;var context =  new (window.AudioContext || window.webkitAudioContext)();<br>
+     * &nbsp;BB.Audio.init();<br>
      * <br>
      * &nbsp;// one way to do it<br>
-     * &nbsp;var loader = new BufferLoader({<br>
-     * &nbsp;&nbsp;&nbsp;&nbsp;context: context,<br>
+     * &nbsp;var loader = new BB.AudioBufferLoader({<br>
      * &nbsp;&nbsp;&nbsp;&nbsp;paths: ['audio/katy.ogg','audio/entro.ogg']<br>
      * &nbsp;}, function(buffers){<br>
      * &nbsp;&nbsp;&nbsp;&nbsp;console.log('loaded:', buffers )<br>
      * &nbsp;});<br>
      * <br>
      * &nbsp;// another way to do it<br>
-     * &nbsp;loader = new BufferLoader({ <br>
-     * &nbsp;&nbsp;&nbsp;&nbsp;context:context, <br>
+     * &nbsp;loader = new BB.AudioBufferLoader({ <br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;context:BB.Audio.context, <br>
      * &nbsp;&nbsp;&nbsp;&nbsp;paths:['katy.ogg','entro.ogg'], <br>
      * &nbsp;&nbsp;&nbsp;&nbsp;autoload:false <br>
      * &nbsp;});<br>
      * &nbsp;loader.load(); // call load later, ex under some other condition<br>
      * </code>
+     *
+     * view basic <a href="../../examples/editor/?file=audio-buffer" target="_blank">BB.AudioBufferLoader</a> example
      */
 
 
     BB.AudioBufferLoader = function( config, callback ){
         
-        /**
-         * corresponding Audio Context
-         * @type {AudioContext}
-         * @property ctx
-         */
-        this.ctx        = config.context;
+
+        // the AudioContext to be used by this module 
+        if( typeof BB.Audio.context === "undefined" )
+            throw new Error('BB Audio Modules require that you first create an AudioContext: BB.Audio.init()');
+        
+        if( BB.Audio.context instanceof Array ){
+            if( typeof config === "undefined" || typeof config.context === "undefined" )
+                throw new Error('BB.AudioBufferLoader: BB.Audio.context is an Array, specify which { context:BB.Audio.context[?] }');
+            else {
+                this.ctx = config.context;
+            }
+        } else {
+            this.ctx = BB.Audio.context;
+        }
 
         /**
          * array of paths to audio files to load 
@@ -52,21 +61,14 @@ function(  BB){
          */
         this.urls       = config.paths;
 
-        /**
-         * whether or not to autoload the files
-         * @type {Boolean}
-         * @property auto
-         */
+        // whether or not to autoload the files
         this.auto       = ( typeof config.autoload !== 'undefined' ) ? config.autoload : true;
 
-        /**
-         * callback to run after loading
-         * @type {Function}
-         * @property onload
-         */
+        //callback to run after loading
         this.onload     = callback;
         
-        this._cnt       = 0; // to know when to callback
+        // to know when to callback
+        this._cnt       = 0; 
 
         /**
          * audio buffers array, accessible in callback
@@ -94,6 +96,7 @@ function(  BB){
      * @method loadbuffer
      * @param {String} path to audio file 
      * @param {Number} index of buffer 
+     * @protected
      */
     BB.AudioBufferLoader.prototype.loadbuffer = function(url, index){
         var self = this;
@@ -125,8 +128,9 @@ function(  BB){
     };
 
     /**
-     * creates buffers from url paths set in the constructor, automatically runs in constructor unless autoload is set to false
-     * @method load
+     * creates buffers from url paths set in the constructor, automatically runs
+     * in constructor unless autoload is set to false ( in the config )
+     * @method load 
      */
     BB.AudioBufferLoader.prototype.load = function(){
         for (var i = 0; i < this.urls.length; i++) this.loadbuffer( this.urls[i], i );

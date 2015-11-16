@@ -98,6 +98,12 @@
 				indentUnit: 4
 			});
 
+			// fix paths issue...
+			var value = editor.getValue();
+				value = value.replace(/..\/..\/assets/g,'../assets');
+				value += "\n"; // fix "Unexpected end of input" bug
+			editor.setValue( value );
+
 			editor.on( 'change', function() {
 				clearTimeout( interval );
 				interval = setTimeout( update, 500 );

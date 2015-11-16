@@ -14,11 +14,11 @@ function logo( ctx, x, y, radius ){
 	this.radius = radius || 30;
 	
 	this.color = {
-		r:204,
-		g:51,
-		b:153,
+		r:228,
+		g:4,
+		b:119,
 		a:1,
-		hex:'#cc3399'
+		hex:'#e40477'
 	};
 
 	this.bcolor = "#ffffff";
