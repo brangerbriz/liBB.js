@@ -153,7 +153,7 @@ function(  BB,        Vector2){
 
 
     /**
-     * the particle's "heading", essentially: Math.atan2( velocity.y,  velocity.x );
+     * the particle's "heading" expressed in radians, essentially: Math.atan2( velocity.y,  velocity.x );
      * @property heading
      * @type Number
      */   
@@ -572,7 +572,7 @@ function(  BB,        Vector2){
             throw new Error('BB.Particle2D.applyForce: force parameter must be present and an instance of BB.Vector2');
         }
 
-        return this.acceleration.add( force.clone().divideScalar(this.mass) );
+        this.acceleration.add( force.clone().divideScalar(this.mass) );
 
     };
 
