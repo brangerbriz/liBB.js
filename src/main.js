@@ -21,6 +21,7 @@ define(function (require) {
   // physics
   BB.Vector2        = require('BB.Vector2');
   BB.Particle2D     = require('BB.Particle2D');
+  BB.Agent2D        = require('BB.Agent2D');
 
   // audio
   BB.Audio             = require('BB.Audio');

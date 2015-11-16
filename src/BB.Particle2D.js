@@ -46,7 +46,6 @@ function(  BB,        Vector2){
      * &nbsp; });
      * </code>
      */
-    
     BB.Particle2D = function(config) {
 
         // position -------------------------------------------------
@@ -153,7 +152,7 @@ function(  BB,        Vector2){
 
 
     /**
-     * the particle's "heading", essentially: Math.atan2( velocity.y,  velocity.x );
+     * the particle's "heading" expressed in radians, essentially: Math.atan2( velocity.y,  velocity.x );
      * @property heading
      * @type Number
      */   
@@ -435,12 +434,14 @@ function(  BB,        Vector2){
                 }
             }
         }
-        
-
     };
 
 
-
+    /**
+     * Update the particle's internals and apply acceleration to veloicty.
+     * Called once per animation frame.
+     * @method  update
+     */
     BB.Particle2D.prototype.update = function() {
 
         var i = 0;
@@ -572,7 +573,7 @@ function(  BB,        Vector2){
             throw new Error('BB.Particle2D.applyForce: force parameter must be present and an instance of BB.Vector2');
         }
 
-        return this.acceleration.add( force.clone().divideScalar(this.mass) );
+        this.acceleration.add( force.clone().divideScalar(this.mass) );
 
     };
 
