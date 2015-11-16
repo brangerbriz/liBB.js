@@ -8,6 +8,10 @@ var katy = new BB.AudioSampler({
 }, function( bufferObj ){
 	draw();
 	katy.play('fireworks', 0, 30, 47);
+	// loop
+	setInterval(function(){
+		katy.play('fireworks',0,30,47);
+	},47000);
 });
 
 // via Chris Wilson >> https://github.com/cwilso/PitchDetect
@@ -46,7 +50,7 @@ function draw() {
     ctx.clearRect(0,0,WIDTH,HEIGHT);
     ctx.fillStyle = "#000";
 
-    pitch = fft.detectPitch();
+    pitch = fft.getPitch();
  	note =  noteFromPitch( pitch );
  	detune = centsOffFromPitch( pitch, note );
  	if(pitch == -1) note = "--";

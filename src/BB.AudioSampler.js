@@ -14,13 +14,27 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 	 * @class BB.AudioSampler
 	 * @constructor
 	 * 
-	 * @param {Object} config A config object to initialize the Sampler
-	 * ... xplain config properties...
-	 * ... new example code ...
+	 * @param {Object} config A config object to initialize the Sampler,
+	 * can contain the following:
+	 * <code class="code prettyprint">
+	 * &nbsp;{<br>
+	 * &nbsp;&nbsp;&nbsp; context: BB.Audio.context[2], // choose specific context <br>
+	 * &nbsp;&nbsp;&nbsp; connect: fft.analyser, // overide default destination <br>
+	 * &nbsp;&nbsp;&nbsp; autoload: false, // don't autoload ( sampler.load() later ) <br>
+	 * &nbsp;&nbsp;&nbsp; rate: 2, // double the playback rate <br>
+	 * &nbsp;&nbsp;&nbsp; // then as many additional keys for samples...<Br>
+	 * &nbsp;&nbsp;&nbsp; soundA: 'path/to/file.ogg', <br>
+	 * &nbsp;&nbsp;&nbsp; soundB: 'path/to/file.ogg'<br>
+	 * &nbsp;}
+	 * </code>
 	 * 
-	 * @param {Function} [callback] A callback, with a buffer Object Array
+	 * @param {Function} [callback] A callback, with a buffer Object Array ( see full example below )
 	 * 
 	 * @example  
+	 * in the example below instantiating the BB.AudioSampler creates a <a href="https://developer.mozilla.org/en-US/docs/Web/API/GainNode" target="_blank">GainNode</a> ( essentially the Sampler's output ) connected to the default BB.Audio.context ( ie. AudioDestination )
+	 * <br> <img src="../assets/images/audiosampler1.png"/>
+	 * <br> everytime an individual sample is played, for example: <code> drum.play('kick')</code>, the corresponding <a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioBuffer" target="_blank">AudioBuffer</a> ( from the URL provided in the config )  is created and connected to the sampler's GainNode ( the image below is an example of the graph when two samples are played )
+	 * <br> <img src="../assets/images/audiosampler2.png"/> <br>
 	 * <code class="code prettyprint">  
 	 *  &nbsp;BB.Audio.init();<br>
 	 *	<br>
@@ -70,8 +84,6 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		} else {
 			this.ctx = BB.Audio.context;
 		}
-
-		this.test = config.test;
 		
 		/**
 		 * whether or not the file(s) have loaded
@@ -116,7 +128,6 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		 * @property rate
 		 */
 		this.rate 	= ( typeof config.rate !== 'undefined' ) ? config.rate : 1;
-	
 
 		// whether or not to autoload the files
 		this.auto 		= ( typeof config.autoload !== 'undefined' ) ? config.autoload : true;
@@ -146,7 +157,7 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 
 		// setup keys && paths
 		for (var key in config ) {
-			if( key!=='context' && key!=='autoload' && key!=="connect"){
+			if( key!=='context' && key!=='autoload' && key!=="connect" && key!=="rate"){
 				this.keys.push( key );
 				this.paths.push( config[key] );
 			}
@@ -208,6 +219,9 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.play('kick');<br>
 	 *	&nbsp;}<br>
 	 * </code>
+	 * <br>
+	 * ...which looks like this ( where the first Gain is the Sampler and the second is the exampleNode )<br>
+	 * <img src="../assets/images/audiosampler3.png">
 	 */
 	BB.AudioSampler.prototype.connect = function( destination, output, input ){
 		if( !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
@@ -242,6 +256,9 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.play('kick');<br>
 	 *	&nbsp;}<br>
 	 * </code>
+	 * <br>
+	 * ...which looks like this ( where the first Gain is the Sampler and the second is the exampleNode )<br>
+	 * <img src="../assets/images/audiosampler4.png">
 	 */
 	BB.AudioSampler.prototype.disconnect = function(destination, output, input ){
 		if( typeof destination !== "undefined" &&
