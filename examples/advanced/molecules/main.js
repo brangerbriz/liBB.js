@@ -59,6 +59,7 @@ function setup() {
         
         WIDTH = canvas.width = window.innerWidth;
         HEIGHT = canvas.height = window.innerHeight;
+        ctx.fillStyle = "#e40477";
     }
     
     window.onresize();
@@ -72,7 +73,6 @@ function setup() {
     });
 
 
-    ctx.fillStyle = "#e40477";
     makeMolecule( WIDTH/2, HEIGHT/2 );
 }
 
