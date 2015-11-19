@@ -164,7 +164,7 @@ function(  BB ){
     /**
      * toggles play/stop or play/pause
      * @method toggle
-     * @param {String} type toggles play/pause instead of default play/stop
+     * @param {String} [type] toggles play/pause instead of default play/stop
      *
      * @example
      * <code class="code prettyprint">
