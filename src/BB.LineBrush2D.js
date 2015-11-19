@@ -73,7 +73,8 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
          * @default 1
          */
         this.weight = 1;
-    
+        this.delta = 0;
+
         /**
          * An array of all supported variants.
          * @property variants
@@ -81,6 +82,8 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
          */
         this.variants = [
             'solid',
+            'ink', 
+            'ink-osc',
             'soft',
             'lines',
             'calligraphy'
@@ -154,7 +157,7 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
 
         if (typeof this.variant !== 'string' ||
             this.variants.indexOf(this.variant) === -1) {
-            throw new Error("BB.BaseBrush2D.draw: " + this.variant + " is not a valid variant for BB.ImageBrush2D");
+            throw new Error("BB.LineBrush2D.draw: " + this.variant + " is not a valid variant for BB.LineBrush2D");
         }      
 
         // draw down here...
@@ -186,20 +189,65 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
 
                     if(this.variant == 'solid'){
 
-                        var dx = (this.prevX > this.x) ? this.prevX - this.x : this.x - this.prevX;
-                        var dy = (this.prevY > this.y) ? this.prevY - this.y : this.y - this.prevY;
 
-                        this.weight = Math.abs(dx - dy);
-
-                        if( this.weight > 100){ this.weight = 100; }
-
-                        context.lineWidth = BB.MathUtils.map(this.weight, 0, 100, this.width / 2.5, this.width * 2.5);
+                        context.lineWidth = this.weight;
                         context.lineTo(this.x, this.y);
                         context.strokeStyle = "rgba(" + r + ", " + g + ", " + b + ", " + alphaFloat + ")";
                         context.stroke();
                         context.closePath();
                         context.beginPath();
                         context.moveTo(this.x, this.y);
+
+
+                    } else if(this.variant == 'ink'){
+
+                        // var dx2 = (this.prevX > this.x) ? this.prevX - this.x : this.x - this.prevX;
+                        // var dy2 = (this.prevY > this.y) ? this.prevY - this.y : this.y - this.prevY;
+
+                        // this.weight = Math.abs(dx2 - dy2);
+
+                        // if( this.weight > 100){ this.weight = 100; }
+
+                        // context.lineWidth = BB.MathUtils.map(this.weight, 0, 100, this.width / 2.5, this.width * 2.5);
+                        // context.lineTo(this.x, this.y);
+                        // context.strokeStyle = "rgba(" + r + ", " + g + ", " + b + ", " + alphaFloat + ")";
+                        // context.stroke();
+                        // context.closePath();
+                        // context.beginPath();
+                        // context.moveTo(this.x, this.y);
+
+                        var dx = (this.prevX > this.x) ? this.prevX - this.x : this.x - this.prevX;
+                        var dy = (this.prevY > this.y) ? this.prevY - this.y : this.y - this.prevY;
+                        this.delta = Math.abs(dx - dy);
+                        if(this.delta > this.weight){
+                            this.weight+=4;
+                            if(this.weight>=this.delta) this.weight = this.delta;
+                        } else {
+                            this.weight--;
+                            if(this.weight<=this.delta) this.weight = this.delta;
+                        }
+                        if(this.weight > 100) this.weight=100;
+                        else if(this.weight<2) this.weight=2;
+                        context.lineWidth = BB.MathUtils.map(this.weight, 2, 100, this.width / 4, this.width * 4);
+  
+                        context.lineTo(this.x, this.y);
+                        context.strokeStyle = "rgba(" + r + ", " + g + ", " + b + ", " + alphaFloat + ")";
+                        context.stroke();
+                        context.closePath();
+                        context.beginPath();
+                        context.moveTo(this.x, this.y);
+
+                    } else if(this.variant == 'ink-osc'){
+
+                        this.weight = 2 + Math.abs( Math.sin( Date.now() * 0.003 ) * 50 );
+                        context.lineWidth = BB.MathUtils.map(this.weight, 2, 52, this.width / 2, this.width * 2);
+                        context.lineTo(this.x, this.y);
+                        context.strokeStyle = "rgba(" + r + ", " + g + ", " + b + ", " + alphaFloat + ")";
+                        context.stroke();
+                        context.closePath();
+                        context.beginPath();
+                        context.moveTo(this.x, this.y);
+
 
                     } else if(this.variant == 'soft'){
                         
