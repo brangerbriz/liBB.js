@@ -20,7 +20,7 @@ function setup() {
     
     window.onresize();
 
-    flowField = new BB.FlowField2D.Noise(40, WIDTH, HEIGHT);
+    flowField = new BB.FlowField2D(40, WIDTH, HEIGHT);
 
     var amount = 50; //gui -name amount
 
@@ -45,10 +45,12 @@ function update() {
 
     var mouse = new BB.Vector2(mouseInput.x, mouseInput.y);
 
+    flowField.generateNoiseField(Date.now() * 0.0005, 0.1);
+
     for (var i = 0; i < agents.length; i++) {
 
         agents[i].applyForce(flowField.lookup(agents[i].position.x, agents[i].position.y));
-        
+
         agents[i].update();
 
         // atari style boarders
@@ -73,7 +75,7 @@ function draw() {
     
     ctx.clearRect(0,0,WIDTH,HEIGHT);
 
-    flowField.drawDebug(ctx, 0, 0, WIDTH, HEIGHT);
+    flowField.drawDebug(ctx, 0, 0, WIDTH, HEIGHT, false);
 
     var width = 30;
     var height = 50;
