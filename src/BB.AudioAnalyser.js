@@ -17,6 +17,8 @@ function(  BB ){
 	 * ( see <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode" target="_blank">AnalyserNode</a> for details )
 	 * 
 	 * @example  
+	 * in the example bellow "samp" is assumed to be an instanceof <a href="BB.AudioSampler.html" target="_blank">BB.AudioSampler</a> ( represented by the Gain in the image below ), it's connected to the Analyser which is connected to the BB.Audio.context ( ie. AudioDestination ) by default
+	 * <br> <img src="../assets/images/audioanalyser.png"/><br>
 	 * <code class="code prettyprint">  
 	 *  &nbsp;BB.Audio.init();<br>
 	 *	<br>
@@ -252,12 +254,12 @@ function(  BB ){
 	};
 
 	/**
-	 * returns pitch frequence, based on <a href="https://github.com/cwilso/PitchDetect" target="_blank">Chris Wilson</a>
+	 * returns pitch frequency (float) in Hz, based on <a href="https://github.com/cwilso/PitchDetect" target="_blank">Chris Wilson</a>
 	 * @return {Number} pitch
-     * @method detectPitch
+     * @method getPitch
 	 * 
 	 */
-	BB.AudioAnalyser.prototype.detectPitch = function() {
+	BB.AudioAnalyser.prototype.getPitch = function() {
 
 		var SIZE = this.timeFloatData.length;
 		var MAX_SAMPLES = Math.floor(SIZE/2);
