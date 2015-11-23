@@ -47,6 +47,8 @@ function update() {
 
     for (var i = 0; i < agents.length; i++) {
 
+        agents[i].applyForce(flowField.lookup(agents[i].position.x, agents[i].position.y));
+        
         agents[i].update();
 
         // atari style boarders
@@ -70,6 +72,8 @@ function update() {
 function draw() {
     
     ctx.clearRect(0,0,WIDTH,HEIGHT);
+
+    flowField.drawDebug(ctx, 0, 0, WIDTH, HEIGHT);
 
     var width = 30;
     var height = 50;
