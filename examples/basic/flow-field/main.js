@@ -22,12 +22,12 @@ function setup() {
 
     flowField = new BB.FlowField2D(40, WIDTH, HEIGHT);
 
-    var amount = 50; //gui -name amount
+    var amount = 50;
 
     for (var i = 0; i < amount; i++) {
         
         var agent = new BB.Agent2D({
-            maxSpeed: 6, //gui -name maxSpeed -min 5 -max 10
+            maxSpeed: 6,
             position: new BB.Vector2( Math.random() * WIDTH, Math.random() * HEIGHT ),
             velocity: new BB.Vector2( BB.MathUtils.randomFloat(-1,1), BB.MathUtils.randomFloat(-5,5) ),
             radius: 50
@@ -45,7 +45,8 @@ function update() {
 
     var mouse = new BB.Vector2(mouseInput.x, mouseInput.y);
 
-    flowField.generateNoiseField(Date.now() * 0.0005, 0.1);
+    var noiseStep = 0.1; //gui -name noiseStep -min 0.05 -max 0.20 -step 0.01
+    flowField.generateNoiseField(Date.now() * 0.0005, noiseStep);
 
     for (var i = 0; i < agents.length; i++) {
 
