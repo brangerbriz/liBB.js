@@ -15,7 +15,7 @@ function(  BB){
      * the event funnel suite of modules.
      * <br>
      * <br>
-     * <i>Note: For use with HTML5 canvas only.<i>
+     * <i>Note: For use with HTML5 canvas only.</i>
      * @class  BB.MouseInput
      * @constructor
      * @param {HTMLCanvasElement} canvasElement The HTML5 canvas object listening for mouse input.

@@ -329,7 +329,6 @@ function(  BB) {
                         if(v.length === 7 ){
                             v = v.substr(1,v.length-1);
                             a = [ v.substr(0,v.length-4), v.substr(2,v.length-4), v.substr(4,v.length-4)];
-                            console.log( parseInt('0x'+a[0]), parseInt('0x'+a[1]), parseInt('0x'+a[2]) );
                             this.r = parseInt('0x'+a[0]);
                             this.g = parseInt('0x'+a[1]);
                             this.b = parseInt('0x'+a[2]);
