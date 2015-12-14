@@ -1,0 +1,49 @@
+
+{
+    "id": 1,
+    // "status": "OK", //OK, ERROR, BAD_USER_ID, OUT_OF_FLOW
+    "centerOfMass": { "x": 1, "y": 1, "z": 1 },
+    "centerOfBone": { "x": 1, "y": 1, "z": 1 },
+    "boundingBox": {
+        "min": { "x": 1, "y": 1, "z": 1 },
+        "max": { "x": 1, "y": 1, "z": 1 }
+    },
+    "pose": {
+        "CROSSED_HANDS": {
+            "held": true,
+            "entered": false,
+            "exited": false
+        },
+        "PSI": {}
+    },
+    "state": {
+        "new": false,
+        "visible": true,
+        "lost": false
+    },
+    "skeleton": {
+        "state": "TRACKED", //NONE, CALIBRATING, TRACKED, ERROR_NOT_IN_POSE, ERROR_HANDS, ERROR_HEAD, ERROR_LEGS, ERROR_TORSO
+        "joints": { // can be null if state is NONE, CALIBRATING, OR ERROR_*
+            "head": {
+                "position": { "x": 1, "y": 1, "z": 1},
+                "positionConfidence": 0.7,
+                "orientation": { "x": 1, "y": 1, "z": 1, "w": 1},
+                "orientationConfidence": 0.5
+            },
+            "neck": {},
+            "leftShoulder": {},
+            "rightShoulder": {},
+            "leftElbow": {},
+            "rightElbow": {},
+            "leftHand": {},
+            "rightHand": {},
+            "torso": {},
+            "leftHip": {},
+            "rightHip": {},
+            "leftKnee": {},
+            "rightKnee": {},
+            "leftFoot": {},
+            "rightFoot": {}
+        }
+    }
+}
