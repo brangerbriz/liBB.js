@@ -46,7 +46,6 @@ function(  BB,        Vector2){
      * &nbsp; });
      * </code>
      */
-    
     BB.Particle2D = function(config) {
 
         // position -------------------------------------------------
@@ -435,8 +434,6 @@ function(  BB,        Vector2){
                 }
             }
         }
-        
-
     };
 
 

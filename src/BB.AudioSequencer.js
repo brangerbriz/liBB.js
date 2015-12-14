@@ -21,8 +21,18 @@ function(  BB ){
 	  * @class BB.AudioSequencer
 	  * @constructor
 	  * @param {Object} config A config object to initialize the Sequencer, use keys "whole", "quarter", "sixth", "eighth" and "sixteenth" to schedule events at those times in a measure 
+	  * additional (optional) config parameters include:
+	  * <code class="code prettyprint">
+	  * &nbsp;{<br>
+	  * &nbsp;&nbsp;&nbsp; multitrack: false, // play only once sample at a given beat <br>
+	  * &nbsp;&nbsp;&nbsp; noteResolution: 1, // play only 8th notes (see below)<br>
+	  * &nbsp;&nbsp;&nbsp; scheduleAheadTime: 0.2 // schedule 200ms ahead (see below)<br>
+	  * &nbsp;&nbsp;&nbsp; tempo: 150, // 150 beats per minute <br>
+	  * &nbsp;}
+	  * </code>
 	  * 
 	  * @example    
+	  * the BB.AudioSequencer only handles scheduling ( it doesn't create any AudioNodes ), but it does require a <a href="BB.Audio.html" target="_blank">BB.Audio.context</a> because it uses the context.currentTime to property schedule events<br>
 	  * <code class="code prettyprint"> 
 	  * &nbsp;BB.Audio.init();<br>
 	  * <br>
@@ -97,15 +107,15 @@ function(  BB ){
 		 * @property scheduleAheadTime
 		 * @default 0.1
 		 */		
-		this.scheduleAheadTime 	= 0.1;		
+		this.scheduleAheadTime 	= ( typeof config.scheduleAheadTime !== 'undefined' ) ? config.scheduleAheadTime : 0.1;		
 		this.nextNoteTime		= 0.0;		// when the next note is due ( in the AudioContext timeline )
 		/**
-		 * 0: play al 16th notes, 1: play only 8th notes, 2: play only quarter notes	
+		 * 0: play all 16th notes, 1: play only 8th notes, 2: play only quarter notes	
 		 * @type {Number}
 		 * @property noteResolution
 		 * @default 0
 		 */
-		this.noteResolution 	= 0;		// 0 == 16th, 1 == 8th, 2 == quarter note
+		this.noteResolution 	= ( typeof config.noteResolution !== 'undefined' ) ? config.noteResolution : 0;		// 0 == 16th, 1 == 8th, 2 == quarter note
 		
 		// this can probably just be defined by the user...
 		// this.noteLength 		= 0.25;		// length of sample/note (seconds)
@@ -154,7 +164,15 @@ function(  BB ){
     /**
      * toggles play/stop or play/pause
      * @method toggle
-     * @param {String} type toggles play/pause instead of default play/stop
+     * @param {String} [type] toggles play/pause instead of default play/stop
+     *
+     * @example
+     * <code class="code prettyprint">
+     * &nbsp;// toggles start/stop (ie. starts from beginning each time)<br>
+     * &nbsp;track.toggle();<br>
+     * &nbsp;// toggles play/pause (ie. starts from where last puased )<br>
+     * &nbsp;track.toggle("pause");
+     * </code>
      */
 	BB.AudioSequencer.prototype.toggle = function( type ){
 		this.isPlaying = !this.isPlaying;

@@ -8,9 +8,8 @@ var ctx        = canvas.getContext('2d');
 var mouseInput = new BB.MouseInput(canvas);
 
 var WIDTH, HEIGHT, agents = [];
-var seperateForce, alignForce, cohesionForce;
-var seperateMult, alignMult, cohesionMult;
 var color = new BB.Color();
+var flowField = null;
 
 function setup() {
     
@@ -21,18 +20,14 @@ function setup() {
     
     window.onresize();
 
-    var amount = 50; //gui -name amount
-    seperateForce = 0.2; //gui -name seperateMaxForce -min 0.1 -max 0.7 -step 0.1
-    alignForce = 0.2; //gui -name alignMaxForce -min 0.1 -max 0.7 -step 0.1
-    cohesionForce = 0.2; //gui -name cohesionMaxForce -min 0.1 -max 0.7 -step 0.1
-    seperateMult = 1; //gui -name seperateMult -min 0.1 -max 1.0 -step 0.1
-    alignMult = 1; //gui -name alignMult -min 0.0 -max 1.0 -step 0.1
-    cohesionMult = 1; //gui -name cohesionMult -min 0.0 -max 1.0 -step 0.1
+    flowField = new BB.FlowField2D(40, WIDTH, HEIGHT);
+
+    var amount = 50;
 
     for (var i = 0; i < amount; i++) {
         
         var agent = new BB.Agent2D({
-            maxSpeed: 6, //gui -name maxSpeed -min 5 -max 10
+            maxSpeed: 6,
             position: new BB.Vector2( Math.random() * WIDTH, Math.random() * HEIGHT ),
             velocity: new BB.Vector2( BB.MathUtils.randomFloat(-1,1), BB.MathUtils.randomFloat(-5,5) ),
             radius: 50
@@ -50,11 +45,13 @@ function update() {
 
     var mouse = new BB.Vector2(mouseInput.x, mouseInput.y);
 
+    var noiseStep = 0.1; //gui -name noiseStep -min 0.05 -max 0.20 -step 0.01
+    flowField.generateNoiseField(Date.now() * 0.0005, noiseStep);
+
     for (var i = 0; i < agents.length; i++) {
 
-        agents[i].seperate(agents, seperateForce, 30, seperateMult);
-        agents[i].align(agents, alignForce, null, alignMult);
-        agents[i].cohesion(agents, cohesionForce, null, cohesionMult);
+        agents[i].applyForce(flowField.lookup(agents[i].position.x, agents[i].position.y));
+
         agents[i].update();
 
         // atari style boarders
@@ -78,6 +75,8 @@ function update() {
 function draw() {
     
     ctx.clearRect(0,0,WIDTH,HEIGHT);
+
+    flowField.drawDebug(ctx, 0, 0, WIDTH, HEIGHT, false);
 
     var width = 30;
     var height = 50;

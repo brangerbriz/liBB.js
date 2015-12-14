@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Kinect Example</title>
+</head>
+<body>
+	<canvas id="canvas"></canvas>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+
+	  var frames = 0;
+	  var socket = io.connect();
+	  var pixels = null;
+
+	  // socket.on('kinect-video', function(data) {
+	  //  	 // console.log('kinect-video');
+	   	 
+	  //  	 // pixels = new Uint8ClampedArray(data);
+	  // });
+
+	  socket.on('kinect-depth', function(data) {
+	  	 // pixels = new Uint16Array(data);
+	  	 updateImageDataDepth(new Uint16Array(data));
+	  });
+
+	  // setInterval(function(){
+	  // 	if (pixels !== null) {
+	  // 		updateImageDataDepth(pixels);
+	  // 	}
+	  // }, 0);
+
+	  var canvas = document.getElementById('canvas');
+	  var ctx = canvas.getContext('2d');
+
+	  canvas.width  = window.innerWidth;
+	  canvas.height = window.innerHeight;
+
+	  var imageData = ctx.createImageData(640, 480);
+
+	  // function updateImageDataRGB(pixels) {
+	  	
+	  // 	var data = imageData.data;
+	  // 	var j = 0;
+
+	  // 	for (var i = 0; i < 640 * 480 * 3; i += 3) {
+
+	  //     data[j]     = pixels[i];     // red
+	  //     data[j + 1] = pixels[i + 1] // green
+	  //     data[j + 2] = pixels[i + 2]; // blue
+	  //     data[j + 3] = 255;  // alpha
+	  //     j += 4; 
+	  //   }
+
+	  // 	// imageData.data = Array(pixels);
+	  // 	ctx.putImageData(imageData, 0, 0);
+	  // }
+
+	  function updateImageDataDepth(pixels) {
+	  	
+	  	var data = imageData.data;
+	  	var j = 0;
+
+	  	for (var i = 0; i < 640 * 480; i++) {
+
+	  	  var val = numMap(pixels[i], 0, 2048, 255, 0);
+
+	      data[j]     = val;     // red
+	      data[j + 1] = val; // green
+	      data[j + 2] = val; // blue
+	      data[j + 3] = 255;  // alpha
+	      j += 4; 
+	    }
+
+	  	// imageData.data = Array(pixels);
+	  	ctx.putImageData(imageData, 0, 0);
+	  }
+
+	  function numMap(val, in_min, in_max, out_min, out_max) {
+		  return (val - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+	  }
+
+	</script>
+</body>
+</html>

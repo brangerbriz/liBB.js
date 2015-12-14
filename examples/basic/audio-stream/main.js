@@ -1,21 +1,18 @@
+
+// create BB AudioContext
 BB.Audio.init();
 
 var fft = new BB.AudioAnalyser();
+	fft.disconnect(); // to avoid feedback from speakers :) 
 
-var katy = new BB.AudioSampler({
-	connect: fft.analyser,
-	fireworks: '../../assets/audio/katy.ogg'
-}, function( bufferObj ){
-	draw();
-	katy.play('fireworks', 0, 0.5, 7.4);
-	// loop
-	setInterval(function(){
-		katy.play('fireworks', 0, 0.5, 7.4);
-	},7400);
+// create AudioStream
+var mic = new BB.AudioStream({
+	connect: fft.analyser
 });
 
 
-// canvas
+
+// canvas -----------------------------------------
 
 var canvas     = document.createElement('canvas');
 var ctx        = canvas.getContext('2d');
@@ -36,19 +33,7 @@ function draw() {
 	requestAnimationFrame(draw);
     ctx.clearRect(0,0,WIDTH,HEIGHT);
 
-    // frequency spectrum
-    var fdata = fft.getByteFrequencyData();
-	ctx.fillStyle="#e40477";
-    for (var i = 0; i < fdata.length; i++) {
-    	var value = fdata[i];
- 		var percent = value / 256;
-		var height = HEIGHT * percent;
-		var offset = HEIGHT - height - 1;
-		var barWidth = WIDTH/fdata.length;
-		ctx.fillRect(i * barWidth, offset, barWidth, height);
-    };
-
-    // waveform 
+    // draw waveform 
     var tdata = fft.getByteTimeDomainData();
 	ctx.lineWidth = BB.MathUtils.map(fft.getAmplitude(), 0,45, 0,10);
 	ctx.strokeStyle = "#000000";
@@ -63,8 +48,26 @@ function draw() {
 		x+=sliceWidth;
     }
 	ctx.lineTo(WIDTH,HEIGHT/2);
-	ctx.stroke();
-    
+	ctx.stroke();   
 }
 
 setup();
+draw();
+
+// create play buttons to open/close stream  ---------------
+
+var streamBtn = document.createElement('button');
+	streamBtn.innerHTML = "open stream";
+	streamBtn.className = "abs btn";
+	streamBtn.onclick = function(){
+		if(!mic.stream){
+			mic.open();
+			streamBtn.innerHTML = "close stream";
+		} else {
+			mic.close();
+			streamBtn.innerHTML = "open stream";
+		}
+	}
+document.body.appendChild(streamBtn);
+
+document.body.className = "radial-grey";

@@ -37,6 +37,7 @@
 .absolute {
 	position: absolute;
 	top:0px; left:0px;
+	z-index: -1;
 }
 
 /* more stylish <button> tags */
@@ -64,4 +65,11 @@
 	top:10px;
 	left:50%;
 	margin-left:-100px;
+}
+.abs-right {
+	position: absolute;
+	display: block;
+	width: 200px;
+	top:10px;
+	right:10px;
 }
