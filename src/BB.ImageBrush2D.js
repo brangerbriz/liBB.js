@@ -200,12 +200,12 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
                 r = self.color.r;
                 g = self.color.g;
                 b = self.color.b;
-                a = self.color.a;
+                a = self.color.a/255;
             } else {
                 r = 255;
                 g = 255;
                 b = 255;
-                a = 255;
+                a = 1;
             }
 
             switch(self.variant){
