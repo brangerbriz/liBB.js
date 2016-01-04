@@ -3,7 +3,7 @@ BB.Audio.init();
 var fft = new BB.AudioAnalyser();
 
 var katy = new BB.AudioSampler({
-	connect: fft.analyser,
+	connect: fft.node,
 	fireworks: '../../assets/audio/katy.ogg'
 }, function( bufferObj ){
 	draw();

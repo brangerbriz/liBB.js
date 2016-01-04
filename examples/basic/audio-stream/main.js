@@ -7,7 +7,7 @@ var fft = new BB.AudioAnalyser();
 
 // create AudioStream
 var mic = new BB.AudioStream({
-	connect: fft.analyser
+	connect: fft.node
 });
 
 

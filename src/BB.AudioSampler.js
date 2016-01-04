@@ -19,7 +19,7 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 	 * <code class="code prettyprint">
 	 * &nbsp;{<br>
 	 * &nbsp;&nbsp;&nbsp; context: BB.Audio.context[2], // choose specific context <br>
-	 * &nbsp;&nbsp;&nbsp; connect: fft.analyser, // overide default destination <br>
+	 * &nbsp;&nbsp;&nbsp; connect: fft.node, // overide default destination <br>
 	 * &nbsp;&nbsp;&nbsp; autoload: false, // don't autoload ( sampler.load() later ) <br>
 	 * &nbsp;&nbsp;&nbsp; rate: 2, // double the playback rate <br>
 	 * &nbsp;&nbsp;&nbsp; // then as many additional keys for samples...<Br>
@@ -84,6 +84,8 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		} else {
 			this.ctx = BB.Audio.context;
 		}
+
+		if( !config ) throw new Error('BB.AudioSampler: requires a config object');
 		
 		/**
 		 * whether or not the file(s) have loaded
@@ -114,6 +116,12 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		 */
 		this.buffers	= {}; 
 		/**
+		 * source node for last played instance
+		 * @type {AudioBufferSourceNode}
+		 * @property node
+		 */
+		this.node	= null; 
+		/**
 		 * changes the pitch (<a href="https://en.wikipedia.org/wiki/Cent_%28music%29" target="_blank">-1200 to 1200</a> )
 		 * @type {Number}
 		 * @property detune
@@ -121,7 +129,8 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		 * @protected
 		 *  --- webkit doesn't seem to support detune :-/ so replacing this with 
 		 */
-		this.detune 	= ( typeof config.detune !== 'undefined' ) ? config.detune : 0;
+		// this.detune 	= ( typeof config.detune !== 'undefined' ) ? config.detune : 0;
+		
 		/**
 		 * changes the playback rate ( pitch and speed ), (<a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioBufferSourceNode/playbackRate" target="_blank">reference</a> )
 		 * @type {Number}
@@ -148,8 +157,6 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		} else {
 			this.gain.connect( this.ctx.destination );
 		}
-
-		if( !config ) throw new Error('BB.AudioSampler: requires a config object');
 
 		if( typeof this.auto !== 'boolean' ) 
 			throw new Error('BB.AudioSampler: autoload should be either true or false');
@@ -202,7 +209,7 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 	 * @method connect
 	 * @param  {AudioNode} destination the AudioNode or AudioDestinationNode to connect to
 	 * @param  {Number} output      which output of the the Sampler do you want to connect to the destination
-	 * @param  {Number} input       which input of the destinatino you want to connect the Sampler to
+	 * @param  {Number} input       which input of the destination you want to connect the Sampler to
 	 * @example  
 	 * <code class="code prettyprint">  
 	 *  &nbsp;BB.Audio.init();<br>
@@ -327,6 +334,7 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		var d = ( typeof duration !== 'undefined' ) ? duration : source.buffer.duration;
 
 	    source.start( w, o, d ); 
+	    this.node = source;
 
     };
 

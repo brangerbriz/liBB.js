@@ -6,6 +6,7 @@ define(function (require) {
   
   //utils
   BB.MathUtils      = require('BB.MathUtils');
+  BB.Detect         = require('BB.Detect');
   BB.Color          = require('BB.Color');
 
   // brushes
@@ -26,12 +27,14 @@ define(function (require) {
 
   // audio
   BB.Audio             = require('BB.Audio');
+  BB.AudioStream       = require('BB.AudioStream');
   BB.AudioBufferLoader = require('BB.AudioBufferLoader');
   BB.AudioSampler      = require('BB.AudioSampler');
+  BB.AudioTone         = require('BB.AudioTone');
   BB.AudioSequencer    = require('BB.AudioSequencer');
   BB.AudioAnalyser     = require('BB.AudioAnalyser');
-  BB.AudioStream       = require('BB.AudioStream');
-
+  BB.AudioFX           = require('BB.AudioFX');
+  
   // midi
   BB.MidiDevice      = require('BB.MidiDevice');
   BB.BaseMidiInput   = require('BB.BaseMidiInput');

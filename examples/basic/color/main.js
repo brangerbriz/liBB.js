@@ -78,7 +78,7 @@ draw();
 // ------------------------     -----------------------
 // ----------------------------------------------------
 var dat_gui_lib = document.createElement('script');
-dat_gui_lib.setAttribute('src','../../assets/js/dat.gui.min.js');
+dat_gui_lib.setAttribute('src','../../assets/js/dat.gui.bb.min.js');
 document.body.appendChild(dat_gui_lib);
 dat_gui_lib.onload = function(){
 

@@ -86,7 +86,7 @@ function(  BB) {
      * the red value between 0 - 255
      * @property r (red)
      * @type Number
-     * @default 204
+     * @default 228
      */   
     Object.defineProperty(BB.Color.prototype, "r", {
         get: function() {
@@ -106,7 +106,7 @@ function(  BB) {
      * the green value between 0 - 255
      * @property g (green)
      * @type Number
-     * @default 51
+     * @default 4
      */   
     Object.defineProperty(BB.Color.prototype, "g", {
         get: function() {
@@ -126,7 +126,7 @@ function(  BB) {
      * the blue value between 0 - 255
      * @property b (blue)
      * @type Number
-     * @default 153
+     * @default 119
      */   
     Object.defineProperty(BB.Color.prototype, "b", {
         get: function() {
@@ -227,7 +227,7 @@ function(  BB) {
      * the base color's rgb string
      * @property rgb
      * @type String
-     * @default "rgb(204,51,153)"
+     * @default "rgb(228,4,119)"
      */   
     Object.defineProperty(BB.Color.prototype, "rgb", {
         get: function() {
@@ -266,7 +266,7 @@ function(  BB) {
      * the base color's rgba string
      * @property rgba
      * @type String
-     * @default "rgba(204,51,153,1)"
+     * @default "rgba(228,4,119,1)"
      */   
     Object.defineProperty(BB.Color.prototype, "rgba", {
         get: function() {
@@ -307,7 +307,7 @@ function(  BB) {
      * the base color's hex string
      * @property hex
      * @type String
-     * @default "#cc3399"
+     * @default "#e40477"
      */   
     Object.defineProperty(BB.Color.prototype, "hex", {
         get: function() {
