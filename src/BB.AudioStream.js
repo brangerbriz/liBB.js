@@ -17,7 +17,7 @@ function(  BB ){
 	 * <code class="code prettyprint">
 	 * &nbsp;{<br>
 	 * &nbsp;&nbsp;&nbsp; context: BB.Audio.context[2], // choose specific context <br>
-	 * &nbsp;&nbsp;&nbsp; connect: fft.analyser, // overide default destination <br>
+	 * &nbsp;&nbsp;&nbsp; connect: fft.node, // overide default destination <br>
 	 * &nbsp;&nbsp;&nbsp; autostart: true // will automatically start the stream <br>
 	 * &nbsp;}
 	 * </code>	 
@@ -145,7 +145,7 @@ function(  BB ){
 	 *	<br>
 	 *	&nbsp;var fft = new BB.AudioAnalyser();<br>
 	 *	&nbsp;var mic = new BB.AudioStream();<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp; mic.connect( fft.analyser );
+	 *	&nbsp;&nbsp;&nbsp;&nbsp; mic.connect( fft.node );
 	 * </code>
 	 * <br>
 	 * BB.AudioStream ( represented by Gain below ) connects to the BB.Audio.context by default, using <code>.connect()</code> also connects it to an additional node ( see disconnect below )
@@ -180,7 +180,7 @@ function(  BB ){
 	 *	&nbsp;var fft = new BB.AudioAnalyser();<br>
 	 *	&nbsp;var mic = new BB.AudioStream();<br>
 	 *	&nbsp;&nbsp;&nbsp;&nbsp; mic.disconnect();<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp; mic.connect( fft.analyser );
+	 *	&nbsp;&nbsp;&nbsp;&nbsp; mic.connect( fft.node );
 	 * </code>
 	 * <br>
 	 * BB.AudioStream ( represented by Gain below ) connects to the BB.Audio.context by default, using <code>.disconnect()</code> disconnects it from it's default, then using <code>.connect()</code>  connects it to the Analyser ( which is connected to the BB.Audio.context by default )

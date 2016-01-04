@@ -24,7 +24,7 @@ function(  BB ){
 	 *	<br>
 	 *	&nbsp;var fft = new BB.AudioAnalyser(); <br>
 	 *	&nbsp;// assuming samp is an instanceof BB.AudioSampler <br>
-	 *	&nbsp;samp.connect( fft.analyser ); <br><br><br>
+	 *	&nbsp;samp.connect( fft.node ); <br><br><br>
 	 *	&nbsp;// you can override fft's defaults by passing a config <br>
 	 *	&nbsp;var fft = new BB.AudioAnalyser({<br>
 	 *  &nbsp;&nbsp;&nbsp;&nbsp;context: BB.Audio.context[3],<br>
@@ -55,25 +55,25 @@ function(  BB ){
 		/**
 		 * the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode" target="_blank">AnalyserNode</a> itself
 		 * @type {AnalyserNode}
-		 * @property analyser
+		 * @property node
 		 */
-		this.analyser 		= this.ctx.createAnalyser();
+		this.node 		= this.ctx.createAnalyser();
 		
 		this.fftSize 		= ( typeof config!=="undefined" && typeof config.fftSize !== 'undefined' ) ? config.fftSize : 2048;
 		this.smoothing 		= ( typeof config!=="undefined" && typeof config.smoothing !== 'undefined' ) ? config.smoothing : 0.8;
 		this.maxDecibels	= ( typeof config!=="undefined" && typeof config.maxDecibels !== 'undefined' ) ? config.maxDecibels : -30;
 		this.minDecibels	= ( typeof config!=="undefined" && typeof config.minDecibels !== 'undefined' ) ? config.minDecibels : -90;
 
-		this.analyser.fftSize 					= this.fftSize;
-		this.analyser.smoothingTimeConstant 	= this.smoothing;
-		this.analyser.maxDecibels 				= this.maxDecibels;
-		this.analyser.minDecibels 				= this.minDecibels;			
+		this.node.fftSize 					= this.fftSize;
+		this.node.smoothingTimeConstant 	= this.smoothing;
+		this.node.maxDecibels 				= this.maxDecibels;
+		this.node.minDecibels 				= this.minDecibels;			
 
 
-		this.freqByteData 	= new Uint8Array( this.analyser.frequencyBinCount );
-		this.freqFloatData 	= new Float32Array(this.analyser.frequencyBinCount);
-		this.timeByteData 	= new Uint8Array( this.analyser.frequencyBinCount );
-		this.timeFloatData 	= new Float32Array(this.analyser.frequencyBinCount);
+		this.freqByteData 	= new Uint8Array( this.node.frequencyBinCount );
+		this.freqFloatData 	= new Float32Array(this.node.frequencyBinCount);
+		this.timeByteData 	= new Uint8Array( this.node.frequencyBinCount );
+		this.timeFloatData 	= new Float32Array(this.node.frequencyBinCount);
 
 		if( this.fftSize%2 !== 0 || this.fftSize < 32 || this.fftSize > 2048)
 			throw new Error('Analyser: fftSize must be a multiple of 2 between 32 and 2048');
@@ -83,12 +83,12 @@ function(  BB ){
 		if( typeof config !== "undefined" && typeof config.connect !== 'undefined' ){
 			if( config.connect instanceof AudioDestinationNode ||
 				config.connect instanceof AudioNode ) 
-				this.analyser.connect( config.connect );
+				this.node.connect( config.connect );
 			else {
 				throw new Error('BB.AudioAnalyser: connect property expecting an AudioNode');
 			}
 		} else {
-			this.analyser.connect( this.ctx.destination );
+			this.node.connect( this.ctx.destination );
 		}
 
 	};
@@ -119,9 +119,9 @@ function(  BB ){
 		if( typeof intput !== "undefined" && typeof input !== "number" )
 			throw new Error('AudioAnalyser.connect: input should be a number');
 
-		if( typeof intput !== "undefined" ) this.analyser.connect( destination, output, input );
-		else if( typeof output !== "undefined" ) this.analyser.connect( destination, output );
-		else this.analyser.connect( destination );
+		if( typeof intput !== "undefined" ) this.node.connect( destination, output, input );
+		else if( typeof output !== "undefined" ) this.node.connect( destination, output );
+		else this.node.connect( destination );
 	};
 
 	/**
@@ -150,10 +150,10 @@ function(  BB ){
 		if( typeof input !== "undefined" && typeof input !== "number" )
 			throw new Error('AudioAnalyser.disconnect: input should be a number');
 
-		if( typeof input !== "undefined" ) this.analyser.disconnect( destination, output, input );
-		else if( typeof output !== "undefined" ) this.analyser.disconnect( destination, output );
-		else if( typeof destination !== "undefined" ) this.analyser.disconnect( destination );
-		else  this.analyser.disconnect();
+		if( typeof input !== "undefined" ) this.node.disconnect( destination, output, input );
+		else if( typeof output !== "undefined" ) this.node.disconnect( destination, output );
+		else if( typeof destination !== "undefined" ) this.node.disconnect( destination );
+		else  this.node.disconnect();
 	};
 
 
@@ -181,7 +181,7 @@ function(  BB ){
 	 * </code>
      */
 	BB.AudioAnalyser.prototype.getByteFrequencyData = function(){
-		this.analyser.getByteFrequencyData( this.freqByteData );
+		this.node.getByteFrequencyData( this.freqByteData );
 		return this.freqByteData;
 	};
 
@@ -190,7 +190,7 @@ function(  BB ){
      * @method getFloatFrequencyData
      */
 	BB.AudioAnalyser.prototype.getFloatFrequencyData = function(){
-		this.analyser.getFloatFrequencyData( this.freqFloatData );
+		this.node.getFloatFrequencyData( this.freqFloatData );
 		return this.freqFloatData;
 	};
 
@@ -223,7 +223,7 @@ function(  BB ){
      */
 	BB.AudioAnalyser.prototype.getByteTimeDomainData = function(){
 		// https://en.wikipedia.org/wiki/Time_domain
-		this.analyser.getByteTimeDomainData( this.timeByteData );
+		this.node.getByteTimeDomainData( this.timeByteData );
 		return this.timeByteData;
 	};
 
@@ -232,7 +232,7 @@ function(  BB ){
      * @method getFloatTimeDomainData
      */
 	BB.AudioAnalyser.prototype.getFloatTimeDomainData = function(){
-		this.analyser.getFloatTimeDomainData( this.timeFloatData );
+		this.node.getFloatTimeDomainData( this.timeFloatData );
 		return this.timeFloatData;
 	};
 
@@ -270,7 +270,7 @@ function(  BB ){
 		var foundGoodCorrelation = false;
 		var correlations = new Array(MAX_SAMPLES);
 
-		this.analyser.getFloatTimeDomainData( this.timeFloatData );
+		this.node.getFloatTimeDomainData( this.timeFloatData );
 
 		for (var i=0;i<SIZE;i++) {
 			var val = this.timeFloatData[i];
@@ -316,6 +316,105 @@ function(  BB ){
 		return -1;
 	};
 
+
+ 	/**
+     * returns an multi-dimentional array ( one array per channel ) with resampled buffer data ( for drawing an entire waveform of a file )
+     * @method getResampledBufferData
+     * 
+	 * @example  
+	 * <code class="code prettyprint">  
+	 *  &nbsp;BB.Audio.init();<br>
+	 *	<br>
+	 *	&nbsp;var fft = new BB.AudioAnalyser();<br>
+	 *	<br>
+	 *	&nbsp;// then in a canvas draw loop...<br>
+     *	&nbsp;var tdata = fft.getResampledBufferData();<br>
+	 *	&nbsp;ctx.beginPath();<br>
+	 *	&nbsp;var sliceWidth = WIDTH / tdata.length;<br>
+	 *	&nbsp;var x = 0;<br>
+     *	&nbsp;for (var i = 0; i < tdata.length; i++) {<br>
+     *	&nbsp;&nbsp;&nbsp;var v = tdata[i] / 128.0;<br>
+     *	&nbsp;&nbsp;&nbsp;var y = v * HEIGHT/2;		<br>
+	 *	&nbsp;&nbsp;&nbsp;if(i===0) ctx.moveTo(x,y);<br>
+	 *	&nbsp;&nbsp;&nbsp;else ctx.lineTo(x,y);		<br>
+	 *	&nbsp;&nbsp;&nbsp;x+=sliceWidth;<br>
+     *	&nbsp;}<br>
+	 *	&nbsp;ctx.lineTo(WIDTH,HEIGHT/2);<br>
+	 *	&nbsp;ctx.stroke();<br>
+	 *	<br>
+	 * </code>
+     */
+    BB.AudioAnalyser.prototype._resampleBufferData = function( chnlData, length ){
+    	// maths via: http://stackoverflow.com/a/22103150/1104148
+    	/*
+			chnlData is a Float32Array describing that channel       
+			we 'resample' with cumul, count, variance
+			Offset 0 : PositiveCumul  1: PositiveCount  2: PositiveVariance
+			       3 : NegativeCumul  4: NegativeCount  5: NegativeVariance
+			that makes 6 data per bucket
+		*/
+		var resampled = new Float64Array(length * 6 );
+		var i=0, j=0, buckIndex = 0;
+		var min=1000, max=-1000;
+		var thisValue=0, res=0;
+		var sampleCount = chnlData.length;
+		// first pass for mean
+		for (i=0; i<sampleCount; i++) {
+			// in which bucket do we fall ?
+			buckIndex = 0 | ( length * i / sampleCount );
+			buckIndex *= 6;
+			// positive or negative ?
+			thisValue = chnlData[i];
+			if (thisValue>0) {
+				resampled[buckIndex    ] += thisValue;
+				resampled[buckIndex + 1] +=1;
+			} else if (thisValue<0) {
+				resampled[buckIndex + 3] += thisValue;
+				resampled[buckIndex + 4] +=1;                           
+			}
+			if (thisValue<min) min=thisValue;
+			if (thisValue>max) max = thisValue;
+		}
+		// compute mean now
+		for (i=0, j=0; i<length; i++, j+=6) {
+			if (resampled[j+1] !== 0) {
+				resampled[j] /= resampled[j+1]; 
+			}
+			if (resampled[j+4]!== 0) {
+				resampled[j+3] /= resampled[j+4];
+			}
+		}
+		// second pass for mean variation  ( variance is too low)
+		for (i=0; i<chnlData.length; i++) {
+			// in which bucket do we fall ?
+			buckIndex = 0 | (length * i / chnlData.length );
+			buckIndex *= 6;
+			// positive or negative ?
+			thisValue = chnlData[i];
+			if (thisValue>0) {
+				resampled[buckIndex + 2] += Math.abs( resampled[buckIndex] - thisValue );               
+			} else  if (thisValue<0) {
+				resampled[buckIndex + 5] += Math.abs( resampled[buckIndex + 3] - thisValue );                           
+			}
+		}
+		// compute mean variation/variance now
+		for (i=0, j=0; i<length; i++, j+=6) {
+			if (resampled[j+1]) resampled[j+2] /= resampled[j+1];
+			if (resampled[j+4]) resampled[j+5] /= resampled[j+4];
+		}	
+		return resampled;
+    };
+	BB.AudioAnalyser.prototype.getResampledBufferData = function( buffer, length ){
+		if( !(buffer instanceof AudioBuffer) ) throw new Error("BB.AudioAnalyser.getResampledBufferData: first parameter expecing an AudioBuffer (object)");
+		if( typeof length !=="number") throw new Error("BB.AudioAnalyser.getResampledBufferData: second parameter expecing number (length to resample to)");
+		
+		var data = [];
+		for (var i = 0; i < buffer.numberOfChannels; i++) {
+			var chnlData = this._resampleBufferData( buffer.getChannelData(i), length );
+			data.push( chnlData );
+		}
+		return data;
+	};
 
 	return BB.AudioAnalyser;
 });
