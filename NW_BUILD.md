@@ -1,4 +1,4 @@
-# Building Node Webkit Apps Fabian
+# Building Node Webkit Apps
 
 [NW-Builder](https://github.com/nwjs/nw-builder) makes building apps from HTML5/CSS/JavaScript with NW.js easy. NW-Builder will automatically download the latest version (or a specified version specified by your `package.json`) of [NW.js](http://nwjs.io) for each target platform. With NW-Builder you can create apps for targets/platforms other than the one you are actually building from.
 
