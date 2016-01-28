@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/BB.MidiDevice.js - BB.js</title>
+    <title>src\BB.MidiDevice.js - liBB.js</title>
         
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/prettify-nick.css">
@@ -22,7 +22,11 @@
             <div id="api-list">
                 <div id="api-tabview" class="tabview">
                     <ul class="tabs">
-                        <li><a href="#api-classes">Classes</a></li>
+                        <a href="/docs">
+                            <img src="../assets/favicon.png" class="icon"/>
+                        </a>
+                        <a href="/docs" class="homelink"> liBB.js </a>
+                        <!-- <li><a href="#api-classes">Classes</a></li> -->
                         <!-- <li><a href="#api-modules">Modules</a></li> -->
                     </ul>
             
@@ -80,7 +84,7 @@
 
         <div id="docs-main" class="apidocs">
             <div class="content container">
-    <h1 class="file-heading">File: src/BB.MidiDevice.js</h1>
+    <h1 class="file-heading">File: src\BB.MidiDevice.js</h1>
     
     <div class="file">
     <pre class="code prettyprint overflow linenums">
@@ -131,7 +135,6 @@
          * @param {Object} midiMap An object with array properties for knobs, sliders, buttons, keys, and pads.
          * @param {Function} success Function to return once MIDIAccess has been received successfully.
          * @param {Function} failure Function to return if MIDIAccess is not received successfully.
-         * @return {Boolean} True if browser supports Midi, false if not.
          */
         BB.MidiDevice = function(midiMap, success, failure) {
             
@@ -179,12 +182,13 @@
     
             var i = 0;
             var key = null;
+            var note = null;
             
             // sliders
             if (typeof midiMap.sliders !== &#x27;undefined&#x27; &amp;&amp; midiMap.sliders instanceof Array) {
                 for (i = 0; i &lt; midiMap.sliders.length; i++) {
                     input = new BB.MidiInputSlider(midiMap.sliders[i]);
-                    var note = (typeof midiMap.sliders[i] === &#x27;number&#x27;) ? midiMap.sliders[i] : midiMap.sliders[i].note;
+                    note = (typeof midiMap.sliders[i] === &#x27;number&#x27;) ? midiMap.sliders[i] : midiMap.sliders[i].note;
                     key = &#x27;key&#x27; + note;
                     if (typeof noteLUT[key] === &#x27;undefined&#x27;) {
                         noteLUT[key] = [];
@@ -198,7 +202,7 @@
             if (typeof midiMap.knobs !== &#x27;undefined&#x27; &amp;&amp; midiMap.knobs instanceof Array) {
                 for (i = 0; i &lt; midiMap.knobs.length; i++) {
                     input = new BB.MidiInputKnob(midiMap.knobs[i]);
-                    var note = (typeof midiMap.knobs[i] === &#x27;number&#x27;) ? midiMap.knobs[i] : midiMap.knobs[i].note;
+                    note = (typeof midiMap.knobs[i] === &#x27;number&#x27;) ? midiMap.knobs[i] : midiMap.knobs[i].note;
                     key = &#x27;key&#x27; + note;
                     if (typeof noteLUT[key] === &#x27;undefined&#x27;) {
                         noteLUT[key] = [];
@@ -212,7 +216,7 @@
             if (typeof midiMap.buttons !== &#x27;undefined&#x27; &amp;&amp; midiMap.buttons instanceof Array) {
                 for (i = 0; i &lt; midiMap.buttons.length; i++) {
                     input = new BB.MidiInputButton(midiMap.buttons[i]);
-                    var note = (typeof midiMap.buttons[i] === &#x27;number&#x27;) ? midiMap.buttons[i] : midiMap.buttons[i].note;
+                    note = (typeof midiMap.buttons[i] === &#x27;number&#x27;) ? midiMap.buttons[i] : midiMap.buttons[i].note;
                     key = &#x27;key&#x27; + note;
                     if (typeof noteLUT[key] === &#x27;undefined&#x27;) {
                         noteLUT[key] = [];
@@ -226,7 +230,7 @@
             if (typeof midiMap.pads !== &#x27;undefined&#x27; &amp;&amp; midiMap.pads instanceof Array) {
                 for (i = 0; i &lt; midiMap.pads.length; i++) {
                     input = new BB.MidiInputPad(midiMap.pads[i]);
-                    var note = (typeof midiMap.pads[i] === &#x27;number&#x27;) ? midiMap.pads[i] : midiMap.pads[i].note;
+                    note = (typeof midiMap.pads[i] === &#x27;number&#x27;) ? midiMap.pads[i] : midiMap.pads[i].note;
                     key = &#x27;key&#x27; + note;
                     if (typeof noteLUT[key] === &#x27;undefined&#x27;) {
                         noteLUT[key] = [];
@@ -240,8 +244,7 @@
             if (typeof midiMap.keys !== &#x27;undefined&#x27; &amp;&amp; midiMap.keys instanceof Array) {
                 for (i = 0; i &lt; midiMap.keys.length; i++) {
                     input = new BB.MidiInputKey(midiMap.keys[i]);
-                    var note = (typeof midiMap.keys[i] === &#x27;number&#x27;) ? midiMap.keys[i] : midiMap.keys[i].note;
-                    console.log(note);
+                    note = (typeof midiMap.keys[i] === &#x27;number&#x27;) ? midiMap.keys[i] : midiMap.keys[i].note;
                     key = &#x27;key&#x27; + note;
                     if (typeof noteLUT[key] === &#x27;undefined&#x27;) {
                         noteLUT[key] = [];
@@ -256,9 +259,8 @@
                 navigator.requestMIDIAccess({
                     sysex: false
                 }).then(onMIDISuccess, failure);
-                return true; // support
             } else {
-                return false; // no support
+                failure();
             }
     
             // midi functions

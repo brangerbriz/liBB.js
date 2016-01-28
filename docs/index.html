@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>BB.js</title>
+    <title>liBB.js</title>
         
     <link rel="stylesheet" href="./assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="./assets/css/prettify-nick.css">
@@ -22,7 +22,11 @@
             <div id="api-list">
                 <div id="api-tabview" class="tabview">
                     <ul class="tabs">
-                        <li><a href="#api-classes">Classes</a></li>
+                        <a href="/docs">
+                            <img src="./assets/favicon.png" class="icon"/>
+                        </a>
+                        <a href="/docs" class="homelink"> liBB.js </a>
+                        <!-- <li><a href="#api-classes">Classes</a></li> -->
                         <!-- <li><a href="#api-modules">Modules</a></li> -->
                     </ul>
             
@@ -81,8 +85,12 @@
         <div id="docs-main" class="apidocs">
             <div class="content container">
     <div class="index-content">
-        <h2>BB.js</h2>
-        <p>A set of JavaScript modules for creating interactive &amp;&amp; generative apps + installations.</p>
+        <h2 class="maintitle">liBB.js</h2>
+        <p class="maindescription">A JavaScript library/framework for creating interactive &amp;&amp; generative apps + installations.</p>
+        <iframe src="" frameborder="0" id="examplesFrame"></iframe>
+        <script>
+        	document.getElementById('examplesFrame').setAttribute('src','http://'+window.location.host+"/examples/index.html");
+        </script>
     </div>            </div>
         </div>
 
