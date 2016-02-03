@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src\BB.LeapMotion.js - liBB.js</title>
+        
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/prettify-nick.css">
+
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    
+    <script src="../assets/vendor/yui-min.js"></script>
+</head>
+<body>
+
+<div id="doc">
+    <div id="bd" class="main-body">
+
+        <div id="docs-sidebar" class="sidebar apidocs">
+            <div id="api-list">
+                <div id="api-tabview" class="tabview">
+                    <ul class="tabs">
+                        <a href="/docs">
+                            <img src="../assets/favicon.png" class="icon"/>
+                        </a>
+                        <a href="/docs" class="homelink"> liBB.js </a>
+                        <!-- <li><a href="#api-classes">Classes</a></li> -->
+                        <!-- <li><a href="#api-modules">Modules</a></li> -->
+                    </ul>
+            
+                    <div id="api-tabview-filter">
+                        <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                    </div>
+            
+                    <div id="api-tabview-panel">
+                        <ul id="api-classes" class="apis classes">
+                            <li><a class="type" href="../classes/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="type" href="../classes/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="type" href="../classes/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="type" href="../classes/BB.AudioStream.html">BB.AudioStream</a></li>
+                            <li><a class="type" href="../classes/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.BaseMidiInput.html">BB.BaseMidiInput</a></li>
+                            <li><a class="type" href="../classes/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
+                            <li><a class="type" href="../classes/BB.Color.html">BB.Color</a></li>
+                            <li><a class="type" href="../classes/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.LeapMotion.html">BB.LeapMotion</a></li>
+                            <li><a class="type" href="../classes/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.MathUtils.html">BB.MathUtils</a></li>
+                            <li><a class="type" href="../classes/BB.MidiDevice.html">BB.MidiDevice</a></li>
+                            <li><a class="type" href="../classes/BB.MidiInputButton.html">BB.MidiInputButton</a></li>
+                            <li><a class="type" href="../classes/BB.MidiInputKey.html">BB.MidiInputKey</a></li>
+                            <li><a class="type" href="../classes/BB.MidiInputKnob.html">BB.MidiInputKnob</a></li>
+                            <li><a class="type" href="../classes/BB.MidiInputPad.html">BB.MidiInputPad</a></li>
+                            <li><a class="type" href="../classes/BB.MidiInputSlider.html">BB.MidiInputSlider</a></li>
+                            <li><a class="type" href="../classes/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="type" href="../classes/BB.Particle2D.html">BB.Particle2D</a></li>
+                            <li><a class="type" href="../classes/BB.Pointer.html">BB.Pointer</a></li>
+                            <li><a class="type" href="../classes/BB.Vector2.html">BB.Vector2</a></li>
+                        </ul>
+            
+                      <!--   <ul id="api-modules" class="apis modules">
+                            <li><a class="module" href="../modules/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="module" href="../modules/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="module" href="../modules/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="module" href="../modules/BB.AudioStream.html">BB.AudioStream</a></li>
+                            <li><a class="module" href="../modules/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.BaseMidiInput.html">BB.BaseMidiInput</a></li>
+                            <li><a class="module" href="../modules/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
+                            <li><a class="module" href="../modules/BB.Color.html">BB.Color</a></li>
+                            <li><a class="module" href="../modules/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.LeapMotion.html">BB.LeapMotion</a></li>
+                            <li><a class="module" href="../modules/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.MathUtils.html">BB.MathUtils</a></li>
+                            <li><a class="module" href="../modules/BB.Midi.html">BB.Midi</a></li>
+                            <li><a class="module" href="../modules/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="module" href="../modules/BB.particle2D.html">BB.particle2D</a></li>
+                            <li><a class="module" href="../modules/BB.Pointer.html">BB.Pointer</a></li>
+                            <li><a class="module" href="../modules/BB.Vector2.html">BB.Vector2</a></li>
+                        </ul> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="docs-main" class="apidocs">
+            <div class="content container">
+    <h1 class="file-heading">File: src\BB.LeapMotion.js</h1>
+    
+    <div class="file">
+    <pre class="code prettyprint overflow linenums">
+    
+    // module to get x, y from leapmotion
+    // used leap-0.6.4.js as needed for the leapmotion to function
+    /**
+     * A module for obtaining the X and Y values from 
+     * the LeapMotion sensor.
+     * @module BB.LeapMotion
+     */
+    define(&#x27;BB.LeapMotion&#x27;,[&#x27;./BB&#x27;, &#x27;../libs/leap-0.6.4&#x27;, &#x27;./BB.Vector2&#x27; ],
+    function(  BB,LeapMotion, Vector2){
+    
+       // &#x27;use strict&#x27;;
+    
+       BB.Vector2 = Vector2;
+       /**
+         * A module for obtaining the X and Y values from 
+         * the LeapMotion sensor.
+         * @class BB.LeapMotion
+         * @param [null] The LeapMotion controller does not need an input to function.
+         * @constructor
+         */
+       BB.LeapMotion = function(){  };
+       // create variables that can be accesed later on to be able to have the data
+       // canvasX, canvasY each will contain a numeric value that represent the position.
+    
+    
+      /**
+      * The users current x position as supplied by the LeapMotion Sensor.
+      * @property canvasX
+      * @type {Number}
+      * @default undefined
+      */
+       BB.LeapMotion.prototype.canvasX = 0;
+       /**
+      * The users current y position as supplied by the LeapMotion Sensor.
+      * @property canvasY
+      * @type {Number}
+      * @default undefined
+      */
+       BB.LeapMotion.prototype.canvasY = 0;
+       //creating function to be called to access x,y in a fast and easy way
+       // function requires a canvas.
+       BB.LeapMotion.prototype.LeapGetXY= function(canvas){
+       // using Leap. controller to create the connection to our sensor
+            var controller = new Leap.Controller();
+            // the controller.on method lets us se what the sensor is telling us on each frame
+            // frames are sent 200 frames per second
+            controller.on(&quot;frame&quot;,function(frame){
+              // frame.pointables allows us to detect when a frame has a pointable.(hand,finger)
+                    if(frame.pointables.length&gt;0)
+                        {
+                        var pointable = frame.pointables[0];
+                        // creates and interaction box it provides normalized coordinates for hands, fingers, and tools within this box.
+                        var interactionBox = frame.interactionBox;
+                        // provides the stabalized tip position
+                        var normalizedPosition = interactionBox.normalizePoint(pointable.stabilizedTipPosition, true);
+                        // Convert the normalized coordinates to span the canvas
+                        BB.LeapMotion.prototype.canvasX = canvas.width * normalizedPosition[0];
+                        BB.LeapMotion.prototype.canvasY = canvas.height * (1 - normalizedPosition[1]);
+                         }
+                     });
+            // connecto to the leap motion sensor to get data
+                    controller.connect();
+                    };
+       return BB.LeapMotion;
+    });
+    
+    </pre>
+    </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

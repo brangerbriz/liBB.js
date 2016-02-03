@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src\modules\BB.BrushManager2D.js - liBB.js</title>
+        
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/prettify-nick.css">
+
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    
+    <script src="../assets/vendor/yui-min.js"></script>
+</head>
+<body>
+
+<div id="doc">
+    <div id="bd" class="main-body">
+
+        <div id="docs-sidebar" class="sidebar apidocs">
+            <div id="api-list">
+                <div id="api-tabview" class="tabview">
+                    <ul class="tabs">
+                        <a href="/docs">
+                            <img src="../assets/favicon.png" class="icon"/>
+                        </a>
+                        <a href="/docs" class="homelink"> liBB.js </a>
+                        <!-- <li><a href="#api-classes">Classes</a></li> -->
+                        <!-- <li><a href="#api-modules">Modules</a></li> -->
+                    </ul>
+            
+                    <div id="api-tabview-filter">
+                        <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                    </div>
+            
+                    <div id="api-tabview-panel">
+                        <ul id="api-classes" class="apis classes">
+                            <li><a class="type" href="../classes/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="type" href="../classes/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="type" href="../classes/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="type" href="../classes/BB.AudioStream.html">BB.AudioStream</a></li>
+                            <li><a class="type" href="../classes/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.BaseMidiInput.html">BB.BaseMidiInput</a></li>
+                            <li><a class="type" href="../classes/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
+                            <li><a class="type" href="../classes/BB.Color.html">BB.Color</a></li>
+                            <li><a class="type" href="../classes/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.MathUtils.html">BB.MathUtils</a></li>
+                            <li><a class="type" href="../classes/BB.MidiDevice.html">BB.MidiDevice</a></li>
+                            <li><a class="type" href="../classes/BB.MidiInputButton.html">BB.MidiInputButton</a></li>
+                            <li><a class="type" href="../classes/BB.MidiInputKey.html">BB.MidiInputKey</a></li>
+                            <li><a class="type" href="../classes/BB.MidiInputKnob.html">BB.MidiInputKnob</a></li>
+                            <li><a class="type" href="../classes/BB.MidiInputPad.html">BB.MidiInputPad</a></li>
+                            <li><a class="type" href="../classes/BB.MidiInputSlider.html">BB.MidiInputSlider</a></li>
+                            <li><a class="type" href="../classes/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="type" href="../classes/BB.Particle2D.html">BB.Particle2D</a></li>
+                            <li><a class="type" href="../classes/BB.Pointer.html">BB.Pointer</a></li>
+                            <li><a class="type" href="../classes/BB.Vector2.html">BB.Vector2</a></li>
+                        </ul>
+            
+                      <!--   <ul id="api-modules" class="apis modules">
+                            <li><a class="module" href="../modules/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="module" href="../modules/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="module" href="../modules/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="module" href="../modules/BB.AudioStream.html">BB.AudioStream</a></li>
+                            <li><a class="module" href="../modules/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.BaseMidiInput.html">BB.BaseMidiInput</a></li>
+                            <li><a class="module" href="../modules/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
+                            <li><a class="module" href="../modules/BB.Color.html">BB.Color</a></li>
+                            <li><a class="module" href="../modules/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.MathUtils.html">BB.MathUtils</a></li>
+                            <li><a class="module" href="../modules/BB.Midi.html">BB.Midi</a></li>
+                            <li><a class="module" href="../modules/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="module" href="../modules/BB.particle2D.html">BB.particle2D</a></li>
+                            <li><a class="module" href="../modules/BB.Pointer.html">BB.Pointer</a></li>
+                            <li><a class="module" href="../modules/BB.Vector2.html">BB.Vector2</a></li>
+                        </ul> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="docs-main" class="apidocs">
+            <div class="content container">
+    <h1 class="file-heading">File: src\modules\BB.BrushManager2D.js</h1>
+    
+    <div class="file">
+    <pre class="code prettyprint overflow linenums">
+    /**
+     * Basic scene manager for brushes and pointers. BB.BrushManager2D allows a
+     * drawing scene (that uses brushes) to persist while the rest of the canvas is
+     * cleared each frame. It also provides functionality to undo/redo manager to
+     * your drawing actions. &lt;br&gt;&lt;br&gt; Note: The BB.BrushManager2D class creates a new canvas
+     * that is added to the DOM on top of the canvas object that you pass to its
+     * constructor. This is acheived through some fancy CSS inside of
+     * BB.BrushManager2D.updateCanvasPosition(...). For this reason the canvas
+     * passed to the constructor must be absolutely positioned and
+     * BB.BrushManager2D.updateCanvasPosition(...) should be called each time that
+     * canvas&#x27; position or size is updated.
+     * @module BB.BrushManager2D
+     */
+    define([&#x27;./modules/BB&#x27;, &#x27;./modules/BB.Pointer&#x27;],
+    function(  BB,      Pointer ){
+    
+        &#x27;use strict&#x27;;
+    
+        BB.Pointer = Pointer;
+    
+        /**
+         * Basic scene manager for brushes and pointers. BB.BrushManager2D allows a
+         * drawing scene (that uses brushes) to persist while the rest of the canvas is
+         * cleared each frame. It also provides functionality to undo/redo manager to
+         * your drawing actions. &lt;br&gt;&lt;br&gt; &lt;i&gt;Note: The BB.BrushManager2D class creates a new canvas
+         * that is added to the DOM on top of the canvas object that you pass to its
+         * constructor. This is acheived through some fancy CSS inside of
+         * BB.BrushManager2D.updateCanvasPosition(...). For this reason the canvas
+         * passed to the constructor must be absolutely positioned and
+         * BB.BrushManager2D.updateCanvasPosition(...) should be called each time that
+         * canvas&#x27; position or size is updated.&lt;/i&gt;
+         * @class BB.BrushManager2D
+         * @constructor
+         * @param {[HTMLCanvasElement]} canvas The HTML5 canvas element for the
+         * brush manager to use.
+         * @example
+         * &lt;code class=&quot;code prettyprint&quot;&gt;&amp;nbsp;var brushManager = new BB.BrushManager2D(document.getElementById(&#x27;canvas&#x27;));
+         * &lt;/code&gt;
+         */    
+        BB.BrushManager2D = function(canvas) {
+    
+            var self = this;
+    
+            if (typeof canvas === &#x27;undefined&#x27; || 
+                !(canvas instanceof HTMLCanvasElement)) {
+                throw new Error(&#x27;BB.BrushManager2D: An HTML5 canvas object must be supplied as a first parameter.&#x27;);
+            }
+    
+            if (window.getComputedStyle(canvas).getPropertyValue(&#x27;position&#x27;) !== &#x27;absolute&#x27;) {
+                throw new Error(&#x27;BB.BrushManager2D: the HTML5 canvas passed into the BB.BrushManager2D&#x27; + 
+                    &#x27; constructor must be absolutely positioned. Sorry ;).&#x27;);
+            }
+    
+            /**
+             * The canvas element passed into the BB.BrushManager2D constructor
+             * @property _parentCanvas
+             * @type {HTMLCanvasElement}
+             * @protected
+             */
+            this._parentCanvas    = canvas;
+    
+            /**
+             * The 2D drawing context of the canvas element passed into the
+             * BB.BrushManager2D constructor
+             * @property _parentContext
+             * @type {CanvasRenderingContext2D}
+             * @protected
+             */
+            this._parentContext   = canvas.getContext(&#x27;2d&#x27;);
+    
+             /**
+              * An in-memory canvas object used internally by BB.BrushManager to
+              * draw to and read pixels from
+              * @property canvas
+              * @type {HTMLCanvasElement}
+             */
+            this.canvas           = document.createElement(&#x27;canvas&#x27;);
+    
+            /**
+              * The 2D drawing context of canvas
+              * @property context
+              * @type {CanvasRenderingContext2D}
+             */
+            this.context          = this.canvas.getContext(&#x27;2d&#x27;);
+    
+            /**
+             * A secondary canvas that is used internally by BB.BrushManager. This
+             * canvas is written to the DOM on top of _parentCanvas (the canvas
+             * passed into the BB.BaseBrush2D constructor). It is absolutely
+             * positioned and has a z-index 1 higher than _parentCanvas.
+             * @property secondaryCanvas
+             * @type {HTMLCanvasElement}
+             */
+            this.secondaryCanvas  = document.createElement(&#x27;canvas&#x27;);
+    
+            /**
+              * The 2D drawing context of secondaryCanvas
+              * @property secondaryContext
+              * @type {CanvasRenderingContext2D}
+             */
+            this.secondaryContext = this.secondaryCanvas.getContext(&#x27;2d&#x27;);
+    
+            this._parentCanvas.parentNode.insertBefore(this.secondaryCanvas, this._parentCanvas.nextSibling);
+            this.updateCanvasPosition();
+    
+            this._numUndos = 5; // matches public numUndos w/ getter and setter
+    
+            /**
+             * An array of base-64 encoded images that represent undo states.
+             * @property _history
+             * @type {Array}
+             * @protected
+             */
+            this._history   = [];
+    
+            /**
+             * An array of base-64 encoded images that represent redo states.
+             * @property _purgatory
+             * @type {Array}
+             * @protected
+             */
+            this._purgatory = [];
+    
+            /**
+             * An internal FBO (Frame Buffer Object) that is assigned the pixels
+             * from canvas and is drawn during BB.BrushManager2D.draw()
+             * @property _fboImage
+             * @type {Image}
+             * @protected
+             */
+            this._fboImage = new Image();
+            this._fboImage.onload = function() {
+                
+                self.secondaryContext.clearRect(0, 0, self.canvas.width, self.canvas.height);
+                self.secondaryCanvas.style.display = self._parentCanvas.style.display;
+                self._fboImageLoadWaiting = false;
+            };
+    
+            /**
+             * A deep copy of _fboImage that is drawn in BB.BrushManager2D.draw()
+             * when _fboImage is reloading
+             * @property _fboImageTemp
+             * @type {Image}
+             * @default null
+             * @protected
+             */
+            this._fboImageTemp = null;
+    
+            this._fboImage.onerror = function(err) {
+               console.log(&#x27;BB.BrushManager2D: src failed to load: &#x27; + err.target.src);
+            };
+    
+            /**
+             * A secondary internal FBO (Frame Buffer Object) that is assigned the
+             * pixels from _secondaryCanvas
+             * @property _secondaryFboImage
+             * @type {Image}
+             * @protected
+             */
+            this._secondaryFboImage = new Image();
+    
+            // called by assigning src during this.update() when 
+            // all pointers are up and at least one was down last frame
+            this._secondaryFboImage.onload = function() {
+    
+                self.context.clearRect(0, 0, self.canvas.width, self.canvas.height);
+        
+                self.context.drawImage(self._fboImage, 0, 0);
+                self.context.drawImage(self._secondaryFboImage, 0, 0);
+    
+                if (self._history.length === self.numUndos + 1) {
+                    self._history.shift();
+                }
+    
+                var image = self.canvas.toDataURL();
+                self._history.push(image);
+    
+                self._fboImageTemp = self._fboImage.cloneNode(true);
+                self._fboImageTemp.onload = function(){}; //no-op
+    
+                self._fboImage.src = image;
+    
+                self.secondaryCanvas.style.display = &quot;none&quot;;
+                self._parentContext.drawImage(self._secondaryFboImage, 0, 0);
+                self._fboImageLoadWaiting = true;
+            };
+    
+            //// https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
+            //// uncommenting this causes error described here:
+            //// https://github.com/brangerbriz/BBMod.js/issues/1
+            // this._fboImage.crossOrigin = &quot;anonymous&quot;;
+    
+            /**
+             * An array of BB.Pointer object used to control the brushes drawn to
+             * brush mananger
+             * @property _pointers
+             * @type {Array}
+             * @protected
+             */
+            this._pointers = [];
+    
+            /**
+             * An array of booleans indicating which pointers are currently active (down)
+             * @property _pointerStates
+             * @type {Array}
+             * @protected
+             */
+            this._pointerStates = [];
+    
+            /**
+             * Internal flag to determine if BB.BrushManager2D.undo() was called
+             * since the BB.BrushManager2D.update()
+             * @property _needsUndo
+             * @type {Boolean}
+             * @protected
+             */
+            this._needsUndo = false;
+    
+            /**
+             * Internal flag to determine if BB.BrushManager2D.redo() was called
+             * since the BB.BrushManager2D.update()
+             * @property _needsRedo
+             * @type {Boolean}
+             * @protected
+             */
+            this._needsRedo = false;
+    
+            /**
+             * Boolean that holds true if at least one pointer is active (down)
+             * @property _somePointersDown
+             * @type {Boolean}
+             * @protected
+             */
+            this._somePointersDown = false;
+    
+            /**
+             * Internal flag checked against in BB.BrushManager2D.draw() that
+             * holds wether or not _fboImage is finished loaded. Note: this flag is
+             * purposefully not set when _fboImage.src is set from undo() or redo().
+             * @property _fboImageLoadWaiting
+             * @type {Boolean}
+             * @protected
+             */
+            this._fboImageLoadWaiting = false;
+    
+            // add empty canvas to the history
+            this._history.push(this.canvas.toDataURL());
+        };
+    
+        /**
+         * The number of undo/redo states to save
+         * @property numUndos
+         * @type {Number}
+         * @default 5
+         */
+        Object.defineProperty(BB.BrushManager2D.prototype, &quot;numUndos&quot;, {
+            get: function() {
+                return this._numUndos;
+            },
+            set: function(val) {
+                
+                this._numUndos = val;
+                
+                // remove old undos if they exist
+                if (this._numUndos &lt; this._history.length - 1) {
+                    this._history.splice(0, this._history.length - this._numUndos - 1);
+                }
+            }
+        });
+    
+        /**
+         * Set the brush manager to use these pointers when drawing.
+         * BB.BrushManager2D must be tracking at least one pointer in order to
+         * update().
+         * @method trackPointers
+         * @param  {Array} pointers An array of BB.Pointer objects for
+         * BB.BrushManager2D to track.
+         */
+        BB.BrushManager2D.prototype.trackPointers = function(pointers) {
+            
+            if (pointers instanceof Array) {
+    
+                for (var i = 0; i &lt; pointers.length; i++) {
+                 
+                    var pointer = pointers[i];
+                    if (! (pointer instanceof BB.Pointer)) {
+                        throw new Error(&#x27;BB.BrushManager2D.trackPointers: pointers[&#x27; +
+                            i + &#x27;] is not an instance of BB.Pointer.&#x27;);
+                    } else {
+                        this._pointers.push(pointer);
+                        this._pointerStates.push(pointer.isDown);
+                    }
+                }
+    
+            } else {
+                throw new Error(&#x27;BB.BrushManager2D.trackPointers: pointers parameter must be an array of pointers.&#x27;);
+            }
+        };
+    
+        /**
+         * Untrack all pointers.
+         * @method untrackPointers
+         */
+        BB.BrushManager2D.prototype.untrackPointers = function() {
+            this._pointers = [];
+            this._pointerStates = [];
+        };
+    
+        /**
+         * Untrack one pointer at index. Pointers tracked by BB.BrushManager2D
+         * have indexes based on the order they were added by calls to
+         * BB.BrushManager2D.trackPointers(...). Untracking a pointer removes it
+         * from the internal _pointers array which changes the index of all pointers
+         * after it. Keep this in mind when using this method.
+         * @method untrackPointerAtIndex
+         * @param {Number} index The index of the pointer to untrack.
+         */
+        BB.BrushManager2D.prototype.untrackPointerAtIndex = function(index) {
+            
+            if (typeof this._pointers[index] !== &#x27;undefined&#x27;) {
+                this._pointers.splice(index, 1);
+                this._pointerStates.splice(index, 1);
+            } else {
+                throw new Error(&#x27;BB.BrushManager2D.untrackPointerAtIndex: Invalid pointer index &#x27; +
+                    index + &#x27;. there is no pointer at that index.&#x27;);
+            }
+        };
+    
+        /**
+         * A method to determine if the brush manager is currently tracking pointers.
+         * @method hasPointers
+         * @return {Boolean} True if brush manager is tracking pointers.
+         */
+        BB.BrushManager2D.prototype.hasPointers = function() {
+            return this._pointers.length &gt; 0;
+        };
+    
+        /**
+         * A method to determine if the brush manager currently has an undo state.
+         * @method hasUndo
+         * @return {Boolean} True if brush manager has an undo state in its queue.
+         */
+        BB.BrushManager2D.prototype.hasUndo = function() {
+            return this._history.length &gt; 1;
+        };
+    
+        /**
+         * A method to determine if the brush manager currently has an redo state.
+         * @method hasRedo
+         * @return {Boolean} True if brush manager has an redo state in its queue.
+         */
+        BB.BrushManager2D.prototype.hasRedo = function() {
+            return this._purgatory.length &gt; 0;
+        };
+    
+        /**
+         * BB.BrushManager2D&#x27;s update method. Should be called once per animation frame.
+         * @method update
+         */
+        BB.BrushManager2D.prototype.update = function() {
+    
+            if (! this.hasPointers()) {
+                throw new Error(&#x27;BB.BrushManager2D.update: You must add at least one pointer to &#x27; +
+                                &#x27;the brush manager with BB.BrushManager2D.addPointers(...)&#x27;);
+            }
+    
+            var somePointersDown = this._pointerStates.some(function(val){ return val === true; });
+    
+            // if there are no pointers down this frame
+            // but there were some last frame
+            if (this._somePointersDown &amp;&amp; !somePointersDown) {
+    
+                this._secondaryFboImage.src = this.secondaryCanvas.toDataURL();
+            }
+    
+            for (var i = 0; i &lt; this._pointers.length; i++) {
+    
+                this._pointerStates[i] = this._pointers[i].isDown;
+            }
+    
+            this._somePointersDown = somePointersDown;
+           
+            var image;
+    
+            if (this._needsUndo) {
+                
+                if (this._purgatory.length == this.numUndos + 1) {
+                    this._purgatory.shift();
+                }
+    
+                this._purgatory.push(this._history.pop());
+    
+                this._fboImage.src = this._history[this._history.length - 1];
+                
+                this._needsUndo = false;
+    
+            } else if (this._needsRedo) {
+                
+                if (this._purgatory.length &gt; 0) {
+    
+                    image = this._purgatory.pop();
+                    this._fboImage.src = image;
+                    this._history.push(image);
+                    this._needsRedo = false;
+                }
+            
+            } else if (this._somePointersDown) {
+    
+                if (this._purgatory.length &gt; 0) {
+                    this._purgatory = [];
+                }
+            }
+        };
+    
+    
+        /**
+         * Draws the brush manager scene to the canvas supplied in the
+         * BB.BrushManager2D constructor or the optionally, &quot;context&quot; if it was
+         * provided as a parameter. Should be called once per animation frame.
+         * @method update
+         * @param {[CanvasRenderingContext2D]} context An optional drawing context
+         * that will be drawn to if it is supplied.
+         */
+        BB.BrushManager2D.prototype.draw = function(context) {
+    
+            if (typeof context === &quot;undefined&quot; ) {
+                context = this._parentContext;
+            } else if(! (context instanceof CanvasRenderingContext2D)) {
+                throw new Error(&#x27;BB.BrushManager2D.draw: context is not an instance of CanvasRenderingContext2D&#x27;);
+            }
+    
+            // if the image has loaded
+            if (this._fboImage.complete) {
+    
+                context.drawImage(this._fboImage, 0, 0);   
+    
+            } else if (this._fboImageTemp !== null){
+    
+                context.drawImage(this._fboImageTemp, 0, 0);
+    
+                if (this._fboImageLoadWaiting) {
+    
+                    context.drawImage(this._secondaryFboImage, 0, 0);
+    
+                }
+            }
+        };
+    
+        /**
+         * Undo one drawing action if available
+         * @method undo
+         */
+        BB.BrushManager2D.prototype.undo = function() {
+    
+            if (this._history.length &gt; 1) {
+                this._needsUndo = true; 
+            }
+        };
+    
+        /**
+         * Redo one drawing action if available
+         * @method redo
+         */
+        BB.BrushManager2D.prototype.redo = function() {
+    
+            if (this._history.length &gt; 0) {
+                this._needsRedo = true;
+            }
+        };
+    
+        /**
+         * Notifies brush manager that the canvas passed into the
+         * BB.BrushManager2D constructor has been moved or resized. It is
+         * important to call this method whenever the positional CSS from the parent
+         * canvas is changed so that BB.BrushManager2D&#x27;s internal canvases may be
+         * updated appropriately.
+         * @method updateCanvasPosition
+         * @example
+         * &lt;code class=&quot;code prettyprint&quot;&gt;
+         * &amp;nbsp;var canvas = document.getElementById(&#x27;canvas&#x27;);&lt;br&gt;
+         * &amp;nbsp;var brushManager = new BB.BrushManager(canvas);&lt;br&gt;
+         * &lt;br&gt;
+         * &amp;nbsp;window.onresize = function() {&lt;br&gt;
+         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;canvas.width  = window.innerWidth;&lt;br&gt;
+         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;canvas.height = window.innerHeight;&lt;br&gt;
+         * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;brushManager.updateCanvasPosition();&lt;br&gt;
+         * &amp;nbsp;}
+         * &lt;/code&gt;
+         */
+        BB.BrushManager2D.prototype.updateCanvasPosition = function() {
+    
+            this.canvas.width = this._parentCanvas.width;
+            this.canvas.height = this._parentCanvas.height;
+    
+            this.secondaryCanvas.width  = this.canvas.width;
+            this.secondaryCanvas.height = this.canvas.height;
+    
+            var parentCanvasStyle = window.getComputedStyle(this._parentCanvas);
+    
+            this.secondaryCanvas.style.position      = &#x27;absolute&#x27;;
+            this.secondaryCanvas.style.pointerEvents = &#x27;none&#x27;;
+            this.secondaryCanvas.style.top           = parentCanvasStyle.getPropertyValue(&#x27;top&#x27;);
+            this.secondaryCanvas.style.right         = parentCanvasStyle.getPropertyValue(&#x27;right&#x27;);
+            this.secondaryCanvas.style.bottom        = parentCanvasStyle.getPropertyValue(&#x27;bottom&#x27;);
+            this.secondaryCanvas.style.left          = parentCanvasStyle.getPropertyValue(&#x27;left&#x27;);
+            this.secondaryCanvas.style.margin        = parentCanvasStyle.getPropertyValue(&#x27;margin&#x27;);
+            this.secondaryCanvas.style.border        = parentCanvasStyle.getPropertyValue(&#x27;border&#x27;);
+            this.secondaryCanvas.style.padding       = parentCanvasStyle.getPropertyValue(&#x27;padding&#x27;);
+            
+            var parentZIndex = parentCanvasStyle.getPropertyValue(&#x27;z-index&#x27;);
+    
+            if (isNaN(parentZIndex)) {
+    
+                parentZIndex = 0;
+                this.secondaryCanvas.style.zIndex = parentZIndex + 1;
+    
+                throw new Error(&#x27;BB.BrushManager2D: the HTML5 canvas passed into the BB.BrushManager2D&#x27; +
+                    &#x27; constructor should have a z-index property value that is numeric. Currently the value is &quot;&#x27; +
+                    parentZIndex + &#x27;&quot;.&#x27;);
+    
+            } else {
+                parentZIndex = parseInt(parentZIndex);
+                this.secondaryCanvas.style.zIndex = parentZIndex + 1;
+            } 
+        };
+    
+        return BB.BrushManager2D;
+    });
+    
+    </pre>
+    </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

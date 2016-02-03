@@ -11,7 +11,7 @@
  * canvas' position or size is updated.
  * @module BB.BrushManager2D
  */
-define(['./BB', 'BB.Pointer'],
+define(['./BB', './BB.Pointer'],
 function(  BB,      Pointer ){
 
     'use strict';

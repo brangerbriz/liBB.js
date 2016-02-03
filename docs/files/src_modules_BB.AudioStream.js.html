@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src\modules\BB.AudioStream.js - liBB.js</title>
+        
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/prettify-nick.css">
+
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    
+    <script src="../assets/vendor/yui-min.js"></script>
+</head>
+<body>
+
+<div id="doc">
+    <div id="bd" class="main-body">
+
+        <div id="docs-sidebar" class="sidebar apidocs">
+            <div id="api-list">
+                <div id="api-tabview" class="tabview">
+                    <ul class="tabs">
+                        <a href="/docs">
+                            <img src="../assets/favicon.png" class="icon"/>
+                        </a>
+                        <a href="/docs" class="homelink"> liBB.js </a>
+                        <!-- <li><a href="#api-classes">Classes</a></li> -->
+                        <!-- <li><a href="#api-modules">Modules</a></li> -->
+                    </ul>
+            
+                    <div id="api-tabview-filter">
+                        <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                    </div>
+            
+                    <div id="api-tabview-panel">
+                        <ul id="api-classes" class="apis classes">
+                            <li><a class="type" href="../classes/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="type" href="../classes/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="type" href="../classes/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="type" href="../classes/BB.AudioStream.html">BB.AudioStream</a></li>
+                            <li><a class="type" href="../classes/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.BaseMidiInput.html">BB.BaseMidiInput</a></li>
+                            <li><a class="type" href="../classes/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
+                            <li><a class="type" href="../classes/BB.Color.html">BB.Color</a></li>
+                            <li><a class="type" href="../classes/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.MathUtils.html">BB.MathUtils</a></li>
+                            <li><a class="type" href="../classes/BB.MidiDevice.html">BB.MidiDevice</a></li>
+                            <li><a class="type" href="../classes/BB.MidiInputButton.html">BB.MidiInputButton</a></li>
+                            <li><a class="type" href="../classes/BB.MidiInputKey.html">BB.MidiInputKey</a></li>
+                            <li><a class="type" href="../classes/BB.MidiInputKnob.html">BB.MidiInputKnob</a></li>
+                            <li><a class="type" href="../classes/BB.MidiInputPad.html">BB.MidiInputPad</a></li>
+                            <li><a class="type" href="../classes/BB.MidiInputSlider.html">BB.MidiInputSlider</a></li>
+                            <li><a class="type" href="../classes/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="type" href="../classes/BB.Particle2D.html">BB.Particle2D</a></li>
+                            <li><a class="type" href="../classes/BB.Pointer.html">BB.Pointer</a></li>
+                            <li><a class="type" href="../classes/BB.Vector2.html">BB.Vector2</a></li>
+                        </ul>
+            
+                      <!--   <ul id="api-modules" class="apis modules">
+                            <li><a class="module" href="../modules/BB.AudioAnalyser.html">BB.AudioAnalyser</a></li>
+                            <li><a class="module" href="../modules/BB.AudioBufferLoader.html">BB.AudioBufferLoader</a></li>
+                            <li><a class="module" href="../modules/BB.AudioSampler.html">BB.AudioSampler</a></li>
+                            <li><a class="module" href="../modules/BB.AudioStream.html">BB.AudioStream</a></li>
+                            <li><a class="module" href="../modules/BB.BaseBrush2D.html">BB.BaseBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.BaseMidiInput.html">BB.BaseMidiInput</a></li>
+                            <li><a class="module" href="../modules/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
+                            <li><a class="module" href="../modules/BB.Color.html">BB.Color</a></li>
+                            <li><a class="module" href="../modules/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.MathUtils.html">BB.MathUtils</a></li>
+                            <li><a class="module" href="../modules/BB.Midi.html">BB.Midi</a></li>
+                            <li><a class="module" href="../modules/BB.MouseInput.html">BB.MouseInput</a></li>
+                            <li><a class="module" href="../modules/BB.particle2D.html">BB.particle2D</a></li>
+                            <li><a class="module" href="../modules/BB.Pointer.html">BB.Pointer</a></li>
+                            <li><a class="module" href="../modules/BB.Vector2.html">BB.Vector2</a></li>
+                        </ul> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="docs-main" class="apidocs">
+            <div class="content container">
+    <h1 class="file-heading">File: src\modules\BB.AudioStream.js</h1>
+    
+    <div class="file">
+    <pre class="code prettyprint overflow linenums">
+    /**
+     * A module for streaming user audio ( getUserMedia )
+     * @module BB.AudioStream
+     */
+    define([&#x27;./modules/BB&#x27;],
+    function(  BB ){
+    
+    	&#x27;use strict&#x27;;
+    
+    	 /**
+    	 *  A module for streaming user audio ( getUserMedia )
+    	 * @class BB.AudioStream
+    	 * @constructor
+    	 * 
+    	 * @param {Object} config A config object to initialize the Stream, must contain a &quot;context: AudioContext&quot; 
+    	 * property and can contain properties for destination ( connect: destinationNode )
+    	 * 
+    	 * @example  
+    	 * &lt;code class=&quot;code prettyprint&quot;&gt;  
+    	 *  &amp;nbsp;var context = new (window.AudioContext || window.webkitAudioContext)();&lt;br&gt;&lt;br&gt;
+    	 *  &amp;nbsp;var fft = new BB.AudioAnalyser({ &lt;br&gt;
+    	 *  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;context: context,&lt;br&gt;
+    	 *  &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;fftSize: 1024&lt;br&gt;
+    	 *  &amp;nbsp;});&lt;br&gt;&lt;br&gt;
+    	 * &amp;nbsp;var mic = new BB.AudioStream({&lt;br&gt;
+    	 * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;context:context,&lt;br&gt;
+    	 * &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;connect:fft.analyser&lt;br&gt;
+    	 * &amp;nbsp;});&lt;br&gt;
+    	 * &lt;/code&gt;
+    	 */
+    	
+    
+    
+    	BB.AudioStream = function( config ){
+    		
+    		this.ctx 		= config.context;
+    		this.dest 		= ( typeof config.connect !== &#x27;undefined&#x27; ) ? config.connect : this.ctx.destination;
+    
+    		navigator.getUserMedia = 	navigator.getUserMedia ||
+    									navigator.webkitGetUserMedia ||
+    									navigator.mozGetUserMedia;
+    
+    		var self = this;
+    
+    		if(navigator.getUserMedia){
+    			navigator.getUserMedia({audio:true}, 
+    				function(stream){
+    					var input = self.ctx.createMediaStreamSource(stream);
+    					input.connect( self.dest );
+    				}, 
+    				function(e){
+    					throw new Error(&quot;Stream: &quot;+ e );
+    				}
+    			);
+    		} else {
+    			console.log(&#x27;getUserMedia not supported&#x27;);
+    		}
+    
+    		if( !config ) throw new Error(&#x27;BufferLoader: requires a config object&#x27;);
+    
+    		if( !(this.ctx instanceof AudioContext) ) 
+    			throw new Error(&#x27;BufferLoader: context should be an instance of AudioContext&#x27;);
+    		
+    	};
+    
+    	return BB.AudioStream;
+    });
+    </pre>
+    </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
