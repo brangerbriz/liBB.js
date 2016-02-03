@@ -2,24 +2,21 @@
 // module to get x, y from leapmotion
 // used leap-0.6.4.js as needed for the leapmotion to function
 /**
- * A module for obtaining the X and Y values from 
+ * A module to obtain the X and Y values from 
  * the LeapMotion sensor.
  * @module BB.LeapMotion
  */
-define('BB.LeapMotion',['./BB', '../libs/leap-0.6.4', './BB.Vector2' ],
-function(  BB,LeapMotion, Vector2){
+define(['./BB'],
+function(BB){
 
-   // 'use strict';
+    'use strict';
 
-   BB.Vector2 = Vector2;
-   /**
-     * A module for obtaining the X and Y values from 
-     * the LeapMotion sensor.
-     * @class BB.LeapMotion
-     * @param [null] The LeapMotion controller does not need an input to function.
-     * @constructor
-     */
-   BB.LeapMotion = function(){  };
+      
+   BB.LeapMotion = function(){ 
+       if(typeof(Leap) === 'undefined'){
+         throw new Error(' missing LeapMotion library ');
+       }
+     };
    // create variables that can be accesed later on to be able to have the data
    // canvasX, canvasY each will contain a numeric value that represent the position.
   /**
@@ -38,6 +35,14 @@ function(  BB,LeapMotion, Vector2){
    BB.LeapMotion.prototype.canvasY = 0;
    //creating function to be called to access x,y in a fast and easy way
    // function requires a canvas.
+     /**
+     * Creates a LeapMotion controller wich allows access to frames
+     * when a pointable is detected it reads the X and Y values 
+     * @method LeapGetXY
+     * @param  {canvas} value The value to be scaled.
+     * @return {BB.LeapMotion}       Returns the scaled value.
+     */
+
    BB.LeapMotion.prototype.LeapGetXY= function(canvas){
    // using Leap. controller to create the connection to our sensor
         var controller = new Leap.Controller();

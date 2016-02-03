@@ -45,7 +45,6 @@
                             <li><a class="type" href="../classes/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
                             <li><a class="type" href="../classes/BB.Color.html">BB.Color</a></li>
                             <li><a class="type" href="../classes/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
-                            <li><a class="type" href="../classes/BB.LeapMotion.html">BB.LeapMotion</a></li>
                             <li><a class="type" href="../classes/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
                             <li><a class="type" href="../classes/BB.MathUtils.html">BB.MathUtils</a></li>
                             <li><a class="type" href="../classes/BB.MidiDevice.html">BB.MidiDevice</a></li>
@@ -94,28 +93,23 @@
     // module to get x, y from leapmotion
     // used leap-0.6.4.js as needed for the leapmotion to function
     /**
-     * A module for obtaining the X and Y values from 
+     * A module to obtain the X and Y values from 
      * the LeapMotion sensor.
      * @module BB.LeapMotion
      */
-    define(&#x27;BB.LeapMotion&#x27;,[&#x27;./BB&#x27;, &#x27;../libs/leap-0.6.4&#x27;, &#x27;./BB.Vector2&#x27; ],
-    function(  BB,LeapMotion, Vector2){
+    define([&#x27;./BB&#x27;],
+    function(BB){
     
-       // &#x27;use strict&#x27;;
+        &#x27;use strict&#x27;;
     
-       BB.Vector2 = Vector2;
-       /**
-         * A module for obtaining the X and Y values from 
-         * the LeapMotion sensor.
-         * @class BB.LeapMotion
-         * @param [null] The LeapMotion controller does not need an input to function.
-         * @constructor
-         */
-       BB.LeapMotion = function(){  };
+          
+       BB.LeapMotion = function(){ 
+           if(typeof(Leap) === &#x27;undefined&#x27;){
+             throw new Error(&#x27; missing LeapMotion library &#x27;);
+           }
+         };
        // create variables that can be accesed later on to be able to have the data
        // canvasX, canvasY each will contain a numeric value that represent the position.
-    
-    
       /**
       * The users current x position as supplied by the LeapMotion Sensor.
       * @property canvasX
@@ -132,6 +126,14 @@
        BB.LeapMotion.prototype.canvasY = 0;
        //creating function to be called to access x,y in a fast and easy way
        // function requires a canvas.
+         /**
+         * Creates a LeapMotion controller wich allows access to frames
+         * when a pointable is detected it reads the X and Y values 
+         * @method LeapGetXY
+         * @param  {canvas} value The value to be scaled.
+         * @return {BB.LeapMotion}       Returns the scaled value.
+         */
+    
        BB.LeapMotion.prototype.LeapGetXY= function(canvas){
        // using Leap. controller to create the connection to our sensor
             var controller = new Leap.Controller();

@@ -10,7 +10,6 @@ YUI.add("yuidoc-meta", function(Y) {
         "BB.BrushManager2D",
         "BB.Color",
         "BB.ImageBrush2D",
-        "BB.LeapMotion",
         "BB.LineBrush2D",
         "BB.MathUtils",
         "BB.MidiDevice",
@@ -92,7 +91,7 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "BB.LeapMotion",
             "name": "BB.LeapMotion",
-            "description": "A module for obtaining the X and Y values from \nthe LeapMotion sensor."
+            "description": "A module to obtain the X and Y values from \nthe LeapMotion sensor."
         },
         {
             "displayName": "BB.LineBrush2D",
