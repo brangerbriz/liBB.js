@@ -2675,7 +2675,6 @@ function(  BB,        MouseInput){
             this.controllerModule._moveCallback        = this._moveCallback;
         }
     }
-
     /**
      * A module for funneling in and standardizing basic pointer-like interfaces
      * like mouse and touch.
@@ -4057,20 +4056,25 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
     return BB.LineBrush2D;
 });
 
+/**
+ * A module implementing LeapMotion Sensor
+ * @module BB.LeapMotion
+ */
+
 
 // module to get x, y from leapmotion
 // used leap-0.6.4.js as needed for the leapmotion to function
-/**
- * A module to obtain the X and Y values from 
- * the LeapMotion sensor.
- * @module BB.LeapMotion
- */
 define('BB.LeapMotion',['./BB'],
 function(BB){
 
     'use strict';
-
-      
+  /**
+     * A module implementing LeapMotion Sensor
+     * @class BB.LeapMotion
+     * @param {[Null]} the constructor makes sure that the LeapMotion library is imported.
+     * this pointer with.
+     * @constructor
+     */
    BB.LeapMotion = function(){ 
        if(typeof(Leap) === 'undefined'){
          throw new Error(' missing LeapMotion library ');
@@ -4078,29 +4082,12 @@ function(BB){
      };
    // create variables that can be accesed later on to be able to have the data
    // canvasX, canvasY each will contain a numeric value that represent the position.
-  /**
-  * The users current x position as supplied by the LeapMotion Sensor.
-  * @property canvasX
-  * @type {Number}
-  * @default undefined
-  */
+
    BB.LeapMotion.prototype.canvasX = 0;
-   /**
-  * The users current y position as supplied by the LeapMotion Sensor.
-  * @property canvasY
-  * @type {Number}
-  * @default undefined
-  */
+  
    BB.LeapMotion.prototype.canvasY = 0;
    //creating function to be called to access x,y in a fast and easy way
    // function requires a canvas.
-     /**
-     * Creates a LeapMotion controller wich allows access to frames
-     * when a pointable is detected it reads the X and Y values 
-     * @method LeapGetXY
-     * @param  {canvas} value The value to be scaled.
-     * @return {BB.LeapMotion}       Returns the scaled value.
-     */
 
    BB.LeapMotion.prototype.LeapGetXY= function(canvas){
    // using Leap. controller to create the connection to our sensor

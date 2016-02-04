@@ -30,8 +30,10 @@
 			    });
     	}
 		function update() {
+			
 				canvasX = LeapMotion.canvasX; // puts the value obtained from sensor to the var created
 				canvasY = LeapMotion.canvasY; // puts the value obtained from sensor to the var created
+
 			    requestAnimationFrame(update);
 			    ball.spring({
 			    	position: new BB.Vector2(canvasX,canvasY),// now assigns the X,Y values to the position

@@ -33,7 +33,6 @@ function(  BB,        MouseInput){
             this.controllerModule._moveCallback        = this._moveCallback;
         }
     }
-
     /**
      * A module for funneling in and standardizing basic pointer-like interfaces
      * like mouse and touch.

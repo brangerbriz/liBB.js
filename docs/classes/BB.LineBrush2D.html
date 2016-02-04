@@ -45,6 +45,7 @@
                             <li><a class="type" href="../classes/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
                             <li><a class="type" href="../classes/BB.Color.html">BB.Color</a></li>
                             <li><a class="type" href="../classes/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.LeapMotion.html">BB.LeapMotion</a></li>
                             <li><a class="type" href="../classes/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
                             <li><a class="type" href="../classes/BB.MathUtils.html">BB.MathUtils</a></li>
                             <li><a class="type" href="../classes/BB.MidiDevice.html">BB.MidiDevice</a></li>
@@ -142,14 +143,6 @@
             <h3>Properties</h3>
     
             <ul class="index-list properties extends">
-                    <li class="index-item property">
-                        <a href="#property_canvasX">canvasX</a>
-    
-                    </li>
-                    <li class="index-item property">
-                        <a href="#property_canvasY">canvasY</a>
-    
-                    </li>
                     <li class="index-item property inherited">
                         <a href="#property_color">color</a>
     
@@ -182,11 +175,11 @@
                         <a href="#property_variant">variant</a>
     
                     </li>
-                    <li class="index-item property protected">
+                    <li class="index-item property">
                         <a href="#property_variants">variants</a>
     
                     </li>
-                    <li class="index-item property">
+                    <li class="index-item property protected">
                         <a href="#property_variants">variants</a>
     
                     </li>
@@ -224,10 +217,6 @@
     
                     <li class="index-item method inherited">
                         <a href="#method_draw">draw</a>
-    
-                    </li>
-                    <li class="index-item method">
-                        <a href="#method_LeapGetXY">LeapGetXY</a>
     
                     </li>
                     <li class="index-item method inherited">
@@ -324,74 +313,6 @@
             <h2>Properties</h2>
     
             <div class="prop-container clearfix">
-                <a name="property_canvasX" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>canvasX</code>
-                    <span class="type">Number</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">undefined</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                    <p>Provided by the <a href="../modules/BB.LeapMotion.html" class="module-name">BB.LeapMotion</a> module.</p>
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l22"><code>src\BB.LeapMotion.js:22</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The users current x position as supplied by the LeapMotion Sensor.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_canvasY" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>canvasY</code>
-                    <span class="type">Number</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">undefined</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                    <p>Provided by the <a href="../modules/BB.LeapMotion.html" class="module-name">BB.LeapMotion</a> module.</p>
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l29"><code>src\BB.LeapMotion.js:29</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>The users current y position as supplied by the LeapMotion Sensor.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
                 <a name="property_color" class="anchor-link"></a>
                 <div class="property item inherited">
                     <h3 class="name"><code>color</code>
@@ -663,6 +584,38 @@
                     </div>
                 </div>
                 <a name="property_variants" class="anchor-link"></a>
+                <div class="property item">
+                    <h3 class="name"><code>variants</code>
+                    <span class="type">Array</span>
+                
+                
+                
+                
+                
+                
+                    </h3>
+                
+                    <div class="meta">
+                                <p>
+                                Defined in
+                        <a href="../files/src_BB.LineBrush2D.js.html#l77"><code>src\BB.LineBrush2D.js:77</code></a>
+                        </p>
+                
+                
+                    </div>
+                
+                    <div class="extended-detail">
+                        <div class="description">
+                            <p>An array of all supported variants.</p>
+                
+                        </div>
+                
+                       
+                
+                
+                    </div>
+                </div>
+                <a name="property_variants" class="anchor-link"></a>
                 <div class="property item protected">
                     <h3 class="name"><code>variants</code>
                     <span class="type">Boolean</span>
@@ -688,38 +641,6 @@
                         <div class="description">
                             <p>Keeps track of wether or not the controllerModule passed into update
                 was made active (for instance if it was pressed) this frame.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_variants" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>variants</code>
-                    <span class="type">Array</span>
-                
-                
-                
-                
-                
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.LineBrush2D.js.html#l77"><code>src\BB.LineBrush2D.js:77</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>An array of all supported variants.</p>
                 
                         </div>
                 
@@ -932,82 +853,6 @@
                                 </ul>
                             </div>
                 
-                
-                    </div>
-                </div>
-                <a name="method_LeapGetXY" class="anchor-link"></a>
-                <div class="method item">
-                    <h3 class="name"><code>LeapGetXY</code>
-                
-                        <div class="args">
-                            <span class="paren">(</span><ul class="args-list inline commas">
-                                <li class="arg">
-                                        <code>value</code>
-                                </li>
-                            </ul><span class="paren">)</span>
-                        </div>
-                
-                        <span class="returns-inline">
-                            <span class="type">BB.LeapMotion</span>
-                        </span>
-                
-                
-                
-                
-                
-                
-                
-                    </h3>
-                
-                    <div class="meta">
-                                    <p>Provided by the <a href="../modules/BB.LeapMotion.html" class="module-name">BB.LeapMotion</a> module.</p>
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l38"><code>src\BB.LeapMotion.js:38</code></a>
-                        </p>
-                
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                
-                        <div class="description">
-                            <p>Creates a LeapMotion controller wich allows access to frames
-                when a pointable is detected it reads the X and Y values</p>
-                
-                        </div>
-                
-                            <div class="params">
-                                <h4>Parameters:</h4>
-                
-                                <ul class="params-list">
-                                    <li class="param">
-                                            <code class="param-name">value</code>
-                                            <span class="type">Canvas</span>
-                
-                
-                                        <div class="param-description">
-                                            <p>The value to be scaled.</p>
-                
-                                        </div>
-                
-                                    </li>
-                                </ul>
-                            </div>
-                
-                            <div class="returns">
-                                <h4>
-                                    Returns:
-                                        <span class="type">BB.LeapMotion</span>
-                                </h4> 
-                
-                                <div class="returns-description">
-                                       
-                                        <p>Returns the scaled value.</p>
-                
-                                </div>
-                            </div>
                 
                     </div>
                 </div>
