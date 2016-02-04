@@ -14,6 +14,8 @@ function(BB){
      * A module implementing LeapMotion Sensor
      * @class BB.LeapMotion
      * @param {[Null]} [Note] The constructor makes sure that the LeapMotion library is imported.
+     * If the LeapMotion library is not imported "missing LeapMotion library " will apear,
+     * check LeapMotion docs or LiBB examples to see how to import library from html.
      * @constructor
      */
    BB.LeapMotion = function(){ 
