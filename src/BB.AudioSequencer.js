@@ -20,7 +20,7 @@ function(  BB ){
 	  * 
 	  * @class BB.AudioSequencer
 	  * @constructor
-	  * @param {Object} config A config object to initialize the Sequencer, use keys "whole", "quarter", "sixth", "eighth" and "sixteenth" to schedule events at those times in a measure 
+	  * @param {Object} config A config object to initialize the Sequencer, use keys "whole", "half", "quarter", "sixth", "eighth" and "sixteenth" to schedule events at those times in a measure 
 	  * additional (optional) config parameters include:
 	  * <code class="code prettyprint">
 	  * &nbsp;{<br>
@@ -85,6 +85,20 @@ function(  BB ){
 		this.tempo 				= ( typeof config.tempo !== 'undefined' ) ? config.tempo : 120;
 		
 		/**
+		 * how many measures per sequence
+		 * @type {Number}
+		 * @property bars
+		 * @default 1
+		 */
+		this.bars 				= ( typeof config.bars !== 'undefined' ) ? config.bars : 1;
+
+		/**
+		 * current measure being played
+		 * @type {Number}
+		 * @property currentBar
+		 */
+		this.currentBar 		= 0;
+		/**
 		 * whether or not sequencer is playing	
 		 * @type {Boolean}
 		 * @property isPlaying
@@ -133,6 +147,12 @@ function(  BB ){
 				throw new ERROR('BB.AudioSequencer: "whole" should be a function -> whole: function(time){ ... }');
 			else this.whole = config.whole;
 		} else { this.whole = undefined; }
+
+		if(typeof config.half !== "undefined"){
+			if( typeof config.half !== "function" )
+				throw new ERROR('BB.AudioSequencer: "half" should be a function -> half: function(time){ ... }');
+			else this.half = config.half;
+		} else { this.half = undefined; }
 
 		if(typeof config.quarter !== "undefined"){
 			if( typeof config.quarter !== "function" )
@@ -225,13 +245,15 @@ function(  BB ){
 		// ...so === 0 instead
 
 		if(this.multitrack){
-			if (beatNumber === 0 && typeof this.whole!=="undefined") this.whole( time );	// beat 0 == kick			
+			if (beatNumber === 0 && typeof this.whole!=="undefined") this.whole( time );			// beat 0 == kick			
+			if (beatNumber % 2 === 0 && typeof this.half!=="undefined") this.half( time );	// quarter notes, ex:snare			
 			if (beatNumber % 4 === 0 && typeof this.quarter!=="undefined") this.quarter( time );	// quarter notes, ex:snare			
 			if (beatNumber % 6 === 0 && typeof this.sixth!=="undefined") this.sixth( time );			
-			if (beatNumber % 8 === 0 && typeof this.eighth!=="undefined") this.eighth( time );	// eigth notes, ex:hat			
+			if (beatNumber % 8 === 0 && typeof this.eighth!=="undefined") this.eighth( time );		// eigth notes, ex:hat			
 			if (typeof this.sixteenth!=="undefined") this.sixteenth( time );				
 		} else {
 			if (beatNumber === 0 && typeof this.whole!=="undefined" ) this.whole( time );	
+			else if (beatNumber % 2 === 0 && typeof this.half!=="undefined") this.half( time );
 			else if (beatNumber % 4 === 0 && typeof this.quarter!=="undefined") this.quarter( time );
 			else if (beatNumber % 6 === 0 && typeof this.sixth!=="undefined") this.sixth( time );	
 			else if (beatNumber % 8 === 0 && typeof this.eighth!=="undefined") this.eighth( time );	
@@ -252,7 +274,12 @@ function(  BB ){
 
 	    this.current16thNote++;	// Advance the beat number, wrap to zero
 	    this.note = this.current16thNote-1;
-	    if (this.current16thNote == 16) this.current16thNote = 0;
+	    // if (this.current16thNote == this.bars*16) this.current16thNote = 0;
+	    if(this.current16thNote == 16){
+	    	this.current16thNote = 0;
+	    	this.currentBar++;
+	    	if(this.currentBar == this.bars) this.currentBar = 0;
+	    }
 	};
 
 	return BB.AudioSequencer;
