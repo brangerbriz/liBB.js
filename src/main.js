@@ -31,6 +31,7 @@ define(function (require) {
   BB.AudioBufferLoader = require('BB.AudioBufferLoader');
   BB.AudioSampler      = require('BB.AudioSampler');
   BB.AudioTone         = require('BB.AudioTone');
+  BB.AudioNoise        = require('BB.AudioNoise');
   BB.AudioSequencer    = require('BB.AudioSequencer');
   BB.AudioAnalyser     = require('BB.AudioAnalyser');
   BB.AudioFX           = require('BB.AudioFX');

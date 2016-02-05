@@ -26,7 +26,7 @@ var cream = new BB.AudioSampler({
 	loop(); 								// start timeline loop
 
 	drawData = buff; 													// set global drawData to buffer data
-	var chnlData = fft.getResampledBufferData( drawData, innerWidth ); 	// resample buffer data for drawing
+	var chnlData = fft.getResampledBufferData( drawData, WIDTH ); 	// resample buffer data for drawing
 	drawWaveform( chnlData ); 											// draw waveform 
 	
 	window.onresize();
