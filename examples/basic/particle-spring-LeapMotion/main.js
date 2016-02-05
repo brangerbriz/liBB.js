@@ -14,10 +14,10 @@
 			spin = 0.01;
 
 		function setup() {
-
-
+				
 				LeapMotion = new BB.LeapMotion();// creates an instance of the LeapMotion module created for liBB library
 				LeapMotion.LeapGetXY(canvas); // method that obtains the X and Y values from the leapmotion sensor, method must be given a canvas
+				
 				    window.onresize = function() {
 			        WIDTH = canvas.width = window.innerWidth ;
 			        HEIGHT = canvas.height = window.innerHeight;
@@ -30,7 +30,7 @@
 			    });
     	}
 		function update() {
-			
+
 				canvasX = LeapMotion.canvasX; // puts the value obtained from sensor to the var created
 				canvasY = LeapMotion.canvasY; // puts the value obtained from sensor to the var created
 

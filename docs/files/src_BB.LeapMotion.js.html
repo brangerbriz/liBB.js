@@ -144,7 +144,7 @@
     
        BB.LeapMotion.prototype.LeapGetXY= function(canvas){
        // using Leap. controller to create the connection to our sensor
-            var controller = new Leap.Controller();
+            var controller = new Leap.Controller({enableGestures:false});
             // the controller.on method lets us se what the sensor is telling us on each frame
             // frames are sent 200 frames per second
             controller.on(&quot;frame&quot;,function(frame){
@@ -160,10 +160,43 @@
                         BB.LeapMotion.prototype.canvasX = canvas.width * normalizedPosition[0];
                         BB.LeapMotion.prototype.canvasY = canvas.height * (1 - normalizedPosition[1]);
                          }
-                     });
-            // connecto to the leap motion sensor to get data
-                    controller.connect();
-                    };
+                    if(frame.hands.length &gt; 0){
+                      var hand = frame.hands[0];
+                      var position = hand.palmPosition;
+                      var grab = false;
+                      if(hand.grabStrength == 1){
+                        grab = true;
+                        console.log(&quot;Grab gesture&quot;);
+                      }else{
+                        grab = false;
+                      }
+                    }     
+            });
+            controller.on(&#x27;gesture&#x27;,onGesture);
+            function onGesture(gesture,frame)
+              {
+                if(frame.valid &amp;&amp; frame.gestures.length &gt; 0){
+                  frame.gestures.forEach(function(gesture){
+                    switch (gesture.type){
+                      case &quot;circle&quot;:
+                        console.log(&quot;Circle Gesture&quot;);
+                      break;
+                      case &quot;keyTap&quot;:
+                        console.log(&quot;Key Tap Gesture&quot;);
+                      break;
+                      case &quot;screenTap&quot;:
+                        console.log(&quot;Screen Tap Gesture&quot;);
+                      break;
+                      case &quot;swipe&quot;:
+                        console.log(&quot;Swipe Gesture&quot;);
+                      break;
+                    }
+                  });
+                }
+              } 
+        // connecto to the leap motion sensor to get data
+        controller.connect();
+        };
        return BB.LeapMotion;
     });
     
