@@ -752,6 +752,7 @@ function(  BB,        Audio,        Detect ) {
      * @param {number} frequency a value in Hz of the frequency you want to play
      * @param {number} [velocity] the volume/gain relative to the master volume/gain of this particular note ( default 1 )
      * @param {number} [attack] the time it takes for the note to fade in ( in seconds, default 0.05 )
+     * @param {number} [schedule] if you want to schedule the note for later ( rather than play immediately ), in seconds ( relative to BB.Audio.context.currentTime )
      *
      * @example  
      * <code class="code prettyprint">  
@@ -762,7 +763,7 @@ function(  BB,        Audio,        Detect ) {
      *  &nbsp; O.ntoeOn( 440, 1, 0.5 ); // will stay on, until noteOff(440) is executed
      * </code>
      */
-    BB.AudioTone.prototype.noteOn = function( freq, velocity, attack ){
+    BB.AudioTone.prototype.noteOn = function( freq, velocity, attack, schedule ){
         if(typeof freq === "undefined") throw new Error('need frequency');
         // if(attack == 0) attack = 0.1; // fix firefox bug
 
@@ -793,7 +794,7 @@ function(  BB,        Audio,        Detect ) {
             
         this._addPolyNote( freq, osc, gainNode );
 
-        var now = this.ctx.currentTime;
+        var now = (typeof schedule !== "undefined") ? schedule : this.ctx.currentTime;
         var vel = (typeof velocity !== "undefined") ? velocity : 1.0;
         var ack = (typeof attack !== "undefined" ) ? attack : 0.05;
         osc.start(now); 
@@ -821,6 +822,7 @@ function(  BB,        Audio,        Detect ) {
         var ack  = (typeof config.attack !== "undefined")       ? config.attack : 0;
         var typ  = (typeof config.type !== "undefined")         ? config.type : "maj";
         var tun  = (typeof config.tuning !== "undefined")       ? config.tuning : "equal";
+        var sch  = (typeof config.schedule !== "undefined")     ? config.schedule : 0;
 
         var steps = this._returnSteps( typ );
         var incSteps = [0];         
@@ -832,7 +834,7 @@ function(  BB,        Audio,        Detect ) {
         }
 
         for (var i = 0; i < incSteps.length; i++) {
-            this.noteOn( O.freq(root, incSteps[i], tun), vel, ack );                    
+            this.noteOn( O.freq(root, incSteps[i], tun), vel, ack, sch );                    
         }
 
     };
@@ -942,6 +944,7 @@ function(  BB,        Audio,        Detect ) {
      *  &nbsp;&nbsp;&nbsp; attack: 1, // fade in for 1 second<br>
      *  &nbsp;&nbsp;&nbsp; sustain: 2, // hold note for 2 more seconds<br>
      *  &nbsp;&nbsp;&nbsp; release: 2, // fade out for 2 more seconds<br>
+     *  &nbsp;&nbsp;&nbsp; schedule: BB.Audio.context.currentTime + 5, // play 5 seconds from now<br>
      *  &nbsp; });<br>
      * </code>
      */
@@ -950,7 +953,7 @@ function(  BB,        Audio,        Detect ) {
         var nStr = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
         if( !config ) config = {};// instead of below? ...bad practice?
         
-        var freq, vel, dur, ack, dec;
+        var freq, vel, dur, ack, dec, sch;
         if ( typeof config === "object" ){
             if(typeof config.frequency !== "undefined"){
                 freq = (typeof config.frequency === "number") ? config.frequency : this.note(config.frequency);
@@ -958,7 +961,8 @@ function(  BB,        Audio,        Detect ) {
             vel  = (typeof config.velocity !== "undefined")     ? config.velocity : 1;
             ack  = (typeof config.attack !== "undefined")       ? config.attack : 0;
             dec  = (typeof config.release !== "undefined")      ? config.release : 0;
-            dur  = (typeof config.sustain !== "undefined")     ? config.sustain*1000 : 250;
+            dur  = (typeof config.sustain !== "undefined")      ? config.sustain*1000 : 250;
+            sch  = (typeof config.schedule !== "undefined")     ? config.schedule : 0;
         }
         else if( typeof config === "number" || typeof config === "string" && nStr.indexOf(config) >= 0  ){
             if(typeof config === "number")  freq = config;
@@ -967,6 +971,7 @@ function(  BB,        Audio,        Detect ) {
             dur  = (typeof sustain === "number") ? sustain*1000 : 250;
             ack  = 0;
             dec  = 0;
+            sch  = 0;
             if(typeof velocity !=="undefined" && typeof velocity !== "number")
                 throw new Error('BB.AudioTone.makeNote: velocity (second param) should be a number');
             if(typeof sustain !=="undefined" && typeof sustain !== "number")
@@ -980,7 +985,7 @@ function(  BB,        Audio,        Detect ) {
             if(typeof this.polynotes[freq].durTimeout !== "undefined")
                 clearTimeout( this.polynotes[freq].durTimeout ); 
 
-        this.noteOn( freq, vel, ack, true );
+        this.noteOn( freq, vel, ack, true, sch );
 
         var self = this;
         this.polynotes[freq].durTimeout = setTimeout(function(){
@@ -1012,6 +1017,7 @@ function(  BB,        Audio,        Detect ) {
      *  &nbsp;&nbsp;&nbsp; attack: 1, // fade in for 1 second<br>
      *  &nbsp;&nbsp;&nbsp; sustain: 2, // hold note for 2 more seconds<br>
      *  &nbsp;&nbsp;&nbsp; release: 2, // fade out for 2 more seconds<br>
+     *  &nbsp;&nbsp;&nbsp; schedule: BB.Audio.context.currentTime + 5, // play 5 seconds from now<br>
      *  &nbsp; });<br>
      * </code>
      */
@@ -1031,6 +1037,7 @@ function(  BB,        Audio,        Detect ) {
         var dur  = (typeof config.sustain !== "undefined")      ? config.sustain : 0.25;
         var typ  = (typeof config.type !== "undefined")         ? config.type : "maj";
         var tun  = (typeof config.tuning !== "undefined")       ? config.tuning : "equal";
+        var sche  = (typeof config.schedule !== "undefined")    ? config.schedule : 0;
 
         var steps = this._returnSteps( typ );
         var incSteps = [0];         
@@ -1047,7 +1054,8 @@ function(  BB,        Audio,        Detect ) {
                 velocity: vel,
                 attack: ack,
                 release: dec,
-                sustain: dur 
+                sustain: dur,
+                schedule: sch
             });
         }
     };
