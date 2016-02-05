@@ -43,6 +43,7 @@ function(  BB ){
 		 * @property stream
 		 */
 		this.stream = null; // set by this.open()
+		// this.node = null;
 
 		// the AudioContext to be used by this module 
 		if( typeof BB.Audio.context === "undefined" )
@@ -105,6 +106,7 @@ function(  BB ){
 				function(stream){
 					self.stream = stream;
 					var input = self.ctx.createMediaStreamSource(stream);
+					self.node = input;
 					input.connect( self.gain );
 				}, 
 				function(e){
