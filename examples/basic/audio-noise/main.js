@@ -3,40 +3,7 @@
 // .~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._
 BB.Audio.init();
 
-// var reverb = BB.Audio.context.createConvolver();
-// var rGain = BB.Audio.context.createGain();
-// 	reverb.connect( rGain );
-// 	rGain.connect( BB.Audio.context.destination );	
-
-// var xhr = new XMLHttpRequest();
-// xhr.open("GET", '../../assets/audio/impulse_rev.wav', true);
-// xhr.responseType = "arraybuffer";
-// xhr.onreadystatechange = function() {
-// 	if (xhr.readyState === 4) {
-// 		if (xhr.status < 300 && xhr.status > 199 || xhr.status === 302) {
-// 			BB.Audio.context.decodeAudioData(xhr.response, function(buffer) {
-// 				reverb.buffer = buffer;
-// 			}, function(e) {
-// 				if (e) console.log("Error decoding data" + e);
-// 			});
-// 		}
-// 	}
-// };
-// xhr.send(null);
-
-
-var fx = new BB.AudioFX('filter',{
-    type: "lowpass",
-    frequency: 880, 
-    Q: 8,
-    fgain: 5,
- });
-
-
-var fft = new BB.AudioAnalyser({
-	connect: fx
-});
-
+var fft = new BB.AudioAnalyser();
 
 var brown = new BB.AudioNoise({
 	connect: fft,
@@ -67,8 +34,6 @@ var custom = new BB.AudioNoise({
 		};	
 	}
 });
-
-// reverb.buffer = custom.buffer;
 
 
 // make buttons

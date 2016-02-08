@@ -3,11 +3,13 @@
  * @module BB.AudioFX
  * @extends BB.AudioBase
  */
-define(['./BB', './BB.AudioBase'],
-function(  BB,        AudioBase ) {
+define(['./BB', './BB.AudioBase', './BB.AudioBufferLoader'],
+function(  BB,        AudioBase,        AudioBufferLoader ) {
 
     'use strict';
- 
+    
+    BB.AudioBufferLoader = AudioBufferLoader;
+
     /**
      * A module for creating audio effects, ex: filters, reverb, delay, distortion, etc...
      * @class BB.AudioFX
@@ -47,6 +49,31 @@ function(  BB,        AudioBase ) {
      * check out the <a href="https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode" target="_blank">BiquadFilterNode</a> documenation for more details on filter types and the properties ( frequency, Q, gain)
      * <br>
      * view basic <a href="../../examples/editor/?file=audio-fx-filter" target="_blank">BB.AudioFX 'filter'</a> example
+     * <br>
+     * <br>
+     * <br>
+     * <br>
+     * <h2> when using 'reverb' type </h2><br>
+     * the AudioFX ( 'reverb' ), can be used just like the 'filter' example above. there's two ways to create "reverb" FX, either algorithmically ( default ) or by pasing it paths to impulse file[s] ( see <a href="https://en.wikipedia.org/wiki/Convolution_reverb" target="_blank">conolution reverb</a> on wikipedia) 
+     * <code class="code prettyprint">  
+     *  &nbsp;// algorithmically calculate convolution's impulse buffer<br>
+     *  &nbsp;var reverb = new BB.AudioFX('reverb');<br>
+     *  <br>
+     *  &nbsp;// customize algorithmically generated impulse buffer<br>
+     *  &nbsp;var reverb = new BB.AudioFX('reverb',{<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;duration: 2,<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;decay: 4.3,<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;reverse:true<br>
+     *  });<br>
+     *  <br>
+     *  &nbsp;// generate convolution buffer from impulse file<br>
+     *  &nbsp;var reverb = new BB.AudioFX('reverb',{<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;paths: ['audio/impulse.wav']<br>
+     *  });<br>
+     * </code>
+     * check out the <a href="https://developer.mozilla.org/en-US/docs/Web/API/ConvolverNode" target="_blank">ConvolutionNode</a> documenation for more info
+     * <br>
+     * view basic <a href="../../examples/editor/?file=audio-fx-reverb" target="_blank">BB.AudioFX 'reverb'</a> example
      */
     
     BB.AudioFX = function( type, config ) {
@@ -82,6 +109,39 @@ function(  BB,        AudioBase ) {
             }
 
             else if(type==="reverb"){
+                this.node = this.ctx.createConvolver();
+                this.impulse = { buffers: null };
+
+                if( typeof config.paths !== "undefined"){
+                    var self = this;                    
+                    var loader = new BB.AudioBufferLoader({
+                        paths: config.paths
+                    }, function(buffers){
+                        self.impulse.buffers = buffers;
+                        self.node.buffer = self.impulse.buffers[0];
+                    });
+
+                } else {
+                    var duration, decay, reverse;
+
+                    if(typeof config.duration !== "undefined" ){
+                        if(typeof config.duration !== "number") throw new Error('BB.AudioFX: reverb config.duration should be a number');
+                        else duration = config.duration;
+                    } else { duration = 1;  }
+                    
+                    if(typeof config.decay !== "undefined" ){
+                        if(typeof config.decay !== "number") throw new Error('BB.AudioFX: reverb config.decay should be a number');
+                        else decay = config.decay;
+                    } else { decay = 2.0;  }
+                    
+                    if(typeof config.reverse !== "undefined" ){
+                        if(typeof config.reverse !== "boolean") throw new Error('BB.AudioFX: reverb config.reverse should be a boolean');
+                        else reverse = config.reverse;
+                    } else { reverse = false;  }
+
+                    this.node.buffer = this._impulseResponse( duration, decay, reverse );
+
+                } 
 
             }
 
@@ -344,6 +404,60 @@ function(  BB,        AudioBase ) {
         //     console.log('freq: ' + frequencyHz[j] + 'Hz, mag: ' + magResponse[j] + ', phase: ' + phaseResponse[j] + ' radians.');
         // }
         return res;
+    };
+
+
+    /*
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` (=^.^=) -{ 'reverb' stuffs }
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     */
+    
+    /**
+     * <b>"reverb" type only</b>. <br> when using impulse files, you can use this method to switch between the different files initially loaded in the 'paths' when the AudioFX 'reverb' was instantiated 
+     * @method useImpuse
+     * @param  {Number} index of impulse.buffers to be used
+     * <code class="code prettyprint">  
+     *  &nbsp;var reverb = new BB.AudioFX('reverb',{<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;paths:[<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'audio/giant_hall.wav',<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'audio/small_room.wav',<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'audio/telephone.wav'<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;]<br>
+     *  });<br>
+     *  <br>
+     *  &nbsp;// by default 'audio/giant_hall.wav' (or reverb.impulse.buffers[0]) is used<br>
+     *  &nbsp;// below we switch to small_room.wav (or reverb.impulse.buffers[1])<br>
+     *  &nbsp;reverb.useImpulse(1);
+     * </code>
+     * view basic <a href="../../examples/editor/?file=audio-fx-reverb" target="_blank">BB.AudioFX 'reverb'</a> example
+     */
+    BB.AudioFX.prototype.useImpulse = function( num ) {
+        if( !isNaN(num) && num.toString().indexOf('.') === -1){
+            if( num >= this.impulse.buffers.length ) 
+                throw new Error('BB.AudioFX.useImpulse: the value cannot be larger than '+(this.impulse.buffers.length-1)+', the length of impulse.buffers');
+            else this.node.buffer = this.impulse.buffers[num];
+        } else {
+            throw new Error("BB.AudioFX.useImpulse: expecting an integer");
+        }
+    };
+    
+    BB.AudioFX.prototype._impulseResponse = function( duration, decay, reverse ) {
+        // via :: http://stackoverflow.com/a/34482734
+        var sampleRate = this.ctx.sampleRate;
+        var length = sampleRate * duration;
+        var impulse = this.ctx.createBuffer(2, length, sampleRate); // maybe expose channel number? so it's not always 2 by default
+        var impulseL = impulse.getChannelData(0);
+        var impulseR = impulse.getChannelData(1);
+
+        for (var i = 0; i < length; i++){
+          var n = reverse ? length - i : i;
+          impulseL[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
+          impulseR[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
+        }
+        return impulse;
     };
 
     return BB.AudioFX;

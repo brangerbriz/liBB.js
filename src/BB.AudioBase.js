@@ -87,7 +87,7 @@ function(  BB,        Audio,        Detect ){
 
 
 	/**
-	* the master volume (of private gain node)
+	* the master volume (of output gain node)
 	* @property volume
 	* @type Number
 	* @default 1
