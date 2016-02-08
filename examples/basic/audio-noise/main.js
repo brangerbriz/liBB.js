@@ -32,11 +32,11 @@ var fx = new BB.AudioFX('filter',{
     fgain: 5,
  });
 
+
 var fft = new BB.AudioAnalyser({
 	connect: fx
 });
 
-console.log( fft instanceof BB.AudioAnalyser )
 
 var brown = new BB.AudioNoise({
 	connect: fft,

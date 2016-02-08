@@ -26,7 +26,7 @@ function(  BB,		  AudioBase ){
 	 *	<br>
 	 *	&nbsp;var fft = new BB.AudioAnalyser(); <br>
 	 *	&nbsp;// assuming samp is an instanceof BB.AudioSampler <br>
-	 *	&nbsp;samp.connect( fft.node ); <br><br><br>
+	 *	&nbsp;samp.connect( fft ); <br><br><br>
 	 *	&nbsp;// you can override fft's defaults by passing a config <br>
 	 *	&nbsp;var fft = new BB.AudioAnalyser({<br>
 	 *  &nbsp;&nbsp;&nbsp;&nbsp;context: BB.Audio.context[3],<br>

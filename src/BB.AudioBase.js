@@ -25,7 +25,7 @@ function(  BB,        Audio,        Detect ){
      *  &nbsp;// or optional config property<br>
      *  &nbsp;var node = new BB.AudioBase({<br>
      *  &nbsp;&nbsp;&nbsp;&nbsp;context: BB.Audio.context[2],<br>
-     *  &nbsp;&nbsp;&nbsp;&nbsp;connect: fft.node,<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;connect: fft,<br>
      *  &nbsp;&nbsp;&nbsp;&nbsp;volume: 0.5<br>
      *  });<br>
      *  <br>
@@ -64,8 +64,12 @@ function(  BB,        Audio,        Detect ){
 		// default destination is context destination
 		// unless otherwise specified in { connect:AudioNode }
 		if( typeof config.connect !== 'undefined' ){
-			if( config.connect instanceof BB.AudioAnalyser || config.connect instanceof BB.AudioFX ) 
+			if( config.connect instanceof BB.AudioAnalyser )
 				this.gain.connect( config.connect.node );
+			else if( config.connect instanceof BB.AudioFX  ) 
+				this.gain.connect( config.connect.input );
+			else if( config.connect instanceof BB.AudioBase )
+				this.gain.connect( config.connect.gain );
 			else if( config.connect instanceof AudioDestinationNode || config.connect instanceof AudioNode ) 
 				this.gain.connect( config.connect );
 			else 
@@ -127,8 +131,12 @@ function(  BB,        Audio,        Detect ){
 	*/
 	BB.AudioBase.prototype.connect = function( destination, output, input ){
 
-		if( destination instanceof BB.AudioAnalyser || destination instanceof BB.AudioFX ) 
+		if( destination instanceof BB.AudioAnalyser) 
 			destination = destination.node;
+		else if( destination instanceof BB.AudioFX  )
+			destination = destination.input;
+		else if( destination instanceof BB.AudioBase )
+			destination = destination.gain;
 
 		if( !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
 			throw new Error('BB.AudioBase.connect: destination should be an instanceof AudioDestinationNode or AudioNode');
@@ -164,8 +172,12 @@ function(  BB,        Audio,        Detect ){
 	*/
 	BB.AudioBase.prototype.disconnect = function(destination, output, input ){
 
-		if( destination instanceof BB.AudioAnalyser || destination instanceof BB.AudioFX ) 
+		if( destination instanceof BB.AudioAnalyser ) 
 			destination = destination.node;
+		else if( destination instanceof BB.AudioFX  )
+			destination = destination.input;
+		else if( destination instanceof BB.AudioBase )
+			destination = destination.gain;
 
 		if( typeof destination !== "undefined" &&
 			!(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )

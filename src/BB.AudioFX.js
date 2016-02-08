@@ -66,15 +66,14 @@ function(  BB,        AudioBase ) {
 
             this.type = type;
 
-            // error checking for 'filter'
-            var filtTypes = ["lowpass", "highpass", "bandpass", "lowshelf", "highshelf", "peaking", "notch", "allpass"];
-            if( typeof config.type !== "undefined" && filtTypes.indexOf(config.type) < 0 ) throw new Error('BB.AudioFX: config.type must be either "lowpass", "highpass", "bandpass", "lowshelf", "highshelf", "peaking", "notch" or "allpass" ');
-            if( typeof config.frequency !=="undefined" && typeof config.frequency !== "number" ) throw new Error('BB.AudioFX: config.frequency should be a number');
-            if( typeof config.fgain !=="undefined" && typeof config.fgain !== "number" ) throw new Error('BB.AudioFX: config.fgain should be a number');
-            if( typeof config.Q !=="undefined" && typeof config.Q !== "number" ) throw new Error('BB.AudioFX: config.Q should be a number');
-
-
             if(type==="filter"){
+                // error checking for 'filter'
+                var filtTypes = ["lowpass", "highpass", "bandpass", "lowshelf", "highshelf", "peaking", "notch", "allpass"];
+                if( typeof config.type !== "undefined" && filtTypes.indexOf(config.type) < 0 ) throw new Error('BB.AudioFX: config.type must be either "lowpass", "highpass", "bandpass", "lowshelf", "highshelf", "peaking", "notch" or "allpass" ');
+                if( typeof config.frequency !=="undefined" && typeof config.frequency !== "number" ) throw new Error('BB.AudioFX: config.frequency should be a number');
+                if( typeof config.fgain !=="undefined" && typeof config.fgain !== "number" ) throw new Error('BB.AudioFX: config.fgain should be a number');
+                if( typeof config.Q !=="undefined" && typeof config.Q !== "number" ) throw new Error('BB.AudioFX: config.Q should be a number');
+
                 this.node = this.ctx.createBiquadFilter(); 
                 this.node.type = (typeof config.type !== "undefined") ? config.type : "lowpass";
                 this.node.frequency.value = (typeof config.frequency !== "undefined") ? config.frequency : 220;
@@ -96,12 +95,159 @@ function(  BB,        AudioBase ) {
 
         }
 
-        this.node.connect( this.gain );
+        // ................... FX loop ..............................
+        //  for bypassing fx // dry + wet channels
+        
+        this.input = this.ctx.createGain();  // input  :: receives connection
+                                             // output :: this.gain ( form AudioBase );
+        this._wet = new BB.AudioBase();
+        this._dry = new BB.AudioBase();
+        this._dry.volume = 0;
+
+        // input > dry > output 
+        this.input.connect( this._dry.gain ); 
+        this._dry.connect( this.gain );  
+        
+        // input > fx > wet > output
+        this.input.connect( this.node ); 
+        this.node.connect( this._wet.gain );
+        this._wet.connect( this.gain ); 
 
     };
 
     BB.AudioFX.prototype = Object.create(BB.AudioBase.prototype);
     BB.AudioFX.prototype.constructor = BB.AudioFX;
+
+   
+    /**
+     * the dry channel gain/volume
+     * @property dry 
+     * @type Number
+     * @default 0
+     */   
+    Object.defineProperty(BB.AudioFX.prototype, "dry", {
+        get: function() {
+            return this._dry.volume;
+        },
+        set: function(v) {
+            if( typeof v !== 'number'){
+                throw new Error("BB.AudioFX.dry: expecing a number");
+            } else {
+                this._dry.setGain( v );
+                var diff = 1 - v;
+                this._wet.setGain( diff );
+            }
+        }
+    }); 
+
+    /**
+     * the wet channel gain/volume
+     * @property wet 
+     * @type Number
+     * @default 1
+     */   
+    Object.defineProperty(BB.AudioFX.prototype, "wet", {
+        get: function() {
+            return this._wet.volume;
+        },
+        set: function(v) {
+            if( typeof v !== 'number'){
+                throw new Error("BB.AudioFX.wet: expecing a number");
+            } else {
+                this._wet.setGain( v );
+                var diff = 1 - v;
+                this._dry.setGain( diff );
+            }
+        }
+    }); 
+
+    /**
+     * set's the dry gain ( && adjust the wet gain accordingly, so that they total to 1 )
+     * @method setDryGain
+     * @param {Number} num a float value, 1 being the default volume, below 1 decreses the volume, above one pushes the gain
+     * @param {Number} ramp value in seconds for how quickly/slowly to ramp to the new value (num) specified
+     *
+     * @example  
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var fx = new BB.AudioFX('filter');<br>
+     *  &nbsp;var noise = new BB.AudioNoise({<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;connect: fx<br>
+     *  &nbsp;});<br>
+     *  <br>
+     *  &nbsp; fx.setDryGain( 0.75, 2 ); // raises dry level from 0 - 0.75 over 2 seconds (wet level drops to 0.25)<br>
+     *  // if no ramp value is needed, you could alternatively do<br>
+     *  &nbsp; fx.dry.volume = 0.75; // immediately jumps to 0.75 (and wet to 0.25) <br>
+     * </code>
+     */
+    BB.AudioFX.prototype.setDryGain = function( num, gradually ) {
+        if( typeof num !== "number" )
+            throw new Error('BB.AudioFX.setDryGain: first argument expecting a number');
+        
+        this._dry._volume = num;
+        var diff = 1 - num;
+        this._wet._volume = diff;
+
+        if(typeof gradually !== "undefined"){
+            if( typeof num !== "number" )
+                throw new Error('BB.AudioFX.setDryGain: second argument expecting a number');
+            else {
+                this._dry._globalGainUpdate( gradually );
+                this._wet._globalGainUpdate( gradually );
+            }
+        }
+        else { this._dry._globalGainUpdate(0); this._wet._globalGainUpdate(0); }
+    };
+
+    /**
+     * set's the wet gain ( && adjust the dry gain accordingly, so that they total to 1 )
+     * @method setWetGain
+     * @param {Number} num a float value, 1 being the default volume, below 1 decreses the volume, above one pushes the gain
+     * @param {Number} ramp value in seconds for how quickly/slowly to ramp to the new value (num) specified
+     *
+     * @example  
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var fx = new BB.AudioFX('filter');<br>
+     *  &nbsp;var noise = new BB.AudioNoise({<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;connect: fx<br>
+     *  &nbsp;});<br>
+     *  <br>
+     *  &nbsp; fx.setWetGain( 0.15, 2 ); // drops wet level from 1 - 0.15 over 2 seconds (dry level rises to 0.85)<br>
+     *  // if no ramp value is needed, you could alternatively do<br>
+     *  &nbsp; fx.wet.volume = 0.15; // immediately jumps to 0.15 (and dry to 0.85) <br>
+     * </code>
+     */
+    BB.AudioFX.prototype.setWetGain = function( num, gradually ) {
+        if( typeof num !== "number" )
+            throw new Error('BB.AudioFX.setWetGain: first argument expecting a number');
+        
+        this._wet._volume = num;
+        var diff = 1 - num;
+        this._dry._volume = diff;
+
+        if(typeof gradually !== "undefined"){
+            if( typeof num !== "number" )
+                throw new Error('BB.AudioFX.setWetGain: second argument expecting a number');
+            else {
+                this._wet._globalGainUpdate( gradually );
+                this._dry._globalGainUpdate( gradually );
+            }
+        }
+        else { this._wet._globalGainUpdate(0); this._dry._globalGainUpdate(0); }
+    };
+
+
+
+    /*
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` (=^.^=) -{ 'filter' stuffs }
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     */
 
     /**
      * frequency value when type is <b>'filter'</b>
@@ -160,13 +306,13 @@ function(  BB,        AudioBase ) {
      * &nbsp;// maths via: http://webaudioapi.com/samples/frequency-response/<br>
      * &nbsp;var dbScale = Math.round(canvas.height/4);<br>
      * &nbsp;var dbScale2 = Math.round(canvas.height/12.5);<br>
-     * &nbsp;var pixelsPerDb = (0.5 * canvas.height) / dbScale;<br>
+     * &nbsp;var pixelsPerDb = (0.5 \* canvas.height) / dbScale;<br>
      * &nbsp;ctx.beginPath();<br>
      * &nbsp;for (var i = 0; i < canvas.width; ++i) {<br>
      * &nbsp;&nbsp;&nbsp;&nbsp;var mr = freqRes.magResponse[i];<br>
-     * &nbsp;&nbsp;&nbsp;&nbsp;var dbResponse = dbScale2 * Math.log(mr) / Math.LN10;<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;var dbResponse = dbScale2 \* Math.log(mr) / Math.LN10;<br>
      * &nbsp;&nbsp;&nbsp;&nbsp;var x = i;<br>
-     * &nbsp;&nbsp;&nbsp;&nbsp;var y = (0.5 * canvas.height) - pixelsPerDb * dbResponse;<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;var y = (0.5 \* canvas.height) - pixelsPerDb \* dbResponse;<br>
      * &nbsp;&nbsp;&nbsp;&nbsp;if ( i == 0 )    ctx.moveTo( x, y );<br>
      * &nbsp;&nbsp;&nbsp;&nbsp;else             ctx.lineTo( x, y );<br>
      * &nbsp;}<br>
