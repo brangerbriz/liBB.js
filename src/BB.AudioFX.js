@@ -1,5 +1,5 @@
 /**
- * A module for creating audio effects, ex: filters, reverb, delay, distortion, etc...
+ * A module for creating filter, reverb and delay effects ( abstracts the WebAudio API BiquadFilterNode, ConvolverNode and DelayNode ), for more advanced audio effects see the <a href="BB.AFX.html" target="_blank">BB.AFX</a> base Audio Effects module
  * @module BB.AudioFX
  * @extends BB.AudioBase
  */
@@ -11,12 +11,12 @@ function(  BB,        AudioBase,        AudioBufferLoader ) {
     BB.AudioBufferLoader = AudioBufferLoader;
 
     /**
-     * A module for creating audio effects, ex: filters, reverb, delay, distortion, etc...
+     * A module for creating filter, reverb and delay effects ( abstracts the WebAudio API BiquadFilterNode, ConvolverNode and DelayNode ), for more advanced audio effects see the <a href="BB.AFX.html" target="_blank">BB.AFX</a> base Audio Effects module
      * @class BB.AudioFX
      * @constructor
      * @extends BB.AudioBase
      * 
-     * @param {String} type the type of effect you want to create ( filter, reverb, delay, distortion, etc. ) 
+     * @param {String} type the type of effect you want to create ( filter, reverb and delay) 
      * @param {Object} config A config object to initialize the effect ( include examples for diff effects )
      *
      * @example  
@@ -74,6 +74,27 @@ function(  BB,        AudioBase,        AudioBufferLoader ) {
      * check out the <a href="https://developer.mozilla.org/en-US/docs/Web/API/ConvolverNode" target="_blank">ConvolutionNode</a> documenation for more info
      * <br>
      * view basic <a href="../../examples/editor/?file=audio-fx-reverb" target="_blank">BB.AudioFX 'reverb'</a> example
+     * <br>
+     * <br>
+     * <br>
+     * <br>
+     * <h2> when using 'delay' type </h2><br>
+     * the AudioFX ( 'delay' ), can be used just like the 'filter' example above. 
+     * <code class="code prettyprint">  
+     *  &nbsp;var delay = new BB.AudioFX('delay');<br>
+     *  <br>
+     *  &nbsp;// with optional config <br>
+     *  &nbsp;var delay = new BB.AudioFX('delay',{<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;max: 5, // max delay time <br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;time: 1 // current delay time <br>
+     *  });<br>
+     *  <br>
+     *  &nbsp;// modify delay time afterwards<br>
+     *  &nbsp;delay.time = 3.2; <br>
+     * </code>
+     * check out the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createDelay" target="_blank">DelayNode</a> documenation for more info
+     * <br>
+     * view basic <a href="../../examples/editor/?file=audio-fx-delay" target="_blank">BB.AudioFX 'delay'</a> example
      */
     
     BB.AudioFX = function( type, config ) {
@@ -86,9 +107,9 @@ function(  BB,        AudioBase,        AudioBufferLoader ) {
         } else if( typeof config === "undefined" ) config = {};
 
         // type conditionals
-        var types = ["filter", "reverb", "delay", "distortion"];
+        var types = ["filter", "reverb", "delay"];
         if(typeof type !== "string" || types.indexOf(type) < 0){
-            throw new Error('BB.AudioFX: first argument should be a type of effect ("filter", "reverb", "delay" or "distortion")');
+            throw new Error('BB.AudioFX: first argument should be a type of effect ("filter", "reverb" or "delay")');
         } else {
 
             this.type = type;
@@ -146,12 +167,23 @@ function(  BB,        AudioBase,        AudioBufferLoader ) {
             }
 
             else if(type==="delay"){
+                this._max = null;
+                this._time = null;
 
-            }
+                if(typeof config.max !== 'undefined'){
+                    if(typeof config.max !== 'number') throw new Error('BB.AudioFX: config.max should be a number in seconds');
+                    else this._max = config.max;
+                } else { this._max = 1; }
 
-            else if(type==="distortion"){
-
-            }
+                this.node = this.ctx.createDelay( this._max );
+                
+                if( typeof config.time !== "undefined" ){
+                    if(typeof config.time !== "number") throw new Error('BB.AudioFX: delay.time should be a number in seconds, up to max');
+                    else this._time = config.time;
+                } else { this._time = 1; }
+                    
+                this.node.delayTime.value = this._time;
+            }   
 
         }
 
@@ -160,18 +192,17 @@ function(  BB,        AudioBase,        AudioBufferLoader ) {
         
         this.input = this.ctx.createGain();  // input  :: receives connection
                                              // output :: this.gain ( form AudioBase );
-        this._wet = new BB.AudioBase();
-        this._dry = new BB.AudioBase();
+        
+        this._wet = new BB.AudioBase({ connect: this.gain });
+        this._dry = new BB.AudioBase({ connect: this.gain });
         this._dry.volume = 0;
 
         // input > dry > output 
         this.input.connect( this._dry.gain ); 
-        this._dry.connect( this.gain );  
         
         // input > fx > wet > output
         this.input.connect( this.node ); 
         this.node.connect( this._wet.gain );
-        this._wet.connect( this.gain ); 
 
     };
 
@@ -459,6 +490,34 @@ function(  BB,        AudioBase,        AudioBufferLoader ) {
         }
         return impulse;
     };
+
+    /*
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` (=^.^=) -{ 'delay' stuffs }
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     */
+    
+    /**
+     * the <b>delay</b> time (up to max specified)
+     * @property time 
+     * @type Number
+     * @default 0
+     */   
+    Object.defineProperty(BB.AudioFX.prototype, "time", {
+        get: function() {
+            return this._time;
+        },
+        set: function(v) {
+            if( typeof v !== 'number'){
+                throw new Error("BB.AudioFX.time: expecing a number in seconds (up to max value)");
+            } else {
+                this._time = v;
+                this.node.delayTime.value = this._time;
+            }
+        }
+    }); 
 
     return BB.AudioFX;
 });
