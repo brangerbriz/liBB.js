@@ -1,9 +1,10 @@
 /**
  * A module for creating an audio sampler, an object that can load, sample and play back sound files
  * @module BB.AudioSampler
+ * @extends BB.AudioBase
  */
-define(['./BB','./BB.AudioBufferLoader','./BB.Audio'],
-function(  BB, 		 AudioBufferLoader,       Audio){
+define(['./BB','./BB.AudioBufferLoader', './BB.AudioBase' ],
+function(  BB, 		 AudioBufferLoader,    	   AudioBase ){
 
 	'use strict';
 
@@ -13,6 +14,7 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 	 *  A module for creating an audio sampler, an object that can load, sample and play back sound files
 	 * @class BB.AudioSampler
 	 * @constructor
+	 * @extends BB.AudioBase
 	 * 
 	 * @param {Object} config A config object to initialize the Sampler,
 	 * can contain the following:
@@ -70,20 +72,8 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 	 */
     
 	BB.AudioSampler = function( config, callback ){
-		
-		// the AudioContext to be used by this module 
-		if( typeof BB.Audio.context === "undefined" )
-			throw new Error('BB Audio Modules require that you first create an AudioContext: BB.Audio.init()');
-		
-		if( BB.Audio.context instanceof Array ){
-			if( typeof config === "undefined" || typeof config.context === "undefined" )
-				throw new Error('BB.AudioSampler: BB.Audio.context is an Array, specify which { context:BB.Audio.context[?] }');
-			else {
-				this.ctx = config.context;
-			}
-		} else {
-			this.ctx = BB.Audio.context;
-		}
+
+		BB.AudioBase.call(this, config);
 
 		if( !config ) throw new Error('BB.AudioSampler: requires a config object');
 		
@@ -144,19 +134,6 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		// will be instance of BB.AudioBufferLoader
 		this.loader 	= undefined;
 
-		// default destination is context destination
-		// unless otherwise specified in { connect:AudioNode }
-		this.gain		= this.ctx.createGain();	
-		if( typeof config.connect !== 'undefined' ){
-			if( config.connect instanceof AudioDestinationNode ||
-				config.connect instanceof AudioNode ) 
-				this.gain.connect( config.connect );
-			else {
-				throw new Error('BB.AudioSampler: connect property expecting an AudioNode');
-			}
-		} else {
-			this.gain.connect( this.ctx.destination );
-		}
 
 		if( typeof this.auto !== 'boolean' ) 
 			throw new Error('BB.AudioSampler: autoload should be either true or false');
@@ -173,6 +150,8 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		if( this.auto===true ) this.load();
 	};
 
+ 	BB.AudioSampler.prototype = Object.create(BB.AudioBase.prototype);
+    BB.AudioSampler.prototype.constructor = BB.AudioSampler;
 
     /**
      * creates buffers from url paths using BB.AudioBufferLoader, this
@@ -203,104 +182,6 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		});
 
 	};
-
-	/**
-	 * connects the Sampler to a particular AudioNode or AudioDestinationNode
-	 * @method connect
-	 * @param  {AudioNode} destination the AudioNode or AudioDestinationNode to connect to
-	 * @param  {Number} output      which output of the the Sampler do you want to connect to the destination
-	 * @param  {Number} input       which input of the destination you want to connect the Sampler to
-	 * @example  
-	 * <code class="code prettyprint">  
-	 *  &nbsp;BB.Audio.init();<br>
-	 *	<br>
-	 *	&nbsp;var drum = new BB.AudioSampler({<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;kick: 'audio/808/kick.ogg',<br>
-	 *	&nbsp;}, run );<br>
-	 *	<br>
-	 *	&nbsp;function run(){<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.connect( exampleNode );<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// connected to both default BB.Audio.context && exampleNode<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// so if exampleNode is also connected to BB.Audio.context by default,<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// ...then you've got drum connected to BB.Audio.context twice<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.play('kick');<br>
-	 *	&nbsp;}<br>
-	 * </code>
-	 * <br>
-	 * ...which looks like this ( where the first Gain is the Sampler and the second is the exampleNode )<br>
-	 * <img src="../assets/images/audiosampler3.png">
-	 */
-	BB.AudioSampler.prototype.connect = function( destination, output, input ){
-		if( !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
-			throw new Error('AudioSampler.connect: destination should be an instanceof AudioDestinationNode or AudioNode');
-		if( typeof output !== "undefined" && typeof output !== "number" )
-			throw new Error('AudioSampler.connect: output should be a number');
-		if( typeof intput !== "undefined" && typeof input !== "number" )
-			throw new Error('AudioSampler.connect: input should be a number');
-
-		if( typeof intput !== "undefined" ) this.gain.connect( destination, output, input );
-		else if( typeof output !== "undefined" ) this.gain.connect( destination, output );
-		else this.gain.connect( destination );
-
-	};
-
-	/**
-	 * diconnects the Sampler from the node it's connected to
-	 * @method disconnect
-	 * @param  {AudioNode} destination what it's connected to
-	 * @param  {Number} output      the particular output number
-	 * @param  {Number} input       the particular input number
-	 * <code class="code prettyprint">  
-	 *  &nbsp;BB.Audio.init();<br>
-	 *	<br>
-	 *	&nbsp;var drum = new BB.AudioSampler({<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;kick: 'audio/808/kick.ogg',<br>
-	 *	&nbsp;}, run );<br>
-	 *	<br>
-	 *	&nbsp;function run(){<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.disconnect(); // disconnected from default BB.Audio.context<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.connect( exampleNode ); // connected to exampleNode only<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.play('kick');<br>
-	 *	&nbsp;}<br>
-	 * </code>
-	 * <br>
-	 * ...which looks like this ( where the first Gain is the Sampler and the second is the exampleNode )<br>
-	 * <img src="../assets/images/audiosampler4.png">
-	 */
-	BB.AudioSampler.prototype.disconnect = function(destination, output, input ){
-		if( typeof destination !== "undefined" &&
-			!(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
-			throw new Error('AudioSampler.disconnect: destination should be an instanceof AudioDestinationNode or AudioNode');
-		if( typeof output !== "undefined" && typeof output !== "number" )
-			throw new Error('AudioSampler.disconnect: output should be a number');
-		if( typeof input !== "undefined" && typeof input !== "number" )
-			throw new Error('AudioSampler.disconnect: input should be a number');
-
-		if( typeof input !== "undefined" ) this.gain.disconnect( destination, output, input );
-		else if( typeof output !== "undefined" ) this.gain.disconnect( destination, output );
-		else if( typeof destination !== "undefined" ) this.gain.disconnect( destination );
-		else  this.gain.disconnect();
-	};
-
-	// ^ ^ ^ ^ ^ 
-	// Maybe add an "output" or "modulate" function that usese the AudioNode.connect(AudioParam)
-	// https://developer.mozilla.org/en-US/docs/Web/API/AudioNode/connect%28AudioParam%29
-	// so we can manipulate parameters w/ the audio signal from AudioSampler
-	// ^ ^ ^ ^ ^
-
-	/**
-	 * sets the gain level of the AudioSamppler ( in a sense, volume control ) 
-	 * @method setGain
-	 * @param {Number} num a float value, 1 being the default volume, below 1 decreses the volume, above one pushes the gain
-	 */
-	BB.AudioSampler.prototype.setGain = function( num ){
-		if( typeof num !== "number" )
-			throw new Error('AudioSampler.setGain: expecting a number');
-
-		this.gain.gain.value = num;
-	};
-
-
 
     /**
      * schedules an audio buffer to be played

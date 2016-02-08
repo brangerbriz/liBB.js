@@ -3,7 +3,32 @@
 // .~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._
 BB.Audio.init();
 
-var fft = new BB.AudioAnalyser();
+// var reverb = BB.Audio.context.createConvolver();
+// var rGain = BB.Audio.context.createGain();
+// 	reverb.connect( rGain );
+// 	rGain.connect( BB.Audio.context.destination );	
+
+// var xhr = new XMLHttpRequest();
+// xhr.open("GET", '../../assets/audio/impulse_rev.wav', true);
+// xhr.responseType = "arraybuffer";
+// xhr.onreadystatechange = function() {
+// 	if (xhr.readyState === 4) {
+// 		if (xhr.status < 300 && xhr.status > 199 || xhr.status === 302) {
+// 			BB.Audio.context.decodeAudioData(xhr.response, function(buffer) {
+// 				reverb.buffer = buffer;
+// 			}, function(e) {
+// 				if (e) console.log("Error decoding data" + e);
+// 			});
+// 		}
+// 	}
+// };
+// xhr.send(null);
+
+
+var fft = new BB.AudioAnalyser({
+	// connect: reverb
+});
+
 
 var brown = new BB.AudioNoise({
 	connect: fft.node,
@@ -15,6 +40,7 @@ var white = new BB.AudioNoise({
 	volume: 0.5,
 	type: "white"
 });
+
 
 // Noise can be used to generate anykind of sound buffer
 // here's a sine wave calculated from scratch
@@ -33,6 +59,8 @@ var custom = new BB.AudioNoise({
 		};	
 	}
 });
+
+// reverb.buffer = custom.buffer;
 
 
 // make buttons

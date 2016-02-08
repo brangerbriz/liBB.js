@@ -1,9 +1,10 @@
 /**
  * A module for creating audio effects, ex: filters, reverb, delay, distortion, etc...
  * @module BB.AudioFX
+ * @extends BB.AudioBase
  */
-define(['./BB', './BB.Audio', './BB.Detect' ],
-function(  BB,        Audio,        Detect ) {
+define(['./BB', './BB.AudioBase'],
+function(  BB,        AudioBase ) {
 
     'use strict';
  
@@ -11,7 +12,8 @@ function(  BB,        Audio,        Detect ) {
      * A module for creating audio effects, ex: filters, reverb, delay, distortion, etc...
      * @class BB.AudioFX
      * @constructor
-     *
+     * @extends BB.AudioBase
+     * 
      * @param {String} type the type of effect you want to create ( filter, reverb, delay, distortion, etc. ) 
      * @param {Object} config A config object to initialize the effect ( include examples for diff effects )
      *
@@ -38,7 +40,7 @@ function(  BB,        Audio,        Detect ) {
      *  &nbsp;&nbsp;&nbsp;&nbsp;type: "lowpass",<br>
      *  &nbsp;&nbsp;&nbsp;&nbsp;frequency: 880, <br>
      *  &nbsp;&nbsp;&nbsp;&nbsp;Q: 8,<br>
-     *  &nbsp;&nbsp;&nbsp;&nbsp;gain: 5,<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;fgain: 5,<br>
      *  &nbsp;});<br>
      * </code>
      * filter types include "lowpass" (default), "highpass", "bandpass", "lowshelf", "highshelf", "peaking", "notch" and "allpass"
@@ -49,19 +51,7 @@ function(  BB,        Audio,        Detect ) {
     
     BB.AudioFX = function( type, config ) {
         
-        // the AudioContext to be used by this module 
-        if( typeof BB.Audio.context === "undefined" )
-            throw new Error('BB Audio Modules require that you first create an AudioContext: BB.Audio.init()');
-        
-        if( BB.Audio.context instanceof Array ){
-            if( typeof config === "undefined" || typeof config.context === "undefined" )
-                throw new Error('BB.AudioFX: BB.Audio.context is an Array, specify which { context:BB.Audio.context[?] }');
-            else {
-                this.ctx = config.context;
-            }
-        } else {
-            this.ctx = BB.Audio.context;
-        }
+        BB.AudioBase.call(this, config);
         
         // config obj
         if(typeof config !== "undefined" && typeof config !== "object" ){
@@ -80,7 +70,7 @@ function(  BB,        Audio,        Detect ) {
             var filtTypes = ["lowpass", "highpass", "bandpass", "lowshelf", "highshelf", "peaking", "notch", "allpass"];
             if( typeof config.type !== "undefined" && filtTypes.indexOf(config.type) < 0 ) throw new Error('BB.AudioFX: config.type must be either "lowpass", "highpass", "bandpass", "lowshelf", "highshelf", "peaking", "notch" or "allpass" ');
             if( typeof config.frequency !=="undefined" && typeof config.frequency !== "number" ) throw new Error('BB.AudioFX: config.frequency should be a number');
-            if( typeof config.gain !=="undefined" && typeof config.gain !== "number" ) throw new Error('BB.AudioFX: config.gain should be a number');
+            if( typeof config.fgain !=="undefined" && typeof config.fgain !== "number" ) throw new Error('BB.AudioFX: config.fgain should be a number');
             if( typeof config.Q !=="undefined" && typeof config.Q !== "number" ) throw new Error('BB.AudioFX: config.Q should be a number');
 
 
@@ -88,7 +78,7 @@ function(  BB,        Audio,        Detect ) {
                 this.node = this.ctx.createBiquadFilter(); 
                 this.node.type = (typeof config.type !== "undefined") ? config.type : "lowpass";
                 this.node.frequency.value = (typeof config.frequency !== "undefined") ? config.frequency : 220;
-                this.node.gain.value = (typeof config.gain !== "undefined") ? config.gain : 3;
+                this.node.gain.value = (typeof config.fgain !== "undefined") ? config.fgain : 3;
                 this.node.Q.value = (typeof config.Q !== "undefined") ? config.Q : 8;
             }
 
@@ -106,21 +96,12 @@ function(  BB,        Audio,        Detect ) {
 
         }
 
+        this.node.connect( this.gain );
 
-        // default destination is undefined
-        // unless otherwise specified in { connect:AudioNode }
-        if( typeof config !== "undefined" && typeof config.connect !== 'undefined' ){
-            if( config.connect instanceof AudioDestinationNode ||
-                config.connect instanceof AudioNode ) 
-                this.node.connect( config.connect );
-            else {
-                throw new Error('BB.AudioFX: connect property expecting an AudioNode');
-            }
-        } else {
-            this.node.connect( this.ctx.destination );
-        }
     };
 
+    BB.AudioFX.prototype = Object.create(BB.AudioBase.prototype);
+    BB.AudioFX.prototype.constructor = BB.AudioFX;
 
     /**
      * frequency value when type is <b>'filter'</b>
@@ -138,18 +119,18 @@ function(  BB,        Audio,        Detect ) {
         }
     });
     /**
-     * gain value when type is <b>'filter'</b>
-     * @property gain 
+     * fgain value when type is <b>'filter'</b>
+     * @property fgain 
      * @type Number
      */   
-    Object.defineProperty(BB.AudioFX.prototype, "gain", {
+    Object.defineProperty(BB.AudioFX.prototype, "fgain", {
         get: function() {
-            if(this.type!=="filter") throw new Error('BB.AudioFX: gain value only availalbe when using "filter" effect');
+            if(this.type!=="filter") throw new Error('BB.AudioFX: fgain value only availalbe when using "filter" effect');
             return this.node.gain.value;
         },
-        set: function(gain) {
-            if(this.type!=="filter") throw new Error('BB.AudioFX: gain value only availalbe when using "filter" effect');
-            this.node.gain.value = gain;
+        set: function(fgain) {
+            if(this.type!=="filter") throw new Error('BB.AudioFX: fgain value only availalbe when using "filter" effect');
+            this.node.gain.value = fgain;
         }
     });
     /**
@@ -168,76 +149,14 @@ function(  BB,        Audio,        Detect ) {
         }
     });
 
-    /**
-     * connects the Effect to a particular AudioNode or AudioDestinationNode
-     * @method connect
-     * @param  {AudioNode} destination the AudioNode or AudioDestinationNode to connect to
-     * @param  {Number} output      which output of the the Sampler do you want to connect to the destination
-     * @param  {Number} input       which input of the destinatino you want to connect the Sampler to
-     * @example  
-     * <code class="code prettyprint">  
-     *  &nbsp;BB.Audio.init();<br>
-     *  <br>
-     *  &nbsp;var filt = new BB.AudioFX('filter');<br>
-     *  &nbsp;// connects AudioFX to exampleNode <br>
-     *  &nbsp;//in additon to the default destination it's already connected to by default<br>
-     *  &nbsp;filt.connect( exampleNode ); 
-     *  <br>
-     * </code>
-     */
-    BB.AudioFX.prototype.connect = function( destination, output, input ){
-        if( !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
-            throw new Error('AudioFX.connect: destination should be an instanceof AudioDestinationNode or AudioNode');
-        if( typeof output !== "undefined" && typeof output !== "number" )
-            throw new Error('AudioFX.connect: output should be a number');
-        if( typeof intput !== "undefined" && typeof input !== "number" )
-            throw new Error('AudioFX.connect: input should be a number');
-
-        if( typeof intput !== "undefined" ) this.node.connect( destination, output, input );
-        else if( typeof output !== "undefined" ) this.node.connect( destination, output );
-        else this.node.connect( destination );
-    };
 
     /**
-     * diconnects the Effect from the node it's connected to
-     * @method disconnect
-     * @param  {AudioNode} destination what it's connected to
-     * @param  {Number} output      the particular output number
-     * @param  {Number} input       the particular input number
-     * <code class="code prettyprint">  
-     *  &nbsp;BB.Audio.init();<br>
-     *  <br>
-     *  &nbsp;var filt = new BB.AudioFX('filter');<br>
-     *  &nbsp;// disconnects Effect from default destination<br>
-     *  &nbsp;filt.disconnect();<br>
-     *  &nbsp;// connects AudioFX to exampleNode <br>
-     *  &nbsp;filt.connect( exampleNode ); 
-     *  <br>
-     * </code>
-     */
-    BB.AudioFX.prototype.disconnect = function(destination, output, input ){
-        if( typeof destination !== "undefined" &&
-            !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
-            throw new Error('AudioFX.disconnect: destination should be an instanceof AudioDestinationNode or AudioNode');
-        if( typeof output !== "undefined" && typeof output !== "number" )
-            throw new Error('AudioFX.disconnect: output should be a number');
-        if( typeof input !== "undefined" && typeof input !== "number" )
-            throw new Error('AudioFX.disconnect: input should be a number');
-
-        if( typeof input !== "undefined" ) this.node.disconnect( destination, output, input );
-        else if( typeof output !== "undefined" ) this.node.disconnect( destination, output );
-        else if( typeof destination !== "undefined" ) this.node.disconnect( destination );
-        else  this.node.disconnect();
-    };
-
-
-    /**
-     * <b>"filter" type only</b>. <br>calculate the frequency response for a length-specified list of audible frequencies 
+     * <b>"filter" type only</b>. <br>calculate the frequency response for a length-specified list of audible frequencies ( can be used to draw a curve representing the filter )
      * @method calcFrequencyResponse
      * @param  {Number} length       the length of the frequency/response arrays
      * <code class="code prettyprint">  
      * &nbsp;var freqRes = filt.calcFrequencyResponse( canvas.width ); <br>
-     * <br>
+     * <br><br><br>
      * &nbsp;// maths via: http://webaudioapi.com/samples/frequency-response/<br>
      * &nbsp;var dbScale = Math.round(canvas.height/4);<br>
      * &nbsp;var dbScale2 = Math.round(canvas.height/12.5);<br>

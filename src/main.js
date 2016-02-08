@@ -27,6 +27,7 @@ define(function (require) {
 
   // audio
   BB.Audio             = require('BB.Audio');
+  BB.AudioBase         = require('BB.AudioBase');
   BB.AudioStream       = require('BB.AudioStream');
   BB.AudioBufferLoader = require('BB.AudioBufferLoader');
   BB.AudioSampler      = require('BB.AudioSampler');
