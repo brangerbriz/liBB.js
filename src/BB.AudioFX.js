@@ -27,7 +27,7 @@ function(  BB,        AudioBase ) {
      *  &nbsp;var filt = new BB.AudioFX('filter');<br>
      *  <br>
      *  &nbsp;var drum = new BB.AudioSampler({<br>
-     *  &nbsp;&nbsp;&nbsp;&nbsp;connect: filt.node,<br>  
+     *  &nbsp;&nbsp;&nbsp;&nbsp;connect: filt,<br>  
      *  &nbsp;&nbsp;&nbsp;&nbsp;kick: 'audio/kick.ogg',<br>
      *  &nbsp;&nbsp;&nbsp;&nbsp;snare: 'audio/snare.ogg'<br>
      *  &nbsp;});<br>
@@ -36,7 +36,7 @@ function(  BB,        AudioBase ) {
      * BB.AudioFX can also take an option config object. when using the 'filter' type, a config object can include the following:
      * <code class="code prettyprint">  
      *  &nbsp;var filt = new BB.AudioFX('filter',{<br>
-     *  &nbsp;&nbsp;&nbsp;&nbsp;connect: fft.node,<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;connect: fft,<br>
      *  &nbsp;&nbsp;&nbsp;&nbsp;type: "lowpass",<br>
      *  &nbsp;&nbsp;&nbsp;&nbsp;frequency: 880, <br>
      *  &nbsp;&nbsp;&nbsp;&nbsp;Q: 8,<br>

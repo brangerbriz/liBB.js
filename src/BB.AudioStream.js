@@ -19,7 +19,7 @@ function(  BB,		  AudioBase ){
 	 * <code class="code prettyprint">
 	 * &nbsp;{<br>
 	 * &nbsp;&nbsp;&nbsp; context: BB.Audio.context[2], // choose specific context <br>
-	 * &nbsp;&nbsp;&nbsp; connect: fft.node, // overide default destination <br>
+	 * &nbsp;&nbsp;&nbsp; connect: fft, // overide default destination <br>
 	 * &nbsp;&nbsp;&nbsp; autostart: true // will automatically start the stream <br>
 	 * &nbsp;}
 	 * </code>	 

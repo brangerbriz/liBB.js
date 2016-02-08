@@ -64,7 +64,9 @@ function(  BB,        Audio,        Detect ){
 		// default destination is context destination
 		// unless otherwise specified in { connect:AudioNode }
 		if( typeof config.connect !== 'undefined' ){
-			if( config.connect instanceof AudioDestinationNode || config.connect instanceof AudioNode ) 
+			if( config.connect instanceof BB.AudioAnalyser || config.connect instanceof BB.AudioFX ) 
+				this.gain.connect( config.connect.node );
+			else if( config.connect instanceof AudioDestinationNode || config.connect instanceof AudioNode ) 
 				this.gain.connect( config.connect );
 			else 
 				throw new Error('BB.AudioBase: connect property expecting an AudioNode');
@@ -124,6 +126,10 @@ function(  BB,        Audio,        Detect ){
 	* <img src="../assets/images/audiosampler3.png">
 	*/
 	BB.AudioBase.prototype.connect = function( destination, output, input ){
+
+		if( destination instanceof BB.AudioAnalyser || destination instanceof BB.AudioFX ) 
+			destination = destination.node;
+
 		if( !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
 			throw new Error('BB.AudioBase.connect: destination should be an instanceof AudioDestinationNode or AudioNode');
 		if( typeof output !== "undefined" && typeof output !== "number" )
@@ -157,6 +163,10 @@ function(  BB,        Audio,        Detect ){
 	* <img src="../assets/images/audiosampler4.png">
 	*/
 	BB.AudioBase.prototype.disconnect = function(destination, output, input ){
+
+		if( destination instanceof BB.AudioAnalyser || destination instanceof BB.AudioFX ) 
+			destination = destination.node;
+
 		if( typeof destination !== "undefined" &&
 			!(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
 				throw new Error('BB.AudioBase.disconnect: destination should be an instanceof AudioDestinationNode or AudioNode');

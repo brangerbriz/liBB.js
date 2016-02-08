@@ -25,18 +25,26 @@ BB.Audio.init();
 // xhr.send(null);
 
 
+var fx = new BB.AudioFX('filter',{
+    type: "lowpass",
+    frequency: 880, 
+    Q: 8,
+    fgain: 5,
+ });
+
 var fft = new BB.AudioAnalyser({
-	// connect: reverb
+	connect: fx
 });
 
+console.log( fft instanceof BB.AudioAnalyser )
 
 var brown = new BB.AudioNoise({
-	connect: fft.node,
+	connect: fft,
 	type: "brown"
 });
 
 var white = new BB.AudioNoise({
-	connect: fft.node,
+	connect: fft,
 	volume: 0.5,
 	type: "white"
 });
@@ -45,7 +53,7 @@ var white = new BB.AudioNoise({
 // Noise can be used to generate anykind of sound buffer
 // here's a sine wave calculated from scratch
 var custom = new BB.AudioNoise({
-	connect: fft.node,
+	connect: fft,
 	volume: 0.5,
 	type: function(){
 		var frameCount = this.ctx.sampleRate * this.duration;

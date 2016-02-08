@@ -8,13 +8,13 @@ var filteredBuffer;
 var fft = new BB.AudioAnalyser();
 
 var filt = new BB.AudioFX('filter',{
-	connect: fft.node,
+	connect: fft,
 	type: "allpass",
 	frequency: 880
 });
 
 var cream = new BB.AudioSampler({
-	connect: filt.node,
+	connect: filt,
 	instrumental: '../../assets/audio/cream.ogg'
 }, function( bufferObj ){
 

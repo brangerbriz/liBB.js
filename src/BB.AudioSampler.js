@@ -21,7 +21,7 @@ function(  BB, 		 AudioBufferLoader,    	   AudioBase ){
 	 * <code class="code prettyprint">
 	 * &nbsp;{<br>
 	 * &nbsp;&nbsp;&nbsp; context: BB.Audio.context[2], // choose specific context <br>
-	 * &nbsp;&nbsp;&nbsp; connect: fft.node, // overide default destination <br>
+	 * &nbsp;&nbsp;&nbsp; connect: fft, // overide default destination <br>
 	 * &nbsp;&nbsp;&nbsp; autoload: false, // don't autoload ( sampler.load() later ) <br>
 	 * &nbsp;&nbsp;&nbsp; rate: 2, // double the playback rate <br>
 	 * &nbsp;&nbsp;&nbsp; // then as many additional keys for samples...<Br>

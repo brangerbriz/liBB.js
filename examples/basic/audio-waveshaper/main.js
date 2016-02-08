@@ -5,7 +5,7 @@ BB.Audio.init();
 var fft = new BB.AudioAnalyser();
 
 var O = new BB.AudioTone({ 
-	connect: fft.node,
+	connect: fft,
 	volume: 0.5
 });
 
