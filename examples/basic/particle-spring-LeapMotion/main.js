@@ -16,7 +16,8 @@
 		function setup() {
 				
 				LeapMotion = new BB.LeapMotion();// creates an instance of the LeapMotion module created for liBB library
-				LeapMotion.LeapGetXY(canvas); // method that obtains the X and Y values from the leapmotion sensor, method must be given a canvas
+				// 
+				LeapMotion.GetLeapData(canvas,true,true); // gives canvas and enables X,Y tracking and enables gestures
 				
 				    window.onresize = function() {
 			        WIDTH = canvas.width = window.innerWidth ;
@@ -33,6 +34,13 @@
 
 				canvasX = LeapMotion.canvasX; // puts the value obtained from sensor to the var created
 				canvasY = LeapMotion.canvasY; // puts the value obtained from sensor to the var created
+
+
+				// test in console that the gestures are being captured.
+				if(LeapMotion.grab){
+					console.log("grab gesture")
+				}	
+
 
 			    requestAnimationFrame(update);
 			    ball.spring({
