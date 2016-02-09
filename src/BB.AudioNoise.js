@@ -20,7 +20,7 @@ function(  BB,        AudioBase ){
      * <code class="code prettyprint">
      * &nbsp;{<br>
      * &nbsp;&nbsp;&nbsp; context: BB.Audio.context[2], // choose specific context <br>
-     * &nbsp;&nbsp;&nbsp; connect: fft.node, // overide default destination <br>
+     * &nbsp;&nbsp;&nbsp; connect: fft, // overide default destination <br>
      * &nbsp;&nbsp;&nbsp; volume: 0.5, // technically master "gain" (expolential multiplier)<br>
      * &nbsp;&nbsp;&nbsp; duraton: 2, // in seconds (corresponds to length of buffer)<br>
      * &nbsp;&nbsp;&nbsp; channels: 1, // channels in buffer <br>

@@ -43,6 +43,46 @@ BB.A2VUtils.drawTimeDomainData = function( fft, canvas, config ){
 }
 
 /**
+ * draws a frequency spectrum (think EQ Meters) of the current fft.getByteFrequencyData sample
+ * @method drawFrequencyData
+ * @param {BB.AudioAnalyser} fft the instanceof BB.AudioAnalyser you'd like to draw as a waveform
+ * @param {HTMLCanvasElement} canvas the canvas to draw to
+ * @param {Object} [config] optional config object, default: { color:"#e40477", weight:3, x:0, y:0, width:canvas.width, height:canvas.height }
+ */
+BB.A2VUtils.drawFrequencyData = function( fft, canvas, config ){
+
+	if( !(fft instanceof BB.AudioAnalyser) )
+		throw new Error('BB.A2VUtils.drawFrequencyData: first parameter expecting an instanceof BB.AudioAnalyser)');
+	if( !(canvas instanceof HTMLCanvasElement) )
+		throw new Error('BB.A2VUtils.drawFrequencyData: second parameter expecting an instanceof HTMLCanvasElement'); 
+
+	if(typeof config !== "object") config = {}
+	// { color:"#e40477", weight:3, x:0, y:0, width:canvas.width, height:canvas.height }
+
+	var color 	= (typeof config.color !== "undefined") ? config.color : "#e40477";
+	var X 		= (typeof config.x !== "undefined") ? config.x : 0; // NOT WORKING PROPERLY
+	var Y 		= (typeof config.y !== "undefined") ? config.y : 0; // NOT WORKING PROPERLY
+	var width 	= (typeof config.width !== "undefined") ? config.width : canvas.width;
+	var height 	= (typeof config.height !== "undefined") ? config.height : canvas.height;
+	var weight 	= (typeof config.weight !== "undefined") ? config.weight : 3;
+
+	// NEED TO MAKE X,Y adjustable maybe?
+	// OR SPECIFY FREQ RANGE ETC?
+
+	// frequency spectrum
+    var fdata = fft.getByteFrequencyData();
+	ctx.fillStyle = color;
+    for (var i = 0; i < fdata.length; i++) {
+    	var value = fdata[i];
+ 		var percent = value / 256;
+		var h = height * percent;
+		var offset = height - h - 1;
+		var barWidth = width/fdata.length;
+		ctx.fillRect(i * barWidth, offset, barWidth, h);
+    };
+}
+
+/**
  * draws the shape of a BB.AudioFX("filter")
  * @method drawFilterShape
  * @param {BB.AudioFX} filter the instanceof BB.AudioFX('filter') you'd like to draw

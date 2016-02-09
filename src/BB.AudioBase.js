@@ -66,7 +66,7 @@ function(  BB,        Audio,        Detect ){
 		if( typeof config.connect !== 'undefined' ){
 			if( config.connect instanceof BB.AudioAnalyser )
 				this.gain.connect( config.connect.node );
-			else if( config.connect instanceof BB.AudioFX  ) 
+			else if( config.connect instanceof BB.AudioFX || config.connect instanceof BB.AFX  ) 
 				this.gain.connect( config.connect.input );
 			else if( config.connect instanceof BB.AudioBase )
 				this.gain.connect( config.connect.gain );
@@ -133,7 +133,7 @@ function(  BB,        Audio,        Detect ){
 
 		if( destination instanceof BB.AudioAnalyser) 
 			destination = destination.node;
-		else if( destination instanceof BB.AudioFX  )
+		else if( destination instanceof BB.AudioFX || destination instanceof BB.AFX  )
 			destination = destination.input;
 		else if( destination instanceof BB.AudioBase )
 			destination = destination.gain;
@@ -174,7 +174,7 @@ function(  BB,        Audio,        Detect ){
 
 		if( destination instanceof BB.AudioAnalyser ) 
 			destination = destination.node;
-		else if( destination instanceof BB.AudioFX  )
+		else if( destination instanceof BB.AudioFX || destination instanceof BB.AFX  )
 			destination = destination.input;
 		else if( destination instanceof BB.AudioBase )
 			destination = destination.gain;
