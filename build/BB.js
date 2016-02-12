@@ -4188,7 +4188,7 @@ function(BB){
                     BB.LeapMotion.prototype.screenTap = false;
                     BB.LeapMotion.prototype.swipe = false;
                 }
-                 
+                // detects hands and makes sure user wants to check for gestures.  
                 if(frame.hands.length > 0 && GetGestures){
                   var hand = frame.hands[0];
                   var position = hand.palmPosition;
