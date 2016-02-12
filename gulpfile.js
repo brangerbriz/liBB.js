@@ -107,6 +107,7 @@ gulp.task('serve', function() {
     app.use('/', express.static(path.resolve(__dirname + '/docs')));
     app.use('/docs', express.static(path.resolve(__dirname + '/docs')));
     app.use('/build', express.static(path.resolve(__dirname + '/build')));
+    app.use('/misc', express.static(path.resolve(__dirname + '/misc')));
     app.use('/examples', function(req, res, next){
 
         console.log(req.path);
