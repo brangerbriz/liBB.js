@@ -38,8 +38,26 @@
 
 				// test in console that the gestures are being captured.
 				if(LeapMotion.grab){
-					console.log("grab gesture")
-				}	
+					console.log("Grab Gesture");
+				}
+				if(LeapMotion.pinch){
+					console.log("Pinch Gesture");
+				}
+			    if(LeapMotion.circle){
+			    	if(LeapMotion.clockwise){console.log(" Circle clockwise");}
+			        else{console.log("Circle Gesture");}
+			    }
+				
+				if(LeapMotion.keytap){
+					console.log("KeyTap Gesture");
+				}
+				if(LeapMotion.swipe){
+					console.log("Swipe Gesture");
+				}
+				if(LeapMotion.screenTap){
+					console.log("ScreenTap Gesture");
+				}
+
 
 
 			    requestAnimationFrame(update);

@@ -82,6 +82,13 @@ function(BB){
          * @default false
          */
    BB.LeapMotion.prototype.swipe = false;
+    /**
+         * Boolean value corresponding to the clockwise detected by the LeapMotion.
+         * @property clockwise
+         * @type {Gesture}
+         * @default false
+         */
+   BB.LeapMotion.prototype.clockwise = false;
    //creating function to be called to access x,y in a fast and easy way
    // function requires a canvas.
    /**
@@ -104,8 +111,7 @@ function(BB){
         // frames are sent 200 frames per second
         controller.on("frame",function(frame){
           // frame.pointables allows us to detect when a frame has a pointable.(hand,finger)
-                if(frame.pointables.length>0 && GetXY)
-                    {
+                if(frame.pointables.length>0 && GetXY){
                     var pointable = frame.pointables[0];
                     // creates and interaction box it provides normalized coordinates for hands, fingers, and tools within this box.
                     var interactionBox = frame.interactionBox;
@@ -114,7 +120,16 @@ function(BB){
                     // Convert the normalized coordinates to span the canvas
                     BB.LeapMotion.prototype.canvasX = canvas.width * normalizedPosition[0];
                     BB.LeapMotion.prototype.canvasY = canvas.height * (1 - normalizedPosition[1]);
-                     }
+                }
+                // make all vars false when no hand detected fromo the LeaMotion
+                if(frame.hands.length === 0){
+                    BB.LeapMotion.prototype.grab = false;
+                    BB.LeapMotion.prototype.pinch = false;
+                    BB.LeapMotion.prototype.circle = false;
+                    BB.LeapMotion.prototype.keytap = false;
+                    BB.LeapMotion.prototype.screenTap = false;
+                    BB.LeapMotion.prototype.swipe = false;
+                }
                  
                 if(frame.hands.length > 0 && GetGestures){
                   var hand = frame.hands[0];
@@ -128,6 +143,8 @@ function(BB){
                     BB.LeapMotion.prototype.keytap = false;
                     BB.LeapMotion.prototype.screenTap = false;
                     BB.LeapMotion.prototype.swipe = false;
+                  }else{
+                    BB.LeapMotion.prototype.grab = false;
                   }
                   // when a frame detects a hand and gestures are wanted it will give true when gesture pinch     
                   if(hand.pinchStrength == 1){
@@ -137,54 +154,47 @@ function(BB){
                     BB.LeapMotion.prototype.keytap = false;
                     BB.LeapMotion.prototype.screenTap = false;
                     BB.LeapMotion.prototype.swipe = false;
-                 }  
-                }   
-        });
-        // controller on to detect gestures
-        controller.on('gesture',onGesture);
-        function onGesture(gesture,frame)
-          {
-            if(frame.valid && frame.gestures.length > 0 && GetGestures){
-              frame.gestures.forEach(function(gesture){
-                switch (gesture.type){
-                  case "circle":
-                    BB.LeapMotion.prototype.grab = false;
+                 }else{
                     BB.LeapMotion.prototype.pinch = false;
-                    BB.LeapMotion.prototype.circle = true;
-                    BB.LeapMotion.prototype.keytap = false;
-                    BB.LeapMotion.prototype.screenTap = false;
-                    BB.LeapMotion.prototype.swipe = false;
-                  break;
-                  case "keyTap":
-                    BB.LeapMotion.prototype.grab = false;
-                    BB.LeapMotion.prototype.pinch = false;
-                    BB.LeapMotion.prototype.circle = false;
-                    BB.LeapMotion.prototype.keytap = true;
-                    BB.LeapMotion.prototype.screenTap = false;
-                    BB.LeapMotion.prototype.swipe = false;
-                  break;
-                  case "screenTap":
-                    BB.LeapMotion.prototype.grab = false;
-                    BB.LeapMotion.prototype.pinch = false;
-                    BB.LeapMotion.prototype.circle = false;
-                    BB.LeapMotion.prototype.keytap = false;
-                    BB.LeapMotion.prototype.screenTap = true;
-                    BB.LeapMotion.prototype.swipe = false;
-                  break;
-                  case "swipe":
-                    BB.LeapMotion.prototype.grab = false;
-                    BB.LeapMotion.prototype.pinch = false;
+                 }
+                } 
+            // when no gestures are being detected all the pre loaded gestures are falsed. (circle,keytap,screenTap,swipe)    
+            if(frame.valid && frame.gestures.length === 0){
                     BB.LeapMotion.prototype.circle = false;
                     BB.LeapMotion.prototype.keytap = false;
                     BB.LeapMotion.prototype.screenTap = false;
-                    BB.LeapMotion.prototype.swipe = true;
-                  break;
-                }
+                    BB.LeapMotion.prototype.swipe = false;
+            } 
+            // when a gesture is detected it will take each gesture and set to true the var that corresponds to the gesture 
+            // making the gesture available to the user  
+            if(frame.valid && frame.gestures.length > 0){              
+              frame.gestures.forEach(function(gesture){           
+                  switch (gesture.type){
+                      case "circle":
+                          BB.LeapMotion.prototype.circle = true;
+                          var pointableID = gesture.pointableIds[0];
+                          var direction = frame.pointable(pointableID).direction;
+                          var dotProduct = Leap.vec3.dot(direction, gesture.normal);
+                          if(dotProduct > 0){
+                            // detects if the circle gesture is clockwise and sets var.
+                             BB.LeapMotion.prototype.clockwise = true;
+                          }else{ BB.LeapMotion.prototype.clockwise = false;}
+                          break;                     
+                      case "keyTap":
+                          BB.LeapMotion.prototype.keytap = true; 
+                          break;
+                      case "screenTap":
+                          BB.LeapMotion.prototype.screenTap = true;
+                          break;
+                      case "swipe":
+                          BB.LeapMotion.prototype.swipe = true;
+                          break;
+                  }
               });
-            }
-          } 
+            }                                   
+        });
     // connecto to the leap motion sensor to get data
     controller.connect();
-    };
+   };
    return BB.LeapMotion;
 });
