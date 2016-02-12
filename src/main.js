@@ -27,13 +27,16 @@ define(function (require) {
 
   // audio
   BB.Audio             = require('BB.Audio');
+  BB.AudioBase         = require('BB.AudioBase');
   BB.AudioStream       = require('BB.AudioStream');
   BB.AudioBufferLoader = require('BB.AudioBufferLoader');
   BB.AudioSampler      = require('BB.AudioSampler');
   BB.AudioTone         = require('BB.AudioTone');
+  BB.AudioNoise        = require('BB.AudioNoise');
   BB.AudioSequencer    = require('BB.AudioSequencer');
   BB.AudioAnalyser     = require('BB.AudioAnalyser');
   BB.AudioFX           = require('BB.AudioFX');
+  BB.AFX               = require('BB.AFX');
   
   // midi
   BB.MidiDevice      = require('BB.MidiDevice');

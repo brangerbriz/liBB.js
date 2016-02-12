@@ -1,9 +1,10 @@
 /**
  * A module for doing FFT ( Fast Fourier Transform ) analysis on audio 
  * @module BB.AudioAnalyser
+ * @extends BB.AudioBase
  */
-define(['./BB'],
-function(  BB ){
+define(['./BB', './BB.AudioBase'],
+function(  BB,		  AudioBase ){
 
 	'use strict';
 
@@ -11,6 +12,7 @@ function(  BB ){
 	 *  A module for doing FFT ( Fast Fourier Transform ) analysis on audio 
 	 * @class BB.AudioAnalyser
 	 * @constructor
+ 	 * @extends BB.AudioBase
 	 * 
 	 * @param {Object} config A config object to initialize the Sampler, must contain a "context: AudioContext" 
 	 * property and can contain properties for fftSize, smoothing, maxDecibels and minDecibels
@@ -24,7 +26,7 @@ function(  BB ){
 	 *	<br>
 	 *	&nbsp;var fft = new BB.AudioAnalyser(); <br>
 	 *	&nbsp;// assuming samp is an instanceof BB.AudioSampler <br>
-	 *	&nbsp;samp.connect( fft.node ); <br><br><br>
+	 *	&nbsp;samp.connect( fft ); <br><br><br>
 	 *	&nbsp;// you can override fft's defaults by passing a config <br>
 	 *	&nbsp;var fft = new BB.AudioAnalyser({<br>
 	 *  &nbsp;&nbsp;&nbsp;&nbsp;context: BB.Audio.context[3],<br>
@@ -38,19 +40,7 @@ function(  BB ){
 
 	BB.AudioAnalyser = function( config ){
 		
-		// the AudioContext to be used by this module 
-		if( typeof BB.Audio.context === "undefined" )
-			throw new Error('BB Audio Modules require that you first create an AudioContext: BB.Audio.init()');
-		
-		if( BB.Audio.context instanceof Array ){
-			if( typeof config === "undefined" || typeof config.context === "undefined" )
-				throw new Error('BB.AudioAnalyser: BB.Audio.context is an Array, specify which { context:BB.Audio.context[?] }');
-			else {
-				this.ctx = config.context;
-			}
-		} else {
-			this.ctx = BB.Audio.context;
-		}
+		BB.AudioBase.call(this, config);
 
 		/**
 		 * the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode" target="_blank">AnalyserNode</a> itself
@@ -75,87 +65,15 @@ function(  BB ){
 		this.timeByteData 	= new Uint8Array( this.node.frequencyBinCount );
 		this.timeFloatData 	= new Float32Array(this.node.frequencyBinCount);
 
+		this.node.connect( this.gain );
+
 		if( this.fftSize%2 !== 0 || this.fftSize < 32 || this.fftSize > 2048)
 			throw new Error('Analyser: fftSize must be a multiple of 2 between 32 and 2048');
 
-		// default destination is undefined
-		// unless otherwise specified in { connect:AudioNode }
-		if( typeof config !== "undefined" && typeof config.connect !== 'undefined' ){
-			if( config.connect instanceof AudioDestinationNode ||
-				config.connect instanceof AudioNode ) 
-				this.node.connect( config.connect );
-			else {
-				throw new Error('BB.AudioAnalyser: connect property expecting an AudioNode');
-			}
-		} else {
-			this.node.connect( this.ctx.destination );
-		}
-
 	};
 
-
-	/**
-	 * connects the Analyser to a particular AudioNode or AudioDestinationNode
-	 * @method connect
-	 * @param  {AudioNode} destination the AudioNode or AudioDestinationNode to connect to
-	 * @param  {Number} output      which output of the the Sampler do you want to connect to the destination
-	 * @param  {Number} input       which input of the destinatino you want to connect the Sampler to
-	 * @example  
-	 * <code class="code prettyprint">  
-	 *  &nbsp;BB.Audio.init();<br>
-	 *	<br>
-	 *	&nbsp;var fft = new BB.AudioAnalyser();<br>
-	 *	&nbsp;// connects AudioAnalyser to exampleNode <br>
-	 *	&nbsp;//in additon to the default destination it's already connected to by default<br>
-	 *	&nbsp;fft.connect( exampleNode ); 
-	 *	<br>
-	 * </code>
-	 */
-	BB.AudioAnalyser.prototype.connect = function( destination, output, input ){
-		if( !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
-			throw new Error('AudioAnalyser.connect: destination should be an instanceof AudioDestinationNode or AudioNode');
-		if( typeof output !== "undefined" && typeof output !== "number" )
-			throw new Error('AudioAnalyser.connect: output should be a number');
-		if( typeof intput !== "undefined" && typeof input !== "number" )
-			throw new Error('AudioAnalyser.connect: input should be a number');
-
-		if( typeof intput !== "undefined" ) this.node.connect( destination, output, input );
-		else if( typeof output !== "undefined" ) this.node.connect( destination, output );
-		else this.node.connect( destination );
-	};
-
-	/**
-	 * diconnects the Analyser from the node it's connected to
-	 * @method disconnect
-	 * @param  {AudioNode} destination what it's connected to
-	 * @param  {Number} output      the particular output number
-	 * @param  {Number} input       the particular input number
-	 * <code class="code prettyprint">  
-	 *  &nbsp;BB.Audio.init();<br>
-	 *	<br>
-	 *	&nbsp;var fft = new BB.AudioAnalyser();<br>
-	 *	&nbsp;// disconnects Analyser from default destination<br>
-	 *	&nbsp;fft.disconnect();<br>
-	 *	&nbsp;// connects AudioAnalyser to exampleNode <br>
-	 *	&nbsp;fft.connect( exampleNode ); 
-	 *	<br>
-	 * </code>
-	 */
-	BB.AudioAnalyser.prototype.disconnect = function(destination, output, input ){
-		if( typeof destination !== "undefined" &&
-			!(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
-			throw new Error('AudioAnalyser.disconnect: destination should be an instanceof AudioDestinationNode or AudioNode');
-		if( typeof output !== "undefined" && typeof output !== "number" )
-			throw new Error('AudioAnalyser.disconnect: output should be a number');
-		if( typeof input !== "undefined" && typeof input !== "number" )
-			throw new Error('AudioAnalyser.disconnect: input should be a number');
-
-		if( typeof input !== "undefined" ) this.node.disconnect( destination, output, input );
-		else if( typeof output !== "undefined" ) this.node.disconnect( destination, output );
-		else if( typeof destination !== "undefined" ) this.node.disconnect( destination );
-		else  this.node.disconnect();
-	};
-
+ 	BB.AudioAnalyser.prototype = Object.create(BB.AudioBase.prototype);
+    BB.AudioAnalyser.prototype.constructor = BB.AudioAnalyser;
 
     /**
      * returns an array with frequency byte data

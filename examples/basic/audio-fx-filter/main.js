@@ -8,13 +8,13 @@ var filteredBuffer;
 var fft = new BB.AudioAnalyser();
 
 var filt = new BB.AudioFX('filter',{
-	connect: fft.node,
+	connect: fft,
 	type: "allpass",
 	frequency: 880
 });
 
 var cream = new BB.AudioSampler({
-	connect: filt.node,
+	connect: filt,
 	instrumental: '../../assets/audio/cream.ogg'
 }, function( bufferObj ){
 
@@ -26,7 +26,7 @@ var cream = new BB.AudioSampler({
 	loop(); 								// start timeline loop
 
 	drawData = buff; 													// set global drawData to buffer data
-	var chnlData = fft.getResampledBufferData( drawData, innerWidth ); 	// resample buffer data for drawing
+	var chnlData = fft.getResampledBufferData( drawData, WIDTH ); 	// resample buffer data for drawing
 	drawWaveform( chnlData ); 											// draw waveform 
 	
 	window.onresize();
@@ -44,7 +44,7 @@ function updateWaveform( buffer ){
 	filter.type = filt.node.type;
 	filter.frequency.value = filt.frequency;
 	filter.Q.value = filt.Q;
-	filter.gain.value = filt.gain;
+	filter.gain.value = filt.fgain;
 	source.connect(filter);
 	filter.connect(offlineContext.destination);
 	source.start(0);
@@ -227,7 +227,7 @@ dat_gui_lib.onload = function(){
 
     gui.add( filt.node, 'type', types ).onChange( drawFilterShape );
     gui.add( filt, 'frequency', 20, 5000 ).onChange( drawFilterShape );
-    gui.add( filt, 'gain', -10, 10 ).onChange( drawFilterShape );
+    gui.add( filt, 'fgain', -10, 10 ).onChange( drawFilterShape );
     gui.add( filt, 'Q', 0, 20 ).onChange( drawFilterShape );
     gui.add( set, "update_waveform");
 

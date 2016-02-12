@@ -3,11 +3,11 @@
 BB.Audio.init();
 
 var fft = new BB.AudioAnalyser();
-	fft.disconnect(); // to avoid feedback from speakers :) 
+	fft.volume = 0; // to avoid feedback from speakers :) 
 
 // create AudioStream
 var mic = new BB.AudioStream({
-	connect: fft.node
+	connect: fft
 });
 
 
