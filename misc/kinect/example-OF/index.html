@@ -12,15 +12,16 @@
 	<script src="http://brangerbriz.net/labs/threejs_playGnd/js/Detector.js"></script>
 </head>
 <body>
-	<!-- <canvas id="canvas"></canvas> -->
+	<canvas id="canvas"></canvas>
 	<script>
 
-	  // var canvas = document.getElementById('canvas');
-	  // var ctx = canvas.getContext('2d');
-	  var trackingFrames = 0;
+	  var canvas = document.getElementsByTagName('canvas')[0];
+	  var ctx = canvas.getContext('2d');
+	  canvas.width  = window.innerWidth;
+	  canvas.height = window.innerHeight;
 
-	  // canvas.width  = window.innerWidth;
-	  // canvas.height = window.innerHeight;
+	  var trackingFrames = 0;
+	  var drawProjective = true;
 
 	  var camera, scene, renderer;
 	  var geometry, material, meshes = [], users = [];
@@ -86,35 +87,11 @@
 	  	// console.log(joint);
 	  });
 
-
 	  // poll to get trackingData framerate
 	  setInterval(function(){
 	  	// console.log(trackingFrames + ' FPS');
 	  	trackingFrames = 0;
 	  }, 1000);
-
-	  // function draw() {
-	  	
-	  // 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	  // 	ctx.save();
-	  // 	ctx.fillColor = "black"
-	  // 	for (var i = 0; i < users.length; i++) {
-	  // 		var user = users[i];
-	  // 		if (user.skeleton.joints) {
-	  // 			for (joint in user.skeleton.joints) {
-	 
-	  // 				var pos = user.skeleton.joints[joint].position;
-	  			
-	  // 				ctx.beginPath();
-			// 		ctx.arc(pos.x, pos.y, 5, 0, 2 * Math.PI);
-			// 		ctx.closePath();
-			// 		ctx.fill();
-	  // 			}
-	  // 		}
-	  		
-	  // 	}
-	  // 	ctx.restore();
-	  // }
 
 	 function setup() {
 
@@ -127,7 +104,6 @@
 		camera.position.z = 500;
 
 		scene = new THREE.Scene();
-		
 		
 		// paste your code from the geometryGUI here
 		geometry = new THREE.CubeGeometry(20, 20, 20);
@@ -145,25 +121,50 @@
 		
 		requestAnimationFrame( draw );
 		
-		// experiment with code from the snippets menu here
-		var j = 0;
-		for (var i = 0; i < users.length; i++) {
-	  		var user = users[i];
-	  		if (user.skeleton.joints) {
-	  			j = 0;
-	  			for (joint in user.skeleton.joints) {
-	  				var pos = user.skeleton.joints[joint].position;
-	  				console.log(pos)
-	  				meshes[j].position.x = pos.x;
-	  				meshes[j].position.y = pos.y;
-	  				meshes[j].position.z = -pos.z/2;
-	  				j++;
-	  			}
-	  		}
-	  		
-	  	}
+		if (drawProjective) {
+	  	
+		  	ctx.clearRect(0, 0, canvas.width, canvas.height);
+		  	ctx.save();
+		  	ctx.fillColor = "black"
+		  	for (var i = 0; i < users.length; i++) {
+		  		var user = users[i];
+		  		if (user.skeleton.joints) {
+		  			for (joint in user.skeleton.joints) {
+		 
+		  				var pos = user.skeleton.joints[joint].position;
+		  			
+		  				ctx.beginPath();
+						ctx.arc(pos.projective.x, pos.projective.y, 5, 0, 2 * Math.PI);
+						ctx.closePath();
+						ctx.fill();
+		  			}
+		  		}
+		  		
+			 }
+			  	
+			 ctx.restore();
 
-		renderer.render( scene, camera );
+		} else {
+
+			// experiment with code from the snippets menu here
+			var j = 0;
+			for (var i = 0; i < users.length; i++) {
+		  		var user = users[i];
+		  		if (user.skeleton.joints) {
+		  			j = 0;
+		  			for (joint in user.skeleton.joints) {
+		  				var pos = user.skeleton.joints[joint].position;
+		  				meshes[j].position.x = pos.real.x;
+		  				meshes[j].position.y = pos.real.y;
+		  				meshes[j].position.z = -pos.real.z/2;
+		  				j++;
+		  			}
+		  		}
+		  		
+		  	}
+
+			renderer.render( scene, camera );
+		}
 
 	}
 

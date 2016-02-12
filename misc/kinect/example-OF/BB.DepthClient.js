@@ -78,34 +78,96 @@ BB.DepthClient.prototype.on = function(name, callback) {
     }
 }
 
+BB.DepthClient.prototype.getDevices = function(callback) {
+     this._jsonRPCClient.call("getDevices", 
+                              "", 
+                              function(devices) {
+                                  callback(null, devices);
+                              },
+                              function(err) {
+                                  callback(err, null)
+                              });
+}
+
+BB.DepthClient.prototype.setSkeletonSmoothing = function(value, callback) {
+    this._jsonRPCClient.call("setSkeletonSmoothingFactor", 
+                              value, 
+                              function() {
+                                  callback(null);
+                              },
+                              function(err) {
+                                  callback(err)
+                              });
+}
+
+BB.DepthClient.prototype.getSkeletonSmoothing = function(callback) {
+    this._jsonRPCClient.call("getSkeletonSmoothingFactor", 
+                              "", 
+                              function(smoothing) {
+                                  callback(null, smoothing);
+                              },
+                              function(err) {
+                                  callback(err, null)
+                              });
+}
+
 BB.DepthClient.prototype._onWebSocketOpen = function(self) {
     
     return function(evt) {
         self._fireEvents('websocketOpen', evt)
     }
 }
-
+var count = 0;
+setInterval(function(){
+                console.log(count + " FPS");
+                count = 0;
+            }, 1000);
 BB.DepthClient.prototype._onWebSocketMessage = function(self) {
     
     return function(evt) {
-        var data = JSON.parse(evt.data)
-        if (data.module === "NIStreamer") {
-            if (data.method === 'trackingFrame') {
-                self._processTrackingFrame(data.params);
-                self._fireEvents('trackingFrame', data.params)
-            } else if (data.method === 'userNew') {
-                self._users[data.params.id] = data.params;
-                self._numUsers++;
-                // set not visible to allow "userVisible" event to be
-                // triggered from inside _processTrackingFrame()
-                self._users[data.params.id].state.visible = false;
-                self._fireEvents('userNew', data.params);
-            } else if (data.method === 'userLost') {
-                delete self._users[data.params.id];
-                self._numUsers--;
-                self._fireEvents('userLost', data.params);
-            }
-        } 
+       
+        try {
+            var data = JSON.parse(evt.data)
+        } catch (err) { /*probably binary*/ }
+        
+        if (typeof data !== 'undefined') {
+
+            if (data.module === "NIStreamer") {
+                if (data.method === 'trackingFrame') {
+                    self._processTrackingFrame(data.params);
+                    self._fireEvents('trackingFrame', data.params)
+                } else if (data.method === 'userNew') {
+                    self._users[data.params.id] = data.params;
+                    self._numUsers++;
+                    // set not visible to allow "userVisible" event to be
+                    // triggered from inside _processTrackingFrame()
+                    self._users[data.params.id].state.visible = false;
+                    self._fireEvents('userNew', data.params);
+                } else if (data.method === 'userLost') {
+                    delete self._users[data.params.id];
+                    self._numUsers--;
+                    self._fireEvents('userLost', data.params);
+                }
+            }     
+        } else { // data failed json parse, probably binary
+            
+            var arrayBuffer;
+            
+            var fileReader = new FileReader();
+            fileReader.onload = function() {
+                arrayBuffer = new Uint16Array(this.result);
+                // var max = 0;
+                // for (var i = 0; i < arrayBuffer.length; i++) {
+                //     max = Math.max(max, arrayBuffer[i]);
+                // }
+                // console.log(max);
+                count++;
+            };
+
+
+            fileReader.readAsArrayBuffer(evt.data);
+        }
+        
     }
 }
 

@@ -25,7 +25,10 @@
         "state": "TRACKED", //NONE, CALIBRATING, TRACKED, ERROR_NOT_IN_POSE, ERROR_HANDS, ERROR_HEAD, ERROR_LEGS, ERROR_TORSO
         "joints": { // can be null if state is NONE, CALIBRATING, OR ERROR_*
             "head": {
-                "position": { "x": 1, "y": 1, "z": 1},
+                "position": {
+                    "real": { "x": 1, "y": 1, "z": 1}, // REAL IS USED FOR 3D SCENES
+                    "projective": { "x": 1, "y": 1, "z": 1}, // PROJECTIVE IS USED FOR 2D SCENES
+                },
                 "positionConfidence": 0.7,
                 "orientation": { "x": 1, "y": 1, "z": 1, "w": 1},
                 "orientationConfidence": 0.5
