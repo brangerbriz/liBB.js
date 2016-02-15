@@ -880,7 +880,7 @@ function(  BB,        AudioBase ) {
         var dur  = (typeof config.sustain !== "undefined")      ? config.sustain : 0.25;
         var typ  = (typeof config.type !== "undefined")         ? config.type : "maj";
         var tun  = (typeof config.tuning !== "undefined")       ? config.tuning : "equal";
-        var sche  = (typeof config.schedule !== "undefined")    ? config.schedule : 0;
+        var sch  = (typeof config.schedule !== "undefined")    ? config.schedule : 0;
 
         var steps = this._returnSteps( typ );
         var incSteps = [0];         
