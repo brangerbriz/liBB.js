@@ -11,15 +11,16 @@ function(BB){
 
     'use strict';
   /**
-     * A module implementing LeapMotion Sensor
-     * @class BB.LeapMotion
-     * @param {[Null]} [Note] The constructor makes sure that the LeapMotion library is imported.
-     * If the LeapMotion library is not imported "missing LeapMotion library " will apear,
+     * A module implementing LeapMotion Sensor. 
+     * 
+     * __Note:__ The constructor makes throws an Error if the LeapMotion library is not already loaded.
+     * If the LeapMotion library is not imported "missing LeapMotion library " should appear in the console,
      * check LeapMotion docs or LiBB examples to see how to import library from html.
+     * @class BB.LeapMotion
      * @constructor
      */
    BB.LeapMotion = function(){ 
-       if(typeof(Leap) === 'undefined'){
+       if(typeof Leap === 'undefined'){
          throw new Error(' missing LeapMotion library ');
        }
      };
@@ -97,21 +98,21 @@ function(BB){
    * Method also allows to detect if a gesture has occured.
    * @method GetLeapData
    * @param {Canvas} canvas The created canvas that must be given to the LeapMotion module.
-   * @param {Boolean} GetXY Boolean value to enable/disable access to the X,Y values from LeapMotion Sensor .
-   * @param {Boolean} GetGestures Boolean value to enable/disable access to the GetGestures from LeapMotion Sensor.
+   * @param {Boolean} getXY Boolean value to enable/disable access to the X,Y values from LeapMotion Sensor .
+   * @param {Boolea} getGestures Boolean value to enable/disable access to te getGestures from LeapMotion Sensor.
    */
    // GetLeapData method accepts need 3 inputs
    // 1 tha canvas created 
    // 2 a boolean value to get X,Y values 
    // 3 a boolean value to get gestures 
-   BB.LeapMotion.prototype.GetLeapData= function(canva , GetXY , GetGestures){
+   BB.LeapMotion.prototype.getLeapData= function(canvas, getXY, getGestures){
    // using Leap. controller to create the connection to our sensor
         var controller = new Leap.Controller({enableGestures:true});
         // the controller.on method lets us se what the sensor is telling us on each frame
         // frames are sent 200 frames per second
         controller.on("frame",function(frame){
           // frame.pointables allows us to detect when a frame has a pointable.(hand,finger)
-                if(frame.pointables.length>0 && GetXY){
+                if(frame.pointables.length>0 && getXY){
                     var pointable = frame.pointables[0];
                     // creates and interaction box it provides normalized coordinates for hands, fingers, and tools within this box.
                     var interactionBox = frame.interactionBox;
@@ -131,7 +132,7 @@ function(BB){
                     BB.LeapMotion.prototype.swipe = false;
                 }
                  
-                if(frame.hands.length > 0 && GetGestures){
+                if(frame.hands.length > 0 & getGestures){
                   var hand = frame.hands[0];
                   var position = hand.palmPosition;
                  

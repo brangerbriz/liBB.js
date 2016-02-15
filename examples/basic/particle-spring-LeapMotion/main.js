@@ -3,21 +3,21 @@
 			var ctx        = canvas.getContext('2d');
 			document.body.appendChild(canvas);
 			document.body.className = "radial-grey";
-			var canvasX = 0; // var obtained from LeapMotion that will give an X coordinate
-			var canvasY = 0; // var obtained from LeapMotion that will give an Y coordinate
+			var canvasX = 0; // var obtained from leapMotion that will give an X coordinate
+			var canvasY = 0; // var obtained from leapMotion that will give an Y coordinate
 			// canvasX and CanvasY will replace point.x and pointer.y 
 			var logo       = new logo(ctx); // toys object
 			var gravity    = new BB.Vector2(); // default 0
-			var LeapMotion;
+			var leapMotion;
 			var WIDTH, HEIGHT, ball,
 		    prevX = prevY = 0 ,
 			spin = 0.01;
 
 		function setup() {
 				
-				LeapMotion = new BB.LeapMotion();// creates an instance of the LeapMotion module created for liBB library
+				leapMotion = new BB.LeapMotion();// creates an instance of the LeapMotion module created for liBB library
 				// 
-				LeapMotion.GetLeapData(canvas,true,true); // gives canvas and enables X,Y tracking and enables gestures
+				leapMotion.getLeapData(canvas, true, true); // gives canvas and enables X,Y tracking and enables gestures
 				
 				    window.onresize = function() {
 			        WIDTH = canvas.width = window.innerWidth ;
@@ -30,35 +30,34 @@
 			        friction: 0.9 //gui -name friction -max 1 -step 0.05
 			    });
     	}
+
 		function update() {
 
-				canvasX = LeapMotion.canvasX; // puts the value obtained from sensor to the var created
-				canvasY = LeapMotion.canvasY; // puts the value obtained from sensor to the var created
+				canvasX = leapMotion.canvasX; // puts the value obtained from sensor to the var created
+				canvasY = leapMotion.canvasY; // puts the value obtained from sensor to the var created
 
 
 				// test in console that the gestures are being captured.
-				if(LeapMotion.grab){
+				if(leapMotion.grab){
 					console.log("Grab Gesture");
 				}
-				if(LeapMotion.pinch){
+				if(leapMotion.pinch){
 					console.log("Pinch Gesture");
 				}
-			    if(LeapMotion.circle){
-			    	if(LeapMotion.clockwise){console.log(" Circle clockwise");}
+			    if(leapMotion.circle){
+			    	if(leapMotion.clockwise){console.log("Circle clockwise");}
 			        else{console.log("Circle Gesture");}
 			    }
 				
-				if(LeapMotion.keytap){
+				if(leapMotion.keytap){
 					console.log("KeyTap Gesture");
 				}
-				if(LeapMotion.swipe){
+				if(leapMotion.swipe){
 					console.log("Swipe Gesture");
 				}
-				if(LeapMotion.screenTap){
+				if(leapMotion.screenTap){
 					console.log("ScreenTap Gesture");
 				}
-
-
 
 			    requestAnimationFrame(update);
 			    ball.spring({
