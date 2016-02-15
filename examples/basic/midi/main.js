@@ -130,6 +130,14 @@ window.onload = function() {
         + "<span>note: " + data.note + "</span><br>"
         + "<span>velocity: " + data.velocity + "</span><br>"
     });
+
+    device.keyboard.on('noteOn', function(note, midiData){
+      console.log('noteOn event fired: ' + note)
+    });
+
+    device.keyboard.on('noteOff', function(note, midiData){
+      console.log('noteOff event fired: ' + note)
+    });
     
    draw();
 }
