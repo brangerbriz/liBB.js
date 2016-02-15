@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/BB.BrushManager2D.js - BB.js</title>
+    <title>src\BB.BrushManager2D.js - liBB.js</title>
         
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/prettify-nick.css">
@@ -22,7 +22,11 @@
             <div id="api-list">
                 <div id="api-tabview" class="tabview">
                     <ul class="tabs">
-                        <li><a href="#api-classes">Classes</a></li>
+                        <a href="/docs">
+                            <img src="../assets/favicon.png" class="icon"/>
+                        </a>
+                        <a href="/docs" class="homelink"> liBB.js </a>
+                        <!-- <li><a href="#api-classes">Classes</a></li> -->
                         <!-- <li><a href="#api-modules">Modules</a></li> -->
                     </ul>
             
@@ -41,6 +45,7 @@
                             <li><a class="type" href="../classes/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
                             <li><a class="type" href="../classes/BB.Color.html">BB.Color</a></li>
                             <li><a class="type" href="../classes/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="type" href="../classes/BB.LeapMotion.html">BB.LeapMotion</a></li>
                             <li><a class="type" href="../classes/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
                             <li><a class="type" href="../classes/BB.MathUtils.html">BB.MathUtils</a></li>
                             <li><a class="type" href="../classes/BB.MidiDevice.html">BB.MidiDevice</a></li>
@@ -65,6 +70,7 @@
                             <li><a class="module" href="../modules/BB.BrushManager2D.html">BB.BrushManager2D</a></li>
                             <li><a class="module" href="../modules/BB.Color.html">BB.Color</a></li>
                             <li><a class="module" href="../modules/BB.ImageBrush2D.html">BB.ImageBrush2D</a></li>
+                            <li><a class="module" href="../modules/BB.LeapMotion.html">BB.LeapMotion</a></li>
                             <li><a class="module" href="../modules/BB.LineBrush2D.html">BB.LineBrush2D</a></li>
                             <li><a class="module" href="../modules/BB.MathUtils.html">BB.MathUtils</a></li>
                             <li><a class="module" href="../modules/BB.Midi.html">BB.Midi</a></li>
@@ -80,7 +86,7 @@
 
         <div id="docs-main" class="apidocs">
             <div class="content container">
-    <h1 class="file-heading">File: src/BB.BrushManager2D.js</h1>
+    <h1 class="file-heading">File: src\BB.BrushManager2D.js</h1>
     
     <div class="file">
     <pre class="code prettyprint overflow linenums">
@@ -97,7 +103,7 @@
      * canvas&#x27; position or size is updated.
      * @module BB.BrushManager2D
      */
-    define([&#x27;./BB&#x27;, &#x27;BB.Pointer&#x27;],
+    define([&#x27;./BB&#x27;, &#x27;./BB.Pointer&#x27;],
     function(  BB,      Pointer ){
     
         &#x27;use strict&#x27;;

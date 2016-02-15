@@ -18,6 +18,7 @@ define(function (require) {
   // inputs, etc...
   BB.MouseInput     = require('BB.MouseInput');
   BB.Pointer        = require('BB.Pointer');
+  BB.LeapMotion     = require('BB.LeapMotion');
 
   // physics
   BB.Vector2        = require('BB.Vector2');
