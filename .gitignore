@@ -2,5 +2,7 @@
 node_modules/
 examples/brushes/build/
 examples/brushes/package.json
-docs/.gitkeep
-build/.gitkeep
+docs/
+build/
+!docs/.gitkeep
+!build/.gitkeep
