@@ -119,7 +119,7 @@ gulp.task('serve', function() {
         }
     });
     app.use('/examples', express.static(path.resolve(__dirname + '/examples')));
-    app.use('/toys', express.static(path.resolve(__dirname + '/toys')));
+    app.use('/addons', express.static(path.resolve(__dirname + '/addons')));
     app.use('/src', express.static(path.resolve(__dirname + '/src')));
     server.listen(serverPort, function() {
         console.log('[server] Server listening on port', serverPort);
