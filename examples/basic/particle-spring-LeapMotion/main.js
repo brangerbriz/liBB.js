@@ -46,20 +46,9 @@
 			    if(LeapMotion.circle){
 			    	if(LeapMotion.clockwise){console.log(" Circle clockwise");}
 			        else{console.log("Circle Gesture");}
+			        console.log(LeapMotion.circleradius);
 			    }
 				
-				if(LeapMotion.keytap){
-					console.log("KeyTap Gesture");
-				}
-				if(LeapMotion.swipe){
-					console.log("Swipe Gesture");
-				}
-				if(LeapMotion.screenTap){
-					console.log("ScreenTap Gesture");
-				}
-
-
-
 			    requestAnimationFrame(update);
 			    ball.spring({
 			    	position: new BB.Vector2(canvasX,canvasY),// now assigns the X,Y values to the position
