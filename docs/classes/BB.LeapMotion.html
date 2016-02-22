@@ -98,7 +98,10 @@
     
     
     <div class="box intro">
-        <p>A module implementing LeapMotion Sensor</p>
+        <p>A module implementing LeapMotion Sensor.</p>
+    <p><strong>Note:</strong> The constructor makes throws an Error if the LeapMotion library is not already loaded.
+    If the LeapMotion library is not imported &quot;missing LeapMotion library &quot;  should appear in the console,
+    check LeapMotion docs or LiBB examples to see how to import library from html.</p>
     
     </div>
     
@@ -158,10 +161,6 @@
     
                     </li>
                     <li class="index-item property">
-                        <a href="#property_deviceDisconnected">deviceDisconnected</a>
-    
-                    </li>
-                    <li class="index-item property">
                         <a href="#property_deviceStreaming">deviceStreaming</a>
     
                     </li>
@@ -171,10 +170,6 @@
                     </li>
                     <li class="index-item property">
                         <a href="#property_keytap">keytap</a>
-    
-                    </li>
-                    <li class="index-item property">
-                        <a href="#property_noHands">noHands</a>
     
                     </li>
                     <li class="index-item property">
@@ -223,13 +218,7 @@
             <div class="method item">
                 <h3 class="name"><code>BB.LeapMotion</code>
             
-                    <div class="args">
-                        <span class="paren">(</span><ul class="args-list inline commas">
-                            <li class="arg">
-                                    <code class="optional">[Note]</code>
-                            </li>
-                        </ul><span class="paren">)</span>
-                    </div>
+                    <span class="paren">()</span>
             
             
             
@@ -256,26 +245,6 @@
                         
                     </div>
             
-                        <div class="params">
-                            <h4>Parameters:</h4>
-            
-                            <ul class="params-list">
-                                <li class="param">
-                                        <code class="param-name optional">[Note]</code>
-                                        <span class="type">Null</span>
-                                        <span class="flag optional" title="This parameter is optional.">optional</span>
-            
-            
-                                    <div class="param-description">
-                                        <p>The constructor makes sure that the LeapMotion library is imported.
-            If the LeapMotion library is not imported &quot;missing LeapMotion library &quot; will apear,
-            check LeapMotion docs or LiBB examples to see how to import library from html.</p>
-            
-                                    </div>
-            
-                                </li>
-                            </ul>
-                        </div>
             
             
                 </div>
@@ -303,7 +272,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l29"><code>src\BB.LeapMotion.js:29</code></a>
+                        <a href="../files/src_BB.LeapMotion.js.html#l30"><code>src\BB.LeapMotion.js:30</code></a>
                         </p>
                 
                 
@@ -336,7 +305,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l36"><code>src\BB.LeapMotion.js:36</code></a>
+                        <a href="../files/src_BB.LeapMotion.js.html#l37"><code>src\BB.LeapMotion.js:37</code></a>
                         </p>
                 
                 
@@ -369,7 +338,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l57"><code>src\BB.LeapMotion.js:57</code></a>
+                        <a href="../files/src_BB.LeapMotion.js.html#l58"><code>src\BB.LeapMotion.js:58</code></a>
                         </p>
                 
                 
@@ -402,7 +371,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l92"><code>src\BB.LeapMotion.js:92</code></a>
+                        <a href="../files/src_BB.LeapMotion.js.html#l93"><code>src\BB.LeapMotion.js:93</code></a>
                         </p>
                 
                 
@@ -435,7 +404,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l85"><code>src\BB.LeapMotion.js:85</code></a>
+                        <a href="../files/src_BB.LeapMotion.js.html#l86"><code>src\BB.LeapMotion.js:86</code></a>
                         </p>
                 
                 
@@ -444,39 +413,6 @@
                     <div class="extended-detail">
                         <div class="description">
                             <p>Boolean value corresponding to the clockwise detected by the LeapMotion.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_deviceDisconnected" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>deviceDisconnected</code>
-                    <span class="type">Connection indicator</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">false</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l106"><code>src\BB.LeapMotion.js:106</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>Boolean value indicating if the LeapMotion device is disconected.</p>
                 
                         </div>
                 
@@ -501,7 +437,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l99"><code>src\BB.LeapMotion.js:99</code></a>
+                        <a href="../files/src_BB.LeapMotion.js.html#l100"><code>src\BB.LeapMotion.js:100</code></a>
                         </p>
                 
                 
@@ -534,7 +470,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l43"><code>src\BB.LeapMotion.js:43</code></a>
+                        <a href="../files/src_BB.LeapMotion.js.html#l44"><code>src\BB.LeapMotion.js:44</code></a>
                         </p>
                 
                 
@@ -567,7 +503,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l64"><code>src\BB.LeapMotion.js:64</code></a>
+                        <a href="../files/src_BB.LeapMotion.js.html#l65"><code>src\BB.LeapMotion.js:65</code></a>
                         </p>
                 
                 
@@ -576,39 +512,6 @@
                     <div class="extended-detail">
                         <div class="description">
                             <p>Boolean value corresponding to the keytap gesture detected by the LeapMotion sensor.</p>
-                
-                        </div>
-                
-                       
-                
-                
-                    </div>
-                </div>
-                <a name="property_noHands" class="anchor-link"></a>
-                <div class="property item">
-                    <h3 class="name"><code>noHands</code>
-                    <span class="type">Indicator</span>
-                
-                
-                
-                
-                
-                            <span class="default">default:<span class="default-value">false</span></span>
-                
-                    </h3>
-                
-                    <div class="meta">
-                                <p>
-                                Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l113"><code>src\BB.LeapMotion.js:113</code></a>
-                        </p>
-                
-                
-                    </div>
-                
-                    <div class="extended-detail">
-                        <div class="description">
-                            <p>Boolean value indicating if the LeapMotion device dettects no hands.</p>
                 
                         </div>
                 
@@ -633,7 +536,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l50"><code>src\BB.LeapMotion.js:50</code></a>
+                        <a href="../files/src_BB.LeapMotion.js.html#l51"><code>src\BB.LeapMotion.js:51</code></a>
                         </p>
                 
                 
@@ -666,7 +569,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l71"><code>src\BB.LeapMotion.js:71</code></a>
+                        <a href="../files/src_BB.LeapMotion.js.html#l72"><code>src\BB.LeapMotion.js:72</code></a>
                         </p>
                 
                 
@@ -699,7 +602,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l78"><code>src\BB.LeapMotion.js:78</code></a>
+                        <a href="../files/src_BB.LeapMotion.js.html#l79"><code>src\BB.LeapMotion.js:79</code></a>
                         </p>
                 
                 
@@ -738,10 +641,10 @@
                                         <code>canvas</code>
                                 </li>
                                 <li class="arg">
-                                        <code>GetXY</code>
+                                        <code>getXY</code>
                                 </li>
                                 <li class="arg">
-                                        <code>GetGestures</code>
+                                        <code>getGestures</code>
                                 </li>
                             </ul><span class="paren">)</span>
                         </div>
@@ -758,7 +661,7 @@
                     <div class="meta">
                                 <p>
                                 Defined in
-                        <a href="../files/src_BB.LeapMotion.js.html#l124"><code>src\BB.LeapMotion.js:124</code></a>
+                        <a href="../files/src_BB.LeapMotion.js.html#l111"><code>src\BB.LeapMotion.js:111</code></a>
                         </p>
                 
                 
@@ -790,7 +693,7 @@
                 
                                     </li>
                                     <li class="param">
-                                            <code class="param-name">GetXY</code>
+                                            <code class="param-name">getXY</code>
                                             <span class="type">Boolean</span>
                 
                 
@@ -801,12 +704,12 @@
                 
                                     </li>
                                     <li class="param">
-                                            <code class="param-name">GetGestures</code>
+                                            <code class="param-name">getGestures</code>
                                             <span class="type">Boolean</span>
                 
                 
                                         <div class="param-description">
-                                            <p>Boolean value to enable/disable access to the GetGestures from LeapMotion Sensor.</p>
+                                            <p>Boolean value to enable/disable access to the getGestures from LeapMotion Sensor.</p>
                 
                                         </div>
                 
