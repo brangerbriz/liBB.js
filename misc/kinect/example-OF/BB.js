@@ -1588,6 +1588,84 @@ function(  BB,        Vector2){
     return BB.MathUtils;
 });
 /**
+ * A module for detecting platform ( browser ) information 
+ * @module BB.Detect
+ */
+define('BB.Detect',['./BB' ],
+function(  BB ){
+
+	'use strict';
+
+	 /**
+	 *  A module for detecting platform ( browser ) information 
+	 * @class BB.Detect
+	 * @constructor
+	 */
+    
+	BB.Detect = function(){};
+
+
+    /**
+     * the browser info { name:'',version:'' }
+     * @property browserInfo 
+     * @type Object
+     */   
+    Object.defineProperty(BB.Detect, "browserInfo", {
+        get: function() {
+		    var ua= navigator.userAgent, tem,
+		    M= ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+		    if(/trident/i.test(M[1])){
+		        tem=  /\brv[ :]+(\d+)/g.exec(ua) || [];
+		        return 'IE '+(tem[1] || '');
+		    }
+		    if(M[1]=== 'Chrome'){
+		        tem= ua.match(/\b(OPR|Edge)\/(\d+)/);
+		        if(tem !== null) return tem.slice(1).join(' ').replace('OPR', 'Opera');
+		    }
+		    M= M[2]? [M[1], M[2]]: [navigator.appName, navigator.appVersion, '-?'];
+		    if((tem= ua.match(/version\/(\d+)/i))!== null) M.splice(1, 1, tem[1]);
+		    return { 'name': M[0], 'version': M[1] };
+        },
+        set: function(wave) {
+            throw new Error('BB.Detect.browserInfo: is read only');
+        }
+    });
+
+    /**
+     * is/isn't on mobile device
+     * @property browserInfo 
+     * @type Boolean
+     */   
+    Object.defineProperty(BB.Detect, "isMobile", {
+        get: function() {
+			if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)){
+				return true;
+			} else{
+				return false;
+			}
+        },
+        set: function(wave) {
+            throw new Error('BB.Detect.browserInfo: is read only');
+        }
+    });	
+
+    /**
+     * does/doesn't support webGL
+     * @property hasWebGL 
+     * @type Boolean
+     */   
+    Object.defineProperty(BB.Detect, "hasWebGL", {
+        get: function() {
+        	return !! window.WebGLRenderingContext && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' );
+        },
+        set: function(wave) {
+            throw new Error('BB.Detect.browserInfo: is read only');
+        }
+    });
+
+	return BB.Detect;
+});
+/**
  * A module for creating color objects, color schemes and doing color maths
  * @module BB.Color
  */
@@ -1675,7 +1753,7 @@ function(  BB) {
      * the red value between 0 - 255
      * @property r (red)
      * @type Number
-     * @default 204
+     * @default 228
      */   
     Object.defineProperty(BB.Color.prototype, "r", {
         get: function() {
@@ -1695,7 +1773,7 @@ function(  BB) {
      * the green value between 0 - 255
      * @property g (green)
      * @type Number
-     * @default 51
+     * @default 4
      */   
     Object.defineProperty(BB.Color.prototype, "g", {
         get: function() {
@@ -1715,7 +1793,7 @@ function(  BB) {
      * the blue value between 0 - 255
      * @property b (blue)
      * @type Number
-     * @default 153
+     * @default 119
      */   
     Object.defineProperty(BB.Color.prototype, "b", {
         get: function() {
@@ -1816,7 +1894,7 @@ function(  BB) {
      * the base color's rgb string
      * @property rgb
      * @type String
-     * @default "rgb(204,51,153)"
+     * @default "rgb(228,4,119)"
      */   
     Object.defineProperty(BB.Color.prototype, "rgb", {
         get: function() {
@@ -1855,7 +1933,7 @@ function(  BB) {
      * the base color's rgba string
      * @property rgba
      * @type String
-     * @default "rgba(204,51,153,1)"
+     * @default "rgba(228,4,119,1)"
      */   
     Object.defineProperty(BB.Color.prototype, "rgba", {
         get: function() {
@@ -1896,7 +1974,7 @@ function(  BB) {
      * the base color's hex string
      * @property hex
      * @type String
-     * @default "#cc3399"
+     * @default "#e40477"
      */   
     Object.defineProperty(BB.Color.prototype, "hex", {
         get: function() {
@@ -4198,6 +4276,208 @@ function(  BB,        BaseBrush2D,        Color,        MathUtils){
 });
 
 /**
+ * A module implementing LeapMotion Sensor
+ * @module BB.LeapMotion
+ */
+
+
+// module to get x, y from leapmotion
+// used leap-0.6.4.js as needed for the leapmotion to function
+define('BB.LeapMotion',['./BB'],
+function(BB){
+
+    'use strict';
+  /**
+     * A module implementing LeapMotion Sensor. 
+     * 
+     * __Note:__ The constructor makes throws an Error if the LeapMotion library is not already loaded.
+     * If the LeapMotion library is not imported "missing LeapMotion library " should appear in the console,
+     * check LeapMotion docs or LiBB examples to see how to import library from html.
+     * @class BB.LeapMotion
+     * @constructor
+     */
+   BB.LeapMotion = function(){ 
+       if(typeof Leap === 'undefined'){
+         throw new Error(' missing LeapMotion library ');
+       }
+     };
+   // create variables that can be accesed later on to be able to have the data
+   // canvasX, canvasY each will contain a numeric value that represent the position.
+
+        /**
+         * The pointers X position as given by the LeapMotion Sensor
+         * @property canvasX
+         * @type {Number}
+         * @default 0
+         */
+   BB.LeapMotion.prototype.canvasX = 0;
+         /**
+         * The pointers Y position as given by the LeapMotion Sensor
+         * @property canvasY
+         * @type {Number}
+         * @default 0
+         */
+   BB.LeapMotion.prototype.canvasY = 0;
+         /**
+         * Boolean value corresponding to the grab gesture detected by the LeapMotion sensor.
+         * @property grab
+         * @type {Gesture}
+         * @default false
+         */
+   BB.LeapMotion.prototype.grab = false;
+         /**
+         * Boolean value corresponding to the pinch gesture detected by the LeapMotion sensor.
+         * @property pinch
+         * @type {Gesture}
+         * @default false
+         */
+   BB.LeapMotion.prototype.pinch = false;
+        /**
+         * Boolean value corresponding to the circle gesture detected by the LeapMotion sensor.
+         * @property circle
+         * @type {Gesture}
+         * @default false
+         */
+   BB.LeapMotion.prototype.circle = false;
+        /**
+         * Boolean value corresponding to the keytap gesture detected by the LeapMotion sensor.
+         * @property keytap
+         * @type {Gesture}
+         * @default false
+         */
+   BB.LeapMotion.prototype.keytap = false;
+        /**
+         * Boolean value corresponding to the screenTap gesture detected by the LeapMotion sensor.
+         * @property screenTap
+         * @type {Gesture}
+         * @default false
+         */
+   BB.LeapMotion.prototype.screenTap = false;
+        /**
+         * Boolean value corresponding to the swipe gesture detected by the LeapMotion sensor.
+         * @property swipe
+         * @type {Gesture}
+         * @default false
+         */
+   BB.LeapMotion.prototype.swipe = false;
+    /**
+         * Boolean value corresponding to the clockwise detected by the LeapMotion.
+         * @property clockwise
+         * @type {Gesture}
+         * @default false
+         */
+   BB.LeapMotion.prototype.clockwise = false;
+   //creating function to be called to access x,y in a fast and easy way
+   // function requires a canvas.
+   /**
+   * Method that enables the LeapMotion module to start 
+   * obtaining the X,Y values from the sensor, these values must be called if needed.
+   * Method also allows to detect if a gesture has occured.
+   * @method GetLeapData
+   * @param {Canvas} canvas The created canvas that must be given to the LeapMotion module.
+   * @param {Boolean} getXY Boolean value to enable/disable access to the X,Y values from LeapMotion Sensor .
+   * @param {Boolea} getGestures Boolean value to enable/disable access to te getGestures from LeapMotion Sensor.
+   */
+   // GetLeapData method accepts need 3 inputs
+   // 1 tha canvas created 
+   // 2 a boolean value to get X,Y values 
+   // 3 a boolean value to get gestures 
+   BB.LeapMotion.prototype.getLeapData= function(canvas, getXY, getGestures){
+   // using Leap. controller to create the connection to our sensor
+        var controller = new Leap.Controller({enableGestures:true});
+        // the controller.on method lets us se what the sensor is telling us on each frame
+        // frames are sent 200 frames per second
+        controller.on("frame",function(frame){
+          // frame.pointables allows us to detect when a frame has a pointable.(hand,finger)
+                if(frame.pointables.length>0 && getXY){
+                    var pointable = frame.pointables[0];
+                    // creates and interaction box it provides normalized coordinates for hands, fingers, and tools within this box.
+                    var interactionBox = frame.interactionBox;
+                    // provides the stabalized tip position
+                    var normalizedPosition = interactionBox.normalizePoint(pointable.stabilizedTipPosition, true);
+                    // Convert the normalized coordinates to span the canvas
+                    BB.LeapMotion.prototype.canvasX = canvas.width * normalizedPosition[0];
+                    BB.LeapMotion.prototype.canvasY = canvas.height * (1 - normalizedPosition[1]);
+                }
+                // make all vars false when no hand detected fromo the LeaMotion
+                if(frame.hands.length === 0){
+                    BB.LeapMotion.prototype.grab = false;
+                    BB.LeapMotion.prototype.pinch = false;
+                    BB.LeapMotion.prototype.circle = false;
+                    BB.LeapMotion.prototype.keytap = false;
+                    BB.LeapMotion.prototype.screenTap = false;
+                    BB.LeapMotion.prototype.swipe = false;
+                }
+                 
+                if(frame.hands.length > 0 & getGestures){
+                  var hand = frame.hands[0];
+                  var position = hand.palmPosition;
+                 
+                  // when a frame detects a hand and gestures are wanted it will give true when gesture grab     
+                  if(hand.grabStrength == 1){
+                    BB.LeapMotion.prototype.grab = true;
+                    BB.LeapMotion.prototype.pinch = false;
+                    BB.LeapMotion.prototype.circle = false;
+                    BB.LeapMotion.prototype.keytap = false;
+                    BB.LeapMotion.prototype.screenTap = false;
+                    BB.LeapMotion.prototype.swipe = false;
+                  }else{
+                    BB.LeapMotion.prototype.grab = false;
+                  }
+                  // when a frame detects a hand and gestures are wanted it will give true when gesture pinch     
+                  if(hand.pinchStrength == 1){
+                    BB.LeapMotion.prototype.grab = false;
+                    BB.LeapMotion.prototype.pinch = true;
+                    BB.LeapMotion.prototype.circle = false;
+                    BB.LeapMotion.prototype.keytap = false;
+                    BB.LeapMotion.prototype.screenTap = false;
+                    BB.LeapMotion.prototype.swipe = false;
+                 }else{
+                    BB.LeapMotion.prototype.pinch = false;
+                 }
+                } 
+            // when no gestures are being detected all the pre loaded gestures are falsed. (circle,keytap,screenTap,swipe)    
+            if(frame.valid && frame.gestures.length === 0){
+                    BB.LeapMotion.prototype.circle = false;
+                    BB.LeapMotion.prototype.keytap = false;
+                    BB.LeapMotion.prototype.screenTap = false;
+                    BB.LeapMotion.prototype.swipe = false;
+            } 
+            // when a gesture is detected it will take each gesture and set to true the var that corresponds to the gesture 
+            // making the gesture available to the user  
+            if(frame.valid && frame.gestures.length > 0){              
+              frame.gestures.forEach(function(gesture){           
+                  switch (gesture.type){
+                      case "circle":
+                          BB.LeapMotion.prototype.circle = true;
+                          var pointableID = gesture.pointableIds[0];
+                          var direction = frame.pointable(pointableID).direction;
+                          var dotProduct = Leap.vec3.dot(direction, gesture.normal);
+                          if(dotProduct > 0){
+                            // detects if the circle gesture is clockwise and sets var.
+                             BB.LeapMotion.prototype.clockwise = true;
+                          }else{ BB.LeapMotion.prototype.clockwise = false;}
+                          break;                     
+                      case "keyTap":
+                          BB.LeapMotion.prototype.keytap = true; 
+                          break;
+                      case "screenTap":
+                          BB.LeapMotion.prototype.screenTap = true;
+                          break;
+                      case "swipe":
+                          BB.LeapMotion.prototype.swipe = true;
+                          break;
+                  }
+              });
+            }                                   
+        });
+    // connecto to the leap motion sensor to get data
+    controller.connect();
+   };
+   return BB.LeapMotion;
+});
+
+/**
  * A 2D Particle class for all your physics needs
  * @module BB.particle2D
  */
@@ -5558,6 +5838,418 @@ function(  BB){
 
     return BB.Audio;
 });
+
+/**
+ * A base audio module class, extended by BB.AudioNoise, BB.AudioSampler, BB.AudioFX, etc.
+ * @module BB.AudioBase
+ */
+define('BB.AudioBase',['./BB', './BB.Audio', './BB.Detect' ],
+function(  BB,        Audio,        Detect ){
+
+	'use strict';
+
+ 	/**
+     * A base audio module class, extended by BB.AudioNoise, BB.AudioSampler, BB.AudioFX, etc.
+     * @class BB.AudioBase
+     * @constructor
+     * 
+     * @example  
+     * in the example below instantiating the BB.AudioBase creates a <a href="https://developer.mozilla.org/en-US/docs/Web/API/GainNode" target="_blank">GainNode</a> ( essentially the modules's output ) connected to the default BB.Audio.context ( ie. AudioDestination )
+     * <br> <img src="../assets/images/audiosampler1.png"/>
+     * <br>
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var node = new BB.AudioBase();<br>
+     *  <br>
+     *  &nbsp;// or optional config property<br>
+     *  &nbsp;var node = new BB.AudioBase({<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;context: BB.Audio.context[2],<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;connect: fft,<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;volume: 0.5<br>
+     *  });<br>
+     *  <br>
+     * </code>
+     */
+	
+	BB.AudioBase = function( config ) {
+
+		if(typeof config === "undefined") config = {};
+
+		/**
+		* the Audio Context this derived from
+		* @property ctx
+		* @type AudioContext
+		* @default BB.Audio.context
+		*/  
+		if( typeof BB.Audio.context === "undefined" )
+			throw new Error('BB Audio Modules require that you first create an AudioContext: BB.Audio.init()');
+
+		if( BB.Audio.context instanceof Array ){
+			if( typeof config === "undefined" || typeof config.context === "undefined" )
+				throw new Error('BB.AudioBase: BB.Audio.context is an Array, specify which { context:BB.Audio.context[?] }');
+			else 
+				this.ctx = config.context;		
+		} else {
+			this.ctx = BB.Audio.context;
+		}	
+		 
+		/**
+		* the "output" gain node ( use .volume, .setGain() to interface with this )
+		* @property gain
+		* @type GainNode
+		* @private
+		*/ 
+		this.gain       = this.ctx.createGain();    
+		// default destination is context destination
+		// unless otherwise specified in { connect:AudioNode }
+		if( typeof config.connect !== 'undefined' ){
+			if( config.connect instanceof BB.AudioAnalyser )
+				this.gain.connect( config.connect.node );
+			else if( config.connect instanceof BB.AudioFX || config.connect instanceof BB.AFX  ) 
+				this.gain.connect( config.connect.input );
+			else if( config.connect instanceof BB.AudioBase )
+				this.gain.connect( config.connect.gain );
+			else if( config.connect instanceof AudioDestinationNode || config.connect instanceof AudioNode ) 
+				this.gain.connect( config.connect );
+			else 
+				throw new Error('BB.AudioBase: connect property expecting an AudioNode');
+		
+		} else {
+			this.gain.connect( this.ctx.destination );
+		}
+
+		this._volume = (typeof config.volume !== "undefined") ? config.volume : 1; // MASTER NOISE VOLUME ESSENTIALY 
+		this.gain.gain.value = this._volume;
+		this.gain.gain.name = "master";
+
+	};
+
+
+	/**
+	* the master volume (of output gain node)
+	* @property volume
+	* @type Number
+	* @default 1
+	*/   
+	Object.defineProperty(BB.AudioBase.prototype, "volume", {
+		get: function() {
+			return this._volume;
+		},
+		set: function(v) {
+			if( typeof v !== 'number'){
+				throw new Error("BB.AudioBase.volume: expecing a number");
+			} else {
+				this.setGain( v );
+			}
+		}
+	});
+
+
+	/**
+	* connects the Noise to a particular AudioNode or AudioDestinationNode
+	* @method connect
+	* @param  {AudioNode} destination the AudioNode or AudioDestinationNode to connect to
+	* @param  {Number} output      which output of the the Noise do you want to connect to the destination
+	* @param  {Number} input       which input of the destination you want to connect the Noise to
+	* @example  
+	* <code class="code prettyprint">  
+	*  &nbsp;BB.Audio.init();<br>
+	*  <br>
+	*  &nbsp;var node = new BB.AudioBase({<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;volume: 0.75,<br>
+	*  &nbsp;});<br>
+	*  <br>
+	*  &nbsp; node.connect( exampleNode );<br>
+	*  &nbsp; // connected to both default BB.Audio.context && exampleNode<br>
+	*  &nbsp; // so if exampleNode is also connected to BB.Audio.context by default,<br>
+	*  &nbsp; // ...then you've got node connected to BB.Audio.context twice<br>
+	* </code>
+	* <br>
+	* ...which looks like this ( where the first Gain is the Noise and the second is the exampleNode )<br>
+	* <img src="../assets/images/audiosampler3.png">
+	*/
+	BB.AudioBase.prototype.connect = function( destination, output, input ){
+
+		if( destination instanceof BB.AudioAnalyser) 
+			destination = destination.node;
+		else if( destination instanceof BB.AudioFX || destination instanceof BB.AFX  )
+			destination = destination.input;
+		else if( destination instanceof BB.AudioBase )
+			destination = destination.gain;
+
+		if( !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
+			throw new Error('BB.AudioBase.connect: destination should be an instanceof AudioDestinationNode or AudioNode');
+		if( typeof output !== "undefined" && typeof output !== "number" )
+			throw new Error('BB.AudioBase.connect: output should be a number');
+		if( typeof intput !== "undefined" && typeof input !== "number" )
+			throw new Error('BB.AudioBase.connect: input should be a number');
+
+		if( typeof intput !== "undefined" ) this.gain.connect( destination, output, input );
+		else if( typeof output !== "undefined" ) this.gain.connect( destination, output );
+		else this.gain.connect( destination );
+	};
+
+	/**
+	* diconnects the Noise from the node it's connected to
+	* @method disconnect
+	* @param  {AudioNode} destination what it's connected to
+	* @param  {Number} output      the particular output number
+	* @param  {Number} input       the particular input number
+	* <code class="code prettyprint">  
+	*  &nbsp;BB.Audio.init();<br>
+	*  <br>
+	*  &nbsp;var node = new BB.AudioBase({<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;volume: 0.75,<br>
+	*  &nbsp;});<br>
+	*  <br>
+	*  &nbsp;node.disconnect(); // disconnected from default BB.Audio.context<br>
+	*  &nbsp;node.connect( exampleNode ); // connected to exampleNode only<br>
+	* </code>
+	* <br>
+	* ...which looks like this ( where the first Gain is the node and the second is the exampleNode )<br>
+	* <img src="../assets/images/audiosampler4.png">
+	*/
+	BB.AudioBase.prototype.disconnect = function(destination, output, input ){
+
+		if( destination instanceof BB.AudioAnalyser ) 
+			destination = destination.node;
+		else if( destination instanceof BB.AudioFX || destination instanceof BB.AFX  )
+			destination = destination.input;
+		else if( destination instanceof BB.AudioBase )
+			destination = destination.gain;
+
+		if( typeof destination !== "undefined" &&
+			!(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
+				throw new Error('BB.AudioBase.disconnect: destination should be an instanceof AudioDestinationNode or AudioNode');
+		if( typeof output !== "undefined" && typeof output !== "number" )
+			throw new Error('BB.AudioBase.disconnect: output should be a number');
+		if( typeof input !== "undefined" && typeof input !== "number" )
+			throw new Error('BB.AudioBase.disconnect: input should be a number');
+
+		if( typeof input !== "undefined" ) this.gain.disconnect( destination, output, input );
+		else if( typeof output !== "undefined" ) this.gain.disconnect( destination, output );
+		else if( typeof destination !== "undefined" ) this.gain.disconnect( destination );
+		else  this.gain.disconnect();
+	};
+
+
+	/**
+	* sets the gain level of the node ( in a sense, master volume control )
+	* @method setGain
+	* @param {Number} num a float value, 1 being the default volume, below 1 decreses the volume, above one pushes the gain
+	* @param {Number} ramp value in seconds for how quickly/slowly to ramp to the new value (num) specified
+	*
+	* @example  
+	* <code class="code prettyprint">  
+	*  &nbsp;BB.Audio.init();<br>
+	*  <br>
+	*  &nbsp;var node = new BB.AudioBase({<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;volume: 0.75<br>
+	*  &nbsp;});<br>
+	*  <br>
+	*  &nbsp; node.setGain( 0.25, 2 ); // lower's volume from 0.75 to 0.25 in 2 seconds <br>
+	*  // if no ramp value is needed, you could alternatively do<br>
+	*  &nbsp; node.volume = 0.5; // immediately jumps from 0.25 to 0.5 <br>
+	* </code>
+	*/
+	BB.AudioBase.prototype.setGain = function( num, gradually ){
+		if( typeof num !== "number" )
+			throw new Error('BB.AudioBase.setGain: first argument expecting a number');
+		
+		this._volume = num;
+
+		if(typeof gradually !== "undefined"){
+			if( typeof num !== "number" )
+				throw new Error('BB.AudioBase.setGain: second argument expecting a number');
+			else
+				this._globalGainUpdate( gradually );
+		}
+		else { this._globalGainUpdate(0); }
+	};
+
+	BB.AudioBase.prototype._sec2tc = function( sec ){
+		return ( sec * 2 ) / 10;
+	};
+
+	BB.AudioBase.prototype._globalGainUpdate = function( gradually ){
+		if(typeof gradually === "undefined") gradually = 0;    
+
+		if(BB.Detect.browserInfo.name=="Firefox"){
+			this.gain.gain.setTargetAtTimePoly( this._volume, 0, gradually);
+		} else {
+			this.gain.gain.setTargetAtTime( this._volume, 0, this._sec2tc(gradually));
+		}    
+	};
+
+	// ... polyfills .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... ....
+
+	if(BB.Detect.browserInfo.name=="Firefox"){   
+		// !!! *** !!! *** !!! *** !!! *** !!! *** !!! *** !!! 
+		// !!!  THIS POLY FILL IS STILL UNDERCONSTRUCTION  !!!
+		// !!! *** !!! *** !!! *** !!! *** !!! *** !!! *** !!! 
+		// 
+		AudioParam.prototype.setTargetAtTimePoly = function( target, startTime, seconds ){
+
+		    // this.value = target;
+
+		    var polyTimeout = null;
+		    var polyInterval = null;
+		    startTime = startTime * 1000;
+		    var self = this;
+		    
+		    // if(typeof polyTimeout !== "undefined"){ clearTimeout( polyTimeout ); polyTimeout = undefined; }  
+		    
+		    polyTimeout = setTimeout(function(){
+		        
+		        
+		        if(seconds===0){     
+		            self.value = target;
+		            // console.log(self.name,'jump to '+target+", now "+self.value)             
+		        } else {
+		            // if(typeof polyInterval !== "undefined"){ clearInterval( polyInterval ); polyInterval = undefined; }  
+
+		            var delta =  target - self.value;
+		            var inc = delta / (seconds*60);
+		            var dir = (delta>=0) ? "up" : "down";
+		            
+		            polyInterval = setInterval(function(){                      
+		                
+		                self.value += inc*2; // why 2? well b/c for some f'n reason it goes too slow otherwise
+
+		                if(dir=="up"){
+		                    if( self.value >= target){clearInterval( polyInterval ); }
+		                } else {
+		                    if( self.value <= target){clearInterval( polyInterval ); }
+		                }
+		                
+		            }, 1000/60 );
+		        }
+
+		    }, startTime );
+		};
+
+	}
+
+	return BB.AudioBase;
+});
+/**
+ * A module for streaming user audio ( getUserMedia )
+ * @module BB.AudioStream
+ * @extends BB.AudioBase
+ */
+define('BB.AudioStream',['./BB', './BB.AudioBase'],
+function(  BB,		  AudioBase ){
+
+	'use strict';
+
+	 /**
+	 *  A module for streaming user audio ( getUserMedia )
+	 * @class BB.AudioStream
+	 * @constructor
+	 * @extends BB.AudioBase
+	 * 
+	 * @param {Object} config An optional config object to initialize the Stream, 
+	 * can contain the following:
+	 * <code class="code prettyprint">
+	 * &nbsp;{<br>
+	 * &nbsp;&nbsp;&nbsp; context: BB.Audio.context[2], // choose specific context <br>
+	 * &nbsp;&nbsp;&nbsp; connect: fft, // overide default destination <br>
+	 * &nbsp;&nbsp;&nbsp; autostart: true // will automatically start the stream <br>
+	 * &nbsp;}
+	 * </code>	 
+	 * 
+	 * @example  
+	 * <code class="code prettyprint">  
+	 *  &nbsp;BB.Audio.init();<br>
+	 *	<br>
+	 *	&nbsp;var mic = new BB.AudioStream();<br>
+	 *	<br>
+	 * </code>
+	 * <br>
+	 * BB.AudioStream ( represented by Gain below ) connects to <a href="BB.Audio.html">BB.Audio.context</a> by default<br>
+	 * <img src="../assets/images/audiosampler1.png">
+	 */
+
+	BB.AudioStream = function( config ){
+		
+		BB.AudioBase.call(this, config);
+
+		/**
+		 * the Audio Stream 
+		 * @type {LocalMEdiaStream}
+		 * @default null
+		 * @property stream
+		 */
+		this.stream = null; // set by this.open()
+		// this.node = null;
+
+		// whether or not to automatically start the stream
+		this.auto 		= (typeof config !== "undefined" &&  typeof config.autostart !== 'undefined' ) ? config.autostart : false;
+
+		if(this.auto === true){
+			this.open();
+		}
+
+	};
+
+ 	BB.AudioStream.prototype = Object.create(BB.AudioBase.prototype);
+    BB.AudioStream.prototype.constructor = BB.AudioStream;
+
+    /**
+     * starts the stream
+     * @method start
+     *
+     * @example
+     * <code class="code prettyprint">
+     * &nbsp;// assuming "mic" is an instanceof BB.AudioStream<br>
+     * &nbsp;if(!mic.stream) mic.open();
+     * </code>
+     */
+	BB.AudioStream.prototype.open = function(){
+		
+		navigator.getUserMedia = (	navigator.getUserMedia ||
+									navigator.webkitGetUserMedia ||
+									navigator.mozGetUserMedia ||
+                          			navigator.msGetUserMedia );
+		var self = this;
+
+		if(navigator.getUserMedia){
+			navigator.getUserMedia({audio:true}, 
+				function(stream){
+					self.stream = stream;
+					var input = self.ctx.createMediaStreamSource(stream);
+					self.node = input;
+					input.connect( self.gain );
+				}, 
+				function(e){
+					throw new Error("BB.AudioStream: "+ e );
+				}
+			);
+		} else {
+			throw new Error('BB.AudioStream: getUserMedia not supported');
+		}
+	};
+
+    /**
+     * stops the stream
+     * @method start
+     *
+     * @example
+     * <code class="code prettyprint">
+     * &nbsp;// assuming "mic" is an instanceof BB.AudioStream<br>
+     * &nbsp;if(mic.stream) mic.close();
+     * </code>
+     */
+	BB.AudioStream.prototype.close = function(){
+		if(this.stream){
+			this.stream.stop();
+			this.stream = null;
+		}
+	};
+
+	return BB.AudioStream;
+});
 /**
  * A module for creating audio buffers from audio files
  * @module BB.AudioBufferLoader
@@ -5701,9 +6393,10 @@ function(  BB){
 /**
  * A module for creating an audio sampler, an object that can load, sample and play back sound files
  * @module BB.AudioSampler
+ * @extends BB.AudioBase
  */
-define('BB.AudioSampler',['./BB','./BB.AudioBufferLoader','./BB.Audio'],
-function(  BB, 		 AudioBufferLoader,       Audio){
+define('BB.AudioSampler',['./BB','./BB.AudioBufferLoader', './BB.AudioBase' ],
+function(  BB, 		 AudioBufferLoader,    	   AudioBase ){
 
 	'use strict';
 
@@ -5713,13 +6406,14 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 	 *  A module for creating an audio sampler, an object that can load, sample and play back sound files
 	 * @class BB.AudioSampler
 	 * @constructor
+	 * @extends BB.AudioBase
 	 * 
 	 * @param {Object} config A config object to initialize the Sampler,
 	 * can contain the following:
 	 * <code class="code prettyprint">
 	 * &nbsp;{<br>
 	 * &nbsp;&nbsp;&nbsp; context: BB.Audio.context[2], // choose specific context <br>
-	 * &nbsp;&nbsp;&nbsp; connect: fft.analyser, // overide default destination <br>
+	 * &nbsp;&nbsp;&nbsp; connect: fft, // overide default destination <br>
 	 * &nbsp;&nbsp;&nbsp; autoload: false, // don't autoload ( sampler.load() later ) <br>
 	 * &nbsp;&nbsp;&nbsp; rate: 2, // double the playback rate <br>
 	 * &nbsp;&nbsp;&nbsp; // then as many additional keys for samples...<Br>
@@ -5770,20 +6464,10 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 	 */
     
 	BB.AudioSampler = function( config, callback ){
-		
-		// the AudioContext to be used by this module 
-		if( typeof BB.Audio.context === "undefined" )
-			throw new Error('BB Audio Modules require that you first create an AudioContext: BB.Audio.init()');
-		
-		if( BB.Audio.context instanceof Array ){
-			if( typeof config === "undefined" || typeof config.context === "undefined" )
-				throw new Error('BB.AudioSampler: BB.Audio.context is an Array, specify which { context:BB.Audio.context[?] }');
-			else {
-				this.ctx = config.context;
-			}
-		} else {
-			this.ctx = BB.Audio.context;
-		}
+
+		BB.AudioBase.call(this, config);
+
+		if( !config ) throw new Error('BB.AudioSampler: requires a config object');
 		
 		/**
 		 * whether or not the file(s) have loaded
@@ -5814,6 +6498,12 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		 */
 		this.buffers	= {}; 
 		/**
+		 * source node for last played instance
+		 * @type {AudioBufferSourceNode}
+		 * @property node
+		 */
+		this.node	= null; 
+		/**
 		 * changes the pitch (<a href="https://en.wikipedia.org/wiki/Cent_%28music%29" target="_blank">-1200 to 1200</a> )
 		 * @type {Number}
 		 * @property detune
@@ -5821,7 +6511,8 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		 * @protected
 		 *  --- webkit doesn't seem to support detune :-/ so replacing this with 
 		 */
-		this.detune 	= ( typeof config.detune !== 'undefined' ) ? config.detune : 0;
+		// this.detune 	= ( typeof config.detune !== 'undefined' ) ? config.detune : 0;
+		
 		/**
 		 * changes the playback rate ( pitch and speed ), (<a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioBufferSourceNode/playbackRate" target="_blank">reference</a> )
 		 * @type {Number}
@@ -5835,21 +6526,6 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		// will be instance of BB.AudioBufferLoader
 		this.loader 	= undefined;
 
-		// default destination is context destination
-		// unless otherwise specified in { connect:AudioNode }
-		this.gain		= this.ctx.createGain();	
-		if( typeof config.connect !== 'undefined' ){
-			if( config.connect instanceof AudioDestinationNode ||
-				config.connect instanceof AudioNode ) 
-				this.gain.connect( config.connect );
-			else {
-				throw new Error('BB.AudioSampler: connect property expecting an AudioNode');
-			}
-		} else {
-			this.gain.connect( this.ctx.destination );
-		}
-
-		if( !config ) throw new Error('BB.AudioSampler: requires a config object');
 
 		if( typeof this.auto !== 'boolean' ) 
 			throw new Error('BB.AudioSampler: autoload should be either true or false');
@@ -5866,6 +6542,8 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		if( this.auto===true ) this.load();
 	};
 
+ 	BB.AudioSampler.prototype = Object.create(BB.AudioBase.prototype);
+    BB.AudioSampler.prototype.constructor = BB.AudioSampler;
 
     /**
      * creates buffers from url paths using BB.AudioBufferLoader, this
@@ -5896,104 +6574,6 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		});
 
 	};
-
-	/**
-	 * connects the Sampler to a particular AudioNode or AudioDestinationNode
-	 * @method connect
-	 * @param  {AudioNode} destination the AudioNode or AudioDestinationNode to connect to
-	 * @param  {Number} output      which output of the the Sampler do you want to connect to the destination
-	 * @param  {Number} input       which input of the destinatino you want to connect the Sampler to
-	 * @example  
-	 * <code class="code prettyprint">  
-	 *  &nbsp;BB.Audio.init();<br>
-	 *	<br>
-	 *	&nbsp;var drum = new BB.AudioSampler({<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;kick: 'audio/808/kick.ogg',<br>
-	 *	&nbsp;}, run );<br>
-	 *	<br>
-	 *	&nbsp;function run(){<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.connect( exampleNode );<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// connected to both default BB.Audio.context && exampleNode<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// so if exampleNode is also connected to BB.Audio.context by default,<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// ...then you've got drum connected to BB.Audio.context twice<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.play('kick');<br>
-	 *	&nbsp;}<br>
-	 * </code>
-	 * <br>
-	 * ...which looks like this ( where the first Gain is the Sampler and the second is the exampleNode )<br>
-	 * <img src="../assets/images/audiosampler3.png">
-	 */
-	BB.AudioSampler.prototype.connect = function( destination, output, input ){
-		if( !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
-			throw new Error('AudioSampler.connect: destination should be an instanceof AudioDestinationNode or AudioNode');
-		if( typeof output !== "undefined" && typeof output !== "number" )
-			throw new Error('AudioSampler.connect: output should be a number');
-		if( typeof intput !== "undefined" && typeof input !== "number" )
-			throw new Error('AudioSampler.connect: input should be a number');
-
-		if( typeof intput !== "undefined" ) this.gain.connect( destination, output, input );
-		else if( typeof output !== "undefined" ) this.gain.connect( destination, output );
-		else this.gain.connect( destination );
-
-	};
-
-	/**
-	 * diconnects the Sampler from the node it's connected to
-	 * @method disconnect
-	 * @param  {AudioNode} destination what it's connected to
-	 * @param  {Number} output      the particular output number
-	 * @param  {Number} input       the particular input number
-	 * <code class="code prettyprint">  
-	 *  &nbsp;BB.Audio.init();<br>
-	 *	<br>
-	 *	&nbsp;var drum = new BB.AudioSampler({<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;kick: 'audio/808/kick.ogg',<br>
-	 *	&nbsp;}, run );<br>
-	 *	<br>
-	 *	&nbsp;function run(){<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.disconnect(); // disconnected from default BB.Audio.context<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.connect( exampleNode ); // connected to exampleNode only<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drum.play('kick');<br>
-	 *	&nbsp;}<br>
-	 * </code>
-	 * <br>
-	 * ...which looks like this ( where the first Gain is the Sampler and the second is the exampleNode )<br>
-	 * <img src="../assets/images/audiosampler4.png">
-	 */
-	BB.AudioSampler.prototype.disconnect = function(destination, output, input ){
-		if( typeof destination !== "undefined" &&
-			!(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
-			throw new Error('AudioSampler.disconnect: destination should be an instanceof AudioDestinationNode or AudioNode');
-		if( typeof output !== "undefined" && typeof output !== "number" )
-			throw new Error('AudioSampler.disconnect: output should be a number');
-		if( typeof input !== "undefined" && typeof input !== "number" )
-			throw new Error('AudioSampler.disconnect: input should be a number');
-
-		if( typeof input !== "undefined" ) this.gain.disconnect( destination, output, input );
-		else if( typeof output !== "undefined" ) this.gain.disconnect( destination, output );
-		else if( typeof destination !== "undefined" ) this.gain.disconnect( destination );
-		else  this.gain.disconnect();
-	};
-
-	// ^ ^ ^ ^ ^ 
-	// Maybe add an "output" or "modulate" function that usese the AudioNode.connect(AudioParam)
-	// https://developer.mozilla.org/en-US/docs/Web/API/AudioNode/connect%28AudioParam%29
-	// so we can manipulate parameters w/ the audio signal from AudioSampler
-	// ^ ^ ^ ^ ^
-
-	/**
-	 * sets the gain level of the AudioSamppler ( in a sense, volume control ) 
-	 * @method setGain
-	 * @param {Number} num a float value, 1 being the default volume, below 1 decreses the volume, above one pushes the gain
-	 */
-	BB.AudioSampler.prototype.setGain = function( num ){
-		if( typeof num !== "number" )
-			throw new Error('AudioSampler.setGain: expecting a number');
-
-		this.gain.gain.value = num;
-	};
-
-
 
     /**
      * schedules an audio buffer to be played
@@ -6027,10 +6607,1282 @@ function(  BB, 		 AudioBufferLoader,       Audio){
 		var d = ( typeof duration !== 'undefined' ) ? duration : source.buffer.duration;
 
 	    source.start( w, o, d ); 
+	    this.node = source;
 
     };
 
 	return BB.AudioSampler;
+});
+/**
+ * A module for creating oscillating tones ( periodic wave forms ) along with music theory utilities
+ * @module BB.AudioTone
+ * @extends BB.AudioBase
+ */
+define('BB.AudioTone',['./BB', './BB.AudioBase' ],
+function(  BB,        AudioBase ) {
+
+    'use strict';
+    
+ /**
+     * A module for creating oscillating tones ( periodic wave forms ) along with music theory utilities
+     * @class BB.AudioTone
+     * @constructor
+     * @extends BB.AudioBase
+     * 
+     * @param {Object} config A config object to initialize the Tone,
+     * can contain the following:<br><br>
+     * <code class="code prettyprint">
+     * &nbsp;{<br>
+     * &nbsp;&nbsp;&nbsp; context: BB.Audio.context[2], // choose specific context <br>
+     * &nbsp;&nbsp;&nbsp; connect: fft, // overide default destination <br>
+     * &nbsp;&nbsp;&nbsp; volume: 0.5, // technically master "gain" (expolential multiplier)<br>
+     * &nbsp;&nbsp;&nbsp; type: "custom", // "sine", "square", "sawtooth", "triangle", "custom"<br>
+     * &nbsp;&nbsp;&nbsp; wave: [ 0, 1, 0, 0.5, 0, 0.25, 0, 0.125 ] // only for "custom" type<Br>
+     * &nbsp;}
+     * </code>
+     * <br>
+     * see the <a href="../../examples/editor/?file=audio-waveshaper" target="_blank">waveshaper</a> for an example of how the wave property works. the "wave" property abstracts the WebAudio API's <a href="https://developer.mozilla.org/en-US/docs/Web/API/PeriodicWave" target="_blank">createPeriodicWave</a> method a bit. the Array passed above starts with 0 followed by the fundamental's amplitude value, followed by how ever many subsequent harmonics you choose. Alternatively, you can also pass an object with a "real" and "imag" (imaginary) Float32Array, for example:
+     * <br><br>
+     * <code class="code prettyprint">
+     * &nbsp;{<br>
+     * &nbsp;&nbsp;&nbsp; context: BB.Audio.context[2], // choose specific context <br>
+     * &nbsp;&nbsp;&nbsp; type: "custom", <br>
+     * &nbsp;&nbsp;&nbsp; wave: {<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp; imag: new Float32Array([0,1,0,0.5,0,0.25,0,0.125]),<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp; real: new Float32Array(8)<br>
+     * &nbsp;&nbsp;&nbsp; }<br>
+     * &nbsp;}
+     * </code>     
+     * <br> 
+     * @example  
+     * in the example below instantiating the BB.AudioTone creates a <a href="https://developer.mozilla.org/en-US/docs/Web/API/GainNode" target="_blank">GainNode</a> ( essentially the Tone's output ) connected to the default BB.Audio.context ( ie. AudioDestination )
+     * <br> <img src="../assets/images/audiosampler1.png"/>
+     * <br> everytime an individual tone is played, for example: <code> O.makeNote("C#")</code>, a corresponding <a href="https://developer.mozilla.org/en-US/docs/Web/API/OscillatorNode/type" target="_blank">OscillatorNode</a> with it's own GainNode is created and connected to the Tone's master GainNode ( the image below is an example of the graph when two notes are played )
+     * <br> <img src="../assets/images/audiotone1.png"/> <br>
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var O = new BB.AudioTone({<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;volume: 0.75,<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;type: "square"<br>
+     *  &nbsp;});<br>
+     *  <br>
+     *  &nbsp; O.makeNote( 440 );<br>
+     *  &nbsp; O.makeNote( 880 );<br>
+     * </code>
+     *
+     * view basic <a href="../../examples/editor/?file=audio-tone" target="_blank">BB.AudioTone</a> example
+     */
+
+    BB.AudioTone = function( config ) {
+
+        BB.AudioBase.call(this, config);
+
+
+        if( !config ) config = {}; // instead of below? ...bad practice?
+        // if( !config ) throw new Error('BB.AudioTone: requires a config object');
+
+         /**
+         * the type of wave
+         * @type {String}
+         * @property type
+         */
+        this.type = null;
+        this._wave = null;
+        var oscTypes = [ "sine", "square", "sawtooth", "triangle", "custom" ];
+        if( typeof config.type !== "undefined"){
+            if( oscTypes.indexOf(config.type) < 0 ){
+                throw new Error('BB.AudioTone: type should be either "sine", "square", "sawtooth", "triangle" or "custom ');                
+            } else if( config.type === "custom" ){
+
+                if( typeof config.wave !== "undefined" ){
+                    if(config.wave instanceof Array){
+
+                        this.type = config.type;
+                        this._wave = config.wave;
+                        var imag = new Float32Array( config.wave );  // sine
+                        var real = new Float32Array( imag.length );  // cos
+                        this.wavetable = this.ctx.createPeriodicWave( real, imag ); 
+                    
+                    } else if(config.wave instanceof Object){
+
+                        if(typeof config.wave.real === "undefined" || typeof config.wave.imag === "undefined"){
+                            throw new Error('BB.AudioTone: wave object should contain a "real" and an "imag" (Float32Array) properties');   
+                        } else if( !(config.wave.real instanceof Float32Array) || !(config.wave.imag instanceof Float32Array) ) {
+                            throw new Error('BB.AudioTone: real and imag properties should be an instanceof Float32Array'); 
+                        } else {
+                            this.type = config.type;
+                            this._wave = config.wave;
+                            this.wavetable = this.ctx.createPeriodicWave( config.wave.real, config.wave.imag );
+                        }                   
+
+                    } else {
+                        throw new Error('BB.AudioTone: wave should be instanceof Object or instanceof Array');
+                    }
+                } else {
+                    throw new Error('BB.AudioTone: additional wave property is required for "custom" type');
+                }
+
+            } else { this.type = config.type; }
+        } else {
+            this.type = "sine";
+        }
+
+        this.polynotes = {}; // keep track of current polysymphonic notes
+
+        this.gainInterval = null; // for elegently adjusting global gain
+
+        this.scales = {
+            "major" : [],
+            "naturalminor" : [],
+            "harmonicminor" : [],
+            "melodicminor" : [],
+            "majorpentatonic" : [],
+            "minorpentatonic" : [],
+            "blues" : [],
+            "minorblues" : [],
+            "majorblues" : [],
+            "augmented" : [],
+            "diminished" : [],
+            "phrygiandominant" : [],
+            "dorian" : [],
+            "phrygian" : [],
+            "lydian" : [],
+            "mixolydian" : [],
+            "locrian" : [],
+            "jazzmelodicminor" : [],
+            "dorianb2" : [],
+            "lydianaugmented" : [],
+            "lydianb7" : [],
+            "mixolydianb13" : [],
+            "locrian#2" : [],
+            "superlocrian" : [],
+            "wholehalfdiminished" : [],
+            "halwholediminished" : [],
+            "enigmatic" : [],
+            "doubleharmonic" : [],
+            "hungarianminor" : [],
+            "persian" : [],
+            "arabian" : [],
+            "japanese" : [],
+            "egyptian" : [],
+            "hirajoshi" : [],
+            "nickfunk1" : [],
+            "nickfunk2" : []
+        };
+
+        this.chords = {
+            "maj" : [],     // major
+            "min" : [],     // minor
+            "dim" : [],     // diminished
+            "7" : [],       // 7th
+            "min7" : [],    // minor 7th
+            "maj7" : [],    // major 7th
+            "sus4" : [],
+            "7sus4" : [],
+            "6" : [],
+            "min6" : [],
+            "aug" : [],
+            "7-5" : [],
+            "7+5" : [],
+            "min7-5" : [],
+            "min/maj7" : [],
+            "maj7+5" : [],
+            "maj7-5" : [],
+            "9" : [],
+            "min9" : [],
+            "maj9" : [],
+            "7+9" : [],
+            "7-9" : [],
+            "7+9-5" : [],
+            "6/9" : [],
+            "9+5" : [],
+            "9-5" : [],
+            "min9-5" : [],
+            "11" : [],
+            "min11" : [],
+            "11-9" : [],
+            "13" : [],
+            "min13" : [],
+            "maj13" : [],
+            "add9" : [],
+            "minadd9" : [],
+            "sus2" : [],
+            "5" : []
+        };
+    };
+
+    BB.AudioTone.prototype = Object.create(BB.AudioBase.prototype);
+    BB.AudioTone.prototype.constructor = BB.AudioTone;
+
+    /**
+     * the wave Array/Object
+     * @property wave 
+     * @type Object
+     * @default null
+     */   
+    Object.defineProperty(BB.AudioTone.prototype, "wave", {
+        get: function() {
+            return this._wave;
+        },
+        set: function(wave) {
+            if( typeof wave !== "undefined" ){
+                if(wave instanceof Array){
+
+                    this.type = "custom";
+                    this._wave = wave;
+                    var imag = new Float32Array( wave );  // sine
+                    var real = new Float32Array( imag.length );  // cos
+                    this.wavetable = this.ctx.createPeriodicWave( real, imag ); 
+                
+                } else if(wave instanceof Object){
+
+                    if(typeof wave.real === "undefined" || typeof wave.imag === "undefined"){
+                        throw new Error('BB.AudioTone.wave: wave object should contain a "real" and an "imag" (Float32Array) properties');  
+                    } else if( !(wave.real instanceof Float32Array) || !(wave.imag instanceof Float32Array) ) {
+                        throw new Error('BB.AudioTone.wave: real and imag properties should be an instanceof Float32Array');    
+                    } else {
+                        this.type = "custom";
+                        this._wave = wave;
+                        this.wavetable = this.ctx.createPeriodicWave( wave.real, wave.imag );
+                    }                   
+
+                } else {
+                    throw new Error('BB.AudioTone.wave: wave should be instanceof Object or instanceof Array');
+                }
+            } else {
+                throw new Error('BB.AudioTone.wave: expecting a wave argument ( Array or Object )');
+            }
+        }
+    });
+
+
+    // ... public utils .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... ....
+
+    /**
+     * utility method which takes a root frequency and a number of semitones and returns the frequency of the "note" the specified number of semitones away from the root frequency
+     * @method freq
+     * @param {Number} root the root frequency ( in Hz )
+     * @param {Number} semitones the number of semitones away from the root you need to know the frequency of ( negative values are lower pitches then root, positive values are higher pitches )
+     * @param {String} [tuning] the kind of temperment to base the transposition on ( eitehr "equal" for equatempered tuning or "just" for pure/harmoniic tuning )
+     * @return {Number} a frequency value in Hz
+     * @example  
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var O = new BB.AudioTone();<br>
+     *  <br>
+     *  &nbsp; O.makeNote( O.freq( 440, 5 ) ); // plays a D,587.33Hz ( 5 semitones up from A,440Hz ) 
+     * </code>
+     */
+    BB.AudioTone.prototype.freq = function( root, n, temp ){
+        if(typeof temp === "undefined") temp = "equal";
+        // see https://www.youtube.com/watch?v=Y5RNrvcQ7q0 for details on different temperments     
+        var rnd = null;
+        if(temp === "just"){
+            var ratios = [ 
+                // just intonation ( aka "chromatic scale" aka "pure intonnation" aka "harmonic tuning" )
+                1,      // unison ( 1/1 )       // C
+                25/24,  // minor second         // C#
+                9/8,    // major second         // D
+                6/5,    // minor third          // D#
+                5/4,    // major third          // E
+                4/3,    // fourth               // F
+                45/32,  // diminished fifth     // F#
+                3/2,    // fifth                // G
+                8/5,    // minor sixth          // G#
+                5/3,    // major sixth          // A
+                9/5,    // minor seventh        // A#
+                15/8,   // major seventh        // B
+                // 2        // octave ( 2/1 )       // C
+            ];
+            if(typeof root !== "number") throw new Error('BB.AudioTone.freq: expecting a frequency in Hz');
+
+            rnd = root * ratios[n%12];
+            if(n>=12) rnd = rnd * (Math.floor(n/12)+1);         
+            return Math.round(rnd*100)/100;
+        }
+        else if(temp === "equal") {
+            if(typeof root !== "number") throw new Error('BB.AudioTone.freq: expecting a frequency in Hz');
+            if(typeof n === "undefined") n = 0;
+            // formula via: http://www.phy.mtu.edu/~suits/NoteFreqCalcs.html
+            var tr2 = Math.pow(2, 1/12); // the twelth root of 2
+            rnd = root * Math.pow(tr2,n);
+            return Math.round(rnd*100)/100;
+        } else {
+            throw new Error('not a scale');
+        }
+
+    };
+
+    /**
+     * utility method which takes a root note (String) and a number of semitones and returns the frequency of the "note" the specified number of semitones away from the root note
+     * @method note
+     * @param {Number} root the root note ( "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" where "A" is 440 )
+     * @param {Number} octave the number of octaves away from the root you need to know the frequency of ( negative values are lower pitches then root, positive values are higher pitches )
+     * @param {Number} [frequency] alternative "A" frequency ( overrides default of 440 )
+     * @return {Number} a frequency value in Hz
+     * @example  
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var O = new BB.AudioTone();<br>
+     *  <br>
+     *  &nbsp; O.makeNote( O.note( "A", 1 ) ); // plays an A,880Hz ( 1 octave up from A,440Hz ) 
+     * </code>
+     */
+    BB.AudioTone.prototype.note = function( note, transpose, root ){
+        var nStr = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+        var idx = nStr.indexOf(note);
+        if( idx < 0 ) throw new Error('BB.AudioTone.note: expecting "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#" or "B"');
+
+        var RT = (typeof root !== "number" ) ? 440 : root;
+        var oct = (typeof transpose !== "number") ? 0 : transpose;
+        note = idx + ( (oct+5)*12);
+
+        return RT * Math.pow(2,(note-69)/12);
+    };
+
+    
+
+
+
+    /**
+     * generates a musical scale ( array of related frequency values ) from a
+     * root note.
+     *
+     * the notes are stored in an array in the <code>.scales</code> property (
+     * object ) and can be accessed by querying the key ( name ) of the scale type
+     * you generated like so: <code> .scales.major </code>, which
+     * will return an array of notes ( frequency number values in Hz )
+     * 
+     * @method createScale
+     * 
+     * @param  {String} scale name of the scale type you want to generate.
+     * can be either major, naturalminor, harmonicminor, melodicminor, majorpentatonic, 
+     * minorpentatonic, blues, minorblues, majorblues, augmented, diminished, phrygiandominant, 
+     * dorian, phrygian, lydian, mixolydian, locrian, jazzmelodicminor, dorianb2, lydianaugmented, 
+     * lydianb7, mixolydianb13, locrian#2, superlocrian, wholehalfdiminished, halwholediminished, 
+     * enigmatic, doubleharmonic, hungarianminor, persian, arabian, japanese, egyptian, hirajoshi, 
+     * nickfunk1, nickfunk2
+     * 
+     * @param  {Number} root the fundamental/root note of the scale ( the "A" in an "A major" )
+     * can be either a number (frequency in Hz) or a note string ( "A", "A#", "B", etc )
+     * 
+     * @param {String} [tuning] the kind of tuning (temperment) you would like to use to derive the scale with,
+     * can be either "equal" (default) or "just"
+     *
+     * @return {Array} the newly created array
+     *
+     * @example  
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var O = new BB.AudioTone({ volume: 0.5 });<br>
+     *  <br>
+     *  &nbsp; function scheduler( freq, tuning, timeout ) { <br>
+     *  &nbsp;&nbsp;&nbsp; return function() { <br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; setTimeout(function(){ <br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; O.makeNote({ <br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; type: "sine", <br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tuning: tuning, <br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; frequency: freq, <br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; duration: 0.25,<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; attack: 0.1,<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; release:0.5<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; });<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; },timeout);<br>
+     *  &nbsp;&nbsp;&nbsp; }<br>
+     *  &nbsp; } <br>
+     *  <br>
+     *  &nbsp; function playScale( scale, root, tuning ){<br>
+     *  &nbsp;&nbsp;&nbsp; O.createScale( scale, root ); // this line generates the scale <br>
+     *  <br>
+     *  &nbsp;&nbsp;&nbsp; for (var i = 0; i < O.scales[scale].length; i++) {<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var freq = O.scales[scale][i];<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; scheduler( freq, tuning, i*500 )();<br>
+     *  &nbsp;&nbsp;&nbsp; };<br>
+     *  &nbsp; }<br>
+     *  <br>
+     *  &nbsp; playScale( "major", 220, "just" );<br>
+     * </code>
+     */
+    BB.AudioTone.prototype.createScale = function( scale, root, temp ){
+        if( !(scale in this.scales) ) {
+            throw new Error("BB.AudioTone.createScale: '"+scale+"' is not a valid scale name, choose from: "+Object.keys(this.scales) );
+        } else {
+
+            var tuning = "equal";
+            if(typeof temp !== "undefined"){
+                if( temp === "equal" || temp === "just" ){
+                    tuning = temp;
+                } else {
+                    throw new Error('BB.AudioTone.createScale: temperment should be either "just" or "equal"');         
+                }
+            }
+                    
+
+            if(typeof root === "string") root = this.note(root);
+            else if(typeof root === "number") root = root;
+            else throw new Error('BB.AudioTone.createScale: expecting a frequency (number) or a note ("A","A#",etc.) as second paramter');
+            
+
+            // via >> http://www.cs.cmu.edu/~scottd/chords_and_scales/music.html
+            var steps;
+                 if(scale=="major")                 steps = [2, 2, 1, 2, 2, 2, 1];
+            else if(scale=="naturalminor")          steps = [2, 1, 2, 2, 1, 2, 2];
+            else if(scale=="harmonicminor")         steps = [2, 1, 2, 2, 1, 3, 1];
+            else if(scale=="melodicminor")          steps = [2, 1, 2, 2, 2, 2, 1];
+            else if(scale=="majorpentatonic")       steps = [2, 2, 3, 2, 3];
+            else if(scale=="minorpentatonic")       steps = [3, 2, 2, 3, 2];
+            else if(scale=="blues")                 steps = [3, 2, 1, 1, 3, 2];
+            else if(scale=="minorblues")            steps = [2, 1, 2, 1, 1, 1, 2, 2];
+            else if(scale=="majorblues")            steps = [2, 1, 1, 1, 1, 1, 2, 1, 2];
+            else if(scale=="augmented")             steps = [2, 2, 2, 2, 2, 2];
+            else if(scale=="diminished")            steps = [2, 1, 2, 1, 2, 1, 2, 1];
+            else if(scale=="phrygiandominant")      steps = [1, 3, 1, 2, 1, 2, 2];
+            else if(scale=="dorian")                steps = [2, 1, 2, 2, 2, 1, 2];
+            else if(scale=="phrygian")              steps = [1, 2, 2, 2, 1, 2, 2];
+            else if(scale=="lydian")                steps = [2, 2, 2, 1, 2, 2, 1];
+            else if(scale=="mixolydian")            steps = [2, 2, 1, 2, 2, 1, 2];
+            else if(scale=="locrian")               steps = [1, 2, 2, 1, 2, 2, 2];
+            else if(scale=="jazzmelodicminor")      steps = [2, 1, 2, 2, 2, 2, 1];
+            else if(scale=="dorianb2")              steps = [1, 2, 2, 2, 2, 1, 2];
+            else if(scale=="lydianaugmented")       steps = [2, 2, 2, 2, 1, 2, 1];
+            else if(scale=="lydianb7")              steps = [2, 2, 2, 1, 2, 1, 2];
+            else if(scale=="mixolydianb13")         steps = [2, 2, 1, 2, 1, 2, 2];
+            else if(scale=="locrian#2")             steps = [2, 1, 2, 1, 2, 2, 2];
+            else if(scale=="superlocrian")          steps = [1, 2, 1, 2, 2, 2, 2];
+            else if(scale=="wholehalfdiminished")   steps = [2, 1, 2, 1, 2, 1, 2, 1];
+            else if(scale=="halwholediminished")    steps = [1, 2, 1, 2, 1, 2, 1, 2];
+            else if(scale=="enigmatic")             steps = [1, 3, 2, 2, 2, 1, 1];
+            else if(scale=="doubleharmonic")        steps = [1, 3, 1, 2, 1, 3, 1];
+            else if(scale=="hungarianminor")        steps = [2, 1, 3, 1, 1, 3, 1];
+            else if(scale=="persian")               steps = [1, 3, 1, 1, 2, 3, 1];
+            else if(scale=="arabian")               steps = [2, 2, 1, 1, 2, 2, 2];
+            else if(scale=="japanese")              steps = [1, 4, 2, 1, 4];
+            else if(scale=="egyptian")              steps = [2, 3, 2, 3, 2];
+            else if(scale=="hirajoshi")             steps = [2, 1, 4, 1, 4];
+            else if(scale=="nickfunk1")             steps = [3, 2, 2, 3, 2, 3, 2];
+            else if(scale=="nickfunk2")             steps = [3, 2, 1, 1, 3, 2, 3, 2, 1];
+
+            this.scales[scale] = [];
+
+            var incSteps = [0];         
+            for (var s = 1; s < steps.length+1; s++) {
+                var inc = 0;
+                for (var j = 0; j < s; j++) inc += steps[j];
+                incSteps.push( inc );
+            }
+        
+            for (var i = 0; i < incSteps.length; i++) {
+                this.scales[scale].push( this.freq( root, incSteps[i], tuning ) );
+            } 
+
+            return this.scales[scale];         
+        }
+    };
+
+
+    // ... private utils .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... ....
+
+    // OVERRIDE the BB.AudioBase._globalGainUpdate()
+    // 
+    BB.AudioTone.prototype._globalGainUpdate = function( gradually, fromNoteOff ){
+        if(typeof gradually === "undefined") gradually = 0;
+        
+
+        if(fromNoteOff){
+            if(typeof this.gainInterval!=="undefined"){ 
+                clearInterval( this.gainInterval );
+                this.gainInterval = undefined;
+            }
+
+            var self = this;
+            this.gainInterval = setInterval(function(){
+
+                var count = 0;
+                var decs = [];
+                for (var k in self.polynotes) {
+                    if (self.polynotes[k].down) count++;
+                    else decs.push( self.polynotes[k].gain.gain.value );
+                }   
+                if( decs.length > 0 ){                  
+                    var sum = decs.reduce(function(a, b) { return a + b; }); // via : http://stackoverflow.com/a/10624256                   
+                    var polylength = count + sum;
+                    if(polylength<1) polylength = 1;
+                    if(BB.Detect.browserInfo.name=="Firefox"){
+                        self.gain.gain.setTargetAtTimePoly( self.volume/polylength, 0, 0 ); 
+                    } else {
+                        self.gain.gain.setTargetAtTime( self.volume/polylength, 0, 0 ); 
+                    }
+                } else {
+                    clearInterval( self.gainInterval );
+                    self.gainInterval = undefined;
+                }               
+            },1000/60);
+
+        } else {
+
+                var count = 0;
+                for (var k in this.polynotes) {
+                    if (this.polynotes[k].down) count++;
+                }           
+                var polylength = (count===0) ? 1 : count;
+                // this.gain.gain.value = this._volume / polylength;
+                if(BB.Detect.browserInfo.name=="Firefox"){
+                    this.gain.gain.setTargetAtTimePoly( this._volume/polylength, 0, gradually);
+                } else {
+                    this.gain.gain.setTargetAtTime( this._volume/polylength, 0, this._sec2tc(gradually));
+                }
+        }
+    };
+
+    BB.AudioTone.prototype._addPolyNote = function( freq, oscNode, gainNode ){
+        this.polynotes[freq] = { down:true, osc:oscNode, gain:gainNode };
+        this._globalGainUpdate( 0.25 );
+    };
+
+    BB.AudioTone.prototype._removePolyNote = function( freq ){       
+        if(typeof this.polynotes[freq]!=="undefined"){
+            if(typeof this.polynotes[freq].timeout!=="undefined")
+                clearTimeout( this.polynotes[freq].timeout );
+            this.polynotes[freq].osc.stop(0);
+            this.polynotes[freq].gain.disconnect();
+            delete this.polynotes[freq];
+            
+            this._globalGainUpdate( 0.25 );
+        } 
+    };
+
+    BB.AudioTone.prototype._returnSteps = function( type ){
+        // via >> http://www.phy.mtu.edu/~suits/chords.html
+        // && >> http://www.cs.cmu.edu/~scottd/chords_and_scales/music.html
+        var steps;
+             if(type=="maj")     steps = [4, 3];
+        else if(type=="min")     steps = [3, 4];
+        else if(type=="dim")     steps = [3, 3];
+        else if(type=="7")       steps = [4, 3, 3];
+        else if(type=="min7")    steps = [3, 4, 3 ];
+        else if(type=="maj7")    steps = [4, 3, 4];
+        else if(type=="sus4")    steps = [5, 2];
+        else if(type=="7sus4")   steps = [5, 2, 3];
+        else if(type=="6")       steps = [4, 3, 2];
+        else if(type=="min6")    steps = [3, 4, 2];
+        else if(type=="aug")     steps = [4, 4];
+        else if(type=="7-5")     steps = [4, 2, 4];
+        else if(type=="7+5")     steps = [4, 4, 2];
+        else if(type=="min7-5")  steps = [3, 3, 4];
+        else if(type=="min/maj7")steps = [3, 4, 4];
+        else if(type=="maj7+5")  steps = [4, 4, 3];
+        else if(type=="maj7-5")  steps = [4, 2, 5];
+        else if(type=="9")       steps = [4, 3, 3, -8];
+        else if(type=="min9")    steps = [3, 4, 3, -8];
+        else if(type=="maj9")    steps = [4, 3, 4, -9];
+        else if(type=="7+9")     steps = [4, 3, 3, -7];
+        else if(type=="7-9")     steps = [4, 3, 3, -9];
+        else if(type=="7+9-5")   steps = [4, 2, 4, -7];
+        else if(type=="6/9")     steps = [4, 3, 2, -7];
+        else if(type=="9+5")     steps = [4, 4, 2, -8];
+        else if(type=="9-5")     steps = [4, 2, 4, -8];
+        else if(type=="min9-5")  steps = [3, 3, 4, -8];
+        else if(type=="11")      steps = [4, 3, 3, -8, 3];
+        else if(type=="min11")   steps = [3, 4, 3, -8, 3];
+        else if(type=="11-9")    steps = [4, 3, 3, -9, 4];
+        else if(type=="13")      steps = [4, 3, 3, -8, 3, 4];
+        else if(type=="min13")   steps = [3, 4, 3, -8, 3, 4];
+        else if(type=="maj13")   steps = [4, 3, 4, -9, 3, 4];
+        else if(type=="add9")    steps = [4, 3, -5];
+        else if(type=="minadd9") steps = [3, 4, -5];
+        else if(type=="sus2")    steps = [2, 5];
+        else if(type=="5")       steps = [7];
+
+        return steps;
+    };
+
+    // ... make sounds!!!! .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... ....
+
+
+    /**
+     * starts playing a tone 
+     * 
+     * @method noteOn
+     * @param {number} frequency a value in Hz of the frequency you want to play
+     * @param {number} [velocity] the volume/gain relative to the master volume/gain of this particular note ( default 1 )
+     * @param {number} [attack] the time it takes for the note to fade in ( in seconds, default 0.05 )
+     * @param {number} [schedule] if you want to schedule the note for later ( rather than play immediately ), in seconds ( relative to BB.Audio.context.currentTime )
+     *
+     * @example  
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var O = new BB.AudioTone({ volume: 0.5 });<br>
+     *  <br>
+     *  &nbsp; O.ntoeOn( 440, 1, 0.5 ); // will stay on, until noteOff(440) is executed
+     * </code>
+     */
+    BB.AudioTone.prototype.noteOn = function( freq, velocity, attack, schedule ){
+        if(typeof freq === "undefined") throw new Error('need frequency');
+        // if(attack == 0) attack = 0.1; // fix firefox bug
+
+        if( typeof this.polynotes[freq] !== "undefined"  ){
+            // console.log(this.polynotes[freq].gain.gain.value);
+            if( this.polynotes[freq].gain.gain.value < 0.99 ){
+                // note currently fading out
+                this._removePolyNote( freq );
+            } else {
+                // already being pressed, so do nothing
+                // console.warn('BB.AudioTone.noteOn: this note is already on'); // <<< MAKE A NOTE OF THIS
+                return;
+            }
+        } 
+
+        var gainNode = this.ctx.createGain();
+            gainNode.connect( this.gain );
+            gainNode.gain.value = 0.0;
+            gainNode.gain.name = "note";
+        var osc = this.ctx.createOscillator();
+            osc.connect( gainNode );
+            osc.frequency.value = freq;
+            if(this.type === "custom"){
+                osc.setPeriodicWave( this.wavetable );
+            } else {
+                osc.type = this.type;
+            }
+            
+        this._addPolyNote( freq, osc, gainNode );
+
+        var now = (typeof schedule !== "undefined") ? schedule : this.ctx.currentTime;
+        var vel = (typeof velocity !== "undefined") ? velocity : 1.0;
+        var ack = (typeof attack !== "undefined" ) ? attack : 0.05;
+        osc.start(now); 
+        
+        // this._fadePolyFill( gainNode.gain, vel, now, ack );
+        if(BB.Detect.browserInfo.name=="Firefox"){
+            gainNode.gain.setTargetAtTimePoly( vel, 0, ack); // maybe edit back to "now" instead of 0
+        } else {
+            gainNode.gain.setTargetAtTime( vel, 0, this._sec2tc(ack)); // maybe edit back to "now" instead of 0
+        }
+
+    };
+
+    BB.AudioTone.prototype.chordOn = function( config ){ 
+        var nStr = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+
+        if(typeof config !== "object") throw new Error('BB.AudioTone.chordOn: expecting config object');
+
+        var root;
+        if(typeof config.frequency === "number") root = config.frequency;
+        else if(typeof config.frequency === "string" && nStr.indexOf(config.frequency) >= 0) root = this.note(config.frequency);
+        else throw new Error('BB.AudioTone.chordOn: frequency paramter should either be a number or a note string ("A","A#", etc.)');
+
+        var vel  = (typeof config.velocity !== "undefined")     ? config.velocity : 1;
+        var ack  = (typeof config.attack !== "undefined")       ? config.attack : 0;
+        var typ  = (typeof config.type !== "undefined")         ? config.type : "maj";
+        var tun  = (typeof config.tuning !== "undefined")       ? config.tuning : "equal";
+        var sch  = (typeof config.schedule !== "undefined")     ? config.schedule : 0;
+
+        var steps = this._returnSteps( typ );
+        var incSteps = [0];         
+
+        for (var s = 1; s < steps.length+1; s++) {
+            var inc = 0;
+            for (var j = 0; j < s; j++) inc += steps[j];
+            incSteps.push( inc );
+        }
+
+        for (var i = 0; i < incSteps.length; i++) {
+            this.noteOn( O.freq(root, incSteps[i], tun), vel, ack, sch );                    
+        }
+
+    };
+
+
+
+    /**
+     * stops playing a tone
+     * 
+     * @method noteOff
+     * @param {number} frequency a value in Hz of the note you want to stop playing
+     * @param {number} [release] the time it takes for the note to fade out ( in seconds, default 0 )
+     *
+     * @example  
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var O = new BB.AudioTone({ volume: 0.5 });<br>
+     *  <br>
+     *  &nbsp; O.noteOn( 440, 1, 0.5 ); <br>
+     *  &nbsp; setTimeout(function(){ O.noteOff(440); },1000);
+     *  </code>
+     */
+    BB.AudioTone.prototype.noteOff = function( freq, release ){
+        if(typeof freq === "undefined") throw new Error('need frequency');
+
+        if(typeof this.polynotes[freq] !== "undefined"){
+            this.polynotes[freq].down = false;
+
+            var self= this;
+            var now = this.ctx.currentTime;
+            var dec = (typeof release !== "undefined") ? release : 0;
+            // var decSec = (dec/20.0); // best guess of dec to seconds, also tried /10.0 ( dec should be 0 - 100 )
+            // var release = now + decSec;  
+            release = now + dec;
+            
+            this.polynotes[freq].gain.gain.cancelScheduledValues( now );
+            if(BB.Detect.browserInfo.name=="Firefox"){
+                this.polynotes[freq].gain.gain.setTargetAtTimePoly( 0.0, 0, dec); // maybe edit back to "now" instead of 0
+            } else {
+                this.polynotes[freq].gain.gain.setTargetAtTime( 0.0, 0, this._sec2tc(dec)); // maybe edit back to "now" instead of 0                
+            }
+            // this._fadePolyFill( this.polynotes[freq].gain.gain, 0.0, now, dec );
+            this.polynotes[freq].osc.stop( release );           
+            this._globalGainUpdate( this._sec2tc(dec), true );
+            
+            if(typeof this.polynotes[freq].timeout !== "undefined" )
+                clearTimeout( this.polynotes[freq].timeout );
+            this.polynotes[freq].timeout = setTimeout(function(){
+                self._removePolyNote( freq );
+            },dec*1000);
+        }
+    };
+
+    
+
+    BB.AudioTone.prototype.chordOff = function( config ){
+        var nStr = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+
+        if(typeof config !== "object") throw new Error('BB.AudioTone.chordOff: expecting config object');
+
+        var root;
+        if(typeof config.frequency === "number") root = config.frequency;
+        else if(typeof config.frequency === "string" && nStr.indexOf(config.frequency) >= 0) root = this.note(config.frequency);
+        else throw new Error('BB.AudioTone.chordOff: frequency paramter should either be a number or a note string ("A","A#", etc.)');
+
+        if(typeof config.type !== "string") throw new Error('BB.AudioTone.chordOff: expecting a type property (chord) as a string');
+
+        var dec  = (typeof config.release !== "undefined")      ? config.release : 0;
+        var tun  = (typeof config.tuning !== "undefined")       ? config.tuning : "equal";
+        var typ  = config.type;
+
+        var steps = this._returnSteps( typ );
+        var incSteps = [0];         
+
+        for (var s = 1; s < steps.length+1; s++) {
+            var inc = 0;
+            for (var j = 0; j < s; j++) inc += steps[j];
+            incSteps.push( inc );
+        }
+
+        for (var i = 0; i < incSteps.length; i++) {
+            this.noteOff( O.freq(root, incSteps[i], tun), dec );                    
+        }
+
+    };
+
+
+    /**
+     * plays (starts and stops) a tone 
+     * @method makeNote
+     * @param {object} config the first value can either be a config object or a note ( in either Hz or string format )
+     * @param {Number} velocity the gain value ( relative to the Tone's master valume ) of this particular note
+     * @param {Number} sustain the amount of time ( in seconds ) to sustain ( play ) the note
+     *
+     * @example  
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var O = new BB.AudioTone({ volume: 0.5 });<br>
+     *  <br>
+     *  &nbsp; O.makeNote("A"); // plays a 440 Hz sine wave<br>
+     *  &nbsp; O.makeNote( 444, 0.5, 3 ); // plays a 444 Hz sine wave at half volume for three seconds<br>
+     *  &nbsp; O.makeNote({<br>
+     *  &nbsp;&nbsp;&nbsp; frequency: 220,<br>
+     *  &nbsp;&nbsp;&nbsp; velocity: 0.75, // 75% of 0.5 ( ie. O's master gain )<br>
+     *  &nbsp;&nbsp;&nbsp; attack: 1, // fade in for 1 second<br>
+     *  &nbsp;&nbsp;&nbsp; sustain: 2, // hold note for 2 more seconds<br>
+     *  &nbsp;&nbsp;&nbsp; release: 2, // fade out for 2 more seconds<br>
+     *  &nbsp;&nbsp;&nbsp; schedule: BB.Audio.context.currentTime + 5, // play 5 seconds from now<br>
+     *  &nbsp; });<br>
+     * </code>
+     */
+    BB.AudioTone.prototype.makeNote = function( config, velocity, sustain ){
+
+        var nStr = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+        if( !config ) config = {};// instead of below? ...bad practice?
+        
+        var freq, vel, dur, ack, dec, sch;
+        if ( typeof config === "object" ){
+            if(typeof config.frequency !== "undefined"){
+                freq = (typeof config.frequency === "number") ? config.frequency : this.note(config.frequency);
+            } else { freq = 440; }           
+            vel  = (typeof config.velocity !== "undefined")     ? config.velocity : 1;
+            ack  = (typeof config.attack !== "undefined")       ? config.attack : 0;
+            dec  = (typeof config.release !== "undefined")      ? config.release : 0;
+            dur  = (typeof config.sustain !== "undefined")      ? config.sustain*1000 : 250;
+            sch  = (typeof config.schedule !== "undefined")     ? config.schedule : 0;
+        }
+        else if( typeof config === "number" || typeof config === "string" && nStr.indexOf(config) >= 0  ){
+            if(typeof config === "number")  freq = config;
+            else                            freq = this.note(config);               
+            vel  = (typeof velocity === "number") ? velocity : 1;
+            dur  = (typeof sustain === "number") ? sustain*1000 : 250;
+            ack  = 0;
+            dec  = 0;
+            sch  = 0;
+            if(typeof velocity !=="undefined" && typeof velocity !== "number")
+                throw new Error('BB.AudioTone.makeNote: velocity (second param) should be a number');
+            if(typeof sustain !=="undefined" && typeof sustain !== "number")
+                throw new Error('BB.AudioTone.makeNote: sustain (third param) should be a number');
+        } 
+        else {
+            throw new Error('BB.AudioTone.makeNote: first argument should either be a config object or a frequency (number) or a note, "A", "A#", etc.');
+        }
+
+        if( typeof this.polynotes[freq] !== "undefined")
+            if(typeof this.polynotes[freq].durTimeout !== "undefined")
+                clearTimeout( this.polynotes[freq].durTimeout ); 
+
+        this.noteOn( freq, vel, ack, true, sch );
+
+        var self = this;
+        this.polynotes[freq].durTimeout = setTimeout(function(){
+            self.noteOff(freq, dec);
+        }, dur );
+
+    };
+
+    /**
+     * plays (starts and stops) a chord ( based on "just" or "equal" temperments ) from any of the following chord types: maj, 
+     * min,  dim,  7,  min7,  maj7,  sus4, 7sus4, 6, min6, aug, 7-5, 7+5, min7-5, min/maj7, maj7+5, 
+     * maj7-5, 9, min9, maj9, 7+9, 7-9, 7+9-5, 6/9, 9+5, 9-5, min9-5, 11, min11, 11-9, 13, min13, 
+     * maj13, add9, minadd9, sus2, 5,
+     * 
+     * @method makeChord
+     * @param {object} config object with any of the optional properties listed in the example below
+     *
+     * @example  
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var O = new BB.AudioTone({ volume: 0.5 });<br>
+     *  <br>
+     *  &nbsp; O.makeChord({<br>
+     *  &nbsp;&nbsp;&nbsp; frequency: 220,<br>
+     *  &nbsp;&nbsp;&nbsp; type: "min7", // plays a minor 7th chord<br>
+     *  &nbsp;&nbsp;&nbsp; tuning: "just", // ...based on "just" (pure/harmonic) tuning rather the default eqaul tempered tuning<br>
+     *  &nbsp;&nbsp;&nbsp; velocity: 0.75, // 75% of 0.5 ( ie. O's master gain )<br>
+     *  &nbsp;&nbsp;&nbsp; attack: 1, // fade in for 1 second<br>
+     *  &nbsp;&nbsp;&nbsp; sustain: 2, // hold note for 2 more seconds<br>
+     *  &nbsp;&nbsp;&nbsp; release: 2, // fade out for 2 more seconds<br>
+     *  &nbsp;&nbsp;&nbsp; schedule: BB.Audio.context.currentTime + 5, // play 5 seconds from now<br>
+     *  &nbsp; });<br>
+     * </code>
+     */
+    BB.AudioTone.prototype.makeChord = function( config ){  
+        var nStr = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+
+        if(typeof config !=="object") throw new Error('BB.AudioTone.makeChord: expecting a config object');
+        
+        var root;
+        if(typeof config.frequency === "number") root = config.frequency;
+        else if(typeof config.frequency === "string" && nStr.indexOf(config.frequency) >= 0) root = this.note(config.frequency);
+        else throw new Error('BB.AudioTone.makeChord: frequency should either be a number or a note("A","A#",etc.)');
+        
+        var vel  = (typeof config.velocity !== "undefined")     ? config.velocity : 1;
+        var ack  = (typeof config.attack !== "undefined")       ? config.attack : 0;
+        var dec  = (typeof config.release !== "undefined")      ? config.release : 0;
+        var dur  = (typeof config.sustain !== "undefined")      ? config.sustain : 0.25;
+        var typ  = (typeof config.type !== "undefined")         ? config.type : "maj";
+        var tun  = (typeof config.tuning !== "undefined")       ? config.tuning : "equal";
+        var sch  = (typeof config.schedule !== "undefined")    ? config.schedule : 0;
+
+        var steps = this._returnSteps( typ );
+        var incSteps = [0];         
+        
+        for (var s = 1; s < steps.length+1; s++) {
+            var inc = 0;
+            for (var j = 0; j < s; j++) inc += steps[j];
+            incSteps.push( inc );
+        }
+
+        for (var i = 0; i < incSteps.length; i++) {                        
+            this.makeNote({
+                frequency: O.freq(root, incSteps[i], tun),
+                velocity: vel,
+                attack: ack,
+                release: dec,
+                sustain: dur,
+                schedule: sch
+            });
+        }
+    };
+
+    return BB.AudioTone;
+});
+
+/**
+ * A module for creating differnt kinds of noise ( defined as any nonconventional and/or mathematically calculated sound buffer ) 
+ * @module BB.AudioNoise
+ * @extends BB.AudioBase
+ */
+define('BB.AudioNoise',['./BB', './BB.AudioBase' ],
+function(  BB,        AudioBase ){
+
+	'use strict';
+
+ 	/**
+     * A module for creating differnt kinds of noise ( defined as any nonconventional and/or mathematically calculated sound buffer ) 
+     * @class BB.AudioNoise
+     * @constructor
+     * @extends BB.AudioBase
+     * 
+     * @param {Object} config this can either be a string (type of noise "white","pink","brown","perlin" ), or a custom function ( see example further down ) or a config object to initialize the Noise
+     * can contain the following:<br><br>
+     * <code class="code prettyprint">
+     * &nbsp;{<br>
+     * &nbsp;&nbsp;&nbsp; context: BB.Audio.context[2], // choose specific context <br>
+     * &nbsp;&nbsp;&nbsp; connect: fft, // overide default destination <br>
+     * &nbsp;&nbsp;&nbsp; volume: 0.5, // technically master "gain" (expolential multiplier)<br>
+     * &nbsp;&nbsp;&nbsp; duraton: 2, // in seconds (corresponds to length of buffer)<br>
+     * &nbsp;&nbsp;&nbsp; channels: 1, // channels in buffer <br>
+     * &nbsp;&nbsp;&nbsp; type: "pink", // "white","pink","brown","perlin" or custom function<br>
+     * &nbsp;}
+     * </code>
+     * <br>
+     * <br> 
+     * @example  
+     * in the example below instantiating the BB.AudioNoise creates a <a href="https://developer.mozilla.org/en-US/docs/Web/API/GainNode" target="_blank">GainNode</a> ( essentially the Noise's output ) connected to the default BB.Audio.context ( ie. AudioDestination )
+     * <br> <img src="../assets/images/audiosampler1.png"/>
+     * <br> everytime noise is played, for example: <code> white.makeNoise()</code>, a corresponding <a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioBufferSourceNode" target="_blank">SourceNode</a> with the appropriate sound buffer (the initialized noise data) is created and connected to the Noise's master GainNode
+     * <br>
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var white = new BB.AudioNoise('white');<br>
+     *  <br>
+     *  &nbsp;white.makeNoise();// plays noise <br>
+     *  &nbsp;var now = BB.Audio.context.currentTime; <br>
+     *  &nbsp;white.makeNoise( 8, 0.5, now+3 ); // plays noise for 8 seconds, at half volume, 3 seconds from now <br><br>
+     *
+     * &nbsp;// example with config object<br>
+     * &nbsp;var brown = new BB.AudioNoise({<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;volume: 0.75,<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;type: "brown"<br>
+     * &nbsp;});<br><br>
+     *
+     * &nbsp;// example with custom function type<br>
+     * &nbsp;var noisey = new BB.AudioNoise(function(){<br>
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var frameCount = this.ctx.sampleRate \* this.duration;<br>
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (var ch = 0; ch < this.channels; ch++) {<br>
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;var data = this.buffer.getChannelData( ch );<br>
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;for (var i = 0; i < frameCount; i++) {<br>
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;data[i] = Math.random() * 2 - 1;<br>
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;};<br>
+	 * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;};<br>
+     * &nbsp;});<br>
+     * </code>
+     *
+     * view basic <a href="../../examples/editor/?file=audio-noise" target="_blank">BB.AudioNoise</a> example
+     */
+	
+	BB.AudioNoise = function( config ) {
+
+		BB.AudioBase.call(this, config);
+
+		var types = ["white","pink","brown","perlin"];
+
+		if(typeof config === "undefined"){ config = {}; }
+		else if(typeof config === "function" || typeof config === "string" && types.indexOf( config) >= 0 ){
+			var t = config;
+			config = { type:t };
+		} else if(typeof config === "string" && types.indexOf( config) < 0 ){
+			throw new Error('BB.AudioNoise: type should be either "white","pink","brown","perlin" or be a custom function');
+		}	
+
+		
+
+		this._type 		= (typeof config.type !== "undefined") ? config.type : "white";
+		if(typeof this._type==="string" && types.indexOf( this._type ) < 0 ) 
+			throw new Error('BB.AudioNoise: type should be either "white","pink","brown","perlin" or be a custom function');
+		else if( typeof this._type !== "string" && typeof this._type !== "function" )
+			throw new Error('BB.AudioNoise: type should be either "white","pink","brown","perlin" or be a custom function');
+		else if( typeof this._type === "function" ){
+			this._typecallback = config.type;
+			this._type = "custom";
+		}
+
+		/**
+		* buffer length in seconds
+		* @property duration
+		* @type Number
+		* @default 1
+		*/   
+		this.duration 	= (typeof config.duration !== "undefined") ? config.duration : 1; // seconds
+		/**
+		* number of channels
+		* @property channels
+		* @type Number
+		* @default 2
+		*/  
+		this.channels 	= (typeof config.channels !== "undefined") ? config.channels : 2; // stereo
+
+		/**
+		* the source node
+		* @property node
+		* @type AudioNode
+		*/ 	
+		this.node = null; 
+
+		/**
+		* the buffer object
+		* @property buffer
+		* @type AudioBuffer
+		*/ 		
+		this.buffer = null;
+
+		this.isPlaying = false;
+		this._isOn = false;
+		
+		this._durTimeout = null; // time out for makeNoise
+
+		this._initBuffer();
+
+	};
+
+ 	BB.AudioNoise.prototype = Object.create(BB.AudioBase.prototype);
+    BB.AudioNoise.prototype.constructor = BB.AudioNoise;
+
+
+	/**
+	* "white","pink","brown" or "custom"
+	* @property type
+	* @type String
+	* @default "white"
+	*/   
+	Object.defineProperty(BB.AudioNoise.prototype, "type", {
+		get: function() {
+			return this._type;
+		},
+		set: function(v) {
+
+			var types = ["white","pink","brown","perlin"];
+			
+			if(typeof v==="string" && types.indexOf( v ) < 0 ) 
+				throw new Error('BB.AudioNoise: type should be either "white","pink","brown","perlin" or be a custom function');
+			else if( typeof v !== "string" && typeof v !== "function" )
+				throw new Error('BB.AudioNoise: type should be either "white","pink","brown","perlin" or be a custom function');
+
+			if( typeof v === "string" ){
+				this._type = v;
+				if(this._isOn===true){
+					this.noiseOff();
+					this._initBuffer();
+					this.noiseOn();
+				} else {
+					this._initBuffer();
+				}
+			}
+			else if( typeof v === "function" ){
+				this._type = "custom";
+				this._typecallback = v;
+				if(this._isOn===true){
+					this.noiseOff();
+					this._initBuffer();
+					this.noiseOn();
+				} else {
+					this._initBuffer();
+				}
+
+			} else {
+				throw new Error('BB.AudioNoise: type should be either "white","pink","brown","perlin" or be a custom function');
+			}
+		}
+	});
+
+	// ---------------
+
+	BB.AudioNoise.prototype._initBuffer = function(){
+		
+		var frameCount = this.ctx.sampleRate * this.duration;
+		this.buffer = this.ctx.createBuffer( this.channels, frameCount, this.ctx.sampleRate );
+
+		// noise maths via: http://noisehack.com/generate-noise-web-audio-api/
+		var ch, data, i, white;
+
+		if( this._type == "white" ){
+			// generate white noise buffer
+			for (ch = 0; ch < this.channels; ch++) {
+				data = this.buffer.getChannelData( ch );
+				for (i = 0; i < frameCount; i++) {
+					data[i] = Math.random() * 2 - 1;
+				}
+			}
+		}
+
+		else if ( this._type == "pink" ){
+			// generate pink noise buffer
+			for (ch = 0; ch < this.channels; ch++) {
+				var b0, b1, b2, b3, b4, b5, b6; 
+				b0 = b1 = b2 = b3 = b4 = b5 = b6 = 0.0;
+				data = this.buffer.getChannelData( ch );
+				for (i = 0; i < frameCount; i++) {
+					white = Math.random() * 2 - 1;
+					b0 = 0.99886 * b0 + white * 0.0555179;
+					b1 = 0.99332 * b1 + white * 0.0750759;
+					b2 = 0.96900 * b2 + white * 0.1538520;
+					b3 = 0.86650 * b3 + white * 0.3104856;
+					b4 = 0.55000 * b4 + white * 0.5329522;
+					b5 = -0.7616 * b5 - white * 0.0168980;
+					data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+					data[i] *= 0.11; // (roughly) compensate for gain
+					b6 = white * 0.115926;
+				}
+			}
+		}
+
+		else if ( this._type == "brown" ){
+			// generate pink brownian ( aka. brown or red ) buffer
+			for (ch = 0; ch < this.channels; ch++) {
+				data = this.buffer.getChannelData( ch );
+				var lastOut = 0.0;
+				for (i = 0; i < frameCount; i++) {
+					white = Math.random() * 2 - 1;
+					data[i] = (lastOut + (0.02 * white)) / 1.02;
+					lastOut = data[i];
+					data[i] *= 3.5; // (roughly) compensate for gain
+				}
+			}
+		}
+
+		else if ( this._type == "perlin" ){
+			// generate perlin noise buffer...
+			// ... right now just sounds like short white noise buffer on loop
+			// ... need to make this more interesting?
+			for (ch = 0; ch < this.channels; ch++) {
+				data = this.buffer.getChannelData( ch );
+				for (i = 0; i < frameCount; i++) {
+					data[i] = BB.MathUtils.noise(i) * 2 - 1;
+				}
+			}
+		}
+
+		else if( this._type == "custom" ){
+			this._typecallback();
+			
+			//  ---- FOR EXMPLE  ----
+
+			// function(){
+			// 	var frameCount = this.ctx.sampleRate * this.duration;
+			// 	for (var ch = 0; ch < this.channels; ch++) {
+			// 		var data = this.buffer.getChannelData( ch );
+			// 		for (var i = 0; i < frameCount; i++) {
+			// 			data[i] = Math.random() * 2 - 1;
+			// 		};
+			// 	};
+			// }
+		}
+
+	};
+
+
+	// ---------------
+
+	/**
+	* plays noise for a specified period of time
+	* @method makeNoise
+	* @param {Number} [duration] how long to play the noise (in seconds)
+	* @param {Number} [velocity] how loud (scalar value applied to master volume)
+	* @param {Number} [schedule] when to play it
+	*
+	* @example  
+	* <code class="code prettyprint">  
+	*  &nbsp;BB.Audio.init();<br>
+	*  <br>
+	*  &nbsp;var whitenoise = new BB.AudioNoise({<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;type: "white",<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;volume: 0.75<br>
+	*  &nbsp;});<br>
+	*  <br>
+	*  &nbsp;// plays for a quarter second, at twice the initial 0.75 volume ( ie. 1.5 ) <br>
+	*  &nbsp;whitenoise.makeNoise( 0.25, 2 ); <br><br>
+	*  &nbsp;// plays for 1 second at the original volume (0.75), will start playing 5 seconds from now<br>
+	*  &nbsp;var now = BB.Audio.context.currentTime; <br>
+	*  &nbsp;whitenoise.makeNoise( 1, 1, now+5 ); 
+	* </code>
+	*/
+	BB.AudioNoise.prototype.makeNoise = function( duration, velocity, schedule ){
+
+		var dur = (typeof duration!=="undefined") ? duration : this.duration;
+		
+		var initvol;
+		if(typeof velocity !== "undefined") {
+			initvol = this.volume;
+			this.volume = velocity;
+		}
+
+		this.noiseOn( schedule, true );
+
+		if( this._durTimeout !== "undefined" ) clearTimeout( this._durTimeout );
+		var self = this;
+		this._durTimeout = setTimeout(function(){
+			self.noiseOff( true );
+			if(typeof velocity !== "undefined") self.volume = initvol;
+		}, dur*1000 );
+	};
+
+	/**
+	* starts playing the noise
+	* @method noiseOn
+	* @param {Number} [schedule] when to play
+	*
+	* @example  
+	* <code class="code prettyprint">  
+	*  &nbsp;BB.Audio.init();<br>
+	*  <br>
+	*  &nbsp;var whitenoise = new BB.AudioNoise(); // default white noise<br>
+	*  <br>
+	*  &nbsp;whitenoise.noiseOn();
+	* </code>
+	*/
+	BB.AudioNoise.prototype.noiseOn = function( schedule, fromMakeNoise ){
+
+		if( this.isPlaying === true ) throw new Error('BB.AudioNoise.noiseOn: is already on');
+
+		if(typeof schedule === "undefined") schedule = 0;
+
+		this.node = this.ctx.createBufferSource();
+		this.node.buffer = this.buffer;
+		this.node.loop = true;
+		this.node.connect( this.gain );
+		this.node.start(schedule); 
+
+		if(typeof fromMakeNoise==="undefined" || fromMakeNoise===false) this._isOn = true;
+		this.isPlaying = true;
+	};
+
+	/**
+	* stops playing the noise
+	* @method noiseOff
+	*
+	* @example  
+	* <code class="code prettyprint">  
+	*  &nbsp;BB.Audio.init();<br>
+	*  <br>
+	*  &nbsp;var whitenoise = new BB.AudioNoise(); // default white noise<br>
+	*  <br>
+	*  &nbsp;whitenoise.noiseOn();<br>
+	*  &nbsp;whitenoise.noiseOff();
+	* </code>
+	*/
+	BB.AudioNoise.prototype.noiseOff = function( fromMakeNoise ){
+		if( this.isPlaying === false ) throw new Error('BB.AudioNoise.noiseOn: is already off');
+		this.node.stop();
+		this.isPlaying = false;
+		if(typeof fromMakeNoise==="undefined" || fromMakeNoise===false) this._isOn = false;
+	};
+
+	return BB.AudioNoise;
 });
 /**
  * A module for scheduling sounds ( in a more musical way ) 
@@ -6054,7 +7906,7 @@ function(  BB ){
 	  * 
 	  * @class BB.AudioSequencer
 	  * @constructor
-	  * @param {Object} config A config object to initialize the Sequencer, use keys "whole", "quarter", "sixth", "eighth" and "sixteenth" to schedule events at those times in a measure 
+	  * @param {Object} config A config object to initialize the Sequencer, use keys "whole", "half", "quarter", "sixth", "eighth" and "sixteenth" to schedule events at those times in a measure 
 	  * additional (optional) config parameters include:
 	  * <code class="code prettyprint">
 	  * &nbsp;{<br>
@@ -6119,6 +7971,20 @@ function(  BB ){
 		this.tempo 				= ( typeof config.tempo !== 'undefined' ) ? config.tempo : 120;
 		
 		/**
+		 * how many measures per sequence
+		 * @type {Number}
+		 * @property bars
+		 * @default 1
+		 */
+		this.bars 				= ( typeof config.bars !== 'undefined' ) ? config.bars : 1;
+
+		/**
+		 * current measure being played
+		 * @type {Number}
+		 * @property currentBar
+		 */
+		this.currentBar 		= 0;
+		/**
 		 * whether or not sequencer is playing	
 		 * @type {Boolean}
 		 * @property isPlaying
@@ -6167,6 +8033,12 @@ function(  BB ){
 				throw new ERROR('BB.AudioSequencer: "whole" should be a function -> whole: function(time){ ... }');
 			else this.whole = config.whole;
 		} else { this.whole = undefined; }
+
+		if(typeof config.half !== "undefined"){
+			if( typeof config.half !== "function" )
+				throw new ERROR('BB.AudioSequencer: "half" should be a function -> half: function(time){ ... }');
+			else this.half = config.half;
+		} else { this.half = undefined; }
 
 		if(typeof config.quarter !== "undefined"){
 			if( typeof config.quarter !== "function" )
@@ -6259,13 +8131,15 @@ function(  BB ){
 		// ...so === 0 instead
 
 		if(this.multitrack){
-			if (beatNumber === 0 && typeof this.whole!=="undefined") this.whole( time );	// beat 0 == kick			
+			if (beatNumber === 0 && typeof this.whole!=="undefined") this.whole( time );			// beat 0 == kick			
+			if (beatNumber % 2 === 0 && typeof this.half!=="undefined") this.half( time );	// quarter notes, ex:snare			
 			if (beatNumber % 4 === 0 && typeof this.quarter!=="undefined") this.quarter( time );	// quarter notes, ex:snare			
 			if (beatNumber % 6 === 0 && typeof this.sixth!=="undefined") this.sixth( time );			
-			if (beatNumber % 8 === 0 && typeof this.eighth!=="undefined") this.eighth( time );	// eigth notes, ex:hat			
+			if (beatNumber % 8 === 0 && typeof this.eighth!=="undefined") this.eighth( time );		// eigth notes, ex:hat			
 			if (typeof this.sixteenth!=="undefined") this.sixteenth( time );				
 		} else {
 			if (beatNumber === 0 && typeof this.whole!=="undefined" ) this.whole( time );	
+			else if (beatNumber % 2 === 0 && typeof this.half!=="undefined") this.half( time );
 			else if (beatNumber % 4 === 0 && typeof this.quarter!=="undefined") this.quarter( time );
 			else if (beatNumber % 6 === 0 && typeof this.sixth!=="undefined") this.sixth( time );	
 			else if (beatNumber % 8 === 0 && typeof this.eighth!=="undefined") this.eighth( time );	
@@ -6286,7 +8160,12 @@ function(  BB ){
 
 	    this.current16thNote++;	// Advance the beat number, wrap to zero
 	    this.note = this.current16thNote-1;
-	    if (this.current16thNote == 16) this.current16thNote = 0;
+	    // if (this.current16thNote == this.bars*16) this.current16thNote = 0;
+	    if(this.current16thNote == 16){
+	    	this.current16thNote = 0;
+	    	this.currentBar++;
+	    	if(this.currentBar == this.bars) this.currentBar = 0;
+	    }
 	};
 
 	return BB.AudioSequencer;
@@ -6294,9 +8173,10 @@ function(  BB ){
 /**
  * A module for doing FFT ( Fast Fourier Transform ) analysis on audio 
  * @module BB.AudioAnalyser
+ * @extends BB.AudioBase
  */
-define('BB.AudioAnalyser',['./BB'],
-function(  BB ){
+define('BB.AudioAnalyser',['./BB', './BB.AudioBase'],
+function(  BB,		  AudioBase ){
 
 	'use strict';
 
@@ -6304,6 +8184,7 @@ function(  BB ){
 	 *  A module for doing FFT ( Fast Fourier Transform ) analysis on audio 
 	 * @class BB.AudioAnalyser
 	 * @constructor
+ 	 * @extends BB.AudioBase
 	 * 
 	 * @param {Object} config A config object to initialize the Sampler, must contain a "context: AudioContext" 
 	 * property and can contain properties for fftSize, smoothing, maxDecibels and minDecibels
@@ -6317,7 +8198,7 @@ function(  BB ){
 	 *	<br>
 	 *	&nbsp;var fft = new BB.AudioAnalyser(); <br>
 	 *	&nbsp;// assuming samp is an instanceof BB.AudioSampler <br>
-	 *	&nbsp;samp.connect( fft.analyser ); <br><br><br>
+	 *	&nbsp;samp.connect( fft ); <br><br><br>
 	 *	&nbsp;// you can override fft's defaults by passing a config <br>
 	 *	&nbsp;var fft = new BB.AudioAnalyser({<br>
 	 *  &nbsp;&nbsp;&nbsp;&nbsp;context: BB.Audio.context[3],<br>
@@ -6331,124 +8212,40 @@ function(  BB ){
 
 	BB.AudioAnalyser = function( config ){
 		
-		// the AudioContext to be used by this module 
-		if( typeof BB.Audio.context === "undefined" )
-			throw new Error('BB Audio Modules require that you first create an AudioContext: BB.Audio.init()');
-		
-		if( BB.Audio.context instanceof Array ){
-			if( typeof config === "undefined" || typeof config.context === "undefined" )
-				throw new Error('BB.AudioAnalyser: BB.Audio.context is an Array, specify which { context:BB.Audio.context[?] }');
-			else {
-				this.ctx = config.context;
-			}
-		} else {
-			this.ctx = BB.Audio.context;
-		}
+		BB.AudioBase.call(this, config);
 
 		/**
 		 * the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode" target="_blank">AnalyserNode</a> itself
 		 * @type {AnalyserNode}
-		 * @property analyser
+		 * @property node
 		 */
-		this.analyser 		= this.ctx.createAnalyser();
+		this.node 		= this.ctx.createAnalyser();
 		
 		this.fftSize 		= ( typeof config!=="undefined" && typeof config.fftSize !== 'undefined' ) ? config.fftSize : 2048;
 		this.smoothing 		= ( typeof config!=="undefined" && typeof config.smoothing !== 'undefined' ) ? config.smoothing : 0.8;
 		this.maxDecibels	= ( typeof config!=="undefined" && typeof config.maxDecibels !== 'undefined' ) ? config.maxDecibels : -30;
 		this.minDecibels	= ( typeof config!=="undefined" && typeof config.minDecibels !== 'undefined' ) ? config.minDecibels : -90;
 
-		this.analyser.fftSize 					= this.fftSize;
-		this.analyser.smoothingTimeConstant 	= this.smoothing;
-		this.analyser.maxDecibels 				= this.maxDecibels;
-		this.analyser.minDecibels 				= this.minDecibels;			
+		this.node.fftSize 					= this.fftSize;
+		this.node.smoothingTimeConstant 	= this.smoothing;
+		this.node.maxDecibels 				= this.maxDecibels;
+		this.node.minDecibels 				= this.minDecibels;			
 
 
-		this.freqByteData 	= new Uint8Array( this.analyser.frequencyBinCount );
-		this.freqFloatData 	= new Float32Array(this.analyser.frequencyBinCount);
-		this.timeByteData 	= new Uint8Array( this.analyser.frequencyBinCount );
-		this.timeFloatData 	= new Float32Array(this.analyser.frequencyBinCount);
+		this.freqByteData 	= new Uint8Array( this.node.frequencyBinCount );
+		this.freqFloatData 	= new Float32Array(this.node.frequencyBinCount);
+		this.timeByteData 	= new Uint8Array( this.node.frequencyBinCount );
+		this.timeFloatData 	= new Float32Array(this.node.frequencyBinCount);
+
+		this.node.connect( this.gain );
 
 		if( this.fftSize%2 !== 0 || this.fftSize < 32 || this.fftSize > 2048)
 			throw new Error('Analyser: fftSize must be a multiple of 2 between 32 and 2048');
 
-		// default destination is undefined
-		// unless otherwise specified in { connect:AudioNode }
-		if( typeof config !== "undefined" && typeof config.connect !== 'undefined' ){
-			if( config.connect instanceof AudioDestinationNode ||
-				config.connect instanceof AudioNode ) 
-				this.analyser.connect( config.connect );
-			else {
-				throw new Error('BB.AudioAnalyser: connect property expecting an AudioNode');
-			}
-		} else {
-			this.analyser.connect( this.ctx.destination );
-		}
-
 	};
 
-
-	/**
-	 * connects the Analyser to a particular AudioNode or AudioDestinationNode
-	 * @method connect
-	 * @param  {AudioNode} destination the AudioNode or AudioDestinationNode to connect to
-	 * @param  {Number} output      which output of the the Sampler do you want to connect to the destination
-	 * @param  {Number} input       which input of the destinatino you want to connect the Sampler to
-	 * @example  
-	 * <code class="code prettyprint">  
-	 *  &nbsp;BB.Audio.init();<br>
-	 *	<br>
-	 *	&nbsp;var fft = new BB.AudioAnalyser();<br>
-	 *	&nbsp;// connects AudioAnalyser to exampleNode <br>
-	 *	&nbsp;//in additon to the default destination it's already connected to by default<br>
-	 *	&nbsp;fft.connect( exampleNode ); 
-	 *	<br>
-	 * </code>
-	 */
-	BB.AudioAnalyser.prototype.connect = function( destination, output, input ){
-		if( !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
-			throw new Error('AudioAnalyser.connect: destination should be an instanceof AudioDestinationNode or AudioNode');
-		if( typeof output !== "undefined" && typeof output !== "number" )
-			throw new Error('AudioAnalyser.connect: output should be a number');
-		if( typeof intput !== "undefined" && typeof input !== "number" )
-			throw new Error('AudioAnalyser.connect: input should be a number');
-
-		if( typeof intput !== "undefined" ) this.analyser.connect( destination, output, input );
-		else if( typeof output !== "undefined" ) this.analyser.connect( destination, output );
-		else this.analyser.connect( destination );
-	};
-
-	/**
-	 * diconnects the Analyser from the node it's connected to
-	 * @method disconnect
-	 * @param  {AudioNode} destination what it's connected to
-	 * @param  {Number} output      the particular output number
-	 * @param  {Number} input       the particular input number
-	 * <code class="code prettyprint">  
-	 *  &nbsp;BB.Audio.init();<br>
-	 *	<br>
-	 *	&nbsp;var fft = new BB.AudioAnalyser();<br>
-	 *	&nbsp;// disconnects Analyser from default destination<br>
-	 *	&nbsp;fft.disconnect();<br>
-	 *	&nbsp;// connects AudioAnalyser to exampleNode <br>
-	 *	&nbsp;fft.connect( exampleNode ); 
-	 *	<br>
-	 * </code>
-	 */
-	BB.AudioAnalyser.prototype.disconnect = function(destination, output, input ){
-		if( typeof destination !== "undefined" &&
-			!(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
-			throw new Error('AudioAnalyser.disconnect: destination should be an instanceof AudioDestinationNode or AudioNode');
-		if( typeof output !== "undefined" && typeof output !== "number" )
-			throw new Error('AudioAnalyser.disconnect: output should be a number');
-		if( typeof input !== "undefined" && typeof input !== "number" )
-			throw new Error('AudioAnalyser.disconnect: input should be a number');
-
-		if( typeof input !== "undefined" ) this.analyser.disconnect( destination, output, input );
-		else if( typeof output !== "undefined" ) this.analyser.disconnect( destination, output );
-		else if( typeof destination !== "undefined" ) this.analyser.disconnect( destination );
-		else  this.analyser.disconnect();
-	};
-
+ 	BB.AudioAnalyser.prototype = Object.create(BB.AudioBase.prototype);
+    BB.AudioAnalyser.prototype.constructor = BB.AudioAnalyser;
 
     /**
      * returns an array with frequency byte data
@@ -6474,7 +8271,7 @@ function(  BB ){
 	 * </code>
      */
 	BB.AudioAnalyser.prototype.getByteFrequencyData = function(){
-		this.analyser.getByteFrequencyData( this.freqByteData );
+		this.node.getByteFrequencyData( this.freqByteData );
 		return this.freqByteData;
 	};
 
@@ -6483,7 +8280,7 @@ function(  BB ){
      * @method getFloatFrequencyData
      */
 	BB.AudioAnalyser.prototype.getFloatFrequencyData = function(){
-		this.analyser.getFloatFrequencyData( this.freqFloatData );
+		this.node.getFloatFrequencyData( this.freqFloatData );
 		return this.freqFloatData;
 	};
 
@@ -6516,7 +8313,7 @@ function(  BB ){
      */
 	BB.AudioAnalyser.prototype.getByteTimeDomainData = function(){
 		// https://en.wikipedia.org/wiki/Time_domain
-		this.analyser.getByteTimeDomainData( this.timeByteData );
+		this.node.getByteTimeDomainData( this.timeByteData );
 		return this.timeByteData;
 	};
 
@@ -6525,7 +8322,7 @@ function(  BB ){
      * @method getFloatTimeDomainData
      */
 	BB.AudioAnalyser.prototype.getFloatTimeDomainData = function(){
-		this.analyser.getFloatTimeDomainData( this.timeFloatData );
+		this.node.getFloatTimeDomainData( this.timeFloatData );
 		return this.timeFloatData;
 	};
 
@@ -6563,7 +8360,7 @@ function(  BB ){
 		var foundGoodCorrelation = false;
 		var correlations = new Array(MAX_SAMPLES);
 
-		this.analyser.getFloatTimeDomainData( this.timeFloatData );
+		this.node.getFloatTimeDomainData( this.timeFloatData );
 
 		for (var i=0;i<SIZE;i++) {
 			var val = this.timeFloatData[i];
@@ -6610,225 +8407,834 @@ function(  BB ){
 	};
 
 
+ 	/**
+     * returns an multi-dimentional array ( one array per channel ) with resampled buffer data ( for drawing an entire waveform of a file )
+     * @method getResampledBufferData
+     * 
+	 * @example  
+	 * <code class="code prettyprint">  
+	 *  &nbsp;BB.Audio.init();<br>
+	 *	<br>
+	 *	&nbsp;var fft = new BB.AudioAnalyser();<br>
+	 *	<br>
+	 *	&nbsp;// then in a canvas draw loop...<br>
+     *	&nbsp;var tdata = fft.getResampledBufferData();<br>
+	 *	&nbsp;ctx.beginPath();<br>
+	 *	&nbsp;var sliceWidth = WIDTH / tdata.length;<br>
+	 *	&nbsp;var x = 0;<br>
+     *	&nbsp;for (var i = 0; i < tdata.length; i++) {<br>
+     *	&nbsp;&nbsp;&nbsp;var v = tdata[i] / 128.0;<br>
+     *	&nbsp;&nbsp;&nbsp;var y = v * HEIGHT/2;		<br>
+	 *	&nbsp;&nbsp;&nbsp;if(i===0) ctx.moveTo(x,y);<br>
+	 *	&nbsp;&nbsp;&nbsp;else ctx.lineTo(x,y);		<br>
+	 *	&nbsp;&nbsp;&nbsp;x+=sliceWidth;<br>
+     *	&nbsp;}<br>
+	 *	&nbsp;ctx.lineTo(WIDTH,HEIGHT/2);<br>
+	 *	&nbsp;ctx.stroke();<br>
+	 *	<br>
+	 * </code>
+     */
+    BB.AudioAnalyser.prototype._resampleBufferData = function( chnlData, length ){
+    	// maths via: http://stackoverflow.com/a/22103150/1104148
+    	/*
+			chnlData is a Float32Array describing that channel       
+			we 'resample' with cumul, count, variance
+			Offset 0 : PositiveCumul  1: PositiveCount  2: PositiveVariance
+			       3 : NegativeCumul  4: NegativeCount  5: NegativeVariance
+			that makes 6 data per bucket
+		*/
+		var resampled = new Float64Array(length * 6 );
+		var i=0, j=0, buckIndex = 0;
+		var min=1000, max=-1000;
+		var thisValue=0, res=0;
+		var sampleCount = chnlData.length;
+		// first pass for mean
+		for (i=0; i<sampleCount; i++) {
+			// in which bucket do we fall ?
+			buckIndex = 0 | ( length * i / sampleCount );
+			buckIndex *= 6;
+			// positive or negative ?
+			thisValue = chnlData[i];
+			if (thisValue>0) {
+				resampled[buckIndex    ] += thisValue;
+				resampled[buckIndex + 1] +=1;
+			} else if (thisValue<0) {
+				resampled[buckIndex + 3] += thisValue;
+				resampled[buckIndex + 4] +=1;                           
+			}
+			if (thisValue<min) min=thisValue;
+			if (thisValue>max) max = thisValue;
+		}
+		// compute mean now
+		for (i=0, j=0; i<length; i++, j+=6) {
+			if (resampled[j+1] !== 0) {
+				resampled[j] /= resampled[j+1]; 
+			}
+			if (resampled[j+4]!== 0) {
+				resampled[j+3] /= resampled[j+4];
+			}
+		}
+		// second pass for mean variation  ( variance is too low)
+		for (i=0; i<chnlData.length; i++) {
+			// in which bucket do we fall ?
+			buckIndex = 0 | (length * i / chnlData.length );
+			buckIndex *= 6;
+			// positive or negative ?
+			thisValue = chnlData[i];
+			if (thisValue>0) {
+				resampled[buckIndex + 2] += Math.abs( resampled[buckIndex] - thisValue );               
+			} else  if (thisValue<0) {
+				resampled[buckIndex + 5] += Math.abs( resampled[buckIndex + 3] - thisValue );                           
+			}
+		}
+		// compute mean variation/variance now
+		for (i=0, j=0; i<length; i++, j+=6) {
+			if (resampled[j+1]) resampled[j+2] /= resampled[j+1];
+			if (resampled[j+4]) resampled[j+5] /= resampled[j+4];
+		}	
+		return resampled;
+    };
+	BB.AudioAnalyser.prototype.getResampledBufferData = function( buffer, length ){
+		if( !(buffer instanceof AudioBuffer) ) throw new Error("BB.AudioAnalyser.getResampledBufferData: first parameter expecing an AudioBuffer (object)");
+		if( typeof length !=="number") throw new Error("BB.AudioAnalyser.getResampledBufferData: second parameter expecing number (length to resample to)");
+		
+		var data = [];
+		for (var i = 0; i < buffer.numberOfChannels; i++) {
+			var chnlData = this._resampleBufferData( buffer.getChannelData(i), length );
+			data.push( chnlData );
+		}
+		return data;
+	};
+
 	return BB.AudioAnalyser;
 });
 /**
- * A module for streaming user audio ( getUserMedia )
- * @module BB.AudioStream
+ * A module for creating filter, reverb and delay effects ( abstracts the WebAudio API BiquadFilterNode, ConvolverNode and DelayNode ), for more advanced audio effects see the <a href="BB.AFX.html" target="_blank">BB.AFX</a> base Audio Effects module
+ * @module BB.AudioFX
+ * @extends BB.AudioBase
  */
-define('BB.AudioStream',['./BB'],
-function(  BB ){
+define('BB.AudioFX',['./BB', './BB.AudioBase', './BB.AudioBufferLoader'],
+function(  BB,        AudioBase,        AudioBufferLoader ) {
 
-	'use strict';
+    'use strict';
+    
+    BB.AudioBufferLoader = AudioBufferLoader;
 
-	 /**
-	 *  A module for streaming user audio ( getUserMedia )
-	 * @class BB.AudioStream
-	 * @constructor
-	 * 
-	 * @param {Object} config An optional config object to initialize the Stream, 
-	 * can contain the following:
-	 * <code class="code prettyprint">
-	 * &nbsp;{<br>
-	 * &nbsp;&nbsp;&nbsp; context: BB.Audio.context[2], // choose specific context <br>
-	 * &nbsp;&nbsp;&nbsp; connect: fft.analyser, // overide default destination <br>
-	 * &nbsp;&nbsp;&nbsp; autostart: true // will automatically start the stream <br>
-	 * &nbsp;}
-	 * </code>	 
-	 * 
-	 * @example  
-	 * <code class="code prettyprint">  
-	 *  &nbsp;BB.Audio.init();<br>
-	 *	<br>
-	 *	&nbsp;var mic = new BB.AudioStream();<br>
-	 *	<br>
-	 * </code>
-	 * <br>
-	 * BB.AudioStream ( represented by Gain below ) connects to <a href="BB.Audio.html">BB.Audio.context</a> by default<br>
-	 * <img src="../assets/images/audiosampler1.png">
-	 */
+    /**
+     * A module for creating filter, reverb and delay effects ( abstracts the WebAudio API BiquadFilterNode, ConvolverNode and DelayNode ), for more advanced audio effects see the <a href="BB.AFX.html" target="_blank">BB.AFX</a> base Audio Effects module
+     * @class BB.AudioFX
+     * @constructor
+     * @extends BB.AudioBase
+     * 
+     * @param {String} type the type of effect you want to create ( filter, reverb and delay) 
+     * @param {Object} config A config object to initialize the effect ( include examples for diff effects )
+     *
+     * @example  
+     * <br>
+     * <h2> when using 'filter' type </h2><br>
+     * in the example bellow the drum sampler is connected to the AudioFX ( in this case a 'filter' ), and the AudioFX is connected to the default BB.Audio destination
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var filt = new BB.AudioFX('filter');<br>
+     *  <br>
+     *  &nbsp;var drum = new BB.AudioSampler({<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;connect: filt,<br>  
+     *  &nbsp;&nbsp;&nbsp;&nbsp;kick: 'audio/kick.ogg',<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;snare: 'audio/snare.ogg'<br>
+     *  &nbsp;});<br>
+     * </code>
+     * <br>
+     * BB.AudioFX can also take an option config object. when using the 'filter' type, a config object can include the following:
+     * <code class="code prettyprint">  
+     *  &nbsp;var filt = new BB.AudioFX('filter',{<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;connect: fft,<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;type: "lowpass",<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;frequency: 880, <br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;Q: 8,<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;fgain: 5,<br>
+     *  &nbsp;});<br>
+     * </code>
+     * filter types include "lowpass" (default), "highpass", "bandpass", "lowshelf", "highshelf", "peaking", "notch" and "allpass"
+     * check out the <a href="https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode" target="_blank">BiquadFilterNode</a> documenation for more details on filter types and the properties ( frequency, Q, gain)
+     * <br>
+     * view basic <a href="../../examples/editor/?file=audio-fx-filter" target="_blank">BB.AudioFX 'filter'</a> example
+     * <br>
+     * <br>
+     * <br>
+     * <br>
+     * <h2> when using 'reverb' type </h2><br>
+     * the AudioFX ( 'reverb' ), can be used just like the 'filter' example above. there's two ways to create "reverb" FX, either algorithmically ( default ) or by pasing it paths to impulse file[s] ( see <a href="https://en.wikipedia.org/wiki/Convolution_reverb" target="_blank">conolution reverb</a> on wikipedia) 
+     * <code class="code prettyprint">  
+     *  &nbsp;// algorithmically calculate convolution's impulse buffer<br>
+     *  &nbsp;var reverb = new BB.AudioFX('reverb');<br>
+     *  <br>
+     *  &nbsp;// customize algorithmically generated impulse buffer<br>
+     *  &nbsp;var reverb = new BB.AudioFX('reverb',{<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;duration: 2,<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;decay: 4.3,<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;reverse:true<br>
+     *  });<br>
+     *  <br>
+     *  &nbsp;// generate convolution buffer from impulse file<br>
+     *  &nbsp;var reverb = new BB.AudioFX('reverb',{<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;paths: ['audio/impulse.wav']<br>
+     *  });<br>
+     * </code>
+     * check out the <a href="https://developer.mozilla.org/en-US/docs/Web/API/ConvolverNode" target="_blank">ConvolutionNode</a> documenation for more info
+     * <br>
+     * view basic <a href="../../examples/editor/?file=audio-fx-reverb" target="_blank">BB.AudioFX 'reverb'</a> example
+     * <br>
+     * <br>
+     * <br>
+     * <br>
+     * <h2> when using 'delay' type </h2><br>
+     * the AudioFX ( 'delay' ), can be used just like the 'filter' example above. 
+     * <code class="code prettyprint">  
+     *  &nbsp;var delay = new BB.AudioFX('delay');<br>
+     *  <br>
+     *  &nbsp;// with optional config <br>
+     *  &nbsp;var delay = new BB.AudioFX('delay',{<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;max: 5, // max delay time <br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;time: 1 // current delay time <br>
+     *  });<br>
+     *  <br>
+     *  &nbsp;// modify delay time afterwards<br>
+     *  &nbsp;delay.time = 3.2; <br>
+     * </code>
+     * check out the <a href="https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createDelay" target="_blank">DelayNode</a> documenation for more info
+     * <br>
+     * view basic <a href="../../examples/editor/?file=audio-fx-delay" target="_blank">BB.AudioFX 'delay'</a> example
+     */
+    
+    BB.AudioFX = function( type, config ) {
+        
+        BB.AudioBase.call(this, config);
+        
+        // config obj
+        if(typeof config !== "undefined" && typeof config !== "object" ){
+            throw new Error('BB.AudioFX: second parameter should be a config object');
+        } else if( typeof config === "undefined" ) config = {};
 
-	BB.AudioStream = function( config ){
-		
-		/**
-		 * the Audio Stream 
-		 * @type {LocalMEdiaStream}
-		 * @default null
-		 * @property stream
-		 */
-		this.stream = null; // set by this.open()
+        // type conditionals
+        var types = ["filter", "reverb", "delay"];
+        if(typeof type !== "string" || types.indexOf(type) < 0){
+            throw new Error('BB.AudioFX: first argument should be a type of effect ("filter", "reverb" or "delay")');
+        } else {
 
-		// the AudioContext to be used by this module 
-		if( typeof BB.Audio.context === "undefined" )
-			throw new Error('BB Audio Modules require that you first create an AudioContext: BB.Audio.init()');
-		
-		if( BB.Audio.context instanceof Array ){
-			if( typeof config === "undefined" || typeof config.context === "undefined" )
-				throw new Error('BB.AudioStream: BB.Audio.context is an Array, specify which { context:BB.Audio.context[?] }');
-			else {
-				this.ctx = config.context;
-			}
-		} else {
-			this.ctx = BB.Audio.context;
-		}
+            this.type = type;
 
-		// default destination is context destination
-		// unless otherwise specified in { connect:AudioNode }
-		this.gain		= this.ctx.createGain();	
-		if(typeof config !== "undefined" && typeof config.connect !== 'undefined' ){
-			if( config.connect instanceof AudioDestinationNode ||
-				config.connect instanceof AudioNode ) 
-				this.gain.connect( config.connect );
-			else {
-				throw new Error('BB.AudioStream: connect property expecting an AudioNode');
-			}
-		} else {
-			this.gain.connect( this.ctx.destination );
-		}
+            if(type==="filter"){
+                // error checking for 'filter'
+                var filtTypes = ["lowpass", "highpass", "bandpass", "lowshelf", "highshelf", "peaking", "notch", "allpass"];
+                if( typeof config.type !== "undefined" && filtTypes.indexOf(config.type) < 0 ) throw new Error('BB.AudioFX: config.type must be either "lowpass", "highpass", "bandpass", "lowshelf", "highshelf", "peaking", "notch" or "allpass" ');
+                if( typeof config.frequency !=="undefined" && typeof config.frequency !== "number" ) throw new Error('BB.AudioFX: config.frequency should be a number');
+                if( typeof config.fgain !=="undefined" && typeof config.fgain !== "number" ) throw new Error('BB.AudioFX: config.fgain should be a number');
+                if( typeof config.Q !=="undefined" && typeof config.Q !== "number" ) throw new Error('BB.AudioFX: config.Q should be a number');
 
-		// whether or not to automatically start the stream
-		this.auto 		= (typeof config !== "undefined" &&  typeof config.autostart !== 'undefined' ) ? config.autostart : false;
+                this.node = this.ctx.createBiquadFilter(); 
+                this.node.type = (typeof config.type !== "undefined") ? config.type : "lowpass";
+                this.node.frequency.value = (typeof config.frequency !== "undefined") ? config.frequency : 220;
+                this.node.gain.value = (typeof config.fgain !== "undefined") ? config.fgain : 3;
+                this.node.Q.value = (typeof config.Q !== "undefined") ? config.Q : 8;
+            }
 
-		if(this.auto === true){
-			this.open();
-		}
+            else if(type==="reverb"){
+                this.node = this.ctx.createConvolver();
+                this.impulse = { buffers: null };
 
-	};
+                if( typeof config.paths !== "undefined"){
+                    var self = this;                    
+                    var loader = new BB.AudioBufferLoader({
+                        paths: config.paths
+                    }, function(buffers){
+                        self.impulse.buffers = buffers;
+                        self.node.buffer = self.impulse.buffers[0];
+                    });
+
+                } else {
+                    var duration, decay, reverse;
+
+                    if(typeof config.duration !== "undefined" ){
+                        if(typeof config.duration !== "number") throw new Error('BB.AudioFX: reverb config.duration should be a number');
+                        else duration = config.duration;
+                    } else { duration = 1;  }
+                    
+                    if(typeof config.decay !== "undefined" ){
+                        if(typeof config.decay !== "number") throw new Error('BB.AudioFX: reverb config.decay should be a number');
+                        else decay = config.decay;
+                    } else { decay = 2.0;  }
+                    
+                    if(typeof config.reverse !== "undefined" ){
+                        if(typeof config.reverse !== "boolean") throw new Error('BB.AudioFX: reverb config.reverse should be a boolean');
+                        else reverse = config.reverse;
+                    } else { reverse = false;  }
+
+                    this.node.buffer = this._impulseResponse( duration, decay, reverse );
+
+                } 
+
+            }
+
+            else if(type==="delay"){
+                this._max = null;
+                this._time = null;
+
+                if(typeof config.max !== 'undefined'){
+                    if(typeof config.max !== 'number') throw new Error('BB.AudioFX: config.max should be a number in seconds');
+                    else this._max = config.max;
+                } else { this._max = 1; }
+
+                this.node = this.ctx.createDelay( this._max );
+                
+                if( typeof config.time !== "undefined" ){
+                    if(typeof config.time !== "number") throw new Error('BB.AudioFX: delay.time should be a number in seconds, up to max');
+                    else this._time = config.time;
+                } else { this._time = 1; }
+                    
+                this.node.delayTime.value = this._time;
+            }   
+
+        }
+
+        // ................... FX loop ..............................
+        //  for bypassing fx // dry + wet channels
+        
+        this.input = this.ctx.createGain();  // input  :: receives connection
+                                             // output :: this.gain ( form AudioBase );
+        
+        this._wet = new BB.AudioBase({ connect: this.gain });
+        this._dry = new BB.AudioBase({ connect: this.gain });
+        this._dry.volume = 0;
+
+        // input > dry > output 
+        this.input.connect( this._dry.gain ); 
+        
+        // input > fx > wet > output
+        this.input.connect( this.node ); 
+        this.node.connect( this._wet.gain );
+
+    };
+
+    BB.AudioFX.prototype = Object.create(BB.AudioBase.prototype);
+    BB.AudioFX.prototype.constructor = BB.AudioFX;
+
+   
+    /**
+     * the dry channel gain/volume
+     * @property dry 
+     * @type Number
+     * @default 0
+     */   
+    Object.defineProperty(BB.AudioFX.prototype, "dry", {
+        get: function() {
+            return this._dry.volume;
+        },
+        set: function(v) {
+            if( typeof v !== 'number'){
+                throw new Error("BB.AudioFX.dry: expecing a number");
+            } else {
+                this._dry.setGain( v );
+                var diff = 1 - v;
+                this._wet.setGain( diff );
+            }
+        }
+    }); 
+
+    /**
+     * the wet channel gain/volume
+     * @property wet 
+     * @type Number
+     * @default 1
+     */   
+    Object.defineProperty(BB.AudioFX.prototype, "wet", {
+        get: function() {
+            return this._wet.volume;
+        },
+        set: function(v) {
+            if( typeof v !== 'number'){
+                throw new Error("BB.AudioFX.wet: expecing a number");
+            } else {
+                this._wet.setGain( v );
+                var diff = 1 - v;
+                this._dry.setGain( diff );
+            }
+        }
+    }); 
+
+    /**
+     * set's the dry gain ( && adjust the wet gain accordingly, so that they total to 1 )
+     * @method setDryGain
+     * @param {Number} num a float value, 1 being the default volume, below 1 decreses the volume, above one pushes the gain
+     * @param {Number} ramp value in seconds for how quickly/slowly to ramp to the new value (num) specified
+     *
+     * @example  
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var fx = new BB.AudioFX('filter');<br>
+     *  &nbsp;var noise = new BB.AudioNoise({<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;connect: fx<br>
+     *  &nbsp;});<br>
+     *  <br>
+     *  &nbsp; fx.setDryGain( 0.75, 2 ); // raises dry level from 0 - 0.75 over 2 seconds (wet level drops to 0.25)<br>
+     *  // if no ramp value is needed, you could alternatively do<br>
+     *  &nbsp; fx.dry.volume = 0.75; // immediately jumps to 0.75 (and wet to 0.25) <br>
+     * </code>
+     */
+    BB.AudioFX.prototype.setDryGain = function( num, gradually ) {
+        if( typeof num !== "number" )
+            throw new Error('BB.AudioFX.setDryGain: first argument expecting a number');
+        
+        this._dry._volume = num;
+        var diff = 1 - num;
+        this._wet._volume = diff;
+
+        if(typeof gradually !== "undefined"){
+            if( typeof num !== "number" )
+                throw new Error('BB.AudioFX.setDryGain: second argument expecting a number');
+            else {
+                this._dry._globalGainUpdate( gradually );
+                this._wet._globalGainUpdate( gradually );
+            }
+        }
+        else { this._dry._globalGainUpdate(0); this._wet._globalGainUpdate(0); }
+    };
+
+    /**
+     * set's the wet gain ( && adjust the dry gain accordingly, so that they total to 1 )
+     * @method setWetGain
+     * @param {Number} num a float value, 1 being the default volume, below 1 decreses the volume, above one pushes the gain
+     * @param {Number} ramp value in seconds for how quickly/slowly to ramp to the new value (num) specified
+     *
+     * @example  
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var fx = new BB.AudioFX('filter');<br>
+     *  &nbsp;var noise = new BB.AudioNoise({<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;connect: fx<br>
+     *  &nbsp;});<br>
+     *  <br>
+     *  &nbsp; fx.setWetGain( 0.15, 2 ); // drops wet level from 1 - 0.15 over 2 seconds (dry level rises to 0.85)<br>
+     *  // if no ramp value is needed, you could alternatively do<br>
+     *  &nbsp; fx.wet.volume = 0.15; // immediately jumps to 0.15 (and dry to 0.85) <br>
+     * </code>
+     */
+    BB.AudioFX.prototype.setWetGain = function( num, gradually ) {
+        if( typeof num !== "number" )
+            throw new Error('BB.AudioFX.setWetGain: first argument expecting a number');
+        
+        this._wet._volume = num;
+        var diff = 1 - num;
+        this._dry._volume = diff;
+
+        if(typeof gradually !== "undefined"){
+            if( typeof num !== "number" )
+                throw new Error('BB.AudioFX.setWetGain: second argument expecting a number');
+            else {
+                this._wet._globalGainUpdate( gradually );
+                this._dry._globalGainUpdate( gradually );
+            }
+        }
+        else { this._wet._globalGainUpdate(0); this._dry._globalGainUpdate(0); }
+    };
+
+
+
+    /*
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` (=^.^=) -{ 'filter' stuffs }
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     */
+
+    /**
+     * frequency value when type is <b>'filter'</b>
+     * @property frequency 
+     * @type Number
+     */   
+    Object.defineProperty(BB.AudioFX.prototype, "frequency", {
+        get: function() {
+            if(this.type!=="filter") throw new Error('BB.AudioFX: frequency value only availalbe when using "filter" effect');
+            return this.node.frequency.value;
+        },
+        set: function(frequency) {
+            if(this.type!=="filter") throw new Error('BB.AudioFX: frequency value only availalbe when using "filter" effect');
+            this.node.frequency.value = frequency;
+        }
+    });
+    /**
+     * fgain value when type is <b>'filter'</b>
+     * @property fgain 
+     * @type Number
+     */   
+    Object.defineProperty(BB.AudioFX.prototype, "fgain", {
+        get: function() {
+            if(this.type!=="filter") throw new Error('BB.AudioFX: fgain value only availalbe when using "filter" effect');
+            return this.node.gain.value;
+        },
+        set: function(fgain) {
+            if(this.type!=="filter") throw new Error('BB.AudioFX: fgain value only availalbe when using "filter" effect');
+            this.node.gain.value = fgain;
+        }
+    });
+    /**
+     * Q value when type is <b>'filter'</b>
+     * @property Q 
+     * @type Number
+     */   
+    Object.defineProperty(BB.AudioFX.prototype, "Q", {
+        get: function() {
+            if(this.type!=="filter") throw new Error('BB.AudioFX: Q property only availalbe when using "filter" effect');
+            return this.node.Q.value;
+        },
+        set: function(Q) {
+            if(this.type!=="filter") throw new Error('BB.AudioFX: Q property only availalbe when using "filter" effect');
+            this.node.Q.value = Q;
+        }
+    });
 
 
     /**
-     * starts the stream
-     * @method start
+     * <b>"filter" type only</b>. <br>calculate the frequency response for a length-specified list of audible frequencies ( can be used to draw a curve representing the filter )
+     * @method calcFrequencyResponse
+     * @param  {Number} length       the length of the frequency/response arrays
+     * <code class="code prettyprint">  
+     * &nbsp;var freqRes = filt.calcFrequencyResponse( canvas.width ); <br>
+     * <br><br><br>
+     * &nbsp;// maths via: http://webaudioapi.com/samples/frequency-response/<br>
+     * &nbsp;var dbScale = Math.round(canvas.height/4);<br>
+     * &nbsp;var dbScale2 = Math.round(canvas.height/12.5);<br>
+     * &nbsp;var pixelsPerDb = (0.5 \* canvas.height) / dbScale;<br>
+     * &nbsp;ctx.beginPath();<br>
+     * &nbsp;for (var i = 0; i < canvas.width; ++i) {<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;var mr = freqRes.magResponse[i];<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;var dbResponse = dbScale2 \* Math.log(mr) / Math.LN10;<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;var x = i;<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;var y = (0.5 \* canvas.height) - pixelsPerDb \* dbResponse;<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;if ( i == 0 )    ctx.moveTo( x, y );<br>
+     * &nbsp;&nbsp;&nbsp;&nbsp;else             ctx.lineTo( x, y );<br>
+     * &nbsp;}<br>
+     * &nbsp;ctx.stroke();   <br>
+     * </code>
+     * view basic <a href="../../examples/editor/?file=audio-fx-filter" target="_blank">BB.AudioFX 'filter'</a> example
+     */
+    BB.AudioFX.prototype.calcFrequencyResponse = function( length ){
+        if(this.type!=="filter") throw new Error('BB.AudioFX: calcFrequencyResponse() only works with "filter" FX type');
+        if(typeof length !== "number") throw new Error('BB.AudioFX: expecting a length (number) argument');
+        // some of this maths via: http://webaudioapi.com/samples/frequency-response/
+        var noctaves = 11;
+        var frequencyHz = new Float32Array(length);
+        var magResponse = new Float32Array(length);
+        var phaseResponse = new Float32Array(length);
+        var nyquist = 0.5 * this.ctx.sampleRate;
+        for (var i = 0; i < length; ++i) {
+            var f = i / length;
+            // Convert to log frequency scale (octaves).
+            f = nyquist * Math.pow(2.0, noctaves * (f - 1.0));
+            frequencyHz[i] = f;
+        }
+
+        this.node.getFrequencyResponse( frequencyHz, magResponse, phaseResponse );
+
+        var res = { frequency:frequencyHz, magResponse:magResponse, phaseResponse:phaseResponse };
+        // // debug
+        // for(var j = 0; j <= frequencyHz.length-1;j++){
+        //     console.log('freq: ' + frequencyHz[j] + 'Hz, mag: ' + magResponse[j] + ', phase: ' + phaseResponse[j] + ' radians.');
+        // }
+        return res;
+    };
+
+
+    /*
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` (=^.^=) -{ 'reverb' stuffs }
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     */
+    
+    /**
+     * <b>"reverb" type only</b>. <br> when using impulse files, you can use this method to switch between the different files initially loaded in the 'paths' when the AudioFX 'reverb' was instantiated 
+     * @method useImpuse
+     * @param  {Number} index of impulse.buffers to be used
+     * <code class="code prettyprint">  
+     *  &nbsp;var reverb = new BB.AudioFX('reverb',{<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;paths:[<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'audio/giant_hall.wav',<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'audio/small_room.wav',<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'audio/telephone.wav'<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;]<br>
+     *  });<br>
+     *  <br>
+     *  &nbsp;// by default 'audio/giant_hall.wav' (or reverb.impulse.buffers[0]) is used<br>
+     *  &nbsp;// below we switch to small_room.wav (or reverb.impulse.buffers[1])<br>
+     *  &nbsp;reverb.useImpulse(1);
+     * </code>
+     * view basic <a href="../../examples/editor/?file=audio-fx-reverb" target="_blank">BB.AudioFX 'reverb'</a> example
+     */
+    BB.AudioFX.prototype.useImpulse = function( num ) {
+        if( !isNaN(num) && num.toString().indexOf('.') === -1){
+            if( num >= this.impulse.buffers.length ) 
+                throw new Error('BB.AudioFX.useImpulse: the value cannot be larger than '+(this.impulse.buffers.length-1)+', the length of impulse.buffers');
+            else this.node.buffer = this.impulse.buffers[num];
+        } else {
+            throw new Error("BB.AudioFX.useImpulse: expecting an integer");
+        }
+    };
+    
+    BB.AudioFX.prototype._impulseResponse = function( duration, decay, reverse ) {
+        // via :: http://stackoverflow.com/a/34482734
+        var sampleRate = this.ctx.sampleRate;
+        var length = sampleRate * duration;
+        var impulse = this.ctx.createBuffer(2, length, sampleRate); // maybe expose channel number? so it's not always 2 by default
+        var impulseL = impulse.getChannelData(0);
+        var impulseR = impulse.getChannelData(1);
+
+        for (var i = 0; i < length; i++){
+          var n = reverse ? length - i : i;
+          impulseL[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
+          impulseR[i] = (Math.random() * 2 - 1) * Math.pow(1 - n / length, decay);
+        }
+        return impulse;
+    };
+
+    /*
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` (=^.^=) -{ 'delay' stuffs }
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     * ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'` ~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`~-._.-~`'`
+     */
+    
+    /**
+     * the <b>delay</b> time (up to max specified)
+     * @property time 
+     * @type Number
+     * @default 0
+     */   
+    Object.defineProperty(BB.AudioFX.prototype, "time", {
+        get: function() {
+            return this._time;
+        },
+        set: function(v) {
+            if( typeof v !== 'number'){
+                throw new Error("BB.AudioFX.time: expecing a number in seconds (up to max value)");
+            } else {
+                this._time = v;
+                this.node.delayTime.value = this._time;
+            }
+        }
+    }); 
+
+    return BB.AudioFX;
+});
+/**
+ * a base module for creating more complicated audio effects (as AFX addons) in the style of <a href="BB.AudioFX.html" target="_blank">BB.AudioFX</a>
+ * @module BB.AFX
+ * @extends BB.AudioBase
+ */
+define('BB.AFX',['./BB', './BB.AudioBase'],
+function(  BB,        AudioBase) {
+
+    'use strict';
+    
+    /**
+     * a base module for creating more complicated audio effects (as AFX addons) in the style of <a href="BB.AudioFX.html" target="_blank">BB.AudioFX</a>
+     * @class BB.AFX
+     * @constructor
+     * @extends BB.AudioBase
+     * 
+     * @param {Object} config A config object to initialize the effect
      *
      * @example
-     * <code class="code prettyprint">
-     * &nbsp;// assuming "mic" is an instanceof BB.AudioStream<br>
-     * &nbsp;if(!mic.stream) mic.open();
+     * here is an example of a basic addon audio effect, we'll call it <i>AFXname.js</i><br>
+     * ( in this case nothing really, just a simple delay ), extended from BB.AFX
+     * <br><br>
+     * <code class="code prettyprint">  
+     *  &nbsp;function AFXname( config ){<br>
+     *  <br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;BB.AFX.call(this, config);<br>
+     *  <br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;// this.node must be some kind of AudioNode<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;// likely something like ConvolverNode, DelayNode, etc. ( or combo )<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;this.node = this.ctx.createDelay();<br>
+     *  <br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;// initialze the input >> dry/wet >> output ( see BB.AFX._init() )<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;// must be called after this.node is declared<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;this._init(); <br>
+     *  &nbsp;}<br>
+     *  <br>
+     *  &nbsp;AFXname.prototype = Object.create(BB.AFX.prototype);<br>
+     *  &nbsp;AFXname.prototype.constructor = AFXname;
      * </code>
+     * <br><br>
+     * by extending from BB.AFX, our AFXname has an input && an output, as well as the delay node ( this.node above ) automatically connected to a "wet" channel ( which is inversely proportional to the "dry" channel )<br>
+     * <img src="../assets/images/afxloop.png">
+     * <br><br>
+     * view the advanced <a href="../../examples/editor/?file=audio-fx-addons&type=advanced" target="_blank">BB.AFX addons</a> example
      */
-	BB.AudioStream.prototype.open = function(){
-		
-		navigator.getUserMedia = (	navigator.getUserMedia ||
-									navigator.webkitGetUserMedia ||
-									navigator.mozGetUserMedia ||
-                          			navigator.msGetUserMedia );
-		var self = this;
+    
+    BB.AFX = function( config ) {
+        
+        BB.AudioBase.call(this, config);
+        
+        // config obj
+        if(typeof config !== "undefined" && typeof config !== "object" ){
+            throw new Error('BB.AFX: first parameter should be a config object');
+        } else if( typeof config === "undefined" ) config = {};
 
-		if(navigator.getUserMedia){
-			navigator.getUserMedia({audio:true}, 
-				function(stream){
-					self.stream = stream;
-					var input = self.ctx.createMediaStreamSource(stream);
-					input.connect( self.gain );
-				}, 
-				function(e){
-					throw new Error("BB.AudioStream: "+ e );
-				}
-			);
-		} else {
-			throw new Error('BB.AudioStream: getUserMedia not supported');
-		}
-	};
+        this.node = null; // MUST BE DEFINED IN THE ADDON
+
+    };
+
+    BB.AFX.prototype = Object.create(BB.AudioBase.prototype);
+    BB.AFX.prototype.constructor = BB.AFX;
+
+    BB.AFX.prototype._init = function(){
+        // ................... FX loop ..............................
+        //  must be executed in the addon's constructor ( after defining this.node )
+        //  for bypassing fx // dry + wet channels
+        
+        this.input = this.ctx.createGain();  // input  :: receives connection
+                                             // output :: this.gain ( form AudioBase );
+        
+        this._wet = new BB.AudioBase({ connect: this.gain });
+        this._dry = new BB.AudioBase({ connect: this.gain });
+        this._dry.volume = 0;
+
+        // input > dry > output 
+        this.input.connect( this._dry.gain ); 
+        
+        // input > fx > wet > output
+        this.input.connect( this.node ); 
+        this.node.connect( this._wet.gain );
+    };
+
+   
+    /**
+     * the dry channel gain/volume
+     * @property dry 
+     * @type Number
+     * @default 0
+     */   
+    Object.defineProperty(BB.AFX.prototype, "dry", {
+        get: function() {
+            return this._dry.volume;
+        },
+        set: function(v) {
+            if( typeof v !== 'number'){
+                throw new Error("BB.AFX.dry: expecing a number");
+            } else {
+                this._dry.setGain( v );
+                var diff = 1 - v;
+                this._wet.setGain( diff );
+            }
+        }
+    }); 
 
     /**
-     * stops the stream
-     * @method start
+     * the wet channel gain/volume
+     * @property wet 
+     * @type Number
+     * @default 1
+     */   
+    Object.defineProperty(BB.AFX.prototype, "wet", {
+        get: function() {
+            return this._wet.volume;
+        },
+        set: function(v) {
+            if( typeof v !== 'number'){
+                throw new Error("BB.AFX.wet: expecing a number");
+            } else {
+                this._wet.setGain( v );
+                var diff = 1 - v;
+                this._dry.setGain( diff );
+            }
+        }
+    }); 
+
+    /**
+     * set's the dry gain ( && adjust the wet gain accordingly, so that they total to 1 )
+     * @method setDryGain
+     * @param {Number} num a float value, 1 being the default volume, below 1 decreses the volume, above one pushes the gain
+     * @param {Number} ramp value in seconds for how quickly/slowly to ramp to the new value (num) specified
      *
-     * @example
-     * <code class="code prettyprint">
-     * &nbsp;// assuming "mic" is an instanceof BB.AudioStream<br>
-     * &nbsp;if(mic.stream) mic.close();
+     * @example  
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var fx = new BB.AFX('filter');<br>
+     *  &nbsp;var noise = new BB.AudioNoise({<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;connect: fx<br>
+     *  &nbsp;});<br>
+     *  <br>
+     *  &nbsp; fx.setDryGain( 0.75, 2 ); // raises dry level from 0 - 0.75 over 2 seconds (wet level drops to 0.25)<br>
+     *  // if no ramp value is needed, you could alternatively do<br>
+     *  &nbsp; fx.dry.volume = 0.75; // immediately jumps to 0.75 (and wet to 0.25) <br>
      * </code>
      */
-	BB.AudioStream.prototype.close = function(){
-		if(this.stream){
-			this.stream.stop();
-			this.stream = null;
-		}
-	};
+    BB.AFX.prototype.setDryGain = function( num, gradually ) {
+        if( typeof num !== "number" )
+            throw new Error('BB.AFX.setDryGain: first argument expecting a number');
+        
+        this._dry._volume = num;
+        var diff = 1 - num;
+        this._wet._volume = diff;
 
-	/**
-	 * connects the Sampler to a particular AudioNode or AudioDestinationNode
-	 * @method connect
-	 * @param  {AudioNode} destination the AudioNode or AudioDestinationNode to connect to
-	 * @param  {Number} output      which output of the the Sampler do you want to connect to the destination
-	 * @param  {Number} input       which input of the destinatino you want to connect the Sampler to
-	 * @example  
-	 * <code class="code prettyprint">  
-	 *  &nbsp;BB.Audio.init();<br>
-	 *	<br>
-	 *	&nbsp;var fft = new BB.AudioAnalyser();<br>
-	 *	&nbsp;var mic = new BB.AudioStream();<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp; mic.connect( fft.analyser );
-	 * </code>
-	 * <br>
-	 * BB.AudioStream ( represented by Gain below ) connects to the BB.Audio.context by default, using <code>.connect()</code> also connects it to an additional node ( see disconnect below )
-	 * <br>
-	 * <img src="../assets/images/audiostream1.png">
-	 */
-	BB.AudioStream.prototype.connect = function( destination, output, input ){
-		if( !(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
-			throw new Error('AudioStream.connect: destination should be an instanceof AudioDestinationNode or AudioNode');
-		if( typeof output !== "undefined" && typeof output !== "number" )
-			throw new Error('AudioStream.connect: output should be a number');
-		if( typeof intput !== "undefined" && typeof input !== "number" )
-			throw new Error('AudioStream.connect: input should be a number');
+        if(typeof gradually !== "undefined"){
+            if( typeof num !== "number" )
+                throw new Error('BB.AFX.setDryGain: second argument expecting a number');
+            else {
+                this._dry._globalGainUpdate( gradually );
+                this._wet._globalGainUpdate( gradually );
+            }
+        }
+        else { this._dry._globalGainUpdate(0); this._wet._globalGainUpdate(0); }
+    };
 
-		if( typeof intput !== "undefined" ) this.gain.connect( destination, output, input );
-		else if( typeof output !== "undefined" ) this.gain.connect( destination, output );
-		else this.gain.connect( destination );
+    /**
+     * set's the wet gain ( && adjust the dry gain accordingly, so that they total to 1 )
+     * @method setWetGain
+     * @param {Number} num a float value, 1 being the default volume, below 1 decreses the volume, above one pushes the gain
+     * @param {Number} ramp value in seconds for how quickly/slowly to ramp to the new value (num) specified
+     *
+     * @example  
+     * <code class="code prettyprint">  
+     *  &nbsp;BB.Audio.init();<br>
+     *  <br>
+     *  &nbsp;var fx = new BB.AFX('filter');<br>
+     *  &nbsp;var noise = new BB.AudioNoise({<br>
+     *  &nbsp;&nbsp;&nbsp;&nbsp;connect: fx<br>
+     *  &nbsp;});<br>
+     *  <br>
+     *  &nbsp; fx.setWetGain( 0.15, 2 ); // drops wet level from 1 - 0.15 over 2 seconds (dry level rises to 0.85)<br>
+     *  // if no ramp value is needed, you could alternatively do<br>
+     *  &nbsp; fx.wet.volume = 0.15; // immediately jumps to 0.15 (and dry to 0.85) <br>
+     * </code>
+     */
+    BB.AFX.prototype.setWetGain = function( num, gradually ) {
+        if( typeof num !== "number" )
+            throw new Error('BB.AFX.setWetGain: first argument expecting a number');
+        
+        this._wet._volume = num;
+        var diff = 1 - num;
+        this._dry._volume = diff;
 
-	};
+        if(typeof gradually !== "undefined"){
+            if( typeof num !== "number" )
+                throw new Error('BB.AFX.setWetGain: second argument expecting a number');
+            else {
+                this._wet._globalGainUpdate( gradually );
+                this._dry._globalGainUpdate( gradually );
+            }
+        }
+        else { this._wet._globalGainUpdate(0); this._dry._globalGainUpdate(0); }
+    };
 
-	/**
-	 * diconnects the Sampler from the node it's connected to
-	 * @method disconnect
-	 * @param  {AudioNode} destination what it's connected to
-	 * @param  {Number} output      the particular output number
-	 * @param  {Number} input       the particular input number
-	 *
-	 *  @example  
-	 * <code class="code prettyprint">  
-	 *  &nbsp;BB.Audio.init();<br>
-	 *	<br>
-	 *	&nbsp;var fft = new BB.AudioAnalyser();<br>
-	 *	&nbsp;var mic = new BB.AudioStream();<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp; mic.disconnect();<br>
-	 *	&nbsp;&nbsp;&nbsp;&nbsp; mic.connect( fft.analyser );
-	 * </code>
-	 * <br>
-	 * BB.AudioStream ( represented by Gain below ) connects to the BB.Audio.context by default, using <code>.disconnect()</code> disconnects it from it's default, then using <code>.connect()</code>  connects it to the Analyser ( which is connected to the BB.Audio.context by default )
-	 * <br>
-	 * <img src="../assets/images/audiostream2.png">
-	 */
-	BB.AudioStream.prototype.disconnect = function(destination, output, input ){
-		if( typeof destination !== "undefined" &&
-			!(destination instanceof AudioDestinationNode || destination instanceof AudioNode) )
-			throw new Error('AudioStream.disconnect: destination should be an instanceof AudioDestinationNode or AudioNode');
-		if( typeof output !== "undefined" && typeof output !== "number" )
-			throw new Error('AudioStream.disconnect: output should be a number');
-		if( typeof input !== "undefined" && typeof input !== "number" )
-			throw new Error('AudioStream.disconnect: input should be a number');
-
-		if( typeof input !== "undefined" ) this.gain.disconnect( destination, output, input );
-		else if( typeof output !== "undefined" ) this.gain.disconnect( destination, output );
-		else if( typeof destination !== "undefined" ) this.gain.disconnect( destination );
-		else  this.gain.disconnect();
-	};
-
-	/**
-	 * sets the gain level of the AudioSamppler ( in a sense, volume control ) 
-	 * @method setGain
-	 * @param {Number} num a float value, 1 being the default volume, below 1 decreses the volume, above one pushes the gain
-	 */
-	BB.AudioStream.prototype.setGain = function( num ){
-		if( typeof num !== "number" )
-			throw new Error('AudioStream.setGain: expecting a number');
-
-		this.gain.gain.value = num;
-	};
-
-	return BB.AudioStream;
+    return BB.AFX;
 });
 /**
  * A base module for representing individual inputs on a midi device.
@@ -7187,6 +9593,8 @@ function(  BB,
             keys: []
         };
 
+        this.keyboard = new Keyboard();
+
         /**
          * The Web MIDI API midiAccess object returned from navigator.requestMIDIAccess(...)
          * @property midiAccess
@@ -7294,6 +9702,7 @@ function(  BB,
             var inputs = self.midiAccess.inputs.values();
             // loop through all inputs
             for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
+                
                 // listen for midi messages
                 input.value.onmidimessage = onMIDIMessage;
                 // this just lists our inputs in the console
@@ -7470,6 +9879,44 @@ function(  BB,
                     }
                 }
             }
+
+            var notes = [ 
+                'C1', 'C#1', 'D1', 'D#1', 'E1', 'F1', 'F#1', 'G1', 'G#1', 'A1', 'A#1', 'B1',
+                'C2', 'C#2', 'D2', 'D#2', 'E2', 'F2', 'F#2', 'G2', 'G#2', 'A2', 'A#2', 'B2',
+                'C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3',
+                'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4',
+                'C5', 'C#5', 'D5', 'D#5', 'E5', 'F5', 'F#5', 'G5', 'G#5', 'A5', 'A#5', 'B5',
+                'C6', 'C#6', 'D6', 'D#6', 'E6', 'F6', 'F#6', 'G6', 'G#6', 'A6', 'A#6', 'B6',
+                'C7', 'C#7', 'D7', 'D#7', 'E7', 'F7', 'F#7', 'G7', 'G#7', 'A7', 'A#7', 'B7',
+                'C8', 'C#8', 'D8', 'D#8', 'E8', 'F8', 'F#8', 'G8', 'G#8', 'A8', 'A#8', 'B8',
+                'C9', 'C#9', 'D9', 'D#9', 'E9', 'F9', 'F#9', 'G9', 'G#9', 'A9', 'A#9', 'B9',
+                'C10', 'C#10', 'D10', 'D#10', 'E10', 'F10', 'F#10', 'G10', 'G#10', 'A10', 'A#10', 'B10'];
+
+            i = 0;
+           
+            // keyboard note on
+            if (type === 144 && note > -1 && note < 121 && self.keyboard.eventStack.noteOn.length > 0) {
+                for (; i < self.keyboard.eventStack.noteOn.length; i++) {
+                    self.keyboard.eventStack.noteOn[i](notes[note], {
+                                velocity: velocity,
+                                channel: channel,
+                                command: command,
+                                type: type,
+                                note: note
+                            });
+                }
+            } // keyboard note off
+            else if (type === 128 && note > -1 && note < 121 && self.keyboard.eventStack.noteOff.length > 0) {
+                for (; i < self.keyboard.eventStack.noteOff.length; i++) {
+                    self.keyboard.eventStack.noteOff[i](notes[note], {
+                                velocity: velocity,
+                                channel: channel,
+                                command: command,
+                                type: type,
+                                note: note
+                            });
+                }
+            }
         } 
     };
 
@@ -7498,10 +9945,27 @@ function(  BB,
         }
     };
 
+    function Keyboard() {
+
+        this.eventStack = {
+            noteOn: [],
+            noteOff: []
+        };
+    }
+
+    Keyboard.prototype.on = function(name, callback) {
+
+        if (name === 'noteOn') {
+            this.eventStack.noteOn.push(callback);
+        } else if (name === 'noteOff') {
+            this.eventStack.noteOff.push(callback);
+        } 
+    };
+
     return BB.MidiDevice;
 });
 
-define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.ImageBrush2D','BB.LineBrush2D','BB.BrushManager2D','BB.MouseInput','BB.Pointer','BB.Vector2','BB.Particle2D','BB.Agent2D','BB.FlowField2D','BB.Audio','BB.AudioBufferLoader','BB.AudioSampler','BB.AudioSequencer','BB.AudioAnalyser','BB.AudioStream','BB.MidiDevice','BB.BaseMidiInput','BB.MidiInputKnob','BB.MidiInputSlider','BB.MidiInputButton','BB.MidiInputKey','BB.MidiInputPad'],function (require) {
+define('main',['require','BB','BB.MathUtils','BB.Detect','BB.Color','BB.BaseBrush2D','BB.ImageBrush2D','BB.LineBrush2D','BB.BrushManager2D','BB.MouseInput','BB.Pointer','BB.LeapMotion','BB.Vector2','BB.Particle2D','BB.Agent2D','BB.FlowField2D','BB.Audio','BB.AudioBase','BB.AudioStream','BB.AudioBufferLoader','BB.AudioSampler','BB.AudioTone','BB.AudioNoise','BB.AudioSequencer','BB.AudioAnalyser','BB.AudioFX','BB.AFX','BB.MidiDevice','BB.BaseMidiInput','BB.MidiInputKnob','BB.MidiInputSlider','BB.MidiInputButton','BB.MidiInputKey','BB.MidiInputPad'],function (require) {
 
   'use strict';
 
@@ -7509,6 +9973,7 @@ define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.Ima
   
   //utils
   BB.MathUtils      = require('BB.MathUtils');
+  BB.Detect         = require('BB.Detect');
   BB.Color          = require('BB.Color');
 
   // brushes
@@ -7520,6 +9985,7 @@ define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.Ima
   // inputs, etc...
   BB.MouseInput     = require('BB.MouseInput');
   BB.Pointer        = require('BB.Pointer');
+  BB.LeapMotion     = require('BB.LeapMotion');
 
   // physics
   BB.Vector2        = require('BB.Vector2');
@@ -7529,12 +9995,17 @@ define('main',['require','BB','BB.MathUtils','BB.Color','BB.BaseBrush2D','BB.Ima
 
   // audio
   BB.Audio             = require('BB.Audio');
+  BB.AudioBase         = require('BB.AudioBase');
+  BB.AudioStream       = require('BB.AudioStream');
   BB.AudioBufferLoader = require('BB.AudioBufferLoader');
   BB.AudioSampler      = require('BB.AudioSampler');
+  BB.AudioTone         = require('BB.AudioTone');
+  BB.AudioNoise        = require('BB.AudioNoise');
   BB.AudioSequencer    = require('BB.AudioSequencer');
   BB.AudioAnalyser     = require('BB.AudioAnalyser');
-  BB.AudioStream       = require('BB.AudioStream');
-
+  BB.AudioFX           = require('BB.AudioFX');
+  BB.AFX               = require('BB.AFX');
+  
   // midi
   BB.MidiDevice      = require('BB.MidiDevice');
   BB.BaseMidiInput   = require('BB.BaseMidiInput');
