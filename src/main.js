@@ -8,6 +8,7 @@ define(function (require) {
   BB.MathUtils      = require('BB.MathUtils');
   BB.Detect         = require('BB.Detect');
   BB.Color          = require('BB.Color');
+  BB.EventEmitter   = require('BB.EventEmitter');
 
   // brushes
   BB.BaseBrush2D    = require('BB.BaseBrush2D');
