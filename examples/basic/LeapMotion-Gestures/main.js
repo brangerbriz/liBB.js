@@ -14,8 +14,12 @@ var connectionString;
     connectionOutput = document.getElementsByName("connectionData");
     gestureString = "";
     connectionString = " ";
-    leapMotion = new BB.LeapMotion();// creates an instance of the LeapMotion module created for liBB library 
-	  leapMotion.getLeapData(null, false, true); // gives canvas and enables X,Y tracking and enables gestures
+    // creates an instance of the LeapMotion module created for liBB library 
+    leapMotion = new BB.LeapMotion({
+    canvasConstructor:  null,
+    coordinatesEnabled:  false,
+    gesturesEnabled:  true
+    });
   }
  function update() {
 	// test in console that the gestures are being captured.

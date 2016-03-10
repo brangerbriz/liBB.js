@@ -3,8 +3,8 @@
 			var ctx        = canvas.getContext('2d');
 			document.body.appendChild(canvas);
 			document.body.className = "radial-grey";
-			var canvasX = 0; // var obtained from leapMotion that will give an X coordinate
-			var canvasY = 0; // var obtained from leapMotion that will give an Y coordinate
+			var X = 0; // var obtained from leapMotion that will give an X coordinate
+			var Y = 0; // var obtained from leapMotion that will give an Y coordinate
 			// canvasX and CanvasY will replace point.x and pointer.y 
 			var logo       = new logo(ctx); // toys object
 			var gravity    = new BB.Vector2(); // default 0
@@ -14,10 +14,13 @@
 			spin = 0.01;
 
 		function setup() {
-				
-				leapMotion = new BB.LeapMotion();// creates an instance of the LeapMotion module created for liBB library
+				// creates an instance of the LeapMotion module created for liBB library
+				leapMotion = new BB.LeapMotion({
+			    canvasConstructor: canvas,
+			    coordinatesEnabled: true, 
+				gesturesEnabled: false
+				});// creates an instance of the LeapMotion module created for liBB library
 				// 
-				leapMotion.getLeapData(canvas, true, true); // gives canvas and enables X,Y tracking and enables gestures
 				
 				    window.onresize = function() {
 			        WIDTH = canvas.width = window.innerWidth ;
@@ -33,26 +36,12 @@
 
 		function update() {
 
-				canvasX = leapMotion.canvasX; // puts the value obtained from sensor to the var created
-				canvasY = leapMotion.canvasY; // puts the value obtained from sensor to the var created
-
-
-				// test in console that the gestures are being captured.
-				if(leapMotion.grab){
-					console.log("Grab Gesture");
-				}
-				if(leapMotion.pinch){
-					console.log("Pinch Gesture");
-				}
-			    if(leapMotion.circle){
-			    	if(leapMotion.clockwise){console.log("Circle clockwise");}
-			        else{console.log("Circle Gesture");}
-			        console.log(leapMotion.circleradius);
-			    }
+				X = leapMotion.x; // puts the value obtained from sensor to the var created
+				Y = leapMotion.y; // puts the value obtained from sensor to the var created
 				
 			    requestAnimationFrame(update);
 			    ball.spring({
-			    	position: new BB.Vector2(canvasX,canvasY),// now assigns the X,Y values to the position
+			    	position: new BB.Vector2(X,Y),// now assigns the X,Y values to the position
 			    	k:0.01,
 			    	length: 100
 			    });
@@ -75,11 +64,11 @@
 		function draw() {
 			    ctx.clearRect(0,0,WIDTH,HEIGHT);
 			    // draw string
-			    var distance = BB.MathUtils.dist( canvasX, canvasY, ball.position.x, ball.position.y );
+			    var distance = BB.MathUtils.dist( X, Y, ball.position.x, ball.position.y );
 			    if(distance>500) distance = 500;
 			    ctx.lineWidth = BB.MathUtils.map( distance, 0, 500, 5, 1);
 			    ctx.beginPath();
-			    ctx.moveTo(canvasX,canvasY);// assigns the values so that now the object moves using data from leapmotion sensor
+			    ctx.moveTo(X,Y);// assigns the values so that now the object moves using data from leapmotion sensor
 			    ctx.lineTo( ball.position.x, ball.position.y );
 			    ctx.closePath();
 			    ctx.stroke();
