@@ -108,7 +108,14 @@ function(BB){
          * @default false
          */
    BB.LeapMotion.prototype.deviceStreaming = false;
-  
+   /**
+         * Objetc containing the values of the last frame registered by the leapmotion sensor.
+         * @property lastFrame
+         * @type {Object}
+         * @default null
+         */
+   BB.LeapMotion.prototype.lastFrame = null;
+ 
 
 
        if(typeof Leap === 'undefined'){
@@ -130,6 +137,8 @@ function(BB){
         // the controller.on method lets us se what the sensor is telling us on each frame
         // frames are sent 200 frames per second
         controller.on("frame",function(frame){
+         // allowing user to acces frame therefor access all the data from the sdk
+         BB.LeapMotion.prototype.lastFrame = frame;
           // frame.pointables allows us to detect when a frame has a pointable.(hand,finger)
                   if(frame.pointables.length>0 && getXY && canvasGiven){
                       var pointable = frame.pointables[0];
