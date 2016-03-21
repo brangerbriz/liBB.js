@@ -11,6 +11,26 @@ function(BB){
 
 
     'use strict';
+
+/**
+* 
+* @property minX
+* @type {Number}
+* @default 0
+*/
+var minX = 0; 
+var outputminX = 0;
+var xscale= 0;
+var widthX =0;
+var minY = 0;
+var outputminY= 0;
+var yscale= 0;
+var heightY = 0;
+var minZ = 0;
+var outputminZ= 0;
+var zscale= 0;
+var depthZ = 0;
+
   /**
      * A module implementing LeapMotion Sensor.
      *
@@ -45,6 +65,13 @@ function(BB){
          * @default 0
          */
    BB.LeapMotion.prototype.y = 0;
+        /**
+         * The pointers Z position as given by the LeapMotion Sensor
+         * @property z
+         * @type {Number}
+         * @default 0
+         */
+   BB.LeapMotion.prototype.z = 0;
          /**
          * Boolean value corresponding to the grab gesture detected by the LeapMotion sensor.
          * @property grab
@@ -126,12 +153,12 @@ function(BB){
         var canvasGiven = false;
 
         // gets data from config
-        var canvas = (config && typeof config.canvasConstructor === 'object') ? config.canvasConstructor : null;
-        var getXY = (config && typeof config.coordinatesEnabled === 'boolean') ? config.coordinatesEnabled : false;
+        var canvas = (config && typeof config.canvasConstructor === 'object') ? config.canvasConstructor : null; 
         var getGestures = (config && typeof config.gesturesEnabled === 'boolean') ? config.gesturesEnabled : false;
+        var mapDimension = (config && typeof config.mapDimension === 'number') ? config.mapDimension : 2;
 
-         if(canvas === null){
-          console.log("No canvas given therefor x and y are not available");
+        if(canvas === null){
+          console.log("No canvas given therefor x and y are only available setting mapX,mapY and mapZ if necessary");
           canvasGiven = false;
         }else{canvasGiven = true;}
         // the controller.on method lets us se what the sensor is telling us on each frame
@@ -140,16 +167,29 @@ function(BB){
          // allowing user to acces frame therefor access all the data from the sdk
          BB.LeapMotion.prototype.lastFrame = frame;
           // frame.pointables allows us to detect when a frame has a pointable.(hand,finger)
-                  if(frame.pointables.length>0 && getXY && canvasGiven){
+
+          if(frame.pointables.length>0){
                       var pointable = frame.pointables[0];
                       // creates and interaction box it provides normalized coordinates for hands, fingers, and tools within this box.
                       var interactionBox = frame.interactionBox;
                       // provides the stabalized tip position
                       var normalizedPosition = interactionBox.normalizePoint(pointable.stabilizedTipPosition, true);
+              if(canvasGiven && mapDimension === 2){
                       // Convert the normalized coordinates to span the canvas
                       BB.LeapMotion.prototype.x = canvas.width * normalizedPosition[0];
-                      BB.LeapMotion.prototype.y = canvas.height * (1 - normalizedPosition[1]);
-                  }
+                      BB.LeapMotion.prototype.y = canvas.height * (1 - normalizedPosition[1]);                    
+              }
+              if(!canvasGiven && mapDimension ===3){
+                      // Convert the normalized coordinates to span the canvas
+                      BB.LeapMotion.prototype.x = widthX *  normalizedPosition[0];
+                      //BB.LeapMotion.prototype.x = outputminX + (normalizedPosition[0] - minX)* xscale;
+                      BB.LeapMotion.prototype.y = heightY *  (1 - normalizedPosition[1]);
+                      //BB.LeapMotion.prototype.y = -1 *(outputminY + (normalizedPosition[1] - minY)* yscale);
+                      //BB.LeapMotion.prototype.z = depthZ * normalizedPosition[2] ;
+                      BB.LeapMotion.prototype.z = depthZ * (outputminZ + (normalizedPosition[2] - minZ)* zscale);
+              }
+          }
+                  
                   // make all vars false when no hand detected fromo the LeaMotion
                   if(frame.hands.length === 0){
                       BB.LeapMotion.prototype.grab = false;
@@ -232,6 +272,49 @@ function(BB){
       function onStopped(){
         BB.LeapMotion.prototype.deviceStreaming = false;
       }   
+  };
+
+  BB.LeapMotion.mapX = function(configX){ 
+     //minX = (configX && typeof configX.minX === 'number') ? configX.minX : 0; 
+     //var maxX = (configX && typeof configX.maxX === 'number') ? configX.maxX : 0; 
+     widthX = (configX && typeof configX.widthX === 'number') ? configX.widthX : null;
+    // outputminX = - widthX /2;
+    //var outputmaxX = widthX /2;
+     
+    // if( outputminX !== null && outputmaxX !== null ){
+   //  xscale = (outputmaxX - outputminX)/(maxX - minX);
+   //  }
+     if(widthX === null){
+      console.log(" widthX parameter missing on mapX method (Not needed if a canvas is given)");
+     }  
+  };
+  BB.LeapMotion.mapY = function(configY){ 
+     //minY = (configY && typeof configY.minY === 'number') ? configY.minY : 0; 
+     //var maxY = (configY && typeof configY.maxY === 'number') ? configY.maxY : 0; 
+     heightY = (configY && typeof configY.heightY === 'number') ? configY.heightY : null;
+     //outputminY = - heightY /2;
+    // var outputmaxY = heightY /2;
+
+    // if( outputminY !== null && outputmaxY !== null ){
+    // yscale = (outputmaxY - outputminY)/(maxY - minY);
+    // }
+     if(heightY === null){
+      console.log(" heightY parameter missing on mapY method (Not needed if a canvas is given)");
+     }   
+  };
+  BB.LeapMotion.mapZ = function(configZ){ 
+     minZ = (configZ && typeof configZ.minZ === 'number') ? configZ.minZ : 0; 
+     var maxZ = (configZ && typeof configZ.maxZ === 'number') ? configZ.maxZ : 0; 
+     depthZ = (configZ && typeof configZ.depthZ === 'number') ? configZ.depthZ : null;
+     outputminZ = - depthZ /2;
+     var outputmaxZ = depthZ /2;
+
+     if( outputminZ !== null && outputmaxZ !== null ){
+     zscale = (outputmaxZ - outputminZ)/(maxZ - minZ);
+     }
+     if(depthZ === null){
+      console.log(" depthZ parameter missing on mapZ method (Must be present for 3D mapping)");
+     } 
   };
   return BB.LeapMotion;
 });
