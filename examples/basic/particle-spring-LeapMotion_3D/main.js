@@ -1,12 +1,11 @@
         if ( window.innerWidth === 0 ) { window.innerWidth = parent.innerWidth; window.innerHeight = parent.innerHeight; }
-			var canvas     = document.createElement('canvas');
-			var ctx        = canvas.getContext('2d');
+        	var canvas     = document.createElement('canvas');
+			var ctx        = canvas.getContext('2d');	
 			document.body.appendChild(canvas);
 			document.body.className = "radial-grey";
 			var X = 0; // var obtained from leapMotion that will give an X coordinate
 			var Y = 0; // var obtained from leapMotion that will give an Y coordinate
 			var Z = 0;
-			// canvasX and CanvasY will replace point.x and pointer.y 
 			var logo       = new logo(ctx); // toys object
 			var gravity    = new BB.Vector2(); // default 0
 			var leapMotion;
@@ -15,16 +14,29 @@
 			spin = 0.01;
 
 		function setup() {
+
+				BB.LeapMotion.mapX({
+					widthX : 1920
+				});
+				BB.LeapMotion.mapY({
+					//heightY : 950
+					heightY : 413
+				});
+				BB.LeapMotion.mapZ({
+					minZ : -100,
+					maxZ : 100,
+					depthZ : 100
+				});
 				// creates an instance of the LeapMotion module created for liBB library
 				leapMotion = new BB.LeapMotion({
-				canvasConstructor : canvas,
-			    mapDimension:2 ,
+			 	mapDimension:3 ,
 				gesturesEnabled: false
 				});// creates an instance of the LeapMotion module created for liBB library
-	
+
 				window.onresize = function() {
-				  WIDTH = canvas.width = window.innerWidth ;
-			      HEIGHT = canvas.height = window.innerHeight;		  
+			      WIDTH = canvas.width = 1920 ;
+			      HEIGHT =  canvas.height = 413;
+			      //HEIGHT =  canvas.height = 950;
 			    }
 			    window.onresize();
 			    ball = new BB.Particle2D({
@@ -38,7 +50,11 @@
 
 				X = leapMotion.x; // puts the value obtained from sensor to the var created.
 				Y = leapMotion.y; // puts the value obtained from sensor to the var created.
-
+				Z = leapMotion.z; // puts the value obtained from sensor to the var created.
+				console.log(" X value: "+X);
+				console.log(" Y value: "+Y);
+				console.log(" Z value: "+Z);
+				
 			    requestAnimationFrame(update);
 			    ball.spring({
 			    	position: new BB.Vector2(X,Y),// now assigns the X,Y values to the position
@@ -60,7 +76,7 @@
 			    prevY = ball.position.y;
 			    draw();
 		}
-        // canvasX and CanvasY will replace point.x and pointer.y 
+        // canvasX and CanvasY will replace point.x and pointer.y
 		function draw() {
 			    ctx.clearRect(0,0,WIDTH,HEIGHT);
 			    // draw string
