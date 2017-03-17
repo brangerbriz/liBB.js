@@ -1,5 +1,6 @@
 .DS_Store
 node_modules/
+src/transpiled/*
 www/docs/*
 !www/docs/README.md
 www/BB.min.js
