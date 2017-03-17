@@ -1,7 +1,7 @@
 # liBB
 
 #### A JavaScript library/framework for creating interactive && generative apps + installations in/out of the browser
-visit [libb.brangerbriz.com](http://libb.brangerbriz.com/) for examples and documentation or see the [www](https://github.com/brangerbriz/liBB.js/blob/master/wwww) directory.
+visit [libb.brangerbriz.com](http://libb.brangerbriz.com/) for examples and documentation or see the [www](https://github.com/brangerbriz/liBB.js/tree/master/www) directory.
 
 ----------
 
