@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+www/docs/*
+!www/docs/README.md
+www/BB.min.js
+www/BB.debug.js
+build/*
+!build/README.md

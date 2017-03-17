@@ -1,0 +1,58 @@
+{
+  "name": "liBB",
+  "version": "0.2.0",
+  "main": "build/BB.js",
+  "description": "A JavaScript library/framework for creating interactive && generative apps + installations in/out of the browser",
+  "contributors": [
+    "Brannon Dorsey <brannon@brannondorsey.com> (http://brannondorsey.com)",
+    "Nick Briz <nickbriz@gmail.com> (http://nickbriz.com)"
+  ],
+  "homepage": "http://libb.brangerbriz.com/",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brangerbriz/BBMod.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/brangerbriz/BBMod.js/issues"
+  },
+  "scripts": {
+    "test": "echo \"NO TESTS YET: gotta check it old school\" ; exit 0",
+    "lint": "jshint --exclude=src/transpiled --reporter=node_modules/jshint-stylish src/* ; exit 0",
+    "transpile": "babel src -d src/transpiled --presets es2015 --ignore transpiled/*",
+    "compile": "browserify src/transpiled/BB.js > build/BB.js",
+    "minify": "uglifyjs build/BB.js > build/BB.min.js ; cp build/BB.min.js www/BB.min.js",
+    "docs": "yuidoc --quiet --exclude=src/transpiled --themedir www/docs-theme --outdir www/docs ./src",
+    "build:debug": "browserify --debug src/BB.js > build/BB.debug.js ; cp build/BB.debug.js www/BB.debug.js",
+    "prebuild": "npm run lint ; npm run transpile",
+    "build": "npm run compile",
+    "postbuild": "npm run minify ; npm run docs",
+    "watch:debug": "nodemon -w src -x 'npm run build:debug'",
+    "watch": "nodemon -w src -x 'npm run build'"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-preset-es2015": "^6.24.0",
+    "browserify": "^14.1.0",
+    "jshint": "^2.9.4",
+    "jshint-stylish": "^2.2.1",
+    "nodemon": "^1.11.0",
+    "uglify-js": "^2.8.13",
+    "yuidocjs": "^0.10.2"
+  },
+  "directories": {
+    "doc": "www/docs",
+    "example": "www/examples"
+  },
+  "keywords": [
+    "html5",
+    "canvas",
+    "drawing",
+    "webaudio",
+    "webgl",
+    "kinect",
+    "interactive",
+    "generative",
+    "art"
+  ]
+}

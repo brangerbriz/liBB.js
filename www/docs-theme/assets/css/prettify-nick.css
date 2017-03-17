@@ -1,0 +1,41 @@
+ 
+/* nick's custom sublime-style monokai theme */
+code.prettyprint { display: block; background-color: #333; border:none; padding: 12px 0px 12px 0px; }
+code.overflow { overflow-x: scroll;  }
+code .nocode { background-color: none; color: #000 }
+code .str { color: #dad06f } /* string  - yellow */
+code .kwd { color: #64d6eb;  } /* keyword - baby blue */
+code .com { color: #75715e } /* comment - grey */
+code .typ { color: #a6da27 } /* type    - green */
+code .lit { color: #ae81f2 } /* literal -purple */
+code .pun { color: #fff }    /* punctuation */
+code .pln { color: #fff }    /* plaintext */
+code .tag { color: #f92672; } /* html/xml tag    - red  */
+code .atn { color: #dad06f;  } /* attribute name  - yellow */
+code .atv { color: #a6da27 } /* attribute value -  green*/
+code .dec { color: #ae81f2 } /* decimal         - purple */
+
+pre.prettyprint { display: block; background-color: #333; border:none; padding: 12px 0px 12px 0px; }
+pre.overflow { overflow-x: scroll;  }
+pre .nocode { background-color: none; color: #000 }
+pre .str { color: #dad06f } /* string  - yellow */
+pre .kwd { color: #64d6eb;  } /* keyword - baby blue */
+pre .com { color: #75715e } /* comment - grey */
+pre .typ { color: #a6da27 } /* type    - green */
+pre .lit { color: #ae81f2 } /* literal -purple */
+pre .pun { color: #fff }    /* punctuation */
+pre .pln { color: #fff }    /* plaintext */
+pre .tag { color: #f92672; } /* html/xml tag    - red  */
+pre .atn { color: #dad06f;  } /* attribute name  - yellow */
+pre .atv { color: #a6da27 } /* attribute value -  green*/
+pre .dec { color: #ae81f2 } /* decimal         - purple */
+
+/* Specify class=linenums on a pre to get line numbering */
+li.L1, li.L3, li.L5, li.L7, li.L9 {
+    background: none;
+}
+li.L0, li.L1, li.L2, li.L3, li.L4, li.L5, li.L6, li.L7, li.L8, li.L9
+{
+    color: #75715E;
+    list-style-type: decimal;
+}

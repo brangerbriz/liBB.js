@@ -1,0 +1,9 @@
+{
+	"projectName" : "liBB",
+
+	"projectVersion" : "0.2.0",
+
+	"projectDescription" : "A JavaScript library/framework for creating interactive && generative apps + installations in/out of the browser",
+
+	"cred" : "lots of coyp+paste from >> https://github.com/Krxtopher/yuidoc-themes"
+}
