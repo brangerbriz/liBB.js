@@ -20,11 +20,11 @@
     "test": "echo \"NO TESTS YET: gotta check it old school\" ; exit 0",
     "lint": "jshint --exclude=src/transpiled --reporter=node_modules/jshint-stylish src/* ; exit 0",
     "transpile": "babel src -d src/transpiled --presets es2015 --ignore transpiled/*",
-    "compile": "browserify src/transpiled/BB.js > build/BB.js",
+    "compile": "browserify src/transpiled/main.js > build/BB.js",
     "minify": "uglifyjs build/BB.js > build/BB.min.js ; cp build/BB.min.js www/BB.min.js",
     "docs": "yuidoc --quiet --exclude src/transpiled --themedir www/docs-theme --outdir www/docs ./src",
-	"postdocs":"cp www/docs-theme/docs-dir-readme.md www/docs/README.md",
-    "build:debug": "browserify --debug src/BB.js > build/BB.debug.js ; cp build/BB.debug.js www/BB.debug.js",
+    "postdocs": "cp www/docs-theme/docs-dir-readme.md www/docs/README.md",
+    "build:debug": "browserify --debug src/main.js > build/BB.debug.js ; cp build/BB.debug.js www/BB.debug.js",
     "prebuild": "npm run lint ; npm run transpile",
     "build": "npm run compile",
     "postbuild": "npm run minify ; npm run docs",
@@ -39,7 +39,8 @@
     "jshint-stylish": "^2.2.1",
     "nodemon": "^1.11.0",
     "uglify-js": "^2.8.13",
-    "yuidocjs": "^0.10.2"
+    "yuidocjs": "^0.10.2",
+	"express": "^4.15.2"
   },
   "directories": {
     "doc": "www/docs",

@@ -1,0 +1,186 @@
+<!doctype html>
+<html>
+	<head>
+		<title> test page </title>
+		<meta charset="utf-8">
+		<style>
+			html,body { margin:0; }
+		</style>
+	</head>
+	<body>
+
+		<!-- <script src="../BB.debug.js"></script> -->
+		<script src="../BB.min.js"></script>
+		<script>
+
+			var nfo = BB.Detect.browserInfo();
+			console.log( nfo );
+
+			// BB.Audio.init();
+			//
+			// var node = new BB.AudioBase();
+			//
+			// var fft = new BB.AudioAnalyser();
+			//
+			// var canvas = document.createElement('canvas');
+			// 	canvas.width = innerWidth;
+			// 	canvas.height = innerHeight;
+			// var ctx = canvas.getContext('2d');
+			// document.body.appendChild(canvas);
+			//
+			// var p = new BB.Particle2D({
+			// 	position: new BB.Vector2D(canvas.width/2, canvas.height/2 ),
+			// 	radius: 30,
+			// 	heading: Math.PI / 2,
+			//     speed: 1
+			// });
+			//
+		    // var a = new BB.Agent2D({
+		    //     // NOTE: setting the maxSpeed too high can cause the 'arrive' behavior not to work
+		    //     maxSpeed: 5, //gui -name maxSpeed -min 1 -max 5 -step 1
+		    //     position: new BB.Vector2D( Math.random()*canvas.width, Math.random()*canvas.height ),
+		    //     velocity: new BB.Vector2D( BB.Maths.randomFloat(-1,1), BB.Maths.randomFloat(-5,5) ),
+		    //     radius: BB.Maths.randomInt(15, 30)
+		    // });
+			//
+		    // var point = new BB.Vector2D( Math.random()*canvas.width, Math.random()*canvas.height );
+			//
+			// var logo = new BB.Logo( ctx );
+			// 	// logo.update( {position:{ x: 960, y: 342 }} );
+			// 	// logo.update( p )
+			// 	logo.draw();
+			//
+			// function update(){
+			// 	requestAnimationFrame(update);
+			// 	ctx.clearRect(0,0,canvas.width,canvas.height);
+			//
+			// 	a.seek(point, 0.1, 150);
+			// 	a.update();
+			//
+			// 	p.update();
+			// 	if( p.position.y > canvas.height || p.position.y < 0 ){
+			// 		p.heading = -p.heading;
+			// 	}
+			//
+			// 	logo.update( a );
+			// 	logo.draw();
+			// 	// console.log( logo.position )
+			// }
+			// update();
+
+
+
+
+			// ctx.fillStyle = clr.hex;
+			// ctx.fillRect(0,0,innerWidth,innerHeight);
+
+
+// var canvas     = document.createElement('canvas');
+// var ctx        = canvas.getContext('2d');
+// document.body.appendChild(canvas);
+// document.body.className = "radial-grey";
+
+// var WIDTH, HEIGHT;
+// var mouse = new BB.MouseInput( canvas );
+// var pointer = new BB.Pointer( mouse );
+
+// var pen = new BB.LineBrush2D({
+// 	color: new BB.Color(),
+// 	weight: 20,
+// 	width: 25,
+// 	variant: "solid"
+// });
+
+// var spray = new BB.WebBrush({
+// 	color: new BB.Color(),
+// 	weight: 100
+// });
+
+// function setup() {
+//     window.onresize = function() {
+//         WIDTH = canvas.width = window.innerWidth;
+//         HEIGHT = canvas.height = window.innerHeight;
+//     }
+
+//     window.onresize();
+
+// }
+
+
+// window.addEventListener('load', function(){ // on page load
+
+//     document.body.addEventListener('touchstart', function(e){
+//         alert(e.changedTouches[0].pageX) // alert pageX coordinate of touch point
+//     }, false)
+
+// }, false);
+
+
+// function update() {
+//    requestAnimationFrame(update);
+
+//    mouse.update();
+//    pointer.update();
+//    spray.update( pointer );
+
+//    draw();
+// }
+
+
+// var logo = new BB.Logo( ctx );
+
+// function draw() {
+
+//     spray.draw( ctx );
+//     logo.draw();
+// }
+
+// setup();
+// update();
+
+
+// // UI ----------------
+
+// function selected( ele ){
+// 	for (var i = 1; i < buttons.length; i++) {
+// 		buttons[i].style.backgroundColor = "#fff";
+// 		buttons[i].style.color = "#000";
+// 	};
+// 	ele.style.backgroundColor = "#e40477";
+// 	ele.style.color = "#fff";
+// }
+
+// var buttons = [];
+// var names = ['erase','solid','ink','ink-osc','soft','lines','calligraphy'];
+// for (var i = 0; i < 7; i++) {
+
+// 	var btn = document.createElement('button');
+// 		btn.innerHTML = names[i];
+// 		btn.className = "abs-right btn";
+// 		btn.name = names[i];
+// 		if(i==0){
+// 			btn.onclick = function(){
+// 				ctx.clearRect(0,0,WIDTH,HEIGHT);
+// 			}
+// 		} else {
+// 			btn.onclick = function(){
+// 				pen.variant = this.name;
+// 				selected( this );
+// 			}
+// 		}
+
+// 	buttons.push( btn )
+// 	document.body.appendChild( btn );
+// 	if(i>0)
+// 		buttons[i].style.top = buttons[i].clientHeight*i + ((i+1)*10) +"px";
+// };
+
+// selected( buttons[1] );
+
+
+
+
+		</script>
+
+	</body>
+</html>
