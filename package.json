@@ -29,7 +29,7 @@
     "build": "npm run compile",
     "postbuild": "npm run minify ; npm run docs",
     "watch:debug": "nodemon -w src -x 'npm run build:debug'",
-    "watch": "nodemon -w src -x 'npm run build'"
+    "watch": "nodemon -w src --ignore src/transpiled -x 'npm run build'"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
