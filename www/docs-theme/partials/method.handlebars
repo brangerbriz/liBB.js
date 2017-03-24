@@ -76,7 +76,8 @@
             {{/if}}
         {{/if}}
         {{#if foundAt}}
-        <a href="{{foundAt}}">`{{{file}}}:{{{line}}}`</a>
+        <!-- <a href="{{foundAt}}">`{{{file}}}:{{{line}}}`</a> -->
+		<a href="https://github.com/brangerbriz/liBB.js/blob/master/{{{file}}}#L{{{line}}}" target="_blank">`{{{file}}}:{{{line}}}`</a>
         {{/if}}
         </p>
 
@@ -174,11 +175,11 @@
                     {{#if type}}
                         <span class="type">{{#crossLink type}}{{/crossLink}}</span>
                     {{/if}}
-                </h4> 
+                </h4>
 
                 <div class="returns-description">
                     {{#if description}}
-                       
+
                         {{{description}}}
                     {{else}}
                         {{#if type}}
