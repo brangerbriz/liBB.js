@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 /*
       +++++++++++++
     +++++++++++++++++
@@ -12,7 +14,42 @@
     +++++++++++++++++                                \___/
       +++++++++++++                                                   // libb.brangerbriz.com
 */
-function BB() {
+
+// import { Detect } from './utils/BB.Detect.js';
+// note: would be nice to use 'import' 'export', but browserify can't seem to handle it
+// && we want to be able to debug un-transpiled code
+
+class BB {
+
+	constructor(){
+		// if u update this, also update package.json
+		// and also update www/docs-theme/theme.json
+		this.version = "0.2.0";
+
+		// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
+		// - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - .
+		// ~._.~'~._.~'~._.~'	 General Utils      '~._.~'~._.~'~._.~'~._.~'~._.~'
+		// - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - .
+		// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
+
+		// this.Detect = Detect; // see note above
+		this.Detect 		= require('./utils/BB.Detect.js');
+		this.ValidArg 		= require('./utils/BB.ValidArg.js');
+		this.Vector2D 		= require('./utils/BB.Vector2D.js');
+		this.Maths 			= require('./utils/BB.Maths.js');
+		this.EventEmitter 	= require('./utils/BB.EventEmitter.js');
+
+		// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
+		// - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - .
+		// ~._.~'~._.~'~._.~'	 Audio Modules      '~._.~'~._.~'~._.~'~._.~'~._.~'
+		// - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - .
+		// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
+		this.Audio 			= require('./audio/BB.Audio.js');
+	}
+
+}
+
+// function BB() {
 
 	// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
 	// - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - .
@@ -104,5 +141,5 @@ function BB() {
 	// this.AudioSampler 		= require('./audio/BB.AudioSampler');
 	// this.AudioSequencer 	= require('./audio/BB.AudioSequencer');
 
-}
+// }
 window.BB = new BB();
