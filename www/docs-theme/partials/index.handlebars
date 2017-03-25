@@ -1,7 +1,10 @@
 <div class="index-content">
     <h2 class="maintitle">{{projectName}}</h2>
-    <p class="maindescription">{{projectDescription}}</p>
-    <iframe src="" frameborder="0" id="examplesFrame"></iframe>
+    <p>{{projectDescription}}</p>
+	<p>
+		Download the <a href='../BB.min.js' target='_bank'>BB.min.js</a> library to use it on the wwweb or use the project generator (TBD) for creating a stand alone app. All the modules included in liBB ( and documented on this page ) can be used independent of the compiled library, just include any of the individual <a href='https://github.com/brangerbriz/liBB.js/tree/master/src' target='_blank'>js files</a> in your project. Some of the modules depend on other modules or 3rd party libraries, in these cases an error will be thrown when they're missing from your project. If you are creating a new liBB module use this <a href='./assets/template-doc/BB.Template.js' target='_blank'>template</a> and refer to it's <a href='./assets/template-doc/docs/Template.html' target='_blank'>documentation page</a> for an explanation
+	</p>
+    <!-- <iframe src="" frameborder="0" id="examplesFrame"></iframe> -->
     <script>
     	document.getElementById('examplesFrame').setAttribute('src','http://'+window.location.host+"/examples/index.html");
     </script>
