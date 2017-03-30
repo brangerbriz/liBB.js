@@ -15,15 +15,16 @@
       +++++++++++++                                                   // libb.brangerbriz.com
 */
 
-// import { Detect } from './utils/BB.Detect.js';
+// import { Check } from './utils/BB.Check.js';
 // note: would be nice to use 'import' 'export', but browserify can't seem to handle it
 // && we want to be able to debug un-transpiled code
 
 class BB {
 
 	constructor(){
-		// if u update this, also update package.json
-		// and also update www/docs-theme/theme.json
+		// if u update this version number,
+		// also update version number in package.json
+		// and also update in www/docs-theme/theme.json
 		this.version = "0.2.0";
 
 		// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
@@ -32,8 +33,8 @@ class BB {
 		// - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - .
 		// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
 
-		// this.Detect = Detect; // see note above
-		this.Detect 		= require('./utils/BB.Detect.js');
+		// this.Check = Check; // see note above
+		this.Check 			= require('./utils/BB.Check.js');
 		this.ValidArg 		= require('./utils/BB.ValidArg.js');
 		this.Vector2D 		= require('./utils/BB.Vector2D.js');
 		this.Maths 			= require('./utils/BB.Maths.js');

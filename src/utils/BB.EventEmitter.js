@@ -1,30 +1,5 @@
 /* jshint esversion: 6 */
 
-let _mod_ = "EventEmitter";
-let _3rd_party_deps = [];
-
-function _3rdPartyChecks( depsList ){
-	depsList.forEach((lib)=>{
-		if( typeof window[lib] == "undefined" )
-			throw new Error(_mod_+" depends on the "+lib+" library which is missing");
-	});
-}
-if( typeof require !== "undefined" ){
-	/*
-	 Notice that we don't call it BB.ValidArg, because BB doesn't exist until the entire library is compiled.
-	 Also notice that we don't call it ValidArg because that will throw a redeclaration error of the class being used as a stand-alone module
-	*/
-  	var BBValidArg = require('./BB.ValidArg'); // example
-
-} else {
-
-  if (typeof ValidArg === 'function') var BBValidArg = ValidArg; // example
-  else throw new Error(_mod_+" depends on BB.ValidArg.js which is missing");
-
-  _3rdPartyChecks( _3rd_party_deps );
-}
-
-
 /**
 * A class for providing a basic event-based programming interface.
 * Often used as a base class extended by other classes that require
@@ -81,7 +56,7 @@ class EventEmitter {
 
 	constructor(){
 		this._eventStack = {};
-		this.err = new BBValidArg(this);
+		this.err = new BB.ValidArg(this);
 	}
 
 	/**
@@ -204,4 +179,4 @@ class EventEmitter {
 	}
 }
 
-if( typeof module !== "undefined") module.exports = EventEmitter;
+module.exports = EventEmitter;

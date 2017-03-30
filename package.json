@@ -22,6 +22,7 @@
     "transpile": "babel src -d src/transpiled --presets es2015 --ignore transpiled/*",
     "compile": "browserify src/transpiled/main.js > build/BB.js",
     "minify": "uglifyjs build/BB.js > build/BB.min.js ; cp build/BB.min.js www/BB.min.js",
+	"predocs": "cd www/docs-theme/assets/template-doc/; docco -c templateDoc.css Template.js",
     "docs": "yuidoc --quiet --exclude src/transpiled --themedir www/docs-theme --outdir www/docs ./src",
     "postdocs": "cp www/docs-theme/docs-dir-readme.md www/docs/README.md",
     "build:debug": "browserify --debug src/main.js > build/BB.debug.js ; cp build/BB.debug.js www/BB.debug.js",
@@ -35,12 +36,13 @@
     "babel-cli": "^6.24.0",
     "babel-preset-es2015": "^6.24.0",
     "browserify": "^14.1.0",
+    "docco": "^0.7.0",
+    "express": "^4.15.2",
     "jshint": "^2.9.4",
     "jshint-stylish": "^2.2.1",
     "nodemon": "^1.11.0",
     "uglify-js": "^2.8.13",
-    "yuidocjs": "^0.10.2",
-	"express": "^4.15.2"
+    "yuidocjs": "^0.10.2"
   },
   "directories": {
     "doc": "www/docs",

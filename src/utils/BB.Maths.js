@@ -1,23 +1,24 @@
 /* jshint esversion: 6 */
 
-function _mErr( func, args ){
-	function chk(a){
+/**
+*  A utility module with more Maths not found in the built in JS Math object
+* @class BB.Maths
+*/
+class Maths {
+
+	static _merrchk(a){
 		if( typeof a !== "number" ){
 			var pre = ( typeof window.BB !== "undefined") ? "BB." : "";
 			var msg = pre +"Maths."+ func + ": was expecting a number but got a "+(typeof a);
 			throw new Error(msg);
 		}
 	}
-	if( args instanceof Array )
-		for (var i = 0; i < args.length; i++) chk( args[i] );
-	else chk( args );
-}
 
-/**
-*  A utility module with more Maths not found in the built in JS Math object
-* @class BB.Maths
-*/
-class Maths {
+	static _mErr( func, args ){
+		if( args instanceof Array )
+			for (var i = 0; i < args.length; i++) this._merrchk( args[i] );
+		else this._merrchk( args );
+	}
 
 	/**
 	* Scales value using min and max. This is the inverse of BB.Maths.lerp(...).
@@ -33,7 +34,7 @@ class Maths {
 	* </code>
 	 */
 	static norm(value, min, max) {
-		_mErr("norm",[value,min,max]);
+		this._mErr("norm",[value,min,max]);
 		return (value - min) / (max - min);
 	}
 
@@ -51,7 +52,7 @@ class Maths {
 	* </code>
 	*/
 	static lerp(norm, min, max) {
-		_mErr("lerp",[norm, min, max]);
+		this._mErr("lerp",[norm, min, max]);
 		return (max - min) * norm + min;
 	}
 
@@ -71,7 +72,7 @@ class Maths {
 	* </code>
 	*/
 	static clamp(value, min, max) {
-		_mErr("clamp",[value, min, max]);
+		this._mErr("clamp",[value, min, max]);
 		return Math.max(min, Math.min(max, value));
 	}
 
@@ -91,7 +92,7 @@ class Maths {
 	* </code>
 	*/
 	static map(value, sourceMin, sourceMax, destMin, destMax) {
-		_mErr("map",[value, sourceMin, sourceMax, destMin, destMax]);
+		this._mErr("map",[value, sourceMin, sourceMax, destMin, destMax]);
 		return this.lerp(this.norm(value, sourceMin, sourceMax), destMin, destMax);
 	}
 
@@ -110,7 +111,7 @@ class Maths {
 	* </code>
 	*/
 	static dist(p1x, p1y, p2x, p2y){
-		_mErr("dist",[p1x, p1y, p2x, p2y]);
+		this._mErr("dist",[p1x, p1y, p2x, p2y]);
 		return Math.sqrt(Math.pow(p2x - p1x, 2) + Math.pow(p2y - p1y, 2));
 	}
 
@@ -131,7 +132,7 @@ class Maths {
 	* </code>
 	 */
 	static angleBtw(p1x, p1y, p2x, p2y){
-		_mErr("angleBtw",[p1x, p1y, p2x, p2y]);
+		this._mErr("angleBtw",[p1x, p1y, p2x, p2y]);
 		return Math.atan2( p2x - p1x, p2y - p1y );
 	}
 
@@ -147,7 +148,7 @@ class Maths {
 	* </code>
 	*/
 	static radToDeg(radians) {
-		_mErr('radToDeg',radians);
+		this._mErr('radToDeg',radians);
 		return radians * (180.0 / Math.PI);
 	}
 
@@ -163,7 +164,7 @@ class Maths {
 	* </code>
 	*/
 	static degToRad(degrees) {
-		_mErr("degToRad",degrees);
+		this._mErr("degToRad",degrees);
 		return degrees * (Math.PI / 180.0);
 	}
 
@@ -185,7 +186,7 @@ class Maths {
 	* </code>
 	*/
 	static cartesianToPolar(x, y) {
-		_mErr("cartesianToPolar",[x, y]);
+		this._mErr("cartesianToPolar",[x, y]);
 		var distance = Math.sqrt(x*x + y*y);
 		var radians = Math.atan2(y,x);
 		var degrees = radians * (180/Math.PI);
@@ -210,7 +211,7 @@ class Maths {
 	* </code>
 	*/
 	static polarToCartesian(distance, angle) {
-		_mErr("polarToCartesian",[distance, angle]);
+		this._mErr("polarToCartesian",[distance, angle]);
 		var x = distance * Math.cos(angle);
 		var y = distance * Math.sin(angle);
 		return { x:x, y:y };
@@ -226,7 +227,7 @@ class Maths {
 	*/
 	static randomInt( min, max) {
 		if( typeof max == 'undefined' ){ max = min; min = 0; }
-		_mErr("randomInt",[min,max]);
+		this._mErr("randomInt",[min,max]);
 		return Math.floor(min + Math.random() * (max - min + 1));
 	}
 
@@ -240,7 +241,7 @@ class Maths {
 	*/
 	static randomFloat( min, max ) {
 		if( typeof max == 'undefined' ){ max = min; min = 0; }
-		_mErr("randomInt",[min,max]);
+		this._mErr("randomInt",[min,max]);
 		return min + Math.random() * (max - min);
 	}
 
@@ -314,7 +315,7 @@ class Maths {
 		y = (typeof y!=="undefined") ? y : 0;
 		z = (typeof z!=="undefined") ? z : 0;
 
-		_mErr("noise",[x,y,z]);
+		this._mErr("noise",[x,y,z]);
 
 		if (perlin === null) {
 			perlin = new Array(PERLIN_SIZE + 1);

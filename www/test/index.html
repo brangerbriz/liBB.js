@@ -9,24 +9,26 @@
 	</head>
 	<body>
 
-		<script src="three.min.js"></script>
+		<!-- <script src="three.min.js"></script> -->
 
 		<!-- <script src="../BB.debug.js"></script> -->
-		<!-- <script src="../BB.min.js"></script> -->
+		<script src="../BB.min.js"></script>
 
-		<script src="BB.ValidArg.js"></script>
-		<script src="BB.EventEmitter.js"></script>
+		<!-- <script src="BB.ValidArg.js"></script> -->
+		<!-- <script src="BB.EventEmitter.js"></script> -->
 		<script>
+			// BB.Check.dependencies('THREE');
 
-			// var nfo = BB.Detect.browserInfo();
-			// console.log( nfo );
+			var nfo = BB.Check.browserInfo();
+			console.log( nfo );
 
-			var x = new EventEmitter("pizza");
-			// var x = new BB.EventEmitter("pizza");
-			console.log( x.name );
+			// var x = new EventEmitter("pizza");
+			var x = new BB.EventEmitter();
+			console.log( x );
 
-			x.name = "farts";
-			console.log( x.name );
+			var y = BB.Maths.randomInt(100);
+			console.log(y)
+
 
 
 
