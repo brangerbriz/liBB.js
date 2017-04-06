@@ -64,6 +64,77 @@ class Check {
 	}
 
 	/**
+	 * returns an object with audio codec support info
+	 * @static
+	 * @method audioSupport
+	 * @example
+	 * <code class="code prettyprint">
+	 * &nbsp;BB.Check.audioSupport();<br>
+	 * &nbsp;// returns { <br>
+	 * &nbsp;//&nbsp;&nbsp;&nbsp;mp3:"probably",  <br>
+	 * &nbsp;//&nbsp;&nbsp;&nbsp;vorbis:"no",  <br>
+	 * &nbsp;//&nbsp;&nbsp;&nbsp;wav:"maybe",  <br>
+	 * &nbsp;//&nbsp;&nbsp;&nbsp;aac:"probably"  <br>
+	 * &nbsp;// } <br>
+	 * </code>
+	 */
+	static audioSupport(){
+		let aObj = {
+			mp3:'no', vorbis:'no', wav:'no', aac:'no'
+		};
+		let a = document.createElement('audio');
+		if( typeof a.canPlayType == "function" ){
+			aObj.mp3 = a.canPlayType('audio/mpeg;');
+			if( aObj.mp3 === '' ) aObj.mp3 = 'no';
+			aObj.vorbis = a.canPlayType('audio/ogg; codecs="vorbis"');
+			if( aObj.vorbis === '' ) aObj.vorbis = 'no';
+			aObj.wav = a.canPlayType('audio/wav; codecs="1"');
+			if( aObj.wav === '' ) aObj.wav = 'no';
+			aObj.aac = a.canPlayType('audio/mp4; codecs="mp4a.40.2"');
+			if( aObj.aac === '' ) aObj.aac = 'no';
+		}
+		return aObj;
+	}
+
+	/**
+	 * returns an object with video codec support info as well as whether or not there is support for posters and captions
+	 * @static
+	 * @method videoSupport
+	 * @example
+	 * <code class="code prettyprint">
+	 * &nbsp;BB.Check.videoSupport();<br>
+	 * &nbsp;// returns { <br>
+	 * &nbsp;//&nbsp;&nbsp;&nbsp;webm:"probably",  <br>
+	 * &nbsp;//&nbsp;&nbsp;&nbsp;h264:"no",  <br>
+	 * &nbsp;//&nbsp;&nbsp;&nbsp;theora:"maybe",  <br>
+	 * &nbsp;//&nbsp;&nbsp;&nbsp;captions:"probably"  <br>
+	 * &nbsp;//&nbsp;&nbsp;&nbsp;poster:"probably"  <br>
+	 * &nbsp;// } <br>
+	 * </code>
+	 */
+	static videoSupport(){
+		let vObj = {
+			captions:'no', poster:'no',
+			webm:'no', h264:'no', theora:'no'
+		};
+		let v = document.createElement('video');
+		if( typeof v.canPlayType == "function" ){
+
+			vObj.webm = v.canPlayType('video/webm; codecs="vp8, vorbis"');
+			if( vObj.webm === '' ) vObj.webm = 'no';
+			vObj.h264 = v.canPlayType('video/mp4; codecs="avc1.42E01E, mp4a.40.2"');
+			if( vObj.h264 === '' ) vObj.h264 = 'no';
+			vObj.theora = v.canPlayType('video/ogg; codecs="theora"');
+			if( vObj.theora === '' ) vObj.theora = 'no';
+
+			vObj.poster = ('poster' in document.createElement('video')) ? 'probably' : 'no';
+			vObj.captions = ('src' in document.createElement('track')) ? 'probably' : 'no';
+
+		}
+		return vObj;
+	}
+
+	/**
 	* check that third party libraries have been included. If the module depends on any third party libraries ( ex: Three.js ) you should include the names of any global variables in that library as a string ( ex: "THREE" ) in the deps Array
 	* @static
 	* @method dependencies
