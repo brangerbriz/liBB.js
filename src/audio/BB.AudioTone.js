@@ -400,7 +400,7 @@ class AudioTone extends AudioBase {
 			else osc.type = type;
 
 		// scheduled start time && adsr
-		let hold = (dur-(attack+decay));
+		let hold = (dur-(attack+decay+release));
 		this._adsr(gainNode, 1.0, st, attack, decay, release, hold, sustain);
 		osc.start(st);
 	}
