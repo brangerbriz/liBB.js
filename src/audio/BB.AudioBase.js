@@ -174,6 +174,37 @@ class AudioBase {
 		}
 	}
 
+	// ------------------------------- poly Utils ------------------------------
+	// for keeping track of polyphonic notes
+	// -------------------------------------------------------------------------
+
+	_addPolyNote( idVal, inputNode, gainNode, sustLvl, gainAdjust ){
+		if( this.input === null ) this.input = {};
+
+		this.input[idVal] = { node:inputNode, gain:gainNode, sus:sustLvl };
+
+		// adjust overall gain to account for total number of waves
+		if( gainAdjust ){
+			let count = 0; for(let k in this.input) count++;
+			let polylength = (count===0) ? 1 : count;
+			// this.output.gain.setTargetAtTime( this.getGain()/polylength, this.ctx.currentTime, 0.1);
+			this.output.gain.setValueAtTime( this.getGain()/polylength, this.ctx.currentTime );
+		}
+	}
+
+	_removePolyNote( idVal, gainAdjust ){
+		if(typeof this.input[idVal]!=="undefined"){
+			this.input[idVal].gain.disconnect();
+			delete this.input[idVal];
+		}
+		if( gainAdjust ){
+			/// adjust overall gain to account for total number of waves
+			let count = 0; for(let k in this.input) count++;
+			let polylength = (count===0) ? 1 : count;
+			this.output.gain.setTargetAtTime( this.getGain()/polylength, this.ctx.currentTime, 0.5);
+		}
+	}
+
 	// ------------------------------- ADSR Utils ------------------------------
 	// a = attack, d = decay, s = sustain (scalar), r = release
 	// t = scheduledTime

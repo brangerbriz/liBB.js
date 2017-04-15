@@ -233,29 +233,29 @@ class AudioTone extends AudioBase {
 
 	// ... private methods  .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... ....
 
-	_addPolyNote( freq, oscNode, gainNode, sustLvl, holdTime ){
-		// TODO get rid of holdTime ( no longer being used )
-		// TODO consider how this might work in sampler/noiseOn
-		// TODO see todo note in constructor
-
-		this.input[freq] = { osc:oscNode, gain:gainNode, hold:holdTime, lvl:sustLvl };
-		// adjust overall gain to account for total number of waves
-		let count = 0; for(let k in this.input) count++;
-		let polylength = (count===0) ? 1 : count;
-		// this.output.gain.setTargetAtTime( this.getGain()/polylength, this.ctx.currentTime, 0.1);
-		this.output.gain.setValueAtTime( this.getGain()/polylength, this.ctx.currentTime );
-	}
-
-	_removePolyNote( freq ){
-		if(typeof this.input[freq]!=="undefined"){
-			this.input[freq].gain.disconnect();
-			delete this.input[freq];
-		}
-		/// adjust overall gain to account for total number of waves
-		let count = 0; for(let k in this.input) count++;
-		let polylength = (count===0) ? 1 : count;
-		this.output.gain.setTargetAtTime( this.getGain()/polylength, this.ctx.currentTime, 0.5);
-	}
+	// _addPolyNote( freq, oscNode, gainNode, sustLvl, holdTime ){
+	// 	// TODO get rid of holdTime ( no longer being used )
+	// 	// TODO consider how this might work in sampler/noiseOn
+	// 	// TODO see todo note in constructor
+	//
+	// 	this.input[freq] = { osc:oscNode, gain:gainNode, hold:holdTime, lvl:sustLvl };
+	// 	// adjust overall gain to account for total number of waves
+	// 	let count = 0; for(let k in this.input) count++;
+	// 	let polylength = (count===0) ? 1 : count;
+	// 	// this.output.gain.setTargetAtTime( this.getGain()/polylength, this.ctx.currentTime, 0.1);
+	// 	this.output.gain.setValueAtTime( this.getGain()/polylength, this.ctx.currentTime );
+	// }
+	//
+	// _removePolyNote( freq ){
+	// 	if(typeof this.input[freq]!=="undefined"){
+	// 		this.input[freq].gain.disconnect();
+	// 		delete this.input[freq];
+	// 	}
+	// 	/// adjust overall gain to account for total number of waves
+	// 	let count = 0; for(let k in this.input) count++;
+	// 	let polylength = (count===0) ? 1 : count;
+	// 	this.output.gain.setTargetAtTime( this.getGain()/polylength, this.ctx.currentTime, 0.5);
+	// }
 
 	_isNote( str ){
 		let notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
@@ -489,7 +489,7 @@ class AudioTone extends AudioBase {
 		// let delay = st - this.ctx.currentTime;
 		// if( delay < 0 ) delay = 0;
 		// this._addPolyNote( freq, osc, gainNode, sustain, delay+attack+decay+0.00002 );
-		this._addPolyNote( freq, osc, gainNode, sustain );
+		this._addPolyNote( freq, osc, gainNode, sustain, true );
 	}
 
 	/**
@@ -539,8 +539,8 @@ class AudioTone extends AudioBase {
 		if(typeof this.input[freq] !== "undefined"){
 
 			let now = this.ctx.currentTime; // fadeOut (if hold||sustain) && stop
-			this._adsrOut( this.input[freq].gain, 1.0, now+hold, release, this.input[freq].lvl  );
-			this.input[freq].osc.stop( now + hold + release + 0.00005);
+			this._adsrOut( this.input[freq].gain, 1.0, now+hold, release, this.input[freq].sus  );
+			this.input[freq].node.stop( now + hold + release + 0.00005);
 
 			// remove from input when fadeOut is complete
 			let rmvInterval = setInterval(()=>{
