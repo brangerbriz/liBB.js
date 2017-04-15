@@ -6,7 +6,7 @@
 * @constructor
 *
 * @example
-* in the example below instantiating the BB.AudioBase creates a <a href="https://developer.mozilla.org/en-US/docs/Web/API/GainNode" target="_blank">GainNode</a> ( the modules's output ) connected to the default BB.Audio.context ( ie. AudioDestination )
+* While in theory you could instantiate an AudioBase node with the code below, it really wouldn't do much of anything, as this is intended to be used as a base class, extended by classes like AudioTone, AudioNoise and AudioSampler
 * <br><br>
 * <code class="code prettyprint">
 *  &nbsp;BB.Audio.init();<br>
@@ -16,8 +16,27 @@
 *  &nbsp;// or optional config property<br>
 *  &nbsp;var node = new BB.AudioBase({<br>
 *  &nbsp;&nbsp;&nbsp;&nbsp;connect: fft,<br>
-*  &nbsp;&nbsp;&nbsp;&nbsp;gain: 0.5<br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;gain: 0.5,<br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;attack: 0.25,<br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;decay: 0.25,<br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;sustain: 0.75,<br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;release: 0.25<br>
 *  &nbsp;});<br>
+*  <br>
+* </code>
+* <br><br>
+* In practice, this is extended by other classes and contains a number of private methods used by these other classes. Below is a simplified example of how it is extended
+* <br><br>
+* <code class="code prettyprint">
+* &nbsp;// example class that extends AuioBase<br><br>
+* &nbsp;let AudioBase = require('./BB.AudioBase.js');<br><br>
+* &nbsp;class Example extends AudioBase {<br>
+* &nbsp;&nbsp;&nbsp;constructor(config){<br>
+* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(config);<br><br>
+* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// custom stuff<br><br>
+* &nbsp;&nbsp;&nbsp;}<br>
+* &nbsp;}<br><br>
+* &nbsp;module.exports = Example;<br>
 *  <br>
 * </code>
 */
@@ -121,7 +140,7 @@ class AudioBase {
 	*  &nbsp;BB.Audio.init();<br>
 	*  <br>
 	*  &nbsp;var node = new BB.AudioBase({<br>
-	*  &nbsp;&nbsp;&nbsp;&nbsp;volume: 0.75,<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;gain: 0.75,<br>
 	*  &nbsp;});<br>
 	*  <br>
 	*  &nbsp;node.connect( exampleNode );<br>
@@ -157,7 +176,7 @@ class AudioBase {
 	*  &nbsp;BB.Audio.init();<br>
 	*  <br>
 	*  &nbsp;var node = new BB.AudioBase({<br>
-	*  &nbsp;&nbsp;&nbsp;&nbsp;volume: 0.75,<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;gain: 0.75,<br>
 	*  &nbsp;});<br>
 	*  <br>
 	*  &nbsp;node.disconnect(); // disconnected from default BB.Audio.context<br>
@@ -230,6 +249,17 @@ class AudioBase {
 		output.gain.linearRampToValueAtTime(lvl*s, 	t + a + d + 0.00002);
 		output.gain.linearRampToValueAtTime(lvl*s, 	t + a + d + h + 0.00003);
 		output.gain.linearRampToValueAtTime(0.0001, t + a + d + h + r + 0.00004);
+	}
+
+	// -------------------- buffer pitch analysis ------------------------------
+	// 	used to alter detuning of buffer w/music theory utils && note-strings
+	// -------------------------------------------------------------------------
+
+	_analyzePitch(){
+		// TODO if it has a buffer
+		// analyze the buffer to determine the pitch
+		// use this so that you can plass note-strings && calculate detune value
+		// as well as being able to do chords && such with buffers
 	}
 
 

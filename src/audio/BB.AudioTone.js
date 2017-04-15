@@ -3,7 +3,7 @@
 let AudioBase = require('./BB.AudioBase.js');
 
 /**
-* A module for creating oscillating tones ( periodic wave forms ) along with music theory utilities
+* A module for creating oscillating tones ( periodic wave forms ) with some built-in music theory
 * @class BB.AudioTone
 * @constructor
 * @extends BB.AudioBase
@@ -12,10 +12,17 @@ let AudioBase = require('./BB.AudioBase.js');
 * can contain the following:<br><br>
 * <code class="code prettyprint">
 * &nbsp;{<br>
+* &nbsp;&nbsp;&nbsp; frequency: 220, // overide default frequency of 440 <br>
+* &nbsp;&nbsp;&nbsp; duration: 2, // overide default duration of 1 second <br>
+* &nbsp;&nbsp;&nbsp; type: "custom", // "sine", "square", "sawtooth", "triangle", "custom"<br>
+* &nbsp;&nbsp;&nbsp; wave: [ 0, 1, 0, 0.5, 0, 0.25, 0, 0.125 ], // only for "custom" type<Br>
+* &nbsp;&nbsp;&nbsp; // as well as all the AudioBase class properties<Br>
 * &nbsp;&nbsp;&nbsp; connect: fft, // overide default destination <br>
 * &nbsp;&nbsp;&nbsp; gain: 0.5, // master "gain" (expolential multiplier)<br>
-* &nbsp;&nbsp;&nbsp; type: "custom", // "sine", "square", "sawtooth", "triangle", "custom"<br>
-* &nbsp;&nbsp;&nbsp; wave: [ 0, 1, 0, 0.5, 0, 0.25, 0, 0.125 ] // only for "custom" type<Br>
+* &nbsp;&nbsp;&nbsp; attack: 0.25,// attack fade-in in seconds<br>
+* &nbsp;&nbsp;&nbsp; decay: 0.25, // decay fade-down to sustain level in seconds <br>
+* &nbsp;&nbsp;&nbsp; sustain: 0.75,// sustain level scalar value<br>
+* &nbsp;&nbsp;&nbsp; release: 0.25 // release fade-out in seconds<br>
 * &nbsp;}
 * </code>
 * <br>
@@ -35,13 +42,87 @@ let AudioBase = require('./BB.AudioBase.js');
 * <code class="code prettyprint">
 *  &nbsp;BB.Audio.init();<br>
 *  <br>
-*  &nbsp;var O = new BB.AudioTone({<br>
+*  &nbsp;// create a tone object one of 3 ways<br><br>
+*  &nbsp;// 1. with default values ( 440Hz sine wave )<br>
+*  &nbsp;var tone = new BB.AudioTone();<br><br>
+*  &nbsp;// 2. by passing a default frequency<br>
+*  &nbsp;var tone = new BB.AudioTone(220);// could also be a note, ex: "B"<br><br>
+*  &nbsp;// 3. by passing a config object<br>
+*  &nbsp;var tone = new BB.AudioTone({<br>
 *  &nbsp;&nbsp;&nbsp;&nbsp;gain: 0.75,<br>
 *  &nbsp;&nbsp;&nbsp;&nbsp;type: "square"<br>
-*  &nbsp;});<br>
-*  <br>
-*  &nbsp; O.play( 440 );<br>
-*  &nbsp; O.play( 880 );<br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;frequency: 220, <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;attack: 0.25 <br>
+*  &nbsp;});<br><br>
+* </code>
+*  <br><br>
+* Once you have instantiated a tone object it can be used in a variety of different ways. Below is an overview:
+*  <br><br>
+*  <code class="code prettyprint">
+*  &nbsp;// the simplest is simply playing it back with all the defaults <br>
+*  &nbsp;// in this case 220Hz 1 second square wave at 0.75 gain with 0.25 second attack<br>
+*  &nbsp; tone.play(); <br>
+*  &nbsp;// you could immediately stop that by calling <br>
+*  &nbsp; tone.stop(); <br><br>
+*  &nbsp;// you could schedule the playback for later, ex 1 second from now<br>
+*  &nbsp; tone.play( BB.Audio.now() + 1 ); <br>
+*  &nbsp;// and stop it 1 second after that ( ie. 2 seconds from now )<br>
+*  &nbsp; tone.stop( BB.Audio.now() + 2 ); <br><br>
+*  &nbsp;// or playback with alternative properties by passing a config object<br>
+*  &nbsp; tone.play({<br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;frequency:"B",//aka 493.883... <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;time:BB.Audio.now()+1, <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;duration: 2, <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;attack:0.2, <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;decay:0.2, <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;sustain:1, <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;release:0.25 <br>
+*  &nbsp; }); <br><br>
+*  &nbsp;// you can trigger the playback of a tone forever like this<br>
+*  &nbsp; tone.noteOn(880); <br>
+*  &nbsp;// you can do the same but schedule it to start later, ex:<br>
+*  &nbsp; tone.noteOn(880, BB.Audio.now()+1 ); <br>
+*  &nbsp;// or do the same but with custom properties, ex:<br>
+*  &nbsp; tone.noteOn({<br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;frequency:880,<br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;time:BB.Audio.now()+1, <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;attack:0.2, <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;decay:0.2, <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;sustain:1, <br>
+*  &nbsp; }); <br><br>
+*  &nbsp;// noteOn can be called once per frequency <br>
+*  &nbsp;// which means you can play polyphonic tones with a single tone object <br>
+*  &nbsp;// there are also chordOn() and chordOff() methods <br>
+*  &nbsp; tone.noteOn(220); <br>
+*  &nbsp; tone.noteOn(440); <br>
+*  &nbsp; tone.noteOn(880); <br><br>
+*  &nbsp;// to stop playback on a particular frequency you can do one of the following: <br>
+*  &nbsp; tone.noteOff(880); <br>
+*  &nbsp;// or...<br>
+*  &nbsp; tone.noteOff({<br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;frequency:880,<br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;hold:1, <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;release:0.25 <br>
+*  &nbsp; }); <br><br>
+*  &nbsp;// because you can play multiple frequencies at the same time (polyphony) <br>
+*  &nbsp;// the tone object needs to keep track of which frequencies are being played <br>
+*  &nbsp;// it does this in it's tone.input dictionary(object) property<br>
+*  &nbsp;// because of this you can't call play or noteOn multiple times on the... <br>
+*  &nbsp;// ...same frequency without overriding the previous instance of that same note <br>
+*  &nbsp;// instead there's an alternative method which does not keep track of the note <br>
+*  &nbsp;// which means it can not be "stopped" but it can be called multiple times <br>
+*  &nbsp;// the api is nearly identical to the play method <br>
+*  &nbsp; tone.spit(); <br>
+*  &nbsp; tone.spit( BB.Audio.now() + 1 ); <br>
+*  &nbsp; tone.spit({<br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;frequency:"B",//aka 493.883... <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;time:BB.Audio.now()+1, <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;duration: 2, <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;attack:0.2, <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;decay:0.2, <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;sustain:1, <br>
+*  &nbsp;&nbsp;&nbsp;&nbsp;release:0.25 <br>
+*  &nbsp; }); <br><br>
 * </code>
 *
 * view basic <a href="../../examples/editor/?file=audio-tone" target="_blank">BB.AudioTone</a> example
@@ -233,30 +314,6 @@ class AudioTone extends AudioBase {
 
 	// ... private methods  .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... ....
 
-	// _addPolyNote( freq, oscNode, gainNode, sustLvl, holdTime ){
-	// 	// TODO get rid of holdTime ( no longer being used )
-	// 	// TODO consider how this might work in sampler/noiseOn
-	// 	// TODO see todo note in constructor
-	//
-	// 	this.input[freq] = { osc:oscNode, gain:gainNode, hold:holdTime, lvl:sustLvl };
-	// 	// adjust overall gain to account for total number of waves
-	// 	let count = 0; for(let k in this.input) count++;
-	// 	let polylength = (count===0) ? 1 : count;
-	// 	// this.output.gain.setTargetAtTime( this.getGain()/polylength, this.ctx.currentTime, 0.1);
-	// 	this.output.gain.setValueAtTime( this.getGain()/polylength, this.ctx.currentTime );
-	// }
-	//
-	// _removePolyNote( freq ){
-	// 	if(typeof this.input[freq]!=="undefined"){
-	// 		this.input[freq].gain.disconnect();
-	// 		delete this.input[freq];
-	// 	}
-	// 	/// adjust overall gain to account for total number of waves
-	// 	let count = 0; for(let k in this.input) count++;
-	// 	let polylength = (count===0) ? 1 : count;
-	// 	this.output.gain.setTargetAtTime( this.getGain()/polylength, this.ctx.currentTime, 0.5);
-	// }
-
 	_isNote( str ){
 		let notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 		if( notes.indexOf(str)<0){
@@ -313,6 +370,34 @@ class AudioTone extends AudioBase {
 
 	// ... make sounds!!!! .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... ....
 
+	/**
+	*  because you can play multiple frequencies at the same time (polyphony)
+	*  the tone object needs to keep track of which frequencies are being played
+	*  it does this in it's tone.input dictionary(object) property
+	*  because of this you can't call play or noteOn multiple times on the
+	*  same frequency without overriding the previous instance of that same note
+	*  instead there's this alternative method which does not keep track of the note
+	*  which means it can not be "stopped" but it can be called multiple times
+	* @method spit
+	* @param {number|object} [config] either a scheduled time or config object
+	*
+	* @example
+	* <code class="code prettyprint">
+	*  &nbsp; tone.spit(); <br>
+	*  &nbsp// or schedule playback for later by passing a time <br>
+	*  &nbsp; tone.spit( BB.Audio.now() + 1 ); <br>
+	*  &nbsp// or pass a config object <br>
+	*  &nbsp; tone.spit({<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;frequency:"B",//aka 493.883... <br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;time:BB.Audio.now()+1, <br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;duration: 2, <br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;attack:0.2, <br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;decay:0.2, <br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;sustain:1, <br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;release:0.25 <br>
+	*  &nbsp; }); <br><br>
+	* </code>
+	*/
 	spit( config ){
 		this.err.checkType(config,["number","undefined","object"]);
 
@@ -406,7 +491,7 @@ class AudioTone extends AudioBase {
 	}
 
 	/**
-	* starts playing a tone
+	* starts playing a tone forever
 	*
 	* @method noteOn
 	* @param {number|string|object} frequency a config object or the frequency value in Hz or a note string (ex: C, C#, A, etc)
@@ -414,22 +499,24 @@ class AudioTone extends AudioBase {
 	*
 	* @example
 	* <code class="code prettyprint">
-	*  &nbsp;BB.Audio.init();<br>
-	*  <br>
-	*  &nbsp;var O = new BB.AudioTone({ gain: 0.5 });<br>
-	*  <br>
-	*  &nbsp;O.noteOn( "A" ); // will stay on, until noteOff(440) is executed<br>
-	*  &nbsp;// could also send as Hz vlue...<br>
-	*  &nbsp;// ... and optionally tell it to start 5 secs from now <br>
-	*  &nbsp;O.noteOn( 440, BB.Audio.now()+5 );
-	*  &nbsp;<br>
-	*  &nbsp;// or you could pass a config object that looks like this <br>
-	*  &nbsp;O.noteOn({<br>
-	*  &nbsp;&nbsp;&nbsp;&nbsp;frequency:440,//or "A"<br>
-	*  &nbsp;&nbsp;&nbsp;&nbsp;attack: 0.5,<br>
-	*  &nbsp;&nbsp;&nbsp;&nbsp;decay: 0.5,<br>
-	*  &nbsp;&nbsp;&nbsp;&nbsp;sustain: 0.5<br>
-	*  &nbsp;});<br>
+	*  &nbsp;// you can trigger the playback of a tone forever like this<br>
+	*  &nbsp; tone.noteOn(880); <br>
+	*  &nbsp;// you can do the same but schedule it to start later, ex:<br>
+	*  &nbsp; tone.noteOn(880, BB.Audio.now()+1 ); <br>
+	*  &nbsp;// or do the same but with custom properties, ex:<br>
+	*  &nbsp; tone.noteOn({<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;frequency:880,<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;time:BB.Audio.now()+1, <br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;attack:0.2, <br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;decay:0.2, <br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;sustain:1, <br>
+	*  &nbsp; }); <br><br>
+	*  &nbsp;// noteOn can be called once per frequency <br>
+	*  &nbsp;// which means you can play polyphonic tones with a single tone object <br>
+	*  &nbsp;// see also chordOn() and chordOff() methods <br>
+	*  &nbsp; tone.noteOn(220); <br>
+	*  &nbsp; tone.noteOn(440); <br>
+	*  &nbsp; tone.noteOn(880); <br><br>
 	* </code>
 	*/
 	noteOn( freqObj, time ){
@@ -497,18 +584,17 @@ class AudioTone extends AudioBase {
 	*
 	* @method noteOff
 	* @param {number|string|object} frequency a config object or the frequency value in Hz or a note string (ex: C, C#, A, etc)
-	* @param {number} [release] the time (in seconds) it takes for the note to fade out ( default 0 )
-	* @param {number} [hold] seconds (from now) to delay before turning the note off ( default 0 )
 	*
 	* @example
 	* <code class="code prettyprint">
-	*  &nbsp;BB.Audio.init();<br>
-	*  <br>
-	*  &nbsp;var O = new BB.AudioTone({ gain: 0.5 });<br>
-	*  <br>
-	*  &nbsp; O.noteOn( 440 ); <br>
-	*  &nbsp;// will turn the note off in 3 seconds, with a 1 second fade<br>
-	*  &nbsp; O.noteOff( 440, 1, 3 );
+	*  &nbsp;// to stop playback on a particular frequency you started, ex: tone.noteOn(880): <br>
+	*  &nbsp; tone.noteOff(880); <br>
+	*  &nbsp;// or...<br>
+	*  &nbsp; tone.noteOff({<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;frequency:880,<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;hold:1, <br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;release:0.25 <br>
+	*  &nbsp; }); <br><br>
 	*  </code>
 	*/
 	noteOff( freqObj ){
@@ -559,31 +645,24 @@ class AudioTone extends AudioBase {
 	/**
 	 * plays (noteOn and noteOff) a tone
 	 * @method play
-	 * @param {number|string|object} frequency a config object or the frequency value in Hz or a note string (ex: C, C#, A, etc)
-	 * @param {number} [hold] seconds (from start time) to delay before turning the note off ( default 0.5 )
-	 * @param {number} [time] if you want to schedule the note for later ( rather than play immediately ), in seconds ( if less than BB.Audio.now() defaults to now )
+	 * @param {number|object} [config] a config object or a scheduled time to playback
 	 *
 	 * @example
 	 * <code class="code prettyprint">
-	 *  &nbsp;BB.Audio.init();<br>
-	 *  <br>
-	 *  &nbsp;var O = new BB.AudioTone();<br>
-	 *  <br>
-	 *  &nbsp; // plays a 440 Hz sine wave for half a second <br>
-	 *  &nbsp; O.play("A");<br>
-	 *  <br>
-	 *  &nbsp; // plays a 444 Hz sine wave for 2 seconds, three seconds from now<br>
-	 *  &nbsp; O.play( 444, 2, BB.Audio.now()+3 ); <br>
-	 *  <br>
-	 *  &nbsp; O.play({<br>
-	 *  &nbsp;&nbsp;&nbsp; frequency: "A",//or 440<br>
-	 *  &nbsp;&nbsp;&nbsp; attack: 0.5, //half second form onset to max gain <br>
-	 *  &nbsp;&nbsp;&nbsp; decay: 0.5, //half second from max gain down to sustain level<br>
-	 *  &nbsp;&nbsp;&nbsp; sustain: 0.75, //sustain level 75% of max gain<br>
-	 *  &nbsp;&nbsp;&nbsp; hold: 2, //hold sustain level for 2 seconds<br>
-	 *  &nbsp;&nbsp;&nbsp; release: 1 //fade out for a second after hold time<br>
-	 *  &nbsp; }, BB.Audio.now()+4 ); //play note 4 seconds from now <br>
-	 *  &nbsp; // note: when passing a config object, second paramter becomes the time parameter
+	 *  &nbsp;// playback using the tone's defaultsk<br>
+	 *  &nbsp; tone.play(); <br>
+	 *  &nbsp;// you could schedule the playback for later, ex 1 second from now<br>
+	 *  &nbsp; tone.play( BB.Audio.now() + 1 ); <br>
+	 *  &nbsp;// or playback with alternative properties by passing a config object<br>
+	 *  &nbsp; tone.play({<br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;frequency:"B",//aka 493.883... <br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;time:BB.Audio.now()+1, <br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;duration: 2, <br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;attack:0.2, <br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;decay:0.2, <br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;sustain:1, <br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;release:0.25 <br>
+	 *  &nbsp; }); <br><br>
 	 * </code>
 	 */
 	play( config ){
@@ -648,6 +727,22 @@ class AudioTone extends AudioBase {
 
 	}
 
+	// shhh, secret alias for play... incase folks are used to webaudio api .start()
+	start(time){ this.play(time); }
+
+	/**
+	 * stops the playback of a tone called via play() method
+	 * @method stop
+	 * @param {number} [time] a scheduled time to stop playback
+	 *
+	 * @example
+	 * <code class="code prettyprint">
+	 * &nbsp;// you could immediately stop that by calling <br>
+ 	 * &nbsp; tone.stop(); <br><br>
+ 	 * &nbsp;// or stop it at a later time<br>
+ 	 * &nbsp; tone.stop( BB.Audio.now() + 2 ); <br><br>
+	 * </code>
+	 */
 	stop( time ){
 		this.err.checkType(time,["undefined","number"],"time");
 
@@ -677,34 +772,30 @@ class AudioTone extends AudioBase {
 	}
 
 
+
 	/**
 	* just like noteOn except it starts playing a chord rather than a single note, and so it's config object takes two additional properties: tuning ( can be "equal" or "just", defautls to "equal" ) and type ( can be maj, min, dim, 7, min7, maj7, sus4, 7sus4, 6, min6, aug, 7-5, 7+5, min7-5, min/maj7, maj7+5, maj7-5, 9, min9, maj9, 7+9, 7-9, 7+9-5, 6/9, 9+5, 9-5, min9-5, 11, min11, 11-9, 13, min13, maj13, add9, minadd9, sus2, or 5) defaults to "maj"
 	*
 	* @method chordOn
-	* @param {number|string|object} frequency a config object or the frequency value in Hz or a note string (ex: C, C#, A, etc)
+	* @param {number|string|object} [frequency] a config object or the frequency value in Hz or a note string (ex: C, C#, A, etc)
 	* @param {number} [time] if you want to schedule the note for later ( rather than play immediately ), in seconds ( if less than BB.Audio.now() defaults to now )
 	*
 	* @example
 	* <code class="code prettyprint">
-	*  &nbsp;BB.Audio.init();<br>
-	*  <br>
-	*  &nbsp;var O = new BB.AudioTone({ gain: 0.5 });<br>
-	*  <br>
-	*  &nbsp;// will stay on an A major chord until chordOff("A") is executed<br>
-	*  &nbsp;O.chordOn( "A" ); <br>
-	*  &nbsp;// could also send as Hz vlue...<br>
-	*  &nbsp;// ... and optionally tell it to start 5 secs from now <br>
-	*  &nbsp;O.chordOn( 440, BB.Audio.now()+5 );
-	*  &nbsp;<br>
-	*  &nbsp;// or you could pass a config object that looks like this <br>
-	*  &nbsp;O.chordOn({<br>
-	*  &nbsp;&nbsp;&nbsp;&nbsp;frequency:440,//or "A"<br>
-	*  &nbsp;&nbsp;&nbsp;&nbsp;attack: 0.5,<br>
-	*  &nbsp;&nbsp;&nbsp;&nbsp;decay: 0.5,<br>
-	*  &nbsp;&nbsp;&nbsp;&nbsp;sustain: 0.5,<br>
-	*  &nbsp;&nbsp;&nbsp;&nbsp;type: "maj9"<br>
+	*  &nbsp;// you can trigger the playback of a tone forever like this<br>
+	*  &nbsp; tone.chordOn(880); <br>
+	*  &nbsp;// you can do the same but schedule it to start later, ex:<br>
+	*  &nbsp; tone.chordOn(880, BB.Audio.now()+1 ); <br>
+	*  &nbsp;// or do the same but with custom properties, ex:<br>
+	*  &nbsp; tone.chordOn({<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;frequency:880,<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;time:BB.Audio.now()+1, <br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;attack:0.2, <br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;decay:0.2, <br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;sustain:1, <br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;type: "maj9",<br>
 	*  &nbsp;&nbsp;&nbsp;&nbsp;tuning: "just"<br>
-	*  &nbsp;});<br>
+	*  &nbsp; }); <br><br>
 	* </code>
 	*/
 	chordOn( freqObj, time ){
@@ -778,24 +869,22 @@ class AudioTone extends AudioBase {
 
     }
 
-
 	/**
-	* just like noteOff except stops a chord which is currently playing, and so it's config object takes two additional properties: tuning ( can be "equal" or "just", defautls to "equal" ) and type ( can be maj, min, dim, 7, min7, maj7, sus4, 7sus4, 6, min6, aug, 7-5, 7+5, min7-5, min/maj7, maj7+5, maj7-5, 9, min9, maj9, 7+9, 7-9, 7+9-5, 6/9, 9+5, 9-5, min9-5, 11, min11, 11-9, 13, min13, maj13, add9, minadd9, sus2, or 5) defaults to "maj"
+	* just like noteOff except stops a chord which is currently playing
 	*
 	* @method chordOff
-	* @param {number|string|object} frequency a config object or the frequency value in Hz or a note string (ex: C, C#, A, etc)
-	* @param {number} [release] the time (in seconds) it takes for the note to fade out ( default 0 )
-	* @param {number} [hold] seconds (from now) to delay before turning the note off ( default 0 )
+	* @param {number|string|object} [frequency] a config object or the frequency value in Hz or a note string (ex: C, C#, A, etc)
 	*
 	* @example
 	* <code class="code prettyprint">
-	*  &nbsp;BB.Audio.init();<br>
-	*  <br>
-	*  &nbsp;var O = new BB.AudioTone({ gain: 0.5 });<br>
-	*  <br>
-	*  &nbsp; O.chordOn( 440 ); <br>
-	*  &nbsp;// will turn the chord off in 3 seconds, with a 1 second fade<br>
-	*  &nbsp; O.chordOff( 440, 1, 3 );
+	*  &nbsp;// to stop playback on a particular frequency you started, ex: tone.chordOn(880): <br>
+	*  &nbsp; tone.chordOff(880); <br>
+	*  &nbsp;// or...<br>
+	*  &nbsp; tone.chordOff({<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;frequency:880,<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;hold:1, <br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;release:0.25 <br>
+	*  &nbsp; }); <br><br>
 	*  </code>
 	*/
 	chordOff( freqObj ){
@@ -853,36 +942,30 @@ class AudioTone extends AudioBase {
 		}
 	}
 
+
 	/**
 	 * similar to the .play() method except that it plays a chord rather than a single note, and so it's config object takes two additional properties: tuning ( can be "equal" or "just", defautls to "equal" ) and type ( can be maj, min, dim, 7, min7, maj7, sus4, 7sus4, 6, min6, aug, 7-5, 7+5, min7-5, min/maj7, maj7+5, maj7-5, 9, min9, maj9, 7+9, 7-9, 7+9-5, 6/9, 9+5, 9-5, min9-5, 11, min11, 11-9, 13, min13, maj13, add9, minadd9, sus2, or 5) defaults to "maj"
 	 * @method playChord
-	 * @param {number|string|object} frequency a config object or the frequency value in Hz or a note string (ex: C, C#, A, etc)
-	 * @param {number} [hold] seconds (from start time) to delay before turning the note off ( default 0.5 )
-	 * @param {number} [time] if you want to schedule the note for later ( rather than play immediately ), in seconds ( if less than BB.Audio.now() defaults to now )
+	 * @param {number|object} [config] a config object or a scheduled time to playback
 	 *
 	 * @example
 	 * <code class="code prettyprint">
-	 *  &nbsp;BB.Audio.init();<br>
-	 *  <br>
-	 *  &nbsp;var O = new BB.AudioTone();<br>
-	 *  <br>
-	 *  &nbsp; // plays an A major chord of equal temperment <br>
-	 *  &nbsp; O.playChord("A");<br>
-	 *  <br>
-	 *  &nbsp; // plays a 444Hz major chord for 2 seconds, three seconds from now<br>
-	 *  &nbsp; O.playChord( 444, 2, BB.Audio.now()+3 ); <br>
-	 *  <br>
-	 *  &nbsp; O.playChord({<br>
-	 *  &nbsp;&nbsp;&nbsp; frequency: "A",//or 440<br>
-	 *  &nbsp;&nbsp;&nbsp; attack: 0.5, //half second form onset to max gain <br>
-	 *  &nbsp;&nbsp;&nbsp; decay: 0.5, //half second from max gain down to sustain level<br>
-	 *  &nbsp;&nbsp;&nbsp; sustain: 0.75, //sustain level 75% of max gain<br>
-	 *  &nbsp;&nbsp;&nbsp; hold: 2, //hold sustain level for 2 seconds<br>
-	 *  &nbsp;&nbsp;&nbsp; release: 1, //fade out for a second after hold time<br>
-	 *  &nbsp;&nbsp;&nbsp; type: "min7", //plays a minor seventh chord<br>
-	 *  &nbsp;&nbsp;&nbsp; tuning: "just" // derived with just temperment<br>
-	 *  &nbsp; }, BB.Audio.now()+4 ); //play note 4 seconds from now <br>
-	 *  &nbsp; // note: when passing a config object, second paramter becomes the time parameter
+	 *  &nbsp;// playback using the tone's defaultsk<br>
+	 *  &nbsp; tone.playChord(); <br>
+	 *  &nbsp;// you could schedule the playback for later, ex 1 second from now<br>
+	 *  &nbsp; tone.playChord( BB.Audio.now() + 1 ); <br>
+	 *  &nbsp;// or playback with alternative properties by passing a config object<br>
+	 *  &nbsp; tone.playChord({<br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;frequency:"B",//aka 493.883... <br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;time:BB.Audio.now()+1, <br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;duration: 2, <br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;attack:0.2, <br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;decay:0.2, <br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;sustain:1, <br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;release:0.25, <br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;type: "min7", //plays a minor seventh chord<br>
+	 *  &nbsp;&nbsp;&nbsp;&nbsp;tuning: "just" // derived with just temperment<br>
+	 *  &nbsp; }); <br><br>
 	 * </code>
 	 */
 	playChord( config ){
