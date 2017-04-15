@@ -67,7 +67,7 @@ class AudioBase {
 			* @type Number
 			*/
 			this.err.checkType(config.sustain,["undefined","number"],"sustain");
-			this.sustain = (typeof config.sustain=="undefined") ? 0 : config.sustain;
+			this.sustain = (typeof config.sustain=="undefined") ? 1 : config.sustain;
 
 			/**
 			* the release time in seconds (default 0)
