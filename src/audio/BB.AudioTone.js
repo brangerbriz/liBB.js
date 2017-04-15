@@ -648,6 +648,34 @@ class AudioTone extends AudioBase {
 
 	}
 
+	stop( time ){
+		this.err.checkType(time,["undefined","number"],"time");
+
+		let st; // scheduled time
+		if(typeof time=="number") st = time;
+		else st = this.ctx.currentTime;
+
+		let freq = this.frequency;
+
+		if(typeof this.input[freq] !== "undefined"){
+
+			this.input[freq].gain.gain.cancelScheduledValues(st);
+			this.input[freq].node.stop( st );
+
+			// remove from input when fadeOut is complete
+			let rmvInterval = setInterval(()=>{
+				if(typeof this.input[freq] !== "undefined"){
+					if(this.ctx.currentTime >= st + 0.00006 ){
+						this._removePolyNote( freq );
+						clearInterval( rmvInterval );
+					}
+				} else {
+					clearInterval( rmvInterval );
+				}
+			},1000/60);
+		}
+	}
+
 
 	/**
 	* just like noteOn except it starts playing a chord rather than a single note, and so it's config object takes two additional properties: tuning ( can be "equal" or "just", defautls to "equal" ) and type ( can be maj, min, dim, 7, min7, maj7, sus4, 7sus4, 6, min6, aug, 7-5, 7+5, min7-5, min/maj7, maj7+5, maj7-5, 9, min9, maj9, 7+9, 7-9, 7+9-5, 6/9, 9+5, 9-5, min9-5, 11, min11, 11-9, 13, min13, maj13, add9, minadd9, sus2, or 5) defaults to "maj"
