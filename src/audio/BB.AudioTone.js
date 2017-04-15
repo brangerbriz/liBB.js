@@ -235,6 +235,9 @@ class AudioTone extends AudioBase {
 
 	_addPolyNote( freq, oscNode, gainNode, sustLvl, holdTime ){
 		// TODO get rid of holdTime ( no longer being used )
+		// TODO consider how this might work in sampler/noiseOn
+		// TODO see todo note in constructor
+
 		this.input[freq] = { osc:oscNode, gain:gainNode, hold:holdTime, lvl:sustLvl };
 		// adjust overall gain to account for total number of waves
 		let count = 0; for(let k in this.input) count++;
@@ -530,6 +533,10 @@ class AudioTone extends AudioBase {
 			release = this.release;
 		}
 
+		// make sure duration is long enough
+		if( attack+decay+release > dur )
+			throw new Error('BB.AudioTone.play: your duration can not be less than attack+decay+release');
+
 		let delay = st - this.ctx.currentTime+0.00002;
 		if( delay < 0 ) delay = 0.00002;
 
@@ -803,6 +810,11 @@ class AudioTone extends AudioBase {
 			typ  = "maj";
 			tun  = "equal";
 		}
+
+		// make sure duration is long enough
+		if( attack+decay+release > dur )
+			throw new Error('BB.AudioTone.playChord: your duration can not be less than attack+decay+release');
+
 
 		let delay = st - this.ctx.currentTime+0.00002;
 		if( delay < 0 ) delay = 0.00002;
