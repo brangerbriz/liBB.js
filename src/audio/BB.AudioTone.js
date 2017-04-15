@@ -313,6 +313,98 @@ class AudioTone extends AudioBase {
 
 	// ... make sounds!!!! .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... .... ....
 
+	spit( config ){
+		this.err.checkType(config,["number","undefined","object"]);
+
+		let st; // start time
+		let freq, dur, attack, decay, sustain, release;
+		if( typeof config=="object"){
+			this.err.checkType(config.frequency,["number","string","undefined"],"frequency");
+			this.err.checkType(config.time,["number","undefined"],"time");
+			this.err.checkType(config.duration,["number","undefined"],"duration");
+			this.err.checkType(config.attack,["number","undefined"],"attack");
+			this.err.checkType(config.decay,["number","undefined"],"decay");
+			this.err.checkType(config.sustain,["number","undefined"],"sustain");
+			this.err.checkType(config.release,["number","undefined"],"release");
+
+			if(typeof config.frequency=="string"){
+				if( this._isNote(config.frequency) )
+					freq = BB.Audio.getFreq( config.frequency );
+			} else if(typeof config.frequency=="number") {
+				freq = config.frequency;
+			} else { freq = this.frequency; }
+
+			st = (typeof config.time=="undefined") ? this.ctx.currentTime : config.time;
+
+			dur = (typeof config.duration=="undefined") ? this.duration : config.duration;
+			attack = (typeof config.attack=="undefined") ? this.attack : config.attack;
+			decay = (typeof config.decay=="undefined") ? this.decay : config.decay;
+			sustain = (typeof config.sustain=="undefined") ? this.sustain : config.sustain;
+			release = (typeof config.release=="undefined") ? this.release : config.release;
+		} else {
+			if(typeof config=="number")	st = config;
+			else st = this.ctx.currentTime;
+			dur = this.duration;
+			freq = this.frequency;
+			attack = this.attack;
+			decay = this.decay;
+			sustain = this.sustain;
+			release = this.release;
+		}
+
+		// custom type / wavetable
+		let type, wave;
+		if( typeof config == "object" ){
+			this.err.checkType(config.type,["string","undefined"],"type");
+			if( typeof config.type == "string" ){
+				if( this.oscTypes.indexOf(config.type) < 0 ){
+					throw new Error('BB.AudioTone: type should be either "sine", "square", "sawtooth", "triangle" or "custom ');
+				} else if( config.type === "custom" && typeof config.wave!=="undefined" ){
+					this.err.checkInstanceOf(config.wave,[Object,Array],"wave");
+				}
+			}
+
+			type = (typeof config.type=="undefined") ? this.type : config.type;
+			if( type=="custom"){
+				if(config.wave instanceof Array){
+					var imag = new Float32Array( config.wave );  // sine
+					var real = new Float32Array( imag.length );  // cos
+					wave = this.ctx.createPeriodicWave( real, imag );
+				} else if(config.wave instanceof Object){
+					if(typeof wave.real === "undefined" || typeof wave.imag === "undefined"){
+						throw new Error('BB.AudioTone.wave: wave object should contain a "real" and an "imag" (Float32Array) properties');
+					} else if( !(wave.real instanceof Float32Array) || !(wave.imag instanceof Float32Array) ) {
+						throw new Error('BB.AudioTone.wave: real and imag properties should be an instanceof Float32Array');
+					} else {
+						wave = this.ctx.createPeriodicWave( config.wave.real, config.wave.imag );
+					}
+				}
+			}
+		} else {
+			type = this.type;
+			if( type=="custom") wave = this.wave;
+		}
+
+		// make sure duration is long enough
+		if( attack+decay+release > dur )
+			throw new Error('BB.AudioTone.play: your duration can not be less than attack+decay+release');
+
+		// the throw away nodes
+		let gainNode = this.ctx.createGain();
+			gainNode.connect( this.output );
+
+		let osc = this.ctx.createOscillator();
+			osc.connect( gainNode );
+			osc.frequency.value = freq;
+			if(type === "custom") osc.setPeriodicWave( wave );
+			else osc.type = type;
+
+		// scheduled start time && adsr
+		let hold = (dur-(attack+decay));
+		this._adsr(gainNode, 1.0, st, attack, decay, release, hold, sustain);
+		osc.start(st);
+	}
+
 	/**
 	* starts playing a tone
 	*
