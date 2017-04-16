@@ -19,36 +19,37 @@
 // note: would be nice to use 'import' 'export', but browserify can't seem to handle it
 // && we want to be able to debug un-transpiled code
 
-class BB {
+window.BB = {
+	// if u update this version number,
+	// also update version number in package.json
+	// and also update in www/docs-theme/theme.json
+	version : "0.2.0",
 
-	constructor(){
-		// if u update this version number,
-		// also update version number in package.json
-		// and also update in www/docs-theme/theme.json
-		this.version = "0.2.0";
+	// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
+	// - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - .
+	// ~._.~'~._.~'~._.~'	 General Utils      '~._.~'~._.~'~._.~'~._.~'~._.~'
+	// - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - .
+	// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
 
-		// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
-		// - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - .
-		// ~._.~'~._.~'~._.~'	 General Utils      '~._.~'~._.~'~._.~'~._.~'~._.~'
-		// - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - .
-		// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
+	// Check : Check, // see note above
+	Check 			: 	require('./utils/BB.Check.js'),
+	ValidArg 		: 	require('./utils/BB.ValidArg.js'),
+	Vector2D 		: 	require('./utils/BB.Vector2D.js'),
+	Maths 			: 	require('./utils/BB.Maths.js'),
+	EventEmitter 	: 	require('./utils/BB.EventEmitter.js'),
 
-		// this.Check = Check; // see note above
-		this.Check 			= require('./utils/BB.Check.js');
-		this.ValidArg 		= require('./utils/BB.ValidArg.js');
-		this.Vector2D 		= require('./utils/BB.Vector2D.js');
-		this.Maths 			= require('./utils/BB.Maths.js');
-		this.EventEmitter 	= require('./utils/BB.EventEmitter.js');
+	// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
+	// - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - .
+	// ~._.~'~._.~'~._.~'	 Audio Modules      '~._.~'~._.~'~._.~'~._.~'~._.~'
+	// - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - .
+	// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
+	Audio 			: 	require('./audio/BB.Audio.js'),
+	AudioBase 		: 	require('./audio/BB.AudioBase.js'),
+	AudioTone 		: 	require('./audio/BB.AudioTone.js'),
+	AudioSampler 	: 	require('./audio/BB.AudioSampler.js'),
+	AudioNoise 		: 	require('./audio/BB.AudioNoise.js')
 
-		// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
-		// - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - .
-		// ~._.~'~._.~'~._.~'	 Audio Modules      '~._.~'~._.~'~._.~'~._.~'~._.~'
-		// - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - .
-		// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
-		this.Audio 			= require('./audio/BB.Audio.js');
-	}
-
-}
+};
 
 // function BB() {
 
@@ -143,4 +144,4 @@ class BB {
 	// this.AudioSequencer 	= require('./audio/BB.AudioSequencer');
 
 // }
-window.BB = new BB();
+// window.BB = new BB();
