@@ -64,6 +64,21 @@ class Check {
 	}
 
 	/**
+	 * returns boolean whether it does/doesn't support MIDIAccess
+	 * @static
+	 * @method hasMIDI
+	 * @example
+	 * <code class="code prettyprint">
+	 * &nbsp;// ex: true <br>
+	 * &nbsp;BB.Check.hasMIDI();<br>
+	 * </code>
+	 */
+	static hasMIDI(){
+		if( navigator.requestMIDIAccess ) return true;
+		else return false;
+	}
+
+	/**
 	 * returns an object with audio codec support info
 	 * @static
 	 * @method audioSupport
