@@ -63,25 +63,23 @@ class MidiDevices {
 
 		this._devices = {};
 
+		/**
+		* the web api midiAccess object
+		* @type {object}
+		* @property access
+		*/
 		this.access = null; // the midi access object
 
 		if (navigator.requestMIDIAccess) {
 			navigator.requestMIDIAccess().then((midi)=>{
+				// save midi-access object
 				this.access = midi;
 				// create initial list of already connected devices
-				let ins = midi.inputs.values();
-				for (let i = ins.next(); i && !i.done; i = ins.next()) {
-					if(i.value.name!=="Midi Through Port-0" && this._isNew(i.value.id) ){
-						i.value.onmidimessage = (msg)=>{ this._onMidiMessage(msg); };
-						i.value.onstatechange = (msg)=>{ this._onStateChange(msg); };
-						i.value.onchange = null;
-						this._devices[i.value.id] = i.value;
-
-					}
-				}
-
+				this._updateDevices(midi);
 				// if user registered optional success callback, fire it
 				if(typeof success=="function") success(midi);
+				// update list of connected devices on state change
+				midi.onstatechange = (msg)=>{ this._updateDevices(midi,msg); };
 
 			},(msg)=>{
 				// if user registered optional failure callback, fire it if failure
@@ -104,11 +102,13 @@ class MidiDevices {
 	}
 	get devices(){
 		let list = [];
-		for( let d in this._devices ) list.push({
-			name:this._devices[d].name,
-			manufacturer:this._devices[d].manufacturer,
-			id: this._devices[d].id
-		});
+		for( let d in this._devices ){
+			if(this._devices[d].state=="connected" ) list.push({
+				name:this._devices[d].name,
+				manufacturer:this._devices[d].manufacturer,
+				id: this._devices[d].id
+			});
+		}
 		return list;
 	}
 
@@ -116,6 +116,19 @@ class MidiDevices {
 	_isNew(id){
 		if( this._devices.hasOwnProperty(id) ) return false;
 		else return true;
+	}
+
+	// used to update list of devices when midi detcts a state change
+	_updateDevices(midi){
+		let ins = midi.inputs.values();
+		for (let i = ins.next(); i && !i.done; i = ins.next()) {
+			if(i.value.name!=="Midi Through Port-0" && this._isNew(i.value.id) ){
+				i.value.onmidimessage = (msg)=>{ this._onMidiMessage(msg); };
+				i.value.onstatechange = (msg)=>{ this._onStateChange(msg); };
+				i.value.onchange = null;
+				this._devices[i.value.id] = i.value;
+			}
+		}
 	}
 
 	_lookUpCmdStr( num ){
@@ -226,12 +239,6 @@ class MidiDevices {
 			return id;
 		}
 	}
-
-	// TODO
-	// in documentation explain how u can do getDeviceById(id).onchnage
-	// in documentation explain how u can do getDeviceById(id).state
-	// in documentation explain how u can do getDeviceById(id).name
-	// in documentation explain how u can do getDeviceById(id).manufacturer
 
 	/**
 	* get a device object by it's id
