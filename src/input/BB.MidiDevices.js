@@ -7,7 +7,7 @@
 * @example
 * <code class="code prettyprint">
 * &nbsp;var midi = new BB.MidiDevices((midiAcc)=>{<br>
-* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//    the midi-access object ^<br>
+* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//    the <a href="https://www.w3.org/TR/webmidi/#requestmidiaccess" target="_blank">midi-access</a> object ^<br>
 * <br>
 * &nbsp;&nbsp;&nbsp;&nbsp;midi.getDeviceByName("nanoKONTROL MIDI 1").onchange = (msg)=>{<br>
 * &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//   msg =  midi-message object<br>
@@ -136,13 +136,13 @@ class MidiDevices {
 		let str;
 		if( num >= 0x80 && num <= 0xEF ){
 			switch(num>>4){
-				case 8: str="note off"; break;
-				case 9: str="note off"; break;
-				case 10: str="polyphonic aftertouch"; break;
-				case 11: str="control mode change"; break;
-				case 12: str="program change"; break;
-				case 13: str="channel aftertouch"; break;
-				case 14: str="pitch wheel range"; break;
+				case 8: str="noteOn"; break; // note on
+				case 9: str="noteOff"; break; // note off
+				case 10: str="noteAftertouch"; break; // polyphonic aftertouch
+				case 11: str="controller"; break; // control mode change
+				case 12: str="programChange"; break; // program change
+				case 13: str="channelAftertouch"; break; // channel aftertouch
+				case 14: str="pitchBend"; break; // pitch wheel range
 			}
 			return str;
 		} else if( num >= 0xF0 && num <= 0xFF ){
