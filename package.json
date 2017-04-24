@@ -29,7 +29,8 @@
     "prebuild": "npm run lint ; npm run transpile",
     "build": "npm run compile",
     "postbuild": "npm run minify ; npm run docs",
-    "watch": "nodemon -w src --ignore src/transpiled -x 'npm run build'"
+    "watch": "nodemon -w src --ignore src/transpiled -x 'npm run build'",
+	"server": "node www/server"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
