@@ -205,8 +205,8 @@ class Audio {
 		if( idx < 0 ) throw new Error('BB.AudioTone.getFreq: expecting "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#" or "B"');
 
 		let RT = (typeof root !== "number" ) ? 440 : root;
-		let oct = (typeof transpose !== "number") ? 0 : transpose;
-		note = idx + ( (oct+5)*12);
+		let oct = (typeof transpose !== "number") ? 5 : transpose;
+		note = idx + ( (oct)*12);
 
 		return RT * Math.pow(2,(note-69)/12);
 	}
