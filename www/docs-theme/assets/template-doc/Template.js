@@ -30,18 +30,14 @@ class Template {
 	// here's an example of getters and setters in es6
 
 	/**
-	* setter description goes here...
-	* @param {String} n the value of the property
-	* @returns {String}
+	* property description goes here...
+	* @type {String}
+	* @property name
 	*/
 	set name( n ){
 		this._name = n;
 	}
 
-	/**
-	* getter description goes here...
-	* @returns {String}
-	*/
 	get name(){
 		return this._name;
 	}
@@ -59,7 +55,7 @@ class Template {
 	*/
 	m_name( val ){ }
 
-	// and here's an exmaple of a static method 
+	// and here's an exmaple of a static method
 
 	/**
 	* description for this static method goes here...

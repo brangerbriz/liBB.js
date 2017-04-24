@@ -56,7 +56,7 @@
             }
 
             input[type="search"] {
-                width: 100%;
+                width: 80%;
                 min-height: 26px;
                 padding: 3px 10px;
                 font-size: 11px;
@@ -184,7 +184,8 @@
             .maindescription { font-size: 24px; }
             #examplesFrame { width: 100%; height: 1550px; }
             .homelink { font-size: 24px; text-align: center; width: 100%; display: inline-block;}
-            .icon { width: 59px; margin: 0px auto; display: block;}
+            /*.icon { width: 59px; margin: 0px auto; display: block;}*/
+			.icon { vertical-align: middle; width: 15%; }
 
 
             /* ~'~._.~'~._.~'~._.~'~._.~'~._.~'~._. TYPES ~'~._.~'~._.~'~._.~'~ */
@@ -260,11 +261,27 @@
 
             .method.item { padding: 0; margin: 2em 0; background-color: #fff; }
 
-            .method.item h3 {
+            /*.method.item h3 {
                 font-size: 16px; text-shadow: 0 1px 0 #fff; margin: 0;
                 padding: 10px 10px 9px 10px; color: #555;
-                background-color: #eee;
-            }
+                background-color: #F7F7F7;
+            }*/
+
+			.method.item h3 {
+				font-size: 16px;
+				margin: 0;
+				padding: 10px 10px 9px 10px;
+				border-bottom: 1px solid #000;
+				padding-bottom: 9px;
+			}
+
+			.method.item h3 code { margin-right: -8px; }
+			.method.item h3 code, .method.item h3 .paren {
+				font-size: 19px;
+				text-transform: none;
+				color: #000;
+				font-family: "inconsolata";
+			}
 
             .method.item h3 .type { background-color: #e0e0e0; border-color: #d0d0d0; }
 
@@ -276,13 +293,23 @@
 
             .default-value { margin-left: .4em; }
 
-            .args { display: inline; }
+            .args {
+				display: inline;
+				color: #000;
+				font-family: "inconsolata";
+				font-size: 19px;
+			}
 
             .args ul { display: inline; list-style: none; padding: 0; }
 
             .args li { display: inline; padding: 0; }
 
-            .method .meta { background-color: #f8f8f8; margin: 0; padding: 5px 10px; color: #999; font-size: 13px; }
+            /*.method .meta { background-color: #F7F7F7; margin: 0; padding: 5px 10px; color: #999; font-size: 13px; }*/
+			.method .meta {
+				margin: 0; padding: 5px 10px; color: #999; font-size: 13px;
+				border-bottom: 1px solid #000;
+				padding-bottom: 9px;
+			}
 
             .method .meta p { margin: 0; }
 
@@ -305,7 +332,12 @@
 
             .param .type { margin-left: .5em; }
 
-            .method .extended-detail { border: 1px solid #cacaca; margin: 0; padding: 0 2em 2em 2em; }
+            .method .extended-detail {
+				/*border: 1px solid #F7F7F7; */
+				margin: 0;
+				margin-bottom: 20px;
+				padding: 0 2em 2em 2em;
+			}
 
             .method .extended-detail .description { margin-bottom: 40px; }
 
@@ -360,12 +392,14 @@
             }
 
             #api-tabview-filter {
-                padding: 10px;
+                padding: 10px 0px;
                 /*background-color: #fafafa;*/
                 /*border: 1px solid #e5e5e5;*/
                 border-bottom: none;
                 border-top: none;
             }
+
+			#api-tabview-filter a:hover { border:none; }
 
             #api-tabview-panel {
                 background-color: #fff;
@@ -385,7 +419,7 @@
                 /*border: 1px solid #e5e5e5;*/
                 padding: 10px;
                 margin: 30px 0px 70px 0px;
-                background-color: #eee;
+                background-color: #F7F7F7;
             }
             .index-section { margin:30px; }
 
@@ -445,9 +479,9 @@
 
 
             .tabs {
-                background-color: #eee;
-                border: 1px solid #eee;
-                border-bottom: 1px solid #eee;
+                background-color: #F7F7F7;
+                border: 1px solid #F7F7F7;
+                border-bottom: 1px solid #F7F7F7;
                 /*border-radius: 4px 4px 0 0;*/
                 padding: 15px 0px;
             }
@@ -476,7 +510,7 @@
             .yui3-tab-selected a:after {
                 border: 8px solid transparent;
                 border-style: outset outset solid outset; /* fixes FF bug */
-                border-bottom-color: #eee;
+                border-bottom-color: #F7F7F7;
                 bottom: 0;
                 content: "";
                 height: 0;
