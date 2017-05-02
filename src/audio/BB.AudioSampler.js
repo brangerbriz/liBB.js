@@ -208,6 +208,13 @@ class AudioSampler extends AudioBase {
 		return this._duration;
 	}
 
+	_toFloat( num ){
+		if( num.toString().indexOf('.')==-1){
+			return num + 0.00000000000001;
+		} else {
+			return num;
+		}
+	}
 
 	// sampleRate && Detue -----------------------------------------------------
 	// -------------------------------------------------------------------------
@@ -562,7 +569,7 @@ class AudioSampler extends AudioBase {
 
 		let node = this.ctx.createBufferSource();
 			node.buffer = buff;
-			node.detune.setValueAtTime(detune,st);
+			if(detune!==0) node.detune.setValueAtTime(detune,st);
 			if( this._playbackRate!==1) node.playbackRate.setValueAtTime(this._playbackRate,st);
 			node.connect( gainNode );
 
@@ -663,7 +670,7 @@ class AudioSampler extends AudioBase {
 			gainNode.connect( this.output );
 		let node = this.ctx.createBufferSource();
 			node.buffer = buff;
-			node.detune.setValueAtTime(detune,time);
+			if(detune!==0) node.detune.setValueAtTime(detune,time);
 			if( this._playbackRate!==1) node.playbackRate.setValueAtTime(this._playbackRate,time);
 			node.loop = true;
 			node.loopStart = off;
