@@ -217,6 +217,7 @@ class AudioSequencer {
 	stop(){
 		this.playing = false;
 		this.current16thNote = 0;
+		this.currentBar = 0;
 	}
 
 	/**
