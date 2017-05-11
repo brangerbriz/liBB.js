@@ -89,6 +89,10 @@ class AudioSequencer {
 		this.err = new BB.ValidArg(this);
 		this.err.checkType(config,"object","config");
 
+		let ac = window.AudioContext||window.webkitAudioContext;
+		if( !(BB.Audio.context instanceof ac) )
+			throw new Error("BB.Audio: you must run BB.Audio.init() before using any other Audio Modules");
+		// internal alias for BB.Audio.context
 		this.ctx = BB.Audio.context;
 
 		/**
