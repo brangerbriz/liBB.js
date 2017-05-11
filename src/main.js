@@ -49,7 +49,6 @@ window.BB = {
 	AudioSampler 	: 	require('./audio/BB.AudioSampler.js'),
 	AudioNoise 		: 	require('./audio/BB.AudioNoise.js'),
 	AudioSequencer 	: 	require('./audio/BB.AudioSequencer.js'),
-	// MidiFileLoader 	: 	require('./audio/BB.MidiFileLoader.js'),
 
 	// ~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'~._.~'
 	// - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - . - .
