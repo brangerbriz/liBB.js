@@ -488,6 +488,7 @@ class AudioTone extends AudioBase {
 		let hold = (dur-(attack+decay+release));
 		this._adsr(gainNode, 1.0, st, attack, decay, release, hold, sustain);
 		osc.start(st);
+		osc.stop(st+attack+decay+release+hold+0.00005);
 	}
 
 	/**
