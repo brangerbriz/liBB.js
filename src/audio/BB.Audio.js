@@ -27,6 +27,14 @@ class Audio {
 		* @property context
 		*/
 		this.context = undefined;
+
+		/**
+		* optional dynamic compressor, see <a href="#method_activateCompressor">activateCompressor()</a>
+		* @type {DynamicsCompressorNode}
+		* @property compressor
+		*/
+		this.compressor = undefined;
+
 		/**
 		* the context's final destination, usually your computer speakers
 		* @type {AudioDestinationNode}
@@ -49,7 +57,11 @@ class Audio {
 	static init(){
 		window.AudioContext = window.AudioContext||window.webkitAudioContext;
 		this.context = new AudioContext();
-		this.destination = this.context.destination;
+		this.compressor = this.context.createDynamicsCompressor();
+		// this.destination = this.context.destination;
+		this.destination = this.context.createGain();
+		this.destination.connect( this.context.destination );
+
 		return this.context;
 	}
 
@@ -75,6 +87,63 @@ class Audio {
 	 */
 	static getSampleRate(){
 		return this.context.sampleRate;
+	}
+
+	/**
+	* activates the built in BB.Audio.compressor, this connects the BB.Audio.destination to BB.Audio.compressor, and disconnects it from the default BB.Audio.context.destination ( instead the BB.Audio.compressor is connected to the BB.Audio.context.destination, essentially placing itself between all other BB.Audio modules and your speakers ). To see how much the compressor is reducing at any given time call <b><code>BB.Audio.compressor.reduction</code></b>
+	* @method activateCompressor
+	* @param {Object} [config] settings object, can include the following properties: threshold, knee, ratio, attack and release
+	* @example
+	* <code class="code prettyprint">
+	*  &nbsp;BB.Audio.init();<br>
+	*  <br>
+	*  &nbsp;BB.Audio.activateCompressor({<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;threshold: -50,<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;knee: 40,<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;ratio: 12,<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;attack: 0.1,<br>
+	*  &nbsp;&nbsp;&nbsp;&nbsp;release: 0.25<br>
+	*  &nbsp;});<br>
+	* </code>
+	*/
+	static activateCompressor( config ){
+		let err = new BB.ValidArg(this);
+		err.checkType( config, ["object","undefined"], "config" );
+
+		try {
+			this.destination.disconnect( this.context.destination );
+		} catch(error) {
+			throw new Error('BB.Audio: compressor is already activated');
+		}
+		this.destination.connect( this.compressor );
+		this.compressor.connect( this.context.destination );
+
+		if( typeof config !== "undefined" ){
+			if(typeof config.threshold!=="undefined")
+				this.compressor.threshold.value = config.threshold;
+			if(typeof config.knee!=="undefined")
+				this.compressor.knee.value = config.knee;
+			if(typeof config.ratio!=="undefined")
+				this.compressor.ratio.value = config.ratio;
+			if(typeof config.attack.value !=="undefined")
+				this.compressor.attack.value = config.attack;
+			if(typeof config.release!=="undefined")
+				this.compressor.release.value = config.release;
+		}
+	}
+
+	/**
+	 * disconnects BB.Audio.destination from the compressor and connects it back to the default BB.Audio.context.destination
+	 * @method deactivateCompressor
+	 */
+	static deactivateCompressor(){
+		try {
+			this.destination.disconnect( this.compressor );
+		} catch(error){
+			throw new Error('BB.Audio: compressor is not currently active');
+		}
+		this.destination.connect( this.context.destination );
+		this.compressor.disconnect( this.context.destination );
 	}
 
 	/**
