@@ -184,6 +184,7 @@ class AudioNoise extends AudioBase {
 		}
 
 		this._detune = 0; // last played ( .play() ) detune value ( so stop can target it )
+		this._playbackRate = 1;
 
 		/**
 		* buffer length in seconds
@@ -618,7 +619,8 @@ class AudioNoise extends AudioBase {
 
 		let node = this.ctx.createBufferSource();
 			node.buffer = this.buffer;
-			node.detune.setValueAtTime(detune,st);
+			if(detune!==0) node.detune.setValueAtTime(detune,st);
+			if( this._playbackRate!==1) node.playbackRate.setValueAtTime(this._playbackRate,st);
 			node.connect( gainNode );
 
 		// scheduled start time && adsr
@@ -693,7 +695,8 @@ class AudioNoise extends AudioBase {
 			gainNode.connect( this.output );
 		let node = this.ctx.createBufferSource();
 			node.buffer = this.buffer;
-			node.detune.setValueAtTime(detune,time);
+			if(detune!==0) node.detune.setValueAtTime(detune,time);
+			if( this._playbackRate!==1) node.playbackRate.setValueAtTime(this._playbackRate,time);
 			node.loop = true;
 			node.connect( gainNode );
 
