@@ -752,7 +752,9 @@ class AudioNoise extends AudioBase {
 
 			let now = this.ctx.currentTime; // fadeOut (if hold||sustain) && stop
 			this._adsrOut( this.input[detune].gain, 1.0, now+hold, release, this.input[detune].sus  );
-			this.input[detune].node.stop( now + hold + release + 0.00005);
+			if( BB.Check.browserInfo().name == "Safari"){
+				// see >> https://github.com/brangerbriz/liBB.js/issues/46
+			} else this.input[detune].node.stop( now + hold + release + 0.00005);
 
 			// remove from input when fadeOut is complete
 			let rmvInterval = setInterval(()=>{
@@ -888,7 +890,10 @@ class AudioNoise extends AudioBase {
 		if(typeof this.input[detune] !== "undefined"){
 
 			this.input[detune].gain.gain.cancelScheduledValues(st);
-			this.input[detune].node.stop( st );
+			if( BB.Check.browserInfo().name == "Safari"){
+				// see >> https://github.com/brangerbriz/liBB.js/issues/46
+			} else this.input[detune].node.stop( st );
+
 
 			// remove from input when fadeOut is complete
 			let rmvInterval = setInterval(()=>{
