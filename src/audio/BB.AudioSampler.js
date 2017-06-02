@@ -581,6 +581,7 @@ class AudioSampler extends AudioBase {
 
 		node.start(st, off, dur);
 
+		return node;
 	}
 
 
